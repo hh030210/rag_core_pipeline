@@ -4,22 +4,14 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from .chunk_stage import run_chunking
 from .dimension_stage import run_dimensions
 from .embedding import EmbeddingModel
-from .llm import LLMClient
-from .prompting import PromptOptimizer
+from .prompt_module import run_prompt_module
 from .settings import Settings
 from .storage import VectorStore
-
-
-def load_examples(path: str | Path) -> List[Dict[str, Any]]:
-    raw = json.loads(Path(path).read_text(encoding="utf-8"))
-    if isinstance(raw, dict) and isinstance(raw.get("examples"), list):
-        raw = raw["examples"]
-    return raw if isinstance(raw, list) else []
 
 
 def run_ingest(settings: Settings, schema_path: str = "") -> Dict[str, Any]:
@@ -53,9 +45,9 @@ def run_ingest(settings: Settings, schema_path: str = "") -> Dict[str, Any]:
 
 
 def optimize_prompt(settings: Settings, examples_path: str, iterations: int) -> Dict[str, Any]:
-    settings.apply_runtime_environment()
-    client = LLMClient(api_key=settings.llm_api_key, base_url=settings.llm_base_url,
-                       model=settings.llm_model, openai_compat=settings.llm_openai_compat,
-                       interval=settings.llm_interval, mock=settings.mock)
-    manager = PromptOptimizer(client=client, run_dir=settings.run_dir)
-    return manager.optimize(load_examples(examples_path), iterations=iterations)
+    return run_prompt_module(
+        examples_path,
+        settings.run_dir / "optimized_prompt.json",
+        settings,
+        iterations=iterations,
+    )

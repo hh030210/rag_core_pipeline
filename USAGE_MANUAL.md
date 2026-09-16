@@ -251,6 +251,58 @@ Prompt 迭代需要一个 JSON 样本文件，格式如下：
 
 后续执行 ask 时会自动读取优化后的 Prompt。没有执行案例级迭代时，项目使用默认的严格上下文问答 Prompt；在线查询扩展仍然保留原问题作为失败兜底。
 
+### 6.1 独立输入输出模块
+
+如果只想优化 Prompt，不希望启动分片、维度抽取或 Qdrant，可以直接运行独立模块：
+
+~~~bash
+cd /home/humq/rag_core_pipeline
+
+/home/humq/envs/denoise_qa/bin/python -m rag_core.prompt_module \
+  --input /home/humq/data/prompt_input.json \
+  --output /home/humq/data/prompt_output.json \
+  --iterations 3 \
+  --llm-api-key "$LLM_API_KEY" \
+  --llm-base-url "$LLM_BASE_URL" \
+  --llm-model "$LLM_MODEL" \
+  --llm-interval "$LLM_API_INTERVAL"
+~~~
+
+输入文件可以是问答样本数组：
+
+~~~json
+[
+  {
+    "question": "景区几点开放？",
+    "context": "景区每日八点开放。",
+    "reference_answer": "景区每日八点开放。"
+  }
+]
+~~~
+
+也可以使用带基础 Prompt 和轮数配置的对象：
+
+~~~json
+{
+  "base_prompt": {
+    "system_prompt": "你是严格的知识库问答助手。"
+  },
+  "config": {"iterations": 3},
+  "examples": []
+}
+~~~
+
+输出文件会保存最终 Prompt、每一轮的答案评分和反馈，并保存输入路径、输出路径、有效样本数和迭代轮数。输出文件可以直接放入某个运行目录，后续 ask 会自动读取其中的 system_prompt 等字段。无 API 或调试时添加 --mock，模块会输出默认 Prompt 和空的迭代历史。
+
+统一入口也支持同样的功能：
+
+~~~bash
+/home/humq/envs/denoise_qa/bin/python run.py prompt-module \
+  --input /home/humq/data/prompt_input.json \
+  --output /home/humq/data/prompt_output.json \
+  --prompt-iterations 3
+~~~
+
 ## 7. 运行产物和检查方法
 
 每个 run-dir 都是独立的，主要文件如下：

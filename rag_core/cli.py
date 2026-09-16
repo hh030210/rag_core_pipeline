@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 
 from .pipeline import optimize_prompt, run_ingest
+from .prompt_module import run_prompt_module
 from .qa import QAService
 from .settings import Settings
 
@@ -49,6 +50,12 @@ def build_parser() -> argparse.ArgumentParser:
     _common(opt)
     opt.add_argument("--examples", required=True)
     opt.add_argument("--prompt-iterations", type=int, default=3)
+    module = sub.add_parser("prompt-module", help="独立 Prompt 模块：JSON 输入到 JSON 输出")
+    _common(module)
+    module.add_argument("--input", required=True, help="问答样本 JSON")
+    module.add_argument("--output", required=True, help="优化 Prompt JSON 输出路径")
+    module.add_argument("--base-prompt", default="", help="可选基础 Prompt JSON")
+    module.add_argument("--prompt-iterations", type=int, default=None)
     return parser
 
 
@@ -75,7 +82,16 @@ def main(argv=None) -> int:
     args = build_parser().parse_args(argv)
     settings = _settings(args)
     try:
-        if args.command in {"run", "ingest"}:
+        if args.command == "prompt-module":
+            result = run_prompt_module(
+                args.input,
+                args.output,
+                settings,
+                base_prompt_path=args.base_prompt,
+                iterations=args.prompt_iterations,
+            )
+            print(json.dumps(result, ensure_ascii=False, indent=2))
+        elif args.command in {"run", "ingest"}:
             settings.input_path = Path(args.input)
             settings.denoise_method = args.denoise_method
             settings.top_k = getattr(args, "top_k", 5)

@@ -30,20 +30,8 @@ class PromptOptimizer:
             except Exception:
                 self.cache = {}
 
-    def load_module(self) -> Dict[str, str]:
-        if self.prompt_path.exists():
-            try:
-                data = json.loads(self.prompt_path.read_text(encoding="utf-8"))
-                if isinstance(data, dict) and data.get("system_prompt"):
-                    return {
-                        "system_prompt": str(data["system_prompt"]),
-                        "instruction": str(data.get("instruction", "")),
-                        "context_strategy": str(data.get("context_strategy", "")),
-                        "format_requirement": str(data.get("format_requirement", "")),
-                        "uncertainty_handling": str(data.get("uncertainty_handling", "")),
-                    }
-            except Exception:
-                pass
+    @staticmethod
+    def default_module() -> Dict[str, str]:
         return {
             "system_prompt": DEFAULT_SYSTEM_PROMPT,
             "instruction": "先定位问题所需事实，再逐项回答。",
@@ -51,6 +39,22 @@ class PromptOptimizer:
             "format_requirement": "使用自然语言回答；问题包含多个要点时分点回答。",
             "uncertainty_handling": "证据不足时明确指出缺失信息，不补写外部事实。",
         }
+
+    def load_module(self) -> Dict[str, str]:
+        if self.prompt_path.exists():
+            try:
+                data = json.loads(self.prompt_path.read_text(encoding="utf-8"))
+                if isinstance(data, dict) and data.get("system_prompt"):
+                    return self.normalize_module(data)
+            except Exception:
+                pass
+        return self.default_module()
+
+    @classmethod
+    def normalize_module(cls, module: Dict[str, Any] | None) -> Dict[str, str]:
+        source = module if isinstance(module, dict) else {}
+        default = cls.default_module()
+        return {key: str(source.get(key, default[key])) for key in default}
 
     def expand(self, query: str) -> Dict[str, Any]:
         if query in self.cache:
@@ -86,13 +90,14 @@ class PromptOptimizer:
         return {"original_query": query, "sub_queries": sub_queries,
                 "entity_terms": entity_terms, "cached": False}
 
-    def optimize(self, examples: List[Dict[str, Any]], iterations: int = 3) -> Dict[str, Any]:
-        current = self.load_module()
+    def optimize(self, examples: List[Dict[str, Any]], iterations: int = 3, *,
+                 initial_module: Dict[str, Any] | None = None,
+                 output_path: str | Path | None = None) -> Dict[str, Any]:
+        current = self.normalize_module(initial_module) if initial_module is not None else self.load_module()
         history = []
         examples = [item for item in examples if isinstance(item, dict) and item.get("question")][:20]
         if not examples or self.client.mock or not self.client.api_key:
-            self._save(current, history, "no_examples_or_mock")
-            return current
+            return self._save(current, history, "no_examples_or_mock", output_path=output_path)
         for round_index in range(max(1, int(iterations))):
             feedback = []
             scores = []
@@ -133,8 +138,7 @@ class PromptOptimizer:
             except Exception as exc:
                 feedback.append(f"Prompt 改写失败：{exc}")
             history.append({"iteration": round_index + 1, "scores": scores, "feedback": feedback})
-        self._save(current, history, "iterative_optimization")
-        return current
+        return self._save(current, history, "iterative_optimization", output_path=output_path)
 
     @staticmethod
     def _qa_user(question: str, context: str, module: Dict[str, str]) -> str:
@@ -144,8 +148,11 @@ class PromptOptimizer:
                 f"<uncertainty_handling>{module.get('uncertainty_handling', '')}</uncertainty_handling>\n\n"
                 f"检索上下文：\n{context}\n\n用户问题：\n{question}\n\n请给出最终答案：")
 
-    def _save(self, module: Dict[str, str], history: List[Dict[str, Any]], method: str) -> None:
+    def _save(self, module: Dict[str, str], history: List[Dict[str, Any]], method: str,
+              *, output_path: str | Path | None = None) -> Dict[str, Any]:
         self.run_dir.mkdir(parents=True, exist_ok=True)
-        self.prompt_path.write_text(json.dumps({**module, "method": method, "history": history},
-                                                ensure_ascii=False, indent=2), encoding="utf-8")
-
+        result = {**module, "method": method, "history": history}
+        path = Path(output_path) if output_path else self.prompt_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+        return result

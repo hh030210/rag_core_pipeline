@@ -1,9 +1,12 @@
+import json
+import tempfile
 import unittest
 from pathlib import Path
 
 from rag_core.dimension_stage import default_schema, build_inverted_index, build_tags
 from rag_core.embedding import EmbeddingModel
 from rag_core.prompting import PromptOptimizer
+from rag_core.prompt_module import PromptOptimizationModule
 from rag_core.settings import Settings
 from rag_core.storage import make_payload
 from rag_core.schema_v2 import load_schema
@@ -40,6 +43,31 @@ class CorePipelineTests(unittest.TestCase):
         result = manager.expand("测试问题")
         self.assertEqual(result["sub_queries"], ["测试问题"])
         self.assertTrue(manager.load_module()["system_prompt"])
+
+    def test_prompt_module_has_explicit_json_input_and_output(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            input_path = root / "prompt_input.json"
+            output_path = root / "prompt_output.json"
+            input_path.write_text(json.dumps({
+                "examples": [{
+                    "question": "景区几点开放？",
+                    "context": "景区每日八点开放。",
+                    "reference_answer": "景区每日八点开放。",
+                }],
+                "config": {"iterations": 2},
+            }, ensure_ascii=False), encoding="utf-8")
+            module = PromptOptimizationModule(
+                client=LLMClient(mock=True),
+                work_dir=root / "work",
+            )
+            result = module.run_file(input_path, output_path)
+            saved = json.loads(output_path.read_text(encoding="utf-8"))
+            self.assertEqual(result["module_version"], "1.0")
+            self.assertEqual(result["io"]["example_count"], 1)
+            self.assertEqual(result["io"]["iterations"], 2)
+            self.assertEqual(saved["method"], "no_examples_or_mock")
+            self.assertTrue(saved["system_prompt"])
 
 
 if __name__ == "__main__":

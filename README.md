@@ -125,6 +125,20 @@ python run.py optimize-prompt \
 
 生成的 `optimized_prompt.json` 会被后续 `ask` 自动读取。没有样本时会使用严格的上下文问答 Prompt；在线问答中的查询扩展仍会保留原问题作为失败兜底。
 
+Prompt 迭代也可以完全脱离入库和问答流程，作为独立的 JSON 输入输出模块运行：
+
+```bash
+python -m rag_core.prompt_module \
+  --input ./prompt_input.json \
+  --output ./prompt_output.json \
+  --iterations 3 \
+  --llm-api-key "$LLM_API_KEY" \
+  --llm-base-url "$LLM_BASE_URL" \
+  --llm-model "$LLM_MODEL"
+```
+
+输入可以是问答样本数组，也可以是包含 `examples`、可选 `base_prompt` 和 `config.iterations` 的 JSON 对象；输出包含最终 Prompt、每轮评分反馈以及 `io` 输入输出信息。统一入口也提供等价命令：`python run.py prompt-module ...`。
+
 ## 5. 运行产物
 
 每次运行都写入独立的 `run-dir`，不会删除或覆盖其他运行：
