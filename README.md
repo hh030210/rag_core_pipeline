@@ -20,6 +20,8 @@ Prompt 优化
 
 原项目中的实验报告、badcase 格式化、Milvus 流程、Web 前端、MySQL 兼容写入和历史版本脚本没有复制进来。维度信息在新项目中以 `V_core_v2.json`、`tags_output_v2.json`、`inverted_index_v2.json` 和 Qdrant payload 为准。
 
+完整的服务器部署、入库、检索、问答、Prompt 迭代和故障排查说明见 [USAGE_MANUAL.md](USAGE_MANUAL.md)。
+
 ## 1. 安装
 
 ```bash
@@ -138,4 +140,3 @@ python run.py optimize-prompt \
 - `store_manifest.json`：Qdrant 或本地后端信息
 - `optimized_prompt.json`：Prompt 优化结果和每轮评测记录
 - `last_answer.json`：检索、上下文长度、Prompt 和答案审计记录
-
