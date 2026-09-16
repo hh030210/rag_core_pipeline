@@ -5,7 +5,11 @@ pytest>=7.0
 openai>=1.0
 dashscope>=1.14
 
-# 真正使用 BGE-M3 时安装以下任一套：
-# FlagEmbedding>=1.2
-# sentence-transformers>=2.2
-# torch>=2.0
+# BGE-M3 运行依赖。服务器当前 PyTorch 为 2.0.x，固定 Transformers
+# 兼容区间，避免最新版 Transformers 因要求 PyTorch >=2.1 而无法导入。
+FlagEmbedding>=1.4.2
+sentence-transformers>=3.0,<4.0
+transformers==4.44.2
+tokenizers==0.19.1
+huggingface-hub>=0.25.2,<1.0
+torch>=2.0
