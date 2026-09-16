@@ -29,7 +29,6 @@ cd rag_core_pipeline
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-pip install FlagEmbedding torch
 ```
 
 服务器上设置真实模型和接口：

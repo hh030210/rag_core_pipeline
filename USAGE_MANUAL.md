@@ -76,13 +76,7 @@ git pull --ff-only origin main
 /home/humq/envs/denoise_qa/bin/python -m pip install -r requirements.txt
 ~~~
 
-如果需要真实 BGE 向量模型，再安装可选依赖：
-
-~~~bash
-/home/humq/envs/denoise_qa/bin/python -m pip install FlagEmbedding torch
-~~~
-
-安装后检查导入：
+requirements.txt 已包含真实 BGE-M3 所需的 FlagEmbedding、Sentence Transformers 和兼容版本的 Transformers 依赖。安装后检查导入：
 
 ~~~bash
 /home/humq/envs/denoise_qa/bin/python -c "import qdrant_client, numpy, yaml; print('DEPENDENCIES_OK')"
@@ -408,4 +402,3 @@ export LLM_API_INTERVAL=5
 - 不把模型文件和大规模运行结果上传 GitHub。
 - Gold Source 只用于评测对照；问答模型实际使用的是融合检索返回的 Top-K chunk。
 - 生产运行前先用 --mock 完成代码验收，再使用小规模输入验证 Qdrant 和 LLM 配置，最后再进行全量入库。
-
