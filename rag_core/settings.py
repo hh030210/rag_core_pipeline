@@ -37,6 +37,8 @@ class Settings:
     tag_text_chars: int = 3000
     top_k: int = 5
     dim_alpha: float = 0.2
+    semantic_pool: int = 20
+    dimension_pool: int = 100
     prompt_iterations: int = 0
     mock: bool = False
 
@@ -62,6 +64,8 @@ class Settings:
             "tag_text_chars": int(os.getenv("TAG_TEXT_CHARS", "3000")),
             "top_k": int(os.getenv("TOP_K", "5")),
             "dim_alpha": float(os.getenv("DIM_ALPHA", "0.2")),
+            "semantic_pool": int(os.getenv("SEMANTIC_POOL", "20")),
+            "dimension_pool": int(os.getenv("DIMENSION_POOL", "100")),
             "prompt_iterations": int(os.getenv("PROMPT_ITERATIONS", "0")),
             "mock": _env_bool("RAG_MOCK", False),
         }

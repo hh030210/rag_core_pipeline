@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 
+from .evaluation import compare_evaluations, run_evaluation
 from .pipeline import optimize_prompt, run_ingest
 from .prompt_module import run_prompt_module
 from .qa import QAService
@@ -46,6 +47,15 @@ def build_parser() -> argparse.ArgumentParser:
     ask.add_argument("--query", required=True)
     ask.add_argument("--top-k", type=int, default=5)
     ask.add_argument("--context-chars", type=int, default=0, help="每个 chunk 上限；0 表示传入完整 chunk")
+    evaluate = sub.add_parser("evaluate", help="使用 Golden 测试集批量评估三路检索")
+    _common(evaluate)
+    evaluate.add_argument("--dataset", required=True, help="Golden JSON/JSONL 测试集")
+    evaluate.add_argument("--output", default="", help="评测输出目录，默认写入 run-dir/evaluation")
+    evaluate.add_argument("--top-k", type=int, default=10, help="最终融合结果的 Top-K")
+    evaluate.add_argument("--eval-depth", type=int, default=20, help="每一路用于评测的候选深度")
+    evaluate.add_argument("--ks", default="1,3,5,10,20", help="评测 K，逗号分隔")
+    evaluate.add_argument("--result-text-chars", type=int, default=800, help="JSONL 中每个结果保留的文本长度")
+    evaluate.add_argument("--no-query-expansion", action="store_true", help="评测时不执行查询扩展")
     opt = sub.add_parser("optimize-prompt", help="用问答样本执行案例级 Prompt 迭代")
     _common(opt)
     opt.add_argument("--examples", required=True)
@@ -56,6 +66,11 @@ def build_parser() -> argparse.ArgumentParser:
     module.add_argument("--output", required=True, help="优化 Prompt JSON 输出路径")
     module.add_argument("--base-prompt", default="", help="可选基础 Prompt JSON")
     module.add_argument("--prompt-iterations", type=int, default=None)
+    compare = sub.add_parser("compare", help="逐问题比较 baseline 与 candidate 评测结果")
+    compare.add_argument("--baseline", required=True, help="baseline results.jsonl")
+    compare.add_argument("--candidate", required=True, help="candidate results.jsonl")
+    compare.add_argument("--output", required=True, help="对比输出目录")
+    compare.add_argument("--ks", default="1,3,5,10,20", help="对比 K，逗号分隔")
     return parser
 
 
@@ -80,6 +95,16 @@ def _settings(args) -> Settings:
 
 def main(argv=None) -> int:
     args = build_parser().parse_args(argv)
+    if args.command == "compare":
+        result = compare_evaluations(
+            baseline_path=args.baseline,
+            candidate_path=args.candidate,
+            output_dir=args.output,
+            ks=args.ks,
+        )
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return 0
+
     settings = _settings(args)
     try:
         if args.command == "prompt-module":
@@ -106,6 +131,27 @@ def main(argv=None) -> int:
                 print(json.dumps(manifest, ensure_ascii=False, indent=2))
         elif args.command == "optimize-prompt":
             result = optimize_prompt(settings, args.examples, args.prompt_iterations)
+            print(json.dumps(result, ensure_ascii=False, indent=2))
+        elif args.command == "evaluate":
+            manifest_path = Path(args.run_dir) / "run_manifest.json"
+            if manifest_path.exists():
+                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                if args.backend is None:
+                    settings.backend = manifest.get("backend", settings.backend)
+                if args.collection is None:
+                    settings.collection = manifest.get("collection", settings.collection)
+            output_dir = args.output or str(Path(args.run_dir) / "evaluation")
+            result = run_evaluation(
+                run_dir=args.run_dir,
+                dataset_path=args.dataset,
+                settings=settings,
+                output_dir=output_dir,
+                top_k=args.top_k,
+                eval_depth=args.eval_depth,
+                ks=args.ks,
+                result_text_chars=args.result_text_chars,
+                query_expansion=not args.no_query_expansion,
+            )
             print(json.dumps(result, ensure_ascii=False, indent=2))
         else:
             manifest_path = Path(args.run_dir) / "run_manifest.json"

@@ -139,7 +139,58 @@ python -m rag_core.prompt_module \
 
 输入可以是问答样本数组，也可以是包含 `examples`、可选 `base_prompt` 和 `config.iterations` 的 JSON 对象；输出包含最终 Prompt、每轮评分反馈以及 `io` 输入输出信息。统一入口也提供等价命令：`python run.py prompt-module ...`。
 
-## 5. 运行产物
+## 5. 离线检索评测
+
+`evaluate` 使用带 Golden 证据的 JSON/JSONL 测试集，分别评估语义、维度和融合三路结果，输出 First Golden Rank、MRR、Hit@K、Golden Recall@K、nDCG、融合救回/伤害和逐问题 badcase。
+
+测试集可以使用规范字段：
+
+```json
+[
+  {
+    "id": "q_0001",
+    "question": "南孔庙的开放时间是什么？",
+    "gold_evidence_texts": ["南孔庙开放时间为……"],
+    "reference_answer": "……",
+    "question_type": "开放时间",
+    "spot": "南孔庙",
+    "answerable": true
+  }
+]
+```
+
+也兼容现有 `query`、`answer`、`source`、`attraction` 字段。Golden 优先使用当前索引的 `gold_chunk_ids`；切片版本变化时，应使用证据文本或字符区间重新映射，避免把 chunk ID 变化误判为检索失败。
+
+在已有运行目录上评测：
+
+```bash
+python run.py evaluate \
+  --run-dir ./runs/scenic_v1 \
+  --dataset ./eval/gold.json \
+  --output ./runs/scenic_v1/evaluation \
+  --top-k 10 \
+  --eval-depth 20 \
+  --ks 1,3,5,10,20
+```
+
+输出文件：
+
+- `results.jsonl`：逐问题三路检索结果、Golden 映射和指标
+- `summary.json`：全量及按景区/问题类型分组汇总
+- `summary.md`：便于人工查看的摘要
+
+对比 baseline 与优化版本：
+
+```bash
+python run.py compare \
+  --baseline ./runs/baseline/evaluation/results.jsonl \
+  --candidate ./runs/optimized/evaluation/results.jsonl \
+  --output ./runs/compare
+```
+
+对比结果包含逐问题改善/退化、MRR/Hit@K/Recall/nDCG 差值以及新增/修复 badcase。评测默认不生成答案；答案质量应作为独立实验记录。
+
+## 6. 运行产物
 
 每次运行都写入独立的 `run-dir`，不会删除或覆盖其他运行：
 

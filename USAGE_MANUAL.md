@@ -216,7 +216,56 @@ cd /home/humq/rag_core_pipeline
 - 每条结果中的 matched_dimensions、matched_labels、dimension_paths 和 score。
 - context_audit：实际传给生成模型的上下文长度。
 
-## 6. Prompt 迭代优化
+## 6. 离线检索评测
+
+`evaluate` 使用带 Golden 证据的 JSON/JSONL 测试集，分别评估语义、维度和融合三路检索，输出 First Golden Rank、MRR、Hit@K、Golden Recall@K、nDCG、融合救回/伤害和逐问题 badcase。
+
+测试集推荐使用以下字段：
+
+~~~json
+[
+  {
+    "id": "q_0001",
+    "question": "景区的开放时间是什么？",
+    "gold_evidence_texts": ["景区每日八点开放。"],
+    "reference_answer": "景区每日八点开放。",
+    "question_type": "开放时间",
+    "spot": "测试景区",
+    "answerable": true
+  }
+]
+~~~
+
+也兼容现有 `query`、`answer`、`source`、`attraction` 字段。切片版本变化时，优先使用证据文本或字符区间映射到新的 chunk；不要只依赖旧 chunk ID。
+
+在已有运行目录上执行：
+
+~~~bash
+cd /home/humq/rag_core_pipeline
+
+/home/humq/envs/denoise_qa/bin/python -u run.py evaluate \
+  --run-dir /home/humq/rag_core_runs/scenic_v1 \
+  --dataset /home/humq/data/eval_gold.json \
+  --output /home/humq/rag_core_runs/scenic_v1/evaluation \
+  --top-k 10 \
+  --eval-depth 20 \
+  --ks 1,3,5,10,20
+~~~
+
+评测输出为 `results.jsonl`、`summary.json` 和 `summary.md`。评测只检查检索，不生成答案；答案质量应单独记录。
+
+比较 baseline 与优化版本：
+
+~~~bash
+/home/humq/envs/denoise_qa/bin/python -u run.py compare \
+  --baseline /home/humq/rag_core_runs/baseline/evaluation/results.jsonl \
+  --candidate /home/humq/rag_core_runs/optimized/evaluation/results.jsonl \
+  --output /home/humq/rag_core_runs/compare
+~~~
+
+`compare` 会输出逐问题改善/退化、三路 MRR/Hit/Recall/nDCG 差值和融合 badcase 变化。
+
+## 7. Prompt 迭代优化
 
 Prompt 迭代需要一个 JSON 样本文件，格式如下：
 
@@ -303,7 +352,7 @@ cd /home/humq/rag_core_pipeline
   --prompt-iterations 3
 ~~~
 
-## 7. 运行产物和检查方法
+## 8. 运行产物和检查方法
 
 每个 run-dir 都是独立的，主要文件如下：
 
@@ -349,7 +398,7 @@ Qdrant payload 中的 dim_<leaf_id> 必须是 JSON 数组，例如：
 "山门; 寺院"
 ~~~
 
-## 8. 后台运行
+## 9. 后台运行
 
 适合较长的入库或问答任务：
 
@@ -384,7 +433,7 @@ test -f /home/humq/rag_core_runs/scenic_v1/run_manifest.json && echo INGEST_DONE
 
 如果需要停止自己启动的任务，先通过进程列表确认 PID，再结束对应 PID；不要停止 Qdrant 主进程。
 
-## 9. 无模型、无 API 的本地验收
+## 10. 无模型、无 API 的本地验收
 
 在首次部署或排查代码问题时，使用 --mock。此模式不访问 Qdrant、BGE 和 LLM：
 
@@ -405,7 +454,7 @@ cd /home/humq/rag_core_pipeline
 
 测试至少验证：确定性嵌入、多标签数组、Prompt 无 LLM 回退和两层 Schema 合法性。
 
-## 10. 常见问题
+## 11. 常见问题
 
 ### Qdrant 无法连接
 
@@ -446,7 +495,7 @@ export LLM_API_INTERVAL=5
 
 确认 ask 没有使用 --context-chars，并查看 last_answer.json 的 context_audit。默认流程会把完整 chunk 传入生成模型；如果上游 chunk 本身过短，应先检查 chunks/chunk_summary.json 和第三阶段长度收口结果。
 
-## 11. 数据和安全约定
+## 12. 数据和安全约定
 
 - 每次实验使用新的 run-dir 和 collection 名称。
 - 不删除旧 collection，不覆盖生产索引。

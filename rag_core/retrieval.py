@@ -174,20 +174,24 @@ class Retriever:
         return {str(item["chunk_id"]): (float(item.get("score", 0.0)) - low) / (high - low)
                 for item in results}
 
-    def search(self, query: str, top_k: int | None = None) -> Dict[str, Any]:
+    def search(self, query: str, top_k: int | None = None,
+               semantic_pool: int | None = None,
+               dimension_pool: int | None = None) -> Dict[str, Any]:
         top_k = top_k or self.settings.top_k
+        semantic_pool = max(top_k, int(semantic_pool or getattr(self.settings, "semantic_pool", 20)))
+        dimension_pool = max(top_k, int(dimension_pool or getattr(self.settings, "dimension_pool", 100)))
         analysis = self._parse_query(query)
         query_vec = self.embeddings.encode([query])[0]
-        semantic_hits = self.store.semantic_search(query_vec, max(top_k, 20))
+        semantic_hits = self.store.semantic_search(query_vec, semantic_pool)
         semantic = []
-        for rank, hit in enumerate(semantic_hits, 1):
+        for hit in semantic_hits:
             payload = hit["payload"]
             if analysis["spot_names"] and payload.get("spot_name") not in analysis["spot_names"]:
                 continue
             semantic.append({"chunk_id": payload.get("chunk_id", hit["id"]),
-                             "score": hit["score"], "rank": rank, "source": "semantic", **payload})
-            if len(semantic) >= max(top_k, 20):
-                break
+                             "score": hit["score"], "source": "semantic", **payload})
+        for rank, item in enumerate(semantic, 1):
+            item["rank"] = rank
 
         dimension = []
         for point in self.points:
@@ -201,24 +205,41 @@ class Retriever:
                               "score": score, "source": "dimension", **payload,
                               "matched_dimensions": sorted(matched_dims), "matches": matches})
         dimension.sort(key=lambda item: item["score"], reverse=True)
-        dimension = dimension[:max(top_k, 100)]
+        dimension = dimension[:dimension_pool]
+        for rank, item in enumerate(dimension, 1):
+            item["rank"] = rank
 
         sem_norm = self._normalize_scores(semantic)
         dim_norm = self._normalize_scores(dimension)
-        by_id = {item["chunk_id"]: dict(item) for item in semantic + dimension}
+        semantic_by_id = {item["chunk_id"]: item for item in semantic}
+        dimension_by_id = {item["chunk_id"]: item for item in dimension}
+        by_id = {}
+        for cid in dict.fromkeys([item["chunk_id"] for item in semantic + dimension]):
+            item = dict(dimension_by_id.get(cid) or semantic_by_id[cid])
+            if cid in semantic_by_id:
+                item["sem_rank"] = semantic_by_id[cid].get("rank")
+                item["semantic_score"] = semantic_by_id[cid].get("score")
+            if cid in dimension_by_id:
+                item["dim_rank"] = dimension_by_id[cid].get("rank")
+                item["dimension_score"] = dimension_by_id[cid].get("score")
+            by_id[cid] = item
         fused_scores = {}
         for cid in by_id:
             fused_scores[cid] = self.settings.dim_alpha * dim_norm.get(cid, 0.0) + (1 - self.settings.dim_alpha) * sem_norm.get(cid, 0.0)
-        fusion = []
-        for cid, score in sorted(fused_scores.items(), key=lambda pair: pair[1], reverse=True)[:top_k]:
+        fusion_candidates = []
+        for cid, score in sorted(fused_scores.items(), key=lambda pair: pair[1], reverse=True):
             item = by_id[cid]
             item["score"] = score
             item["final_score"] = score
             item["source"] = ("dimension" if cid in dim_norm else "") + ("+semantic" if cid in sem_norm else "")
-            fusion.append(item)
+            fusion_candidates.append(item)
+        fusion = fusion_candidates[:top_k]
         return {
             "query": query, "query_analysis": analysis,
             "constraints": analysis["constraints"],
+            "semantic_candidates": semantic,
+            "dimension_candidates": dimension,
+            "fusion_candidates": fusion_candidates,
             "semantic_results": semantic[:top_k],
             "dimension_results": dimension[:top_k],
             "fusion_results": fusion, "top_chunks": fusion,

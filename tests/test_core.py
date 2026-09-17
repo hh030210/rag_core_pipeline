@@ -5,6 +5,7 @@ from pathlib import Path
 
 from rag_core.dimension_stage import default_schema, build_inverted_index, build_tags
 from rag_core.embedding import EmbeddingModel
+from rag_core.evaluation import evaluate_row, load_gold_records, map_gold_to_chunks, route_metrics
 from rag_core.prompting import PromptOptimizer
 from rag_core.prompt_module import PromptOptimizationModule
 from rag_core.settings import Settings
@@ -68,6 +69,54 @@ class CorePipelineTests(unittest.TestCase):
             self.assertEqual(result["io"]["iterations"], 2)
             self.assertEqual(saved["method"], "no_examples_or_mock")
             self.assertTrue(saved["system_prompt"])
+
+    def test_route_metrics_report_first_gold_and_cutoffs(self):
+        result = route_metrics(
+            [{"chunk_id": "noise"}, {"chunk_id": "gold"}, {"chunk_id": "other"}],
+            ["gold"],
+            ks=(1, 3),
+        )
+        self.assertEqual(result["first_gold_rank"], 2)
+        self.assertEqual(result["rr"], 0.5)
+        self.assertFalse(result["hit_at_1"])
+        self.assertTrue(result["hit_at_3"])
+        self.assertEqual(result["rr_at_1"], 0.0)
+        self.assertEqual(result["rr_at_3"], 0.5)
+
+    def test_gold_aliases_and_evidence_mapping(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "gold.json"
+            path.write_text(json.dumps([{
+                "id": "q1",
+                "query": "几点开放？",
+                "source": ["景区每日八点开放。"],
+                "attraction": "测试景区",
+            }], ensure_ascii=False), encoding="utf-8")
+            record = load_gold_records(path)[0]
+            self.assertEqual(record["question"], "几点开放？")
+            self.assertEqual(record["spot"], "测试景区")
+            mapped = map_gold_to_chunks(record, [{
+                "chunk_id": "c1",
+                "source_file": "测试景区",
+                "chunk_text_full": "介绍：景区每日八点开放。",
+            }])
+            self.assertEqual(mapped["gold_chunk_ids"], ["c1"])
+            self.assertEqual(mapped["gold_resolution"]["match_basis"], "evidence_text")
+
+    def test_evaluation_keeps_fusion_metrics_and_diagnostics_separate(self):
+        row = evaluate_row(
+            {"id": "q1", "question": "测试", "gold_chunk_ids": ["gold"]},
+            {
+                "semantic_candidates": [{"chunk_id": "noise"}, {"chunk_id": "gold"}],
+                "dimension_candidates": [{"chunk_id": "gold"}],
+                "fusion_candidates": [{"chunk_id": "noise"}, {"chunk_id": "gold"}],
+            },
+            ks=(1, 2),
+            eval_depth=2,
+        )
+        self.assertEqual(row["retrieval_metrics"]["fusion"]["first_gold_rank"], 2)
+        self.assertIn("fusion_diagnostics", row["retrieval_metrics"])
+        self.assertEqual(row["retrieval_metrics"]["fusion_diagnostics"]["rank_gain"], -1)
 
 
 if __name__ == "__main__":

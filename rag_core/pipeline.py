@@ -32,6 +32,14 @@ def run_ingest(settings: Settings, schema_path: str = "") -> Dict[str, Any]:
         "project": "rag_core_pipeline", "schema_version": "2.0",
         "backend": store_result["backend"], "collection": store_result["collection"],
         "input": str(settings.input_path), "run_dir": str(settings.run_dir),
+        "experiment_config": {
+            "semantic_pool": int(getattr(settings, "semantic_pool", 20)),
+            "dimension_pool": int(getattr(settings, "dimension_pool", 100)),
+            "top_k": int(settings.top_k),
+            "dim_alpha": float(settings.dim_alpha),
+            "embedding_model": settings.model_path or "configured_default",
+            "denoise_method": settings.denoise_method,
+        },
         "chunk_summary": chunk_result["summary"], "store": store_result,
         "artifacts": {
             "chunks": str(settings.run_dir / "chunks.json"),
