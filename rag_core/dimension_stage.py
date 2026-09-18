@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import json
+import os
 import re
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any, Dict, Iterable, List
 
@@ -66,17 +69,36 @@ def build_tags(records, schema, settings, miner=None) -> Dict[str, Any]:
     leaves = [node for node in schema["dimensions"]
               if node.get("level") == 2 and node.get("indexable") is True]
     documents: Dict[str, Any] = {}
-    for index, record in enumerate(records, 1):
-        doc_id = str(record["doc_id"])
-        text = str(record.get("doc_text", ""))
+
+    try:
+        workers = max(1, int(os.getenv("LLM_CONCURRENCY", "1")))
+    except ValueError:
+        workers = 1
+
+    def extract_one(record: Dict[str, Any], worker_state: threading.local | None = None):
         if settings.mock:
-            extracted = _mock_extract(text, leaves)
+            extracted = _mock_extract(str(record.get("doc_text", "")), leaves)
         else:
-            extracted = miner.extract_batch_dimensions_v2(
-                text, leaves,
+            active_miner = miner
+            if worker_state is not None:
+                active_miner = getattr(worker_state, "miner", None)
+                if active_miner is None:
+                    from .llm_service import DimensionMiningWithQwen
+                    active_miner = DimensionMiningWithQwen(
+                        api_key=settings.llm_api_key,
+                        model_name=settings.llm_model,
+                        base_url=settings.llm_base_url,
+                    )
+                    worker_state.miner = active_miner
+            extracted = active_miner.extract_batch_dimensions_v2(
+                str(record.get("doc_text", "")), leaves,
                 max_dimensions_per_request=settings.max_dimensions_per_request,
                 max_text_chars=settings.tag_text_chars,
             )
+        return extracted
+
+    def consume(index: int, record: Dict[str, Any], extracted: Dict[str, Any]) -> None:
+        doc_id = str(record["doc_id"])
         tags, details = canonicalize_tag_details(extracted or {}, schema)
         maps = schema_maps(schema)
         paths = sorted({dimension_path(schema, leaf_id) for leaf_id in tags if leaf_id in maps["leaves"]})
@@ -86,8 +108,30 @@ def build_tags(records, schema, settings, miner=None) -> Dict[str, Any]:
             "dimension_paths": paths,
             "schema_version": SCHEMA_VERSION,
         }
-        if index % 50 == 0:
-            print(f"[维度抽取] {index}/{len(records)}")
+
+    if workers > 1 and not settings.mock and records:
+        print(f"[维度抽取] 启用受控并发: {workers} workers")
+        worker_state = threading.local()
+        completed = 0
+        results: Dict[int, Dict[str, Any]] = {}
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            futures = {
+                executor.submit(extract_one, record, worker_state): (index, record)
+                for index, record in enumerate(records, 1)
+            }
+            for future in as_completed(futures):
+                index, record = futures[future]
+                results[index] = future.result()
+                completed += 1
+                if completed % 10 == 0 or completed == len(records):
+                    print(f"[维度抽取] {completed}/{len(records)}")
+        for index, record in enumerate(records, 1):
+            consume(index, record, results[index])
+    else:
+        for index, record in enumerate(records, 1):
+            consume(index, record, extract_one(record))
+            if index % 50 == 0:
+                print(f"[维度抽取] {index}/{len(records)}")
     return {"schema_version": SCHEMA_VERSION, "documents": documents}
 
 
@@ -184,4 +228,3 @@ def run_dimensions(records, settings, schema_path: str = "") -> Dict[str, Any]:
     (settings.run_dir / "dimension_hierarchy_v2.json").write_text(
         json.dumps(index["hierarchy"], ensure_ascii=False, indent=2), encoding="utf-8")
     return {"schema": schema, "tags": tag_output, "index": index}
-

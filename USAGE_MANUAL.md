@@ -300,7 +300,7 @@ Prompt 迭代需要一个 JSON 样本文件，格式如下：
 
 后续执行 ask 时会自动读取优化后的 Prompt。没有执行案例级迭代时，项目使用默认的严格上下文问答 Prompt；在线查询扩展仍然保留原问题作为失败兜底。
 
-### 6.1 独立输入输出模块
+### 7.1 独立输入输出模块
 
 如果只想优化 Prompt，不希望启动分片、维度抽取或 Qdrant，可以直接运行独立模块：
 
@@ -352,6 +352,45 @@ cd /home/humq/rag_core_pipeline
   --prompt-iterations 3
 ~~~
 
+### 7.2 QA 聚类与聚类级群智 Prompt
+
+新项目已迁移原项目中的“Prompt 迭代后聚类 QA，再由新查询匹配聚类 Prompt”的流程。执行时，每条 QA 先使用统一的 Prompt 优化器迭代；随后使用“问题 + 参考答案”向量进行确定性 KMeans 聚类；最后将同一聚类内的多条迭代记录交给 LLM，合成为该聚类的 Prompt。
+
+在已有 run-dir 上单独执行：
+
+~~~bash
+cd /home/humq/rag_core_pipeline
+
+/home/humq/envs/denoise_qa/bin/python -u run.py cluster-prompts \
+  --run-dir /home/humq/rag_core_runs/scenic_v1 \
+  --examples /home/humq/data/prompt_examples.json \
+  --cluster-count 6 \
+  --cluster-iterations 3 \
+  --llm-api-key "$LLM_API_KEY" \
+  --llm-base-url "$LLM_BASE_URL" \
+  --llm-model "$LLM_MODEL" \
+  --llm-interval "$LLM_API_INTERVAL"
+~~~
+
+问答时显式启用聚类路由：
+
+~~~bash
+/home/humq/envs/denoise_qa/bin/python -u run.py ask \
+  --run-dir /home/humq/rag_core_runs/scenic_v1 \
+  --backend qdrant \
+  --qdrant-url "$QDRANT_URL" \
+  --collection rag_core_scenic_v1 \
+  --model-path "$BGE_MODEL_PATH" \
+  --cluster-prompts \
+  --cluster-top-k 1 \
+  --llm-api-key "$LLM_API_KEY" \
+  --llm-base-url "$LLM_BASE_URL" \
+  --llm-model "$LLM_MODEL" \
+  --query '景区几点开门？'
+~~~
+
+`--cluster-top-k 1` 表示只使用最相近的聚类 Prompt；设为 2 或更大时，会分别生成多个聚类答案，再用全局 Prompt 融合。`cluster_prompting.json` 不存在、路由未启用或聚类流程失败时，问答自动回退到原有全局 Prompt。也可以在 `run` 或 `ingest` 命令中增加 `--cluster-examples`，让入库结束后自动生成聚类 Prompt。
+
 ## 8. 运行产物和检查方法
 
 每个 run-dir 都是独立的，主要文件如下：
@@ -370,6 +409,9 @@ cd /home/humq/rag_core_pipeline
 | store_manifest.json | Qdrant 地址、collection 和 point 数量 |
 | run_manifest.json | 本次运行总清单 |
 | optimized_prompt.json | Prompt 迭代记录 |
+| cluster_prompting.json | QA 聚类、聚类中心和聚类级 Prompt |
+| cluster_prompting/case_iterations/ | 每条 QA 的 Prompt 迭代审计 |
+| cluster_prompting/cluster_prompts/ | 每个聚类的群智 Prompt |
 | last_answer.json | 最近一次答案、检索结果和上下文审计 |
 
 快速检查入库结果：

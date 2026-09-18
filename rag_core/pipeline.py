@@ -7,9 +7,12 @@ from pathlib import Path
 from typing import Any, Dict
 
 from .chunk_stage import run_chunking
+from .cluster_prompting import ClusterPromptPipeline, normalize_examples
 from .dimension_stage import run_dimensions
 from .embedding import EmbeddingModel
+from .llm import LLMClient
 from .prompt_module import run_prompt_module
+from .prompt_module import load_prompt_input
 from .settings import Settings
 from .storage import VectorStore
 
@@ -58,4 +61,28 @@ def optimize_prompt(settings: Settings, examples_path: str, iterations: int) -> 
         settings.run_dir / "optimized_prompt.json",
         settings,
         iterations=iterations,
+    )
+
+
+def run_cluster_prompting(settings: Settings, examples_path: str, *,
+                          cluster_count: int | None = None,
+                          iterations: int | None = None) -> Dict[str, Any]:
+    """执行案例迭代、QA 聚类和聚类级群智 Prompt 优化。"""
+    settings.apply_runtime_environment()
+    settings.ensure_dirs()
+    payload = load_prompt_input(examples_path)
+    examples = normalize_examples(payload.get("examples", []))
+    client = LLMClient(
+        api_key=settings.llm_api_key, base_url=settings.llm_base_url,
+        model=settings.llm_model, openai_compat=settings.llm_openai_compat,
+        interval=settings.llm_interval, mock=settings.mock,
+    )
+    embeddings = EmbeddingModel(settings.model_path, settings.embedding_device,
+                                settings.vector_dim, settings.mock)
+    pipeline = ClusterPromptPipeline(client=client, embeddings=embeddings,
+                                      run_dir=settings.run_dir)
+    return pipeline.run(
+        examples,
+        cluster_count=cluster_count if cluster_count is not None else settings.cluster_count,
+        iterations=iterations if iterations is not None else max(0, settings.prompt_iterations or 3),
     )

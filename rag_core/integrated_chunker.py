@@ -85,8 +85,27 @@ class OpenAICompatClient:
         # json_object，避免自建网关返回 400；调用提示本身仍要求严格 JSON，
         # 响应随后由本类的 json.loads 校验。需要网关强制结构化输出时，可显式
         # 设置 LLM_RESPONSE_FORMAT=json_object 或 json_schema。
-        response_format = os.getenv("LLM_RESPONSE_FORMAT", "").strip()
-        if response_format:
+        response_format = os.getenv("LLM_RESPONSE_FORMAT", "").strip().lower()
+        if response_format == "json_schema":
+            payload["response_format"] = {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "chunk_recommendation",
+                    "strict": True,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "genre": {"type": "string"},
+                            "l_min": {"type": "integer", "minimum": 100, "maximum": 3000},
+                            "l_max": {"type": "integer", "minimum": 200, "maximum": 3000},
+                            "reasoning": {"type": "string"},
+                        },
+                        "required": ["genre", "l_min", "l_max", "reasoning"],
+                        "additionalProperties": False,
+                    },
+                },
+            }
+        elif response_format:
             payload["response_format"] = {"type": response_format}
         data = json.dumps(payload).encode("utf-8")
         req = urllib.request.Request(url=url, data=data, method="POST")
@@ -104,28 +123,102 @@ class OpenAICompatClient:
                         for item in content
                     )
                 content = str(content).strip()
-                fenced = re.search(r"```(?:json)?\s*([\s\S]*?)\s*```", content)
-                candidate = fenced.group(1) if fenced else content
-                candidate = self._normalize_jsonish(candidate)
-                try:
-                    value = json.loads(candidate)
-                except json.JSONDecodeError:
-                    decoder = json.JSONDecoder()
-                    value = None
-                    for match in re.finditer(r"[\{\[]", candidate):
-                        try:
-                            value, _ = decoder.raw_decode(candidate[match.start():])
-                            if isinstance(value, (dict, list)):
-                                break
-                        except json.JSONDecodeError:
-                            continue
-                    if value is None:
-                        raise ValueError(f"LLM 未返回可解析 JSON: {content[:300]}")
+                value = self.parse_json_object(content)
                 if not isinstance(value, dict):
                     raise ValueError("LLM 分片推荐必须返回 JSON 对象")
                 return value
         except Exception as e:
             raise RuntimeError(f"LLM API Error: {e}")
+
+    @classmethod
+    def parse_json_object(cls, content: str) -> Dict:
+        """从代理模型的自然语言响应中恢复分片推荐对象。
+
+        兼容三类常见的 OpenAI 兼容网关输出：Markdown JSON 代码块、JSON
+        前后的解释文字，以及字符串中出现的非法反斜杠。最后再按推荐字段
+        做一次最小恢复，避免模型只在 reasoning 中多写一个引号就完全丢失
+        动态的 l_min/l_max。
+        """
+        raw = str(content or "").strip()
+        fenced = re.search(r"```(?:json)?\s*([\s\S]*?)\s*```", raw, re.I)
+        candidates = [fenced.group(1)] if fenced else []
+        candidates.append(raw)
+
+        for candidate in candidates:
+            candidate = cls._normalize_jsonish(candidate)
+            start = candidate.find("{")
+            end = candidate.rfind("}")
+            if start >= 0 and end > start:
+                candidate = candidate[start:end + 1]
+
+            variants = [candidate]
+            repaired_escapes = re.sub(
+                r'\\(?!["\\/bfnrtu]|u[0-9a-fA-F]{4})',
+                r"\\\\",
+                candidate,
+            )
+            if repaired_escapes != candidate:
+                variants.append(repaired_escapes)
+
+            for variant in variants:
+                try:
+                    value = json.loads(variant)
+                    if isinstance(value, dict):
+                        return cls._normalize_recommendation(value)
+                except json.JSONDecodeError:
+                    decoder = json.JSONDecoder()
+                    for match in re.finditer(r"[\{\[]", variant):
+                        try:
+                            value, _ = decoder.raw_decode(variant[match.start():])
+                            if isinstance(value, dict):
+                                return cls._normalize_recommendation(value)
+                        except json.JSONDecodeError:
+                            continue
+
+        # 兜底只提取分片推荐真正需要的字段；reasoning 损坏不应导致动态
+        # 长度推荐整体失效。
+        genre_match = re.search(
+            r'["\'“”]?genre["\'“”]?\s*[:：]\s*["\'“”]?([^"\'”},\r\n]+)',
+            raw,
+            re.I,
+        )
+        min_match = re.search(
+            r'["\'“”]?l_min["\'“”]?\s*[:：]\s*(-?\d+(?:\.\d+)?)', raw, re.I
+        )
+        max_match = re.search(
+            r'["\'“”]?l_max["\'“”]?\s*[:：]\s*(-?\d+(?:\.\d+)?)', raw, re.I
+        )
+        if min_match and max_match:
+            def number(match):
+                value = float(match.group(1))
+                return int(value) if value.is_integer() else value
+
+            return {
+                "genre": genre_match.group(1).strip() if genre_match else "",
+                "l_min": number(min_match),
+                "l_max": number(max_match),
+                "reasoning": "从模型非严格 JSON 响应中恢复分片参数",
+            }
+        raise ValueError(f"LLM 未返回可解析 JSON: {raw[:300]}")
+
+    @staticmethod
+    def _normalize_recommendation(value: Dict) -> Dict:
+        """统一代理可能使用的嵌套 recommendation/length_range 格式。"""
+        result = dict(value)
+        nested = value.get("recommendation")
+        if isinstance(nested, dict):
+            result = {**value, **nested}
+
+        ranges = result.get("length_range") or result.get("lengthRange")
+        if isinstance(ranges, dict):
+            ranges = [ranges]
+        if isinstance(ranges, list) and ranges:
+            first = ranges[0] if isinstance(ranges[0], dict) else {}
+            if result.get("l_min") is None:
+                result["l_min"] = first.get("min", first.get("l_min"))
+            if result.get("l_max") is None:
+                result["l_max"] = first.get("max", first.get("l_max"))
+        return result
 
     @staticmethod
     def _normalize_jsonish(text: str) -> str:

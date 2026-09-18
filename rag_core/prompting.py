@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import threading
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -23,6 +24,7 @@ class PromptOptimizer:
         self.run_dir = Path(run_dir)
         self.prompt_path = self.run_dir / "optimized_prompt.json"
         self.cache_path = self.run_dir / "query_expansion_cache.json"
+        self._cache_lock = threading.Lock()
         self.cache = {}
         if self.cache_path.exists():
             try:
@@ -57,9 +59,11 @@ class PromptOptimizer:
         return {key: str(source.get(key, default[key])) for key in default}
 
     def expand(self, query: str) -> Dict[str, Any]:
-        if query in self.cache:
-            sub_queries = self.cache[query].get("sub_queries", [query])
-            entity_terms = self.cache[query].get("entity_terms", [])
+        with self._cache_lock:
+            cached = self.cache.get(query)
+        if cached:
+            sub_queries = cached.get("sub_queries", [query])
+            entity_terms = cached.get("entity_terms", [])
             return {"original_query": query, "sub_queries": sub_queries,
                     "entity_terms": entity_terms, "cached": True}
         sub_queries = [query]
@@ -84,9 +88,12 @@ class PromptOptimizer:
                 entity_terms = [term.strip() for term in raw.split("|") if term.strip()][:10]
             except Exception as exc:
                 print(f"[提示] 实体提取失败，保留空列表: {exc}")
-        self.cache[query] = {"sub_queries": sub_queries, "entity_terms": entity_terms}
-        self.run_dir.mkdir(parents=True, exist_ok=True)
-        self.cache_path.write_text(json.dumps(self.cache, ensure_ascii=False, indent=2), encoding="utf-8")
+        with self._cache_lock:
+            self.cache[query] = {"sub_queries": sub_queries, "entity_terms": entity_terms}
+            self.run_dir.mkdir(parents=True, exist_ok=True)
+            self.cache_path.write_text(
+                json.dumps(self.cache, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
         return {"original_query": query, "sub_queries": sub_queries,
                 "entity_terms": entity_terms, "cached": False}
 
@@ -101,6 +108,7 @@ class PromptOptimizer:
         for round_index in range(max(1, int(iterations))):
             feedback = []
             scores = []
+            answers = []
             for example in examples:
                 context = str(example.get("context", example.get("retrieved_context", "")))[:6000]
                 reference = str(example.get("reference_answer", example.get("answer", "")))[:2000]
@@ -109,6 +117,7 @@ class PromptOptimizer:
                     self._qa_user(example["question"], context, current),
                     temperature=0.1, max_tokens=800,
                 )
+                answers.append({"question": example["question"], "answer": answer})
                 try:
                     judged = self.client.complete_json(
                         "你是严格的 RAG 答案评测器，只输出 JSON。",
@@ -137,7 +146,8 @@ class PromptOptimizer:
                                            "format_requirement", "uncertainty_handling")}
             except Exception as exc:
                 feedback.append(f"Prompt 改写失败：{exc}")
-            history.append({"iteration": round_index + 1, "scores": scores, "feedback": feedback})
+            history.append({"iteration": round_index + 1, "scores": scores,
+                            "feedback": feedback, "answers": answers})
         return self._save(current, history, "iterative_optimization", output_path=output_path)
 
     @staticmethod

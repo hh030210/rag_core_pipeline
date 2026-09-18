@@ -8,7 +8,8 @@ import os
 from pathlib import Path
 
 from .evaluation import compare_evaluations, run_evaluation
-from .pipeline import optimize_prompt, run_ingest
+from .batch_qa import run_batch_qa
+from .pipeline import optimize_prompt, run_cluster_prompting, run_ingest
 from .prompt_module import run_prompt_module
 from .qa import QAService
 from .settings import Settings
@@ -25,6 +26,10 @@ def _common(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--llm-model", default=None)
     parser.add_argument("--no-openai-compat", action="store_true")
     parser.add_argument("--llm-interval", type=float, default=None)
+    parser.add_argument("--cluster-prompts", action="store_true",
+                        help="问答时启用 QA 聚类路由和聚类级 Prompt")
+    parser.add_argument("--cluster-top-k", type=int, default=None,
+                        help="新问题最多使用几个相近聚类 Prompt，默认 1")
     parser.add_argument("--mock", action="store_true", help="本地无网络验收模式")
 
 
@@ -39,6 +44,10 @@ def build_parser() -> argparse.ArgumentParser:
         item.add_argument("--denoise-method", choices=("none", "ppl", "mechanical"), default="mechanical")
         item.add_argument("--prompt-examples", default="", help="可选问答样本 JSON，用于 Prompt 迭代")
         item.add_argument("--prompt-iterations", type=int, default=3)
+        item.add_argument("--cluster-examples", default="",
+                          help="可选 QA JSON；执行聚类级 Prompt 流程")
+        item.add_argument("--cluster-count", type=int, default=None)
+        item.add_argument("--cluster-iterations", type=int, default=None)
         if command == "run":
             item.add_argument("--query", default="", help="入库后立即回答一条问题")
             item.add_argument("--top-k", type=int, default=5)
@@ -47,6 +56,14 @@ def build_parser() -> argparse.ArgumentParser:
     ask.add_argument("--query", required=True)
     ask.add_argument("--top-k", type=int, default=5)
     ask.add_argument("--context-chars", type=int, default=0, help="每个 chunk 上限；0 表示传入完整 chunk")
+    batch = sub.add_parser("batch-ask", help="对问答数据集批量生成答案并保留三路 Top-5")
+    _common(batch)
+    batch.add_argument("--dataset", required=True, help="问答 JSON/JSONL 数据集")
+    batch.add_argument("--output", required=True, help="批量问答 JSONL 输出路径")
+    batch.add_argument("--top-k", type=int, default=5)
+    batch.add_argument("--context-chars", type=int, default=0, help="每个 chunk 上限；0 表示完整 chunk")
+    batch.add_argument("--concurrency", type=int, default=1, help="并发问答数")
+    batch.add_argument("--no-resume", action="store_true", help="不读取已有输出，重新处理全部问题")
     evaluate = sub.add_parser("evaluate", help="使用 Golden 测试集批量评估三路检索")
     _common(evaluate)
     evaluate.add_argument("--dataset", required=True, help="Golden JSON/JSONL 测试集")
@@ -60,6 +77,11 @@ def build_parser() -> argparse.ArgumentParser:
     _common(opt)
     opt.add_argument("--examples", required=True)
     opt.add_argument("--prompt-iterations", type=int, default=3)
+    cluster = sub.add_parser("cluster-prompts", help="QA 聚类并生成聚类级群智 Prompt")
+    _common(cluster)
+    cluster.add_argument("--examples", required=True, help="问答样本 JSON")
+    cluster.add_argument("--cluster-count", type=int, default=None)
+    cluster.add_argument("--cluster-iterations", type=int, default=None)
     module = sub.add_parser("prompt-module", help="独立 Prompt 模块：JSON 输入到 JSON 输出")
     _common(module)
     module.add_argument("--input", required=True, help="问答样本 JSON")
@@ -84,12 +106,17 @@ def _settings(args) -> Settings:
         "llm_base_url": args.llm_base_url,
         "llm_model": args.llm_model,
         "llm_interval": args.llm_interval,
+        "cluster_top_k": args.cluster_top_k,
         "mock": True if args.mock else None,
     }.items() if value is not None}
     if args.no_openai_compat:
         overrides["llm_openai_compat"] = False
     if args.mock:
         overrides["backend"] = "local"
+    if getattr(args, "cluster_prompts", False):
+        overrides["cluster_prompt_enabled"] = True
+    if getattr(args, "cluster_count", None) is not None:
+        overrides["cluster_count"] = args.cluster_count
     return Settings.from_env(args.run_dir, **overrides)
 
 
@@ -123,12 +150,38 @@ def main(argv=None) -> int:
             manifest = run_ingest(settings, schema_path=args.schema)
             if args.prompt_examples:
                 optimize_prompt(settings, args.prompt_examples, args.prompt_iterations)
+            if args.cluster_examples:
+                settings.cluster_prompt_enabled = True
+                cluster_result = run_cluster_prompting(
+                    settings, args.cluster_examples,
+                    cluster_count=args.cluster_count,
+                    iterations=args.cluster_iterations,
+                )
+                manifest["cluster_prompting"] = {
+                    "artifact": cluster_result.get("artifact_path", ""),
+                    "sample_count": cluster_result.get("metrics", {}).get("sample_count", 0),
+                    "cluster_count": cluster_result.get("metrics", {}).get("cluster_count_actual", 0),
+                }
+                (settings.run_dir / "run_manifest.json").write_text(
+                    json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
+                )
             if args.command == "run" and args.query:
                 result = QAService(run_dir=settings.run_dir, settings=settings).answer(args.query, top_k=args.top_k)
-                print(json.dumps({"answer": result["answer"], "top_chunks": result["retrieval"]["top_chunks"]},
-                                 ensure_ascii=False, indent=2))
+                print(json.dumps({
+                    "query": result["query"],
+                    "retrieval_query": result["retrieval_query"],
+                    "answer": result["answer"],
+                    "retrieval_top5": result["retrieval_top5"],
+                }, ensure_ascii=False, indent=2))
             else:
                 print(json.dumps(manifest, ensure_ascii=False, indent=2))
+        elif args.command == "cluster-prompts":
+            result = run_cluster_prompting(
+                settings, args.examples,
+                cluster_count=args.cluster_count,
+                iterations=args.cluster_iterations,
+            )
+            print(json.dumps(result, ensure_ascii=False, indent=2))
         elif args.command == "optimize-prompt":
             result = optimize_prompt(settings, args.examples, args.prompt_iterations)
             print(json.dumps(result, ensure_ascii=False, indent=2))
@@ -151,6 +204,18 @@ def main(argv=None) -> int:
                 ks=args.ks,
                 result_text_chars=args.result_text_chars,
                 query_expansion=not args.no_query_expansion,
+            )
+            print(json.dumps(result, ensure_ascii=False, indent=2))
+        elif args.command == "batch-ask":
+            result = run_batch_qa(
+                run_dir=args.run_dir,
+                dataset_path=args.dataset,
+                output_path=args.output,
+                settings=settings,
+                top_k=args.top_k,
+                context_chars=args.context_chars,
+                concurrency=args.concurrency,
+                resume=not args.no_resume,
             )
             print(json.dumps(result, ensure_ascii=False, indent=2))
         else:

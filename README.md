@@ -15,10 +15,12 @@ Qdrant 入库（chunk 向量 + 标题向量 + 数组标签 payload）
     ↓
 Prompt 优化
     ↓
+QA 聚类 → 聚类级群智 Prompt → 新查询匹配聚类（可选）
+    ↓
 答案生成
 ```
 
-原项目中的实验报告、badcase 格式化、Milvus 流程、Web 前端、MySQL 兼容写入和历史版本脚本没有复制进来。维度信息在新项目中以 `V_core_v2.json`、`tags_output_v2.json`、`inverted_index_v2.json` 和 Qdrant payload 为准。
+原项目中的实验报告、badcase 格式化、Milvus 流程、Web 前端、MySQL 兼容写入和历史版本脚本没有复制进来。维度信息在新项目中以 `V_core_v2.json`、`tags_output_v2.json`、`inverted_index_v2.json` 和 Qdrant payload 为准。真实景区原始文档位于 `data_input/test_data/`，问答数据位于 `data/`；模型和运行产物不放入项目数据目录。
 
 完整的服务器部署、入库、检索、问答、Prompt 迭代和故障排查说明见 [USAGE_MANUAL.md](USAGE_MANUAL.md)。
 
@@ -49,7 +51,7 @@ export LLM_MODEL='Qwen/Qwen3-8B'
 
 ```bash
 python run.py run \
-  --input ../data_input/test_data \
+  --input ./data_input/test_data \
   --run-dir ./runs/smoke \
   --mock \
   --query '少林寺的开放时间和门票是多少？'
@@ -58,7 +60,7 @@ python run.py run \
 也可以分开执行：
 
 ```bash
-python run.py ingest --input ../data_input/test_data --run-dir ./runs/demo --mock
+python run.py ingest --input ./data_input/test_data --run-dir ./runs/demo --mock
 python run.py ask --run-dir ./runs/demo --mock --query '西湖什么时候开放？'
 ```
 
@@ -139,7 +141,43 @@ python -m rag_core.prompt_module \
 
 输入可以是问答样本数组，也可以是包含 `examples`、可选 `base_prompt` 和 `config.iterations` 的 JSON 对象；输出包含最终 Prompt、每轮评分反馈以及 `io` 输入输出信息。统一入口也提供等价命令：`python run.py prompt-module ...`。
 
-## 5. 离线检索评测
+## 5. QA 聚类与聚类级群智 Prompt
+
+新项目已迁移原流程中的聚类 Prompt 逻辑。它先对每条 QA 样本执行案例级 Prompt 迭代，再使用“问题 + 参考答案”向量做确定性 KMeans 聚类，最后汇总每个聚类中的多条迭代记录，由 LLM 生成一个聚类级 Prompt。新查询问答时可按余弦相似度选择 Top-K 聚类，并使用对应 Prompt；选择多个聚类时会再融合候选答案。
+
+单独执行聚类流程：
+
+```bash
+python run.py cluster-prompts \
+  --run-dir ./runs/scenic_v1 \
+  --examples ./examples.json \
+  --cluster-count 6 \
+  --cluster-iterations 3 \
+  --llm-api-key "$LLM_API_KEY" \
+  --llm-base-url "$LLM_BASE_URL" \
+  --llm-model "$LLM_MODEL"
+```
+
+产物包括 `cluster_prompting.json`、`cluster_prompting/case_iterations/` 和 `cluster_prompting/cluster_prompts/`。已有入库运行目录问答时启用路由：
+
+```bash
+python run.py ask \
+  --run-dir ./runs/scenic_v1 \
+  --backend qdrant \
+  --qdrant-url "$QDRANT_URL" \
+  --collection rag_core_scenic_v1 \
+  --model-path "$BGE_MODEL_PATH" \
+  --cluster-prompts \
+  --cluster-top-k 1 \
+  --llm-api-key "$LLM_API_KEY" \
+  --llm-base-url "$LLM_BASE_URL" \
+  --llm-model "$LLM_MODEL" \
+  --query '景区几点开门？'
+```
+
+也可以在 `run` 或 `ingest` 时增加 `--cluster-examples`，在入库后自动生成聚类 Prompt。默认 `--cluster-top-k 1`，设置为大于 1 时会生成多个聚类答案并进行答案融合。未启用或找不到 `cluster_prompting.json` 时，自动使用原有全局 Prompt，不影响原流程。
+
+## 6. 离线检索评测
 
 `evaluate` 使用带 Golden 证据的 JSON/JSONL 测试集，分别评估语义、维度和融合三路结果，输出 First Golden Rank、MRR、Hit@K、Golden Recall@K、nDCG、融合救回/伤害和逐问题 badcase。
 
@@ -190,7 +228,7 @@ python run.py compare \
 
 对比结果包含逐问题改善/退化、MRR/Hit@K/Recall/nDCG 差值以及新增/修复 badcase。评测默认不生成答案；答案质量应作为独立实验记录。
 
-## 6. 运行产物
+## 7. 运行产物
 
 每次运行都写入独立的 `run-dir`，不会删除或覆盖其他运行：
 
@@ -203,4 +241,7 @@ python run.py compare \
 - `dimension_metadata_v2.json` / `dimension_hierarchy_v2.json`
 - `store_manifest.json`：Qdrant 或本地后端信息
 - `optimized_prompt.json`：Prompt 优化结果和每轮评测记录
+- `cluster_prompting.json`：QA 聚类、聚类中心和聚类级 Prompt 路由产物
+- `cluster_prompting/case_iterations/`：逐条 QA 的 Prompt 迭代审计
+- `cluster_prompting/cluster_prompts/`：每个聚类的群智 Prompt
 - `last_answer.json`：检索、上下文长度、Prompt 和答案审计记录
