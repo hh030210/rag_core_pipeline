@@ -1,0 +1,76 @@
+{
+  "children": {
+    "object_identity": [
+      "entity_type",
+      "person_role"
+    ],
+    "geographic_location": [
+      "location_hierarchy",
+      "transportation_mode"
+    ],
+    "history_culture": [
+      "historical_event",
+      "cultural_connotation",
+      "artistic_feature"
+    ],
+    "landscape_feature": [
+      "landscape_composition",
+      "visual_feature"
+    ],
+    "operation_service": [
+      "opening_period",
+      "visitor_service"
+    ],
+    "ticketing_policy": [
+      "ticket_type",
+      "ticket_policy"
+    ]
+  },
+  "ancestors": {
+    "object_identity": [],
+    "entity_type": [
+      "object_identity"
+    ],
+    "person_role": [
+      "object_identity"
+    ],
+    "geographic_location": [],
+    "location_hierarchy": [
+      "geographic_location"
+    ],
+    "transportation_mode": [
+      "geographic_location"
+    ],
+    "history_culture": [],
+    "historical_event": [
+      "history_culture"
+    ],
+    "cultural_connotation": [
+      "history_culture"
+    ],
+    "artistic_feature": [
+      "history_culture"
+    ],
+    "landscape_feature": [],
+    "landscape_composition": [
+      "landscape_feature"
+    ],
+    "visual_feature": [
+      "landscape_feature"
+    ],
+    "operation_service": [],
+    "opening_period": [
+      "operation_service"
+    ],
+    "visitor_service": [
+      "operation_service"
+    ],
+    "ticketing_policy": [],
+    "ticket_type": [
+      "ticketing_policy"
+    ],
+    "ticket_policy": [
+      "ticketing_policy"
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "project": "rag_core_pipeline",
+  "schema_version": "2.0",
+  "backend": "qdrant",
+  "collection": "rag_core_v4pro_full_20260917_run1",
+  "input": "/home/humq/rag_core_pipeline/data_input/test_data",
+  "run_dir": "/home/humq/rag_core_runs/real_merged7_v4pro_full_20260917_run1",
+  "experiment_config": {
+    "semantic_pool": 20,
+    "dimension_pool": 100,
+    "top_k": 5,
+    "dim_alpha": 0.2,
+    "embedding_model": "/home/humq/rag_db_silm/model/bge-m3",
+    "denoise_method": "mechanical"
+  },
+  "chunk_summary": {
+    "total_chunks": 323,
+    "min_length": 32,
+    "max_length": 1305,
+    "average_length": 429.167,
+    "shorter_than_l_min": 169,
+    "longer_than_l_max": 21,
+    "denoise_method": "mechanical",
+    "source_artifact": "/home/humq/rag_core_runs/real_merged7_v4pro_full_20260917_run1/chunks/all_chunks_chunks.json"
+  },
+  "store": {
+    "backend": "qdrant",
+    "qdrant_url": "http://127.0.0.1:6333",
+    "collection": "rag_core_v4pro_full_20260917_run1",
+    "vector_dim": 1024,
+    "point_count": 323,
+    "local_points": ""
+  },
+  "artifacts": {
+    "chunks": "/home/humq/rag_core_runs/real_merged7_v4pro_full_20260917_run1/chunks.json",
+    "schema": "/home/humq/rag_core_runs/real_merged7_v4pro_full_20260917_run1/V_core_v2.json",
+    "tags": "/home/humq/rag_core_runs/real_merged7_v4pro_full_20260917_run1/tags_output_v2.json",
+    "inverted_index": "/home/humq/rag_core_runs/real_merged7_v4pro_full_20260917_run1/inverted_index_v2.json"
+  }
+}
