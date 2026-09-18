@@ -27,6 +27,19 @@ class Retriever:
         self.points = self.store.scroll()
         self.tags_by_dim = {leaf_id: set((self.postings.get(leaf_id) or {}).keys())
                             for leaf_id in self.maps["leaves"]}
+        self.query_parser = None
+        if self.llm and not self.settings.mock:
+            try:
+                from code_jyx.query_parser_v4 import QueryParserV4
+
+                self.query_parser = QueryParserV4(
+                    self.schema,
+                    cache_file=str(self.run_dir / "query_cache_v4.json"),
+                    miner=self.llm,
+                    label_vocabulary=self.postings,
+                )
+            except Exception as exc:
+                print(f"[提示] 原始 code_jyx QueryParserV4 不可用，使用确定性解析: {exc}")
 
     @staticmethod
     def _norm(value: Any) -> str:
@@ -35,6 +48,7 @@ class Retriever:
     def _parse_query(self, query: str) -> Dict[str, Any]:
         constraints: Dict[str, Dict[str, Any]] = {}
         normalized_query = self._norm(query)
+        parser_diagnostics = {}
 
         # 先用已有标签词表做严格词匹配，最长标签优先。
         for leaf_id in self.maps["leaves"]:
@@ -44,11 +58,12 @@ class Retriever:
                     item = constraints.setdefault(leaf_id, {"labels": [], "intent_terms": [], "match": "ANY"})
                     if label not in item["labels"]:
                         item["labels"].append(label)
-        # 再让 v2 LLM parser 识别自然语言意图；失败时保留严格匹配结果。
-        if self.llm and not self.settings.mock:
+        # 使用原始 code_jyx v4 QueryParser：它负责 LLM 约束、词表恢复、
+        # 意图词恢复和查询缓存。失败时保留上面的确定性标签匹配结果。
+        if self.query_parser:
             try:
-                leaves = [self.maps["nodes"][leaf_id] for leaf_id in self.maps["leaves"]]
-                parsed = self.llm.parse_query_intent_v4(query, leaves)
+                parsed = self.query_parser.parse("online", query)
+                parser_diagnostics = parsed.get("diagnostics", {}) if isinstance(parsed, dict) else {}
                 for item in parsed.get("constraints", []) if isinstance(parsed, dict) else []:
                     leaf_id = str(item.get("dimension_id", ""))
                     if leaf_id not in self.maps["leaves"]:
@@ -60,7 +75,8 @@ class Retriever:
                             if value and value not in target[key]:
                                 target[key].append(value)
             except Exception as exc:
-                print(f"[提示] 查询解析失败，使用确定性标签解析: {exc}")
+                parser_diagnostics = {"error": f"{type(exc).__name__}: {exc}"}
+                print(f"[提示] 原始 code_jyx 查询解析失败，使用确定性解析: {exc}")
 
         # 维度名/别名触发意图槽，避免“几点开门、怎么预约”等问题没有标签时为空。
         cue_map = {
@@ -99,6 +115,7 @@ class Retriever:
             "active_dimensions": list(constraints),
             "spot_names": matched_spots,
             "confidence": min(1.0, 0.25 + 0.15 * len(constraints)) if constraints else 0.0,
+            "parser_diagnostics": parser_diagnostics,
         }
 
     @staticmethod

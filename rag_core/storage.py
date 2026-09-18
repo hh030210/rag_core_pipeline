@@ -8,6 +8,7 @@ import uuid
 from pathlib import Path
 from typing import Any, Dict, Iterable, List
 
+from code_jyx.index_builder import build_qdrant_payload_v2
 from .schema_v2 import SCHEMA_VERSION, schema_maps
 
 
@@ -16,8 +17,11 @@ def _point_id(chunk_id: str) -> str:
 
 
 def make_payload(record: Dict[str, Any], document_tags: Dict[str, Any], schema: Dict[str, Any]) -> Dict[str, Any]:
-    maps = schema_maps(schema)
-    payload = {
+    # Qdrant 的 v2 数组标签、dimension_paths 和 tag_details 统一使用原始
+    # code_jyx IndexBuilderV2 的 payload 实现；这里仅补充新项目 chunk 元数据。
+    payload = build_qdrant_payload_v2(str(record["doc_id"]), document_tags, schema,
+                                      include_empty=True)
+    payload.update({
         "chunk_id": str(record["chunk_id"]),
         "doc_id": str(record["doc_id"]),
         "parent_doc_id": str(record.get("parent_doc_id", "")),
@@ -29,16 +33,7 @@ def make_payload(record: Dict[str, Any], document_tags: Dict[str, Any], schema: 
         "chunk_len": int(record.get("chunk_len", len(record.get("doc_text", "")))),
         "spot_name": str(record.get("spot_name", "")),
         "schema_version": SCHEMA_VERSION,
-        "dimension_paths": list(document_tags.get("dimension_paths", []) or []),
-        "tag_details": document_tags.get("tag_details", {}) or {},
-    }
-    tags = document_tags.get("tags", {}) or {}
-    for leaf_id in maps["leaves"]:
-        values = tags.get(leaf_id, [])
-        if not isinstance(values, list):
-            values = [values]
-        # Qdrant keyword array 必须保持数组语义，禁止拼接成字符串。
-        payload[f"dim_{leaf_id}"] = [str(value) for value in values if str(value).strip()]
+    })
     return payload
 
 
@@ -166,4 +161,3 @@ class VectorStore:
                                         with_payload=True, with_vectors=False)
         return [{"id": point.id, "score": float(point.score), "payload": point.payload or {}}
                 for point in points]
-

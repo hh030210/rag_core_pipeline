@@ -1,4 +1,3 @@
-"""新项目对 canonical v2 Schema 实现的本地导出。"""
+"""原始 code_jyx v2 Schema 的兼容导出。"""
 
-from core.schema_v2 import *  # noqa: F401,F403
-
+from code_jyx.schema_v2 import *  # noqa: F401,F403

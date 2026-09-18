@@ -1,230 +1,106 @@
-"""v2 层次化维度发现、叶子多标签抽取和倒排索引。"""
+"""维度阶段适配层：生产逻辑来自原始 ``code_jyx``。
+
+新项目不重新实现维度 Schema、标签抽取和倒排索引。这里仅负责把三阶段
+分片产生的 chunk 记录转换成原始 code_jyx v2 接口需要的输入，并保存到
+当前 run-dir。叶子维度、多标签、evidence、父子层次和 v2 索引语义均由
+``code_jyx`` 中的原实现负责。
+"""
 
 from __future__ import annotations
 
 import json
-import os
-import re
-import threading
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
-from typing import Any, Dict, Iterable, List
+from typing import Any, Dict, Iterable
 
-from .schema_v2 import (
-    SCHEMA_VERSION,
-    canonicalize_tag_details,
-    dimension_path,
-    load_schema,
-    make_dimension_node,
-    schema_maps,
-)
+from code_jyx.dimension_generate import V2_THRESHOLDS, diagnose_leaf_dimensions
+from code_jyx.index_builder import IndexBuilderV2
+from code_jyx.schema_v2 import SCHEMA_VERSION, load_schema
+from code_jyx.tag_generate import TagGeneratorV2
+from code_jyx.v2_pipeline import MockMiner, make_mock_schema
 
 
 def default_schema() -> Dict[str, Any]:
-    groups = [
-        ("content", "内容属性", "对象、位置和历史文化内容。", [
-            ("entity", "涉及对象", "文本明确提到的人物、人群或对象。"),
-            ("location", "地理位置", "文本明确提到的地名、区域和景区位置。"),
-            ("history", "历史沿革", "文本明确提到的年代、沿革、事件和由来。"),
-        ]),
-        ("landscape", "景观属性", "景观构成、特色和游览内容。", [
-            ("composition", "景观组成", "建筑、景点、山水和空间组成。"),
-            ("feature", "景观特色", "景观特点、规模、数量和观赏价值。"),
-            ("culture", "文化内涵", "文化意义、宗教内涵、艺术和典故。"),
-        ]),
-        ("operation", "运营服务", "面向游客的时间、票务和服务信息。", [
-            ("opening", "开放时间", "开门、闭园、营业和开放时段。"),
-            ("ticketing", "票务规则", "门票、票价、预约、优惠和购票规则。"),
-            ("service", "游客服务", "厕所、餐饮、讲解、寄存和其他服务设施。"),
-        ]),
-        ("transport", "交通游览", "到达路线和景区内部游览。", [
-            ("route", "交通方式", "公交、地铁、自驾和到达路线。"),
-            ("facility", "交通设施", "停车场、接驳车、索道和游船。"),
-        ]),
-        ("season", "时令游览", "季节、天气和游览时机。", [
-            ("seasonal", "最佳时节", "季节、天气和适合游览的时间。"),
-            ("activity", "游览活动", "节庆、活动和互动体验。"),
-        ]),
-    ]
-    nodes = []
-    for parent_id, parent_name, parent_desc, leaves in groups:
-        nodes.append(make_dimension_node(name=parent_name, parent_id=None, level=1,
-                                         indexable=False, description=parent_desc,
-                                         dimension_id=parent_id))
-        for leaf_id, leaf_name, description in leaves:
-            nodes.append(make_dimension_node(name=leaf_name, parent_id=parent_id,
-                                             level=2, indexable=True,
-                                             description=description,
-                                             dimension_id=f"{parent_id}.{leaf_id}"))
-    return {"schema_version": SCHEMA_VERSION, "dimensions": nodes,
-            "generation_method": "validated_fallback"}
+    """返回原 code_jyx v2 测试 Schema，保留两层叶子维度语义。"""
+    return make_mock_schema()
 
 
-def _records_to_docs(records: Iterable[Dict[str, Any]]) -> List[Dict[str, str]]:
-    return [{"doc_id": str(item["doc_id"]), "doc_text": str(item.get("doc_text", ""))}
-            for item in records]
-
-
-def build_tags(records, schema, settings, miner=None) -> Dict[str, Any]:
-    leaves = [node for node in schema["dimensions"]
-              if node.get("level") == 2 and node.get("indexable") is True]
-    documents: Dict[str, Any] = {}
-
-    try:
-        workers = max(1, int(os.getenv("LLM_CONCURRENCY", "1")))
-    except ValueError:
-        workers = 1
-
-    def extract_one(record: Dict[str, Any], worker_state: threading.local | None = None):
-        if settings.mock:
-            extracted = _mock_extract(str(record.get("doc_text", "")), leaves)
-        else:
-            active_miner = miner
-            if worker_state is not None:
-                active_miner = getattr(worker_state, "miner", None)
-                if active_miner is None:
-                    from .llm_service import DimensionMiningWithQwen
-                    active_miner = DimensionMiningWithQwen(
-                        api_key=settings.llm_api_key,
-                        model_name=settings.llm_model,
-                        base_url=settings.llm_base_url,
-                    )
-                    worker_state.miner = active_miner
-            extracted = active_miner.extract_batch_dimensions_v2(
-                str(record.get("doc_text", "")), leaves,
-                max_dimensions_per_request=settings.max_dimensions_per_request,
-                max_text_chars=settings.tag_text_chars,
-            )
-        return extracted
-
-    def consume(index: int, record: Dict[str, Any], extracted: Dict[str, Any]) -> None:
-        doc_id = str(record["doc_id"])
-        tags, details = canonicalize_tag_details(extracted or {}, schema)
-        maps = schema_maps(schema)
-        paths = sorted({dimension_path(schema, leaf_id) for leaf_id in tags if leaf_id in maps["leaves"]})
-        documents[doc_id] = {
-            "tags": tags,
-            "tag_details": details,
-            "dimension_paths": paths,
-            "schema_version": SCHEMA_VERSION,
-        }
-
-    if workers > 1 and not settings.mock and records:
-        print(f"[维度抽取] 启用受控并发: {workers} workers")
-        worker_state = threading.local()
-        completed = 0
-        results: Dict[int, Dict[str, Any]] = {}
-        with ThreadPoolExecutor(max_workers=workers) as executor:
-            futures = {
-                executor.submit(extract_one, record, worker_state): (index, record)
-                for index, record in enumerate(records, 1)
-            }
-            for future in as_completed(futures):
-                index, record = futures[future]
-                results[index] = future.result()
-                completed += 1
-                if completed % 10 == 0 or completed == len(records):
-                    print(f"[维度抽取] {completed}/{len(records)}")
-        for index, record in enumerate(records, 1):
-            consume(index, record, results[index])
-    else:
-        for index, record in enumerate(records, 1):
-            consume(index, record, extract_one(record))
-            if index % 50 == 0:
-                print(f"[维度抽取] {index}/{len(records)}")
-    return {"schema_version": SCHEMA_VERSION, "documents": documents}
-
-
-def _mock_extract(text: str, leaves: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
-    rules = {
-        "location": ["北京", "杭州", "衢州", "河南", "浙江", "西湖", "颐和园", "少林寺"],
-        "opening": ["开放", "营业", "开门", "上午", "下午", "每日"],
-        "ticketing": ["门票", "票价", "免费", "预约", "购票", "元"],
-        "entity": ["儿童", "青少年", "成人", "游客", "孔子"],
-        "history": ["历史", "始建", "修建", "朝代", "年代"],
-        "feature": ["特色", "景观", "面积", "海拔", "高度"],
-        "route": ["公交", "地铁", "自驾", "路线", "交通"],
-        "seasonal": ["春季", "夏季", "秋季", "冬季", "季节"],
-    }
-    result = {}
-    for leaf in leaves:
-        key = leaf["id"].split(".")[-1]
-        values = []
-        for token in rules.get(key, []):
-            if token in text:
-                values.append({"label": token, "raw_label": token,
-                               "evidence": token, "confidence": 1.0})
-        if values:
-            result[leaf["id"]] = values
-    return result
+def build_tags(records: Iterable[Dict[str, Any]], schema: Dict[str, Any], settings,
+               miner=None) -> Dict[str, Any]:
+    """调用原始 ``TagGeneratorV2`` 完成叶子多标签抽取。"""
+    if settings.mock:
+        miner = MockMiner()
+    if miner is None:
+        raise ValueError("真实维度抽取需要 code_jyx.DimensionMiningWithQwen")
+    generator = TagGeneratorV2(
+        schema,
+        miner=miner,
+        max_dimensions_per_request=settings.max_dimensions_per_request,
+    )
+    return generator.run(list(records))
 
 
 def build_inverted_index(tag_output: Dict[str, Any], schema: Dict[str, Any]) -> Dict[str, Any]:
-    maps = schema_maps(schema)
-    postings = {leaf_id: {} for leaf_id in maps["leaves"]}
-    documents = tag_output.get("documents", {})
-    for doc_id, document in documents.items():
-        tags = document.get("tags", {}) if isinstance(document, dict) else {}
-        for leaf_id in maps["leaves"]:
-            values = tags.get(leaf_id, [])
-            if not isinstance(values, list):
-                values = [values]
-            for label in values:
-                normalized = str(label).strip()
-                if not normalized:
-                    continue
-                postings[leaf_id].setdefault(normalized, [])
-                if doc_id not in postings[leaf_id][normalized]:
-                    postings[leaf_id][normalized].append(str(doc_id))
-    metadata = {}
-    for node_id, node in maps["nodes"].items():
-        labels = postings.get(node_id, {})
-        metadata[node_id] = {
-            **node,
-            "path": dimension_path(schema, node_id),
-            "unique_label_count": len(labels),
-            "values": sorted(labels),
-        }
-    return {"schema_version": SCHEMA_VERSION, "postings": postings,
-            "hierarchy": {"children": maps["children"], "ancestors": maps["ancestors"]},
-            "dimension_metadata": metadata}
+    """调用原始 ``IndexBuilderV2``，不再使用新项目的重复实现。"""
+    return IndexBuilderV2(schema).build(tag_output)
+
+
+def _write_json(path: Path, value: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def run_dimensions(records, settings, schema_path: str = "") -> Dict[str, Any]:
+    """运行原始 code_jyx v2 Schema、叶子标签和倒排索引流程。"""
     settings.ensure_dirs()
+    records = list(records or [])
+    if not records:
+        raise ValueError("维度抽取输入 records 为空")
+
     if schema_path:
         schema = load_schema(schema_path, allow_legacy=True, strict=False)
+        generation_method = "provided_schema"
     elif settings.mock or not settings.llm_api_key:
         schema = default_schema()
+        generation_method = "code_jyx_mock_schema"
     else:
-        from .llm_service import DimensionMiningWithQwen
+        from code_jyx.llm_service import DimensionMiningWithQwen
+
         miner_for_schema = DimensionMiningWithQwen(
-            api_key=settings.llm_api_key, model_name=settings.llm_model,
-            base_url=settings.llm_base_url)
+            api_key=settings.llm_api_key,
+            model_name=settings.llm_model,
+            base_url=settings.llm_base_url,
+        )
         schema = miner_for_schema.generate_candidate_schema(
-            [str(item.get("doc_text", "")) for item in records]
+            [str(item.get("doc_text", item.get("chunk_text_full", ""))) for item in records]
         )
         schema = load_schema(schema, allow_legacy=False, strict=True)
+        generation_method = "code_jyx_llm_v2"
 
-    (settings.run_dir / "V_cand_v2.json").write_text(
-        json.dumps(schema, ensure_ascii=False, indent=2), encoding="utf-8")
-    (settings.run_dir / "V_core_v2.json").write_text(
-        json.dumps(schema, ensure_ascii=False, indent=2), encoding="utf-8")
+    schema = {**schema, "generation_method": generation_method}
+    _write_json(settings.run_dir / "V_cand_v2.json", schema)
+    _write_json(settings.run_dir / "V_core_v2.json", schema)
 
     miner = None
     if not settings.mock:
-        from .llm_service import DimensionMiningWithQwen
+        from code_jyx.llm_service import DimensionMiningWithQwen
+
         miner = DimensionMiningWithQwen(
-            api_key=settings.llm_api_key, model_name=settings.llm_model,
-            base_url=settings.llm_base_url)
+            api_key=settings.llm_api_key,
+            model_name=settings.llm_model,
+            base_url=settings.llm_base_url,
+        )
     tag_output = build_tags(records, schema, settings, miner=miner)
-    tags_path = settings.run_dir / "tags_output_v2.json"
-    tags_path.write_text(json.dumps(tag_output, ensure_ascii=False, indent=2), encoding="utf-8")
+    _write_json(settings.run_dir / "tags_output_v2.json", tag_output)
+
     index = build_inverted_index(tag_output, schema)
-    (settings.run_dir / "inverted_index_v2.json").write_text(
-        json.dumps(index["postings"], ensure_ascii=False, indent=2), encoding="utf-8")
-    (settings.run_dir / "dimension_metadata_v2.json").write_text(
-        json.dumps(index["dimension_metadata"], ensure_ascii=False, indent=2), encoding="utf-8")
-    (settings.run_dir / "dimension_hierarchy_v2.json").write_text(
-        json.dumps(index["hierarchy"], ensure_ascii=False, indent=2), encoding="utf-8")
-    return {"schema": schema, "tags": tag_output, "index": index}
+    builder = IndexBuilderV2(schema, output_dir=settings.run_dir)
+    builder.save(index, settings.run_dir)
+
+    # 原实现提供的叶子覆盖率、最小支持数和兄弟标签重叠诊断也保留。
+    diagnostics = diagnose_leaf_dimensions(
+        tag_output, schema, thresholds=getattr(settings, "dimension_thresholds", V2_THRESHOLDS)
+    )
+    _write_json(settings.run_dir / "dimension_diagnostics_v2.json", diagnostics)
+
+    return {"schema": schema, "tags": tag_output, "index": index,
+            "diagnostics": diagnostics}
