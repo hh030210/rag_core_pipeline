@@ -421,9 +421,10 @@ class Retriever:
         semantic_pool = max(top_k, int(semantic_pool or getattr(self.settings, "semantic_pool", 20)))
         dimension_pool = max(top_k, int(dimension_pool or getattr(self.settings, "dimension_pool", 100)))
         analysis = self._parse_query(query)
-        # Dimension-only evaluation skips semantic *search*, but still encodes
-        # the query for the same-dimension tag-vector fallback.
-        query_vec = _unit_vector(self.embeddings.encode([query])[0]) if analysis["constraints"] else []
+        # Semantic search always needs the query vector, including questions
+        # without a parsed dimension constraint.  The same vector is reused
+        # by the routed dimension tag fallback when constraints are present.
+        query_vec = _unit_vector(self.embeddings.encode([query])[0])
         dimension_policy = self._dimension_policy(analysis)
         fact_anchor_terms = (
             self._fact_anchor_terms(query, analysis)
