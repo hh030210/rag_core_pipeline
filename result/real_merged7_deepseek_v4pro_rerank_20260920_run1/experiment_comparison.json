@@ -1,0 +1,96 @@
+{
+  "alignment": {
+    "old_rows": 435,
+    "new_rows": 435,
+    "common_rows_by_id_occurrence": 435,
+    "question_mismatch": 0
+  },
+  "row_changes_at_5": {
+    "semantic": {
+      "unchanged_hit_state": 420,
+      "improved_hit_state": 7,
+      "regressed_hit_state": 8,
+      "mean_gold_recall_delta": 0.002681992367816093
+    },
+    "dimension": {
+      "improved_hit_state": 183,
+      "unchanged_hit_state": 223,
+      "regressed_hit_state": 29,
+      "mean_gold_recall_delta": 0.34011494259770103
+    },
+    "fusion": {
+      "unchanged_hit_state": 401,
+      "improved_hit_state": 20,
+      "regressed_hit_state": 14,
+      "mean_gold_recall_delta": 0.014252873586206898
+    }
+  },
+  "metrics_at_5": {
+    "semantic": {
+      "mrr": {
+        "old": 0.62065134,
+        "new": 0.60555556,
+        "delta": -0.015095780000000003
+      },
+      "hit_rate": {
+        "old": 0.76321839,
+        "new": 0.76091954,
+        "delta": -0.0022988500000000744
+      },
+      "gold_recall": {
+        "old": 0.70440613,
+        "new": 0.70708812,
+        "delta": 0.002681990000000023
+      },
+      "ndcg": {
+        "old": 0.62039759,
+        "new": 0.61123116,
+        "delta": -0.009166430000000059
+      }
+    },
+    "dimension": {
+      "mrr": {
+        "old": 0.14555556,
+        "new": 0.38950192,
+        "delta": 0.24394636
+      },
+      "hit_rate": {
+        "old": 0.25057471,
+        "new": 0.6045977,
+        "delta": 0.35402299000000004
+      },
+      "gold_recall": {
+        "old": 0.19877395,
+        "new": 0.53888889,
+        "delta": 0.34011494
+      },
+      "ndcg": {
+        "old": 0.14134042,
+        "new": 0.41065115,
+        "delta": 0.26931073000000005
+      }
+    },
+    "fusion": {
+      "mrr": {
+        "old": 0.62789272,
+        "new": 0.6240613,
+        "delta": -0.0038314199999999188
+      },
+      "hit_rate": {
+        "old": 0.76321839,
+        "new": 0.77701149,
+        "delta": 0.013793100000000003
+      },
+      "gold_recall": {
+        "old": 0.70881226,
+        "new": 0.72306513,
+        "delta": 0.014252869999999973
+      },
+      "ndcg": {
+        "old": 0.6264607,
+        "new": 0.62845086,
+        "delta": 0.001990159999999963
+      }
+    }
+  }
+}

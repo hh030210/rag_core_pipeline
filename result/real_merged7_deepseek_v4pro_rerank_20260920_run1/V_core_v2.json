@@ -1,0 +1,226 @@
+{
+  "schema_version": "2.0",
+  "dimensions": [
+    {
+      "id": "entity_identity",
+      "name": "对象与身份",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景区内涉及的人物、建筑、自然实体等对象的名称、身份、角色与代际关系信息",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "entity_name",
+      "name": "对象名称",
+      "parent_id": "entity_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "建筑物、景点、人物、文物等对象的正式名称与别称",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "entity_role",
+      "name": "身份角色",
+      "parent_id": "entity_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "人物担任的职务、世系辈分、历史地位或建筑的功能定位",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "entity_attribute",
+      "name": "实体属性",
+      "parent_id": "entity_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "对象的物理特征、材质、体量、形态、年代等内在或外在属性",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "spatial_location",
+      "name": "地理位置",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景区、景点、设施的行政归属、方位、坐标及相对位置信息",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "geo_admin",
+      "name": "行政归属",
+      "parent_id": "spatial_location",
+      "level": 2,
+      "indexable": true,
+      "description": "景区或景点所在的国家、省、市、区县等行政区划",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "geo_position",
+      "name": "相对位置",
+      "parent_id": "spatial_location",
+      "level": 2,
+      "indexable": true,
+      "description": "景点在景区内的方位、与标志物的相对位置或所处的地理单元名称",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "culture_history",
+      "name": "历史文化",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "与景区相关的历史事件、朝代变迁、典籍记载、宗教文化及民间传说等信息",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "hist_event",
+      "name": "历史事件",
+      "parent_id": "culture_history",
+      "level": 2,
+      "indexable": true,
+      "description": "景区内发生过的建造、毁坏、迁徙、战争、册封等具体历史事件",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "hist_figure",
+      "name": "历史人物",
+      "parent_id": "culture_history",
+      "level": 2,
+      "indexable": true,
+      "description": "与景区历史、建造、居住、修缮、题词等活动相关的具体人名或群体",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "culture_religion",
+      "name": "宗教文化",
+      "parent_id": "culture_history",
+      "level": 2,
+      "indexable": true,
+      "description": "景区涉及的宗教流派、祭祀对象、供奉关系、宗法制度或核心文化理念",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "landscape_feature",
+      "name": "景观特色",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景区的自然与人文景观构成、美学风格、代表性景观元素及生态环境",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "landscape_type",
+      "name": "景观类型",
+      "parent_id": "landscape_feature",
+      "level": 2,
+      "indexable": true,
+      "description": "景观的地貌或建筑类别,如山体、水体、洞穴、塔林、碑刻、园林、古建筑群等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "landscape_element",
+      "name": "景观构成",
+      "parent_id": "landscape_feature",
+      "level": 2,
+      "indexable": true,
+      "description": "构成景区风貌的具体元素,如峰墙、彩林、瀑布、游廊、石像、佛塔等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "visitor_service",
+      "name": "游客服务",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景区为游客提供的游览设施、服务项目、安全须知及行为规范等信息",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "service_facility",
+      "name": "服务设施",
+      "parent_id": "visitor_service",
+      "level": 2,
+      "indexable": true,
+      "description": "景区提供的交通、休息、导览等设施,如观光车、索道、游船、自行车道等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "service_rule",
+      "name": "游览须知",
+      "parent_id": "visitor_service",
+      "level": 2,
+      "indexable": true,
+      "description": "对游客行为的规范与建议,如禁烟、禁飞、安全提示、寄存须知等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "transport_access",
+      "name": "交通到达",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "游客抵达景区及在景区内部不同景点间移动的交通方式与线路信息",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "transport_external",
+      "name": "外部交通",
+      "parent_id": "transport_access",
+      "level": 2,
+      "indexable": true,
+      "description": "外部进入景区的交通方式,如高铁、公交、自驾、地铁等路线与站点",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "transport_internal",
+      "name": "内部交通",
+      "parent_id": "transport_access",
+      "level": 2,
+      "indexable": true,
+      "description": "景区内部的游览路线、步道及代步工具信息,如电瓶车、游船线路、登山路径等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    }
+  ],
+  "generation_method": "code_jyx_llm_v2"
+}

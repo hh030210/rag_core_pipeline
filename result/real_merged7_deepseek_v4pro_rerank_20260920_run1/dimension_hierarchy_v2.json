@@ -1,0 +1,80 @@
+{
+  "children": {
+    "entity_identity": [
+      "entity_name",
+      "entity_role",
+      "entity_attribute"
+    ],
+    "spatial_location": [
+      "geo_admin",
+      "geo_position"
+    ],
+    "culture_history": [
+      "hist_event",
+      "hist_figure",
+      "culture_religion"
+    ],
+    "landscape_feature": [
+      "landscape_type",
+      "landscape_element"
+    ],
+    "visitor_service": [
+      "service_facility",
+      "service_rule"
+    ],
+    "transport_access": [
+      "transport_external",
+      "transport_internal"
+    ]
+  },
+  "ancestors": {
+    "entity_identity": [],
+    "entity_name": [
+      "entity_identity"
+    ],
+    "entity_role": [
+      "entity_identity"
+    ],
+    "entity_attribute": [
+      "entity_identity"
+    ],
+    "spatial_location": [],
+    "geo_admin": [
+      "spatial_location"
+    ],
+    "geo_position": [
+      "spatial_location"
+    ],
+    "culture_history": [],
+    "hist_event": [
+      "culture_history"
+    ],
+    "hist_figure": [
+      "culture_history"
+    ],
+    "culture_religion": [
+      "culture_history"
+    ],
+    "landscape_feature": [],
+    "landscape_type": [
+      "landscape_feature"
+    ],
+    "landscape_element": [
+      "landscape_feature"
+    ],
+    "visitor_service": [],
+    "service_facility": [
+      "visitor_service"
+    ],
+    "service_rule": [
+      "visitor_service"
+    ],
+    "transport_access": [],
+    "transport_external": [
+      "transport_access"
+    ],
+    "transport_internal": [
+      "transport_access"
+    ]
+  }
+}
