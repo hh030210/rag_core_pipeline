@@ -3,15 +3,9 @@ import json
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional
-
-try:
-    import numpy as np
-except ImportError:
-    np = None
-try:
-    from FlagEmbedding import BGEM3FlagModel
-except ImportError:
-    BGEM3FlagModel = None
+# FlagEmbedding is only needed by the legacy vector-index builder below.
+# Avoid importing its native runtime during normal payload/index operations.
+BGEM3FlagModel = None
 try:
     from .schema_v2 import (
         SCHEMA_VERSION,
@@ -293,6 +287,10 @@ class IndexBuilder:
             print("\n正在构建开放维度的向量索引...")
             current_dir = os.path.dirname(__file__)
             embedding_model_path = os.path.join(current_dir, 'bge-m3')
+            global BGEM3FlagModel
+            if BGEM3FlagModel is None:
+                from FlagEmbedding import BGEM3FlagModel as _BGEM3FlagModel
+                BGEM3FlagModel = _BGEM3FlagModel
             self.encoder = BGEM3FlagModel(embedding_model_path, use_fp16=True, device='cuda')
             
             tag_vectors = {} # {dim: {'vals': [], 'vecs': np.array}}

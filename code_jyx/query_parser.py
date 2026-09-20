@@ -5,19 +5,36 @@ import re
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 try:
-    from .llm_service import DimensionMiningWithQwen
     from .schema_v2 import SCHEMA_VERSION, load_schema, normalize_label, normalize_text, schema_maps
 except ImportError:
-    from llm_service import DimensionMiningWithQwen
     from schema_v2 import SCHEMA_VERSION, load_schema, normalize_label, normalize_text, schema_maps
 
 
 QUERY_PARSER_VERSION = "2.1"
 
+
+def _default_miner():
+    # Avoid importing the model stack during deterministic/offline retrieval.
+    # Some Windows environments load native ML libraries at import time even
+    # though the supplied miner never uses them.
+    try:
+        from .llm_service import DimensionMiningWithQwen
+    except ImportError:
+        from llm_service import DimensionMiningWithQwen
+    return DimensionMiningWithQwen()
+
 # 这些词用于“模型没有返回约束”时恢复查询意图。它们不是标签，也不会直接
 # 作为精确标签写入倒排索引；只用于选择叶子维度，并生成该维度的语义子查询。
 # 这样可以处理“几点开门”“修建了多久”“怎么预约”等没有规范标签字面值的问题。
 _QUERY_CUE_ALIASES = {
+    "实体类型": (
+        "建筑", "建筑物", "景点", "景区", "陵墓", "陵寝", "洞窟", "佛像", "寺庙",
+        "孔庙", "宫殿", "大殿", "园林", "山峰", "湖泊", "瀑布", "展厅", "展览",
+    ),
+    "人物身份": (
+        "人物", "身份", "皇帝", "皇后", "妃子", "住持", "僧人", "工匠", "主持者",
+        "建造者", "修建者", "谁建", "谁造", "谁修", "谁主持", "哪位皇帝",
+    ),
     "历史事件": (
         "历史", "建于", "修建", "建造", "营建", "朝代", "皇帝", "陵墓", "战争", "破坏",
         "事件", "故事", "来历", "由来", "典故", "传说", "人物", "贡献", "名称", "名字",
@@ -29,14 +46,27 @@ _QUERY_CUE_ALIASES = {
         "中医", "佛教", "孔子", "供奉", "文物", "仿制品", "传统文化", "祭孔", "典礼", "对联",
         "讲究", "身份", "掌门人", "传统", "青花",
     ),
+    "文化内涵": (
+        "文化", "价值", "意义", "寓意", "象征", "传承", "非物质", "非遗", "祭祀", "信仰",
+        "中医", "佛教", "孔子", "供奉", "文物", "传统文化", "祭孔", "典礼", "典故", "传说",
+        "名称", "名字", "得名", "为什么叫", "由来",
+    ),
+    "艺术特征": (
+        "艺术", "风格", "雕刻", "雕塑", "绘画", "壁画", "书法", "石刻", "工艺", "造型",
+        "北魏", "盛唐", "唐代", "宋代", "明代", "清代", "题材", "作品",
+    ),
     "景观特色": (
         "景观", "特色", "海拔", "高度", "高差", "长度", "多高", "多长", "面积", "数量",
         "多少个", "多少对", "几座", "几个", "动物", "看点", "全景", "俯瞰", "观景", "拍照",
     ),
     "景观组成": (
-        "建筑", "结构", "布局", "空间", "组成", "洞窟", "佛像", "路线", "景点", "桥",
+        "建筑", "结构", "布局", "空间", "组成", "洞窟", "佛像", "桥",
         "殿", "神道", "神路", "门", "规模", "什么样", "全景", "俯瞰", "观景", "拍照", "展厅",
         "互动体验", "精华路线", "山洞", "看头", "西庑", "大堂",
+    ),
+    "视觉特色": (
+        "形状", "色彩", "颜色", "光影", "气势", "外观", "视觉", "景色", "景象", "样子",
+        "壮观", "奇特", "像什么", "拍照", "全景", "俯瞰",
     ),
     "季节景观": (
         "春天", "夏天", "秋天", "冬天", "春季", "夏季", "秋季", "冬季", "季节", "雨天",
@@ -58,11 +88,26 @@ _QUERY_CUE_ALIASES = {
         "门票", "票价", "多少钱", "价格", "收费", "费用", "优惠", "免费", "买票", "购票",
         "预约", "预订", "预定", "退票", "取票", "联票", "打折", "有效期",
     ),
+    "票价类型": (
+        "门票", "票价", "多少钱", "价格", "收费", "费用", "优惠票", "全价票", "学生票",
+        "儿童票", "老人票", "联票", "免费", "打折",
+    ),
+    "购票政策": (
+        "预约", "预订", "预定", "买票", "购票", "退票", "改签", "取票", "实名", "渠道",
+        "有效期", "入园", "二次入园", "免票", "优惠", "证件",
+    ),
     "服务设施": (
         "设施", "厕所", "卫生间", "餐饮", "餐厅", "吃饭", "住宿", "寄存", "存包", "代步",
         "观光车", "医疗", "充电", "充电宝", "母婴室", "配套", "租借", "礼品", "纪念品", "书店",
         "买", "购买", "卖", "电话", "wifi", "Wi-Fi", "直饮水", "饮水", "导览图", "导览",
         "急救", "紧急", "讲解器",
+    ),
+    "游客服务": (
+        "服务", "设施", "厕所", "卫生间", "餐饮", "餐厅", "吃饭", "住宿", "寄存", "存包",
+        "观光车", "医疗", "充电", "母婴室", "配套", "租借", "礼品", "纪念品", "电话",
+        "wifi", "Wi-Fi", "饮水", "导览图", "导览", "急救", "讲解器", "讲解", "报名",
+        "注意", "规定", "允许", "禁止", "能不能", "是否可以", "宠物", "携带", "活动",
+        "游览路线", "安排路线", "行程安排", "适合老人", "适合小孩", "轻松路线",
     ),
     "游览须知": (
         "注意", "规定", "允许", "禁止", "能不能", "是否可以", "怎么到", "怎么走", "入口",
@@ -71,6 +116,10 @@ _QUERY_CUE_ALIASES = {
     ),
     "位置层级": (
         "在哪里", "在哪", "位于", "位置", "地址", "地理", "海拔", "高差", "哪个地方", "什么地方",
+    ),
+    "交通方式": (
+        "交通", "交通路线", "公交", "地铁", "自驾", "出租车", "高铁", "火车站", "机场", "停车",
+        "停车场", "缆车", "索道", "观光车", "游船", "步行", "徒步", "怎么去", "怎么到", "到达",
     ),
     "地理位置": (
         "在哪里", "在哪", "位于", "位置", "地址", "地理", "海拔", "高差", "哪个地方",
@@ -135,7 +184,7 @@ class QueryParserV2:
     ):
         self.schema = load_schema(schema, allow_legacy=False, strict=False)
         self.maps = schema_maps(self.schema)
-        self.miner = miner or DimensionMiningWithQwen()
+        self.miner = miner or _default_miner()
         self.cache_file = cache_file
         self.label_vocabulary = self._normalize_vocabulary(label_vocabulary)
         self.vocabulary_signature = self._vocabulary_signature(self.label_vocabulary)
@@ -435,7 +484,7 @@ class QueryParserV2:
 
 class QueryParser:
     def __init__(self, cache_file="./experiment_data/query_cache.json"):
-        self.miner = DimensionMiningWithQwen()
+        self.miner = _default_miner()
         self.cache_file = cache_file
         self.cache = {}
         self._load_cache()

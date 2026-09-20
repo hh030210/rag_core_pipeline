@@ -327,6 +327,7 @@ def _compact_result(item: Mapping[str, Any], gold_ids: set[str], text_chars: int
         "chunk_id", "rank", "score", "final_score", "source", "sem_rank", "dim_rank",
         "doc_id", "parent_doc_id", "doc_title", "chunk_gen_title", "source_file",
         "spot_name", "dimension_paths", "matched_dimensions", "matches",
+        "fact_anchor_bonus", "fact_anchor_matches",
     ):
         if key in item:
             result[key] = item[key]
