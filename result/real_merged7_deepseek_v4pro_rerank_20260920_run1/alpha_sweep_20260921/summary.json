@@ -1,0 +1,96 @@
+{
+  "metric_scope": "fusion Top-5",
+  "candidates": [
+    {
+      "alpha": 0.0,
+      "hit_rate": 0.76321839,
+      "gold_recall": 0.70938697,
+      "mrr": 0.60670498,
+      "ndcg": 0.61268157,
+      "badcase": 51,
+      "summary": "/home/humq/rag_core_runs/real_merged7_deepseek_v4pro_rerank_20260920_run1/alpha_sweep_20260921/alpha_0.0/evaluation/summary.json",
+      "balanced_mean": 0.6729979775
+    },
+    {
+      "alpha": 0.1,
+      "hit_rate": 0.77011494,
+      "gold_recall": 0.71609195,
+      "mrr": 0.61436782,
+      "ndcg": 0.61966943,
+      "badcase": 49,
+      "summary": "/home/humq/rag_core_runs/real_merged7_deepseek_v4pro_rerank_20260920_run1/alpha_sweep_20260921/alpha_0.1/evaluation/summary.json",
+      "balanced_mean": 0.680061035
+    },
+    {
+      "alpha": 0.2,
+      "hit_rate": 0.77701149,
+      "gold_recall": 0.72249042,
+      "mrr": 0.62214559,
+      "ndcg": 0.62659432,
+      "badcase": 50,
+      "summary": "/home/humq/rag_core_runs/real_merged7_deepseek_v4pro_rerank_20260920_run1/alpha_sweep_20260921/alpha_0.2/evaluation/summary.json",
+      "balanced_mean": 0.687060455
+    },
+    {
+      "alpha": 0.3,
+      "hit_rate": 0.77931034,
+      "gold_recall": 0.71793103,
+      "mrr": 0.61785441,
+      "ndcg": 0.62012634,
+      "badcase": 51,
+      "summary": "/home/humq/rag_core_runs/real_merged7_deepseek_v4pro_rerank_20260920_run1/alpha_sweep_20260921/alpha_0.3/evaluation/summary.json",
+      "balanced_mean": 0.68380553
+    },
+    {
+      "alpha": 0.4,
+      "hit_rate": 0.77701149,
+      "gold_recall": 0.71800766,
+      "mrr": 0.59068965,
+      "ndcg": 0.60146648,
+      "badcase": 51,
+      "summary": "/home/humq/rag_core_runs/real_merged7_deepseek_v4pro_rerank_20260920_run1/alpha_sweep_20260921/alpha_0.4/evaluation/summary.json",
+      "balanced_mean": 0.67179382
+    },
+    {
+      "alpha": 0.5,
+      "hit_rate": 0.75632184,
+      "gold_recall": 0.69145594,
+      "mrr": 0.56444444,
+      "ndcg": 0.57425425,
+      "badcase": 51,
+      "summary": "/home/humq/rag_core_runs/real_merged7_deepseek_v4pro_rerank_20260920_run1/alpha_sweep_20260921/alpha_0.5/evaluation/summary.json",
+      "balanced_mean": 0.6466191175
+    },
+    {
+      "alpha": 0.7,
+      "hit_rate": 0.71494253,
+      "gold_recall": 0.65517241,
+      "mrr": 0.49965517,
+      "ndcg": 0.5225924,
+      "badcase": 53,
+      "summary": "/home/humq/rag_core_runs/real_merged7_deepseek_v4pro_rerank_20260920_run1/alpha_sweep_20260921/alpha_0.7/evaluation/summary.json",
+      "balanced_mean": 0.5980906275
+    },
+    {
+      "alpha": 1.0,
+      "hit_rate": 0.70804598,
+      "gold_recall": 0.64302682,
+      "mrr": 0.46662835,
+      "ndcg": 0.49398553,
+      "badcase": 54,
+      "summary": "/home/humq/rag_core_runs/real_merged7_deepseek_v4pro_rerank_20260920_run1/alpha_sweep_20260921/alpha_1.0/evaluation/summary.json",
+      "balanced_mean": 0.57792167
+    }
+  ],
+  "selection_metric": "mean(hit_rate@5,gold_recall@5,mrr@5,ndcg@5)",
+  "best_balanced": {
+    "alpha": 0.2,
+    "hit_rate": 0.77701149,
+    "gold_recall": 0.72249042,
+    "mrr": 0.62214559,
+    "ndcg": 0.62659432,
+    "badcase": 50,
+    "summary": "/home/humq/rag_core_runs/real_merged7_deepseek_v4pro_rerank_20260920_run1/alpha_sweep_20260921/alpha_0.2/evaluation/summary.json",
+    "balanced_mean": 0.687060455
+  }
+}

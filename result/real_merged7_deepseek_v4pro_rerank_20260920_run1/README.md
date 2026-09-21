@@ -30,5 +30,9 @@
 - `optimized_prompt.json`：迭代优化后的问答 Prompt
 - `experiment_comparison.md`：与上一版本的 Top-5 对比表
 - `experiment_comparison.json`：对比数据
+- `alpha_sweep_20260921/summary.md`：8 组 DIM_ALPHA 参数扫描与最优参数
+- `qa_alpha_0.2/qa_evaluation/qa_answer_evaluation_summary.md`：全量答案质量评价
 
 检索评测使用了 `--no-query-expansion`，以便与上一版本保持同口径。
+
+本次参数扫描按融合检索 Top-5 的 Hit Rate、Gold Recall、MRR 和 nDCG 四项均值选择参数，推荐 `DIM_ALPHA=0.2`。问答质量评价使用 DeepSeek-V4-Pro 对正确性、完整性、相关性、证据支撑和无依据陈述进行独立评分。

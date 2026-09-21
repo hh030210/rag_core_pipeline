@@ -1,0 +1,21 @@
+{
+  "input": "/home/humq/rag_core_runs/real_merged7_deepseek_v4pro_rerank_20260920_run1/qa_alpha_0.2/qa_results.jsonl",
+  "output": "/home/humq/rag_core_runs/real_merged7_deepseek_v4pro_rerank_20260920_run1/qa_alpha_0.2/qa_evaluation/qa_answer_evaluation.jsonl",
+  "total": 435,
+  "evaluated": 435,
+  "failed": 0,
+  "verdict_counts": {
+    "pass": 228,
+    "partial": 172,
+    "fail": 35
+  },
+  "pass_rate": 0.5241,
+  "average_scores": {
+    "correctness": 4.1632,
+    "completeness": 3.6209,
+    "relevance": 4.4377,
+    "groundedness": 4.4621
+  },
+  "unsupported_claim_rate": 0.3678,
+  "retrieval_metrics_source": "/home/humq/rag_core_runs/real_merged7_deepseek_v4pro_rerank_20260920_run1/alpha_sweep_20260921/alpha_0.2/evaluation/results.jsonl"
+}

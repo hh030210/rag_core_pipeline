@@ -238,6 +238,23 @@ python run.py compare \
 
 对比结果包含逐问题改善/退化、MRR/Hit@K/Recall/nDCG 差值以及新增/修复 badcase。评测默认不生成答案；答案质量应作为独立实验记录。
 
+## 6.1 问答答案质量评价
+
+批量问答完成后，可使用 `rag_core.qa_evaluation` 对每条答案进行 LLM 评价。评价维度包括正确性、完整性、相关性、证据支撑和无依据陈述，并可关联同一顺序的检索评测结果：
+
+```bash
+python -m rag_core.qa_evaluation \
+  --input ./runs/scenic_v1/qa_results.jsonl \
+  --output-dir ./runs/scenic_v1/qa_evaluation \
+  --retrieval-results ./runs/scenic_v1/evaluation/results.jsonl \
+  --base-url "$LLM_BASE_URL" \
+  --model "$LLM_MODEL" \
+  --api-key "$LLM_API_KEY" \
+  --concurrency 4
+```
+
+输出 `qa_answer_evaluation.jsonl`、`qa_answer_evaluation_summary.json` 和 `qa_answer_evaluation_summary.md`。该评价与检索指标分开统计，便于区分“检索证据不足”和“答案生成质量不足”。
+
 ## 7. 运行产物
 
 每次运行都写入独立的 `run-dir`，不会删除或覆盖其他运行：
