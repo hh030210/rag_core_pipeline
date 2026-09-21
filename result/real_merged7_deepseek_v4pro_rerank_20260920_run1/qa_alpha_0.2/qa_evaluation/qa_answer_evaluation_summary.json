@@ -1,6 +1,6 @@
 {
-  "input": "/home/humq/rag_core_runs/real_merged7_deepseek_v4pro_rerank_20260920_run1/qa_alpha_0.2/qa_results.jsonl",
-  "output": "/home/humq/rag_core_runs/real_merged7_deepseek_v4pro_rerank_20260920_run1/qa_alpha_0.2/qa_evaluation/qa_answer_evaluation.jsonl",
+  "input": "result/real_merged7_deepseek_v4pro_rerank_20260920_run1/qa_alpha_0.2/qa_results.jsonl",
+  "output": "result/real_merged7_deepseek_v4pro_rerank_20260920_run1/qa_alpha_0.2/qa_evaluation/qa_answer_evaluation.jsonl",
   "total": 435,
   "evaluated": 435,
   "failed": 0,
@@ -17,5 +17,21 @@
     "groundedness": 4.4621
   },
   "unsupported_claim_rate": 0.3678,
-  "retrieval_metrics_source": "/home/humq/rag_core_runs/real_merged7_deepseek_v4pro_rerank_20260920_run1/alpha_sweep_20260921/alpha_0.2/evaluation/results.jsonl"
+  "retrieval_metrics_source": "result/real_merged7_deepseek_v4pro_rerank_20260920_run1/evaluation_noexpansion/results.jsonl",
+  "mechanical_metrics": {
+    "normalized_exact_match_rate": 0.0,
+    "mean_length_ratio": 4.2014,
+    "mean_char_precision": 0.2588,
+    "mean_char_recall": 0.7643,
+    "mean_char_f1": 0.36,
+    "mean_rouge_l_f1": 0.2867,
+    "numeric_evaluable_count": 243,
+    "mean_numeric_precision": 0.2314,
+    "mean_numeric_recall": 0.6675,
+    "mean_numeric_f1": 0.4136,
+    "mean_missing_reference_number_count": 0.5241,
+    "mean_extra_answer_number_count": 4.4345,
+    "mean_answer_evidence_char_precision": 0.8676,
+    "mean_reference_evidence_char_recall": 0.9286
+  }
 }

@@ -4,6 +4,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
+import unicodedata
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any, Dict, List
@@ -30,6 +33,127 @@ def _as_bool(value: Any) -> bool:
     if isinstance(value, str):
         return value.strip().lower() in {"true", "1", "yes", "是", "有"}
     return bool(value)
+
+
+def _metric_text(value: Any) -> str:
+    """为机械指标统一文本格式，去掉 Markdown、空白和来源标记。"""
+    text = unicodedata.normalize("NFKC", str(value or "")).lower()
+    text = re.sub(r"\[(?:来源|证据|source|evidence)[^\]]*\]", "", text, flags=re.I)
+    text = re.sub(r"\s+", "", text)
+    return "".join(char for char in text if char.isalnum())
+
+
+def _counter_prf(prediction: str, reference: str) -> Dict[str, float]:
+    """按字符多重集合计算 Precision/Recall/F1。"""
+    predicted = Counter(prediction)
+    expected = Counter(reference)
+    overlap = sum((predicted & expected).values())
+    precision = overlap / len(prediction) if prediction else 0.0
+    recall = overlap / len(reference) if reference else 0.0
+    f1 = (2 * precision * recall / (precision + recall)) if precision + recall else 0.0
+    return {
+        "precision": round(precision, 4),
+        "recall": round(recall, 4),
+        "f1": round(f1, 4),
+    }
+
+
+def _lcs_length(left: str, right: str) -> int:
+    """计算两个字符序列的最长公共子序列长度。"""
+    if not left or not right:
+        return 0
+    if len(left) < len(right):
+        left, right = right, left
+    previous = [0] * (len(right) + 1)
+    for left_char in left:
+        current = [0]
+        for index, right_char in enumerate(right, 1):
+            if left_char == right_char:
+                current.append(previous[index - 1] + 1)
+            else:
+                current.append(max(previous[index], current[-1]))
+        previous = current
+    return previous[-1]
+
+
+def _rouge_l(prediction: str, reference: str) -> Dict[str, float]:
+    lcs = _lcs_length(prediction, reference)
+    precision = lcs / len(prediction) if prediction else 0.0
+    recall = lcs / len(reference) if reference else 0.0
+    f1 = (2 * precision * recall / (precision + recall)) if precision + recall else 0.0
+    return {
+        "precision": round(precision, 4),
+        "recall": round(recall, 4),
+        "f1": round(f1, 4),
+    }
+
+
+_NUMBER_PATTERN = re.compile(r"\d+(?:\.\d+)?")
+
+
+def _numeric_metrics(prediction: str, reference: str) -> Dict[str, Any]:
+    """比较答案和参考答案中的阿拉伯数字，避免数字事实被文字相似度掩盖。"""
+    predicted = _NUMBER_PATTERN.findall(prediction)
+    expected = _NUMBER_PATTERN.findall(reference)
+    predicted_counter = Counter(predicted)
+    expected_counter = Counter(expected)
+    overlap_counter = predicted_counter & expected_counter
+    overlap = sum(overlap_counter.values())
+    missing = list((expected_counter - predicted_counter).elements())
+    extra = list((predicted_counter - expected_counter).elements())
+    if not expected:
+        precision = 0.0 if predicted else None
+        recall = None
+        f1 = None
+    else:
+        precision = overlap / len(predicted) if predicted else 0.0
+        recall = overlap / len(expected)
+        f1 = (2 * precision * recall / (precision + recall)) if precision + recall else 0.0
+    return {
+        "precision": round(precision, 4) if precision is not None else None,
+        "recall": round(recall, 4) if recall is not None else None,
+        "f1": round(f1, 4) if f1 is not None else None,
+        "missing_reference_numbers": missing,
+        "extra_answer_numbers": extra,
+    }
+
+
+def compute_mechanical_metrics(row: Dict[str, Any]) -> Dict[str, Any]:
+    """计算不调用模型的答案质量指标。
+
+    字符重叠、ROUGE-L 和证据覆盖是 lexical proxy，只用于稳定对比，不能替代事实判断。
+    """
+    answer = _metric_text(row.get("answer", ""))
+    reference = _metric_text(row.get("reference_answer", ""))
+    overlap = _counter_prf(answer, reference)
+    rouge_l = _rouge_l(answer, reference)
+    numeric = _numeric_metrics(answer, reference)
+    evidence_parts = []
+    for item in ((row.get("retrieval_top5") or {}).get("fusion_top5") or []):
+        evidence_parts.append(_metric_text(item.get("chunk_text_full") or item.get("chunk_text") or ""))
+    evidence = "".join(evidence_parts)
+    answer_evidence = _counter_prf(answer, evidence)
+    # 交换参数，使 recall 的分母为参考答案长度，表示“参考答案有多少字符能在证据中找到”。
+    evidence_reference = _counter_prf(evidence, reference)
+    return {
+        "normalized_exact_match": int(bool(answer) and answer == reference),
+        "answer_length_chars": len(answer),
+        "reference_length_chars": len(reference),
+        "length_ratio": round(len(answer) / len(reference), 4) if reference else None,
+        "char_precision": overlap["precision"],
+        "char_recall": overlap["recall"],
+        "char_f1": overlap["f1"],
+        "rouge_l_precision": rouge_l["precision"],
+        "rouge_l_recall": rouge_l["recall"],
+        "rouge_l_f1": rouge_l["f1"],
+        "numeric_precision": numeric["precision"],
+        "numeric_recall": numeric["recall"],
+        "numeric_f1": numeric["f1"],
+        "missing_reference_numbers": numeric["missing_reference_numbers"],
+        "extra_answer_numbers": numeric["extra_answer_numbers"],
+        "answer_evidence_char_precision": answer_evidence["precision"],
+        "reference_evidence_char_recall": evidence_reference["recall"],
+    }
 
 
 def _context_text(row: Dict[str, Any]) -> str:
@@ -106,6 +230,11 @@ def evaluate_qa(
                 if item.get("dataset_index") is not None and not item.get("judgment", {}).get("error"):
                     completed[int(item["dataset_index"])] = item
 
+    # 旧版本结果没有机械指标；对已完成的 LLM 评价重新补算，避免为了新增指标重复调用 API。
+    for index, item in completed.items():
+        if 1 <= index <= len(rows):
+            item["mechanical_metrics"] = compute_mechanical_metrics(rows[index - 1])
+
     pending = [(index, row) for index, row in enumerate(rows, 1) if index not in completed]
 
     def evaluate_one(index: int, row: Dict[str, Any]) -> Dict[str, Any]:
@@ -115,6 +244,7 @@ def evaluate_qa(
             "id": row.get("id", ""),
             "question": row.get("question", ""),
             "judgment": judgment,
+            "mechanical_metrics": compute_mechanical_metrics(row),
         }
         if index <= len(retrieval_rows):
             metrics = (retrieval_rows[index - 1].get("retrieval_metrics") or {}).get("fusion") or {}
@@ -165,6 +295,39 @@ def evaluate_qa(
         ) if valid else 0.0,
         "retrieval_metrics_source": str(retrieval_results or ""),
     }
+
+    def mean_mechanical(key: str) -> float:
+        values = [
+            item.get("mechanical_metrics", {}).get(key)
+            for item in valid
+        ]
+        values = [float(value) for value in values if value is not None]
+        return round(sum(values) / len(values), 4) if values else 0.0
+
+    mechanical = [item.get("mechanical_metrics", {}) for item in valid]
+    numeric_evaluable = sum(
+        item.get("numeric_recall") is not None for item in mechanical
+    )
+    summary["mechanical_metrics"] = {
+        "normalized_exact_match_rate": mean_mechanical("normalized_exact_match"),
+        "mean_length_ratio": mean_mechanical("length_ratio"),
+        "mean_char_precision": mean_mechanical("char_precision"),
+        "mean_char_recall": mean_mechanical("char_recall"),
+        "mean_char_f1": mean_mechanical("char_f1"),
+        "mean_rouge_l_f1": mean_mechanical("rouge_l_f1"),
+        "numeric_evaluable_count": numeric_evaluable,
+        "mean_numeric_precision": mean_mechanical("numeric_precision"),
+        "mean_numeric_recall": mean_mechanical("numeric_recall"),
+        "mean_numeric_f1": mean_mechanical("numeric_f1"),
+        "mean_missing_reference_number_count": round(
+            sum(len(item.get("missing_reference_numbers", [])) for item in mechanical) / len(mechanical), 4
+        ) if mechanical else 0.0,
+        "mean_extra_answer_number_count": round(
+            sum(len(item.get("extra_answer_numbers", [])) for item in mechanical) / len(mechanical), 4
+        ) if mechanical else 0.0,
+        "mean_answer_evidence_char_precision": mean_mechanical("answer_evidence_char_precision"),
+        "mean_reference_evidence_char_recall": mean_mechanical("reference_evidence_char_recall"),
+    }
     (output_dir / "qa_answer_evaluation_summary.json").write_text(
         json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
@@ -179,7 +342,23 @@ def evaluate_qa(
         f"- 平均完整性：{summary['average_scores']['completeness']:.2f}/5\n"
         f"- 平均相关性：{summary['average_scores']['relevance']:.2f}/5\n"
         f"- 平均证据支撑：{summary['average_scores']['groundedness']:.2f}/5\n"
-        f"- 无依据陈述率：{summary['unsupported_claim_rate']:.2%}\n",
+        f"- 无依据陈述率：{summary['unsupported_claim_rate']:.2%}\n\n"
+        "## 机械计算指标\n\n"
+        "> 以下指标不调用模型，基于归一化后的字符、数字和融合 Top5 证据做确定性计算；字符重叠和证据覆盖属于 lexical proxy，不能单独等同于事实正确。\n\n"
+        f"- 归一化 Exact Match：{summary['mechanical_metrics']['normalized_exact_match_rate']:.2%}\n"
+        f"- 平均答案/参考答案长度比：{summary['mechanical_metrics']['mean_length_ratio']:.4f}\n"
+        f"- 字符级 Precision：{summary['mechanical_metrics']['mean_char_precision']:.4f}\n"
+        f"- 字符级 Recall：{summary['mechanical_metrics']['mean_char_recall']:.4f}\n"
+        f"- 字符级 F1：{summary['mechanical_metrics']['mean_char_f1']:.4f}\n"
+        f"- ROUGE-L F1：{summary['mechanical_metrics']['mean_rouge_l_f1']:.4f}\n"
+        f"- 数字事实可评价样本：{summary['mechanical_metrics']['numeric_evaluable_count']}\n"
+        f"- 数字 Precision：{summary['mechanical_metrics']['mean_numeric_precision']:.4f}\n"
+        f"- 数字 Recall：{summary['mechanical_metrics']['mean_numeric_recall']:.4f}\n"
+        f"- 数字 F1：{summary['mechanical_metrics']['mean_numeric_f1']:.4f}\n"
+        f"- 平均遗漏参考数字数：{summary['mechanical_metrics']['mean_missing_reference_number_count']:.4f}\n"
+        f"- 平均多答数字数：{summary['mechanical_metrics']['mean_extra_answer_number_count']:.4f}\n"
+        f"- 答案字符在融合证据中的覆盖 Precision：{summary['mechanical_metrics']['mean_answer_evidence_char_precision']:.4f}\n"
+        f"- 参考答案字符在融合证据中的覆盖 Recall：{summary['mechanical_metrics']['mean_reference_evidence_char_recall']:.4f}\n",
         encoding="utf-8",
     )
     return summary

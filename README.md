@@ -255,6 +255,8 @@ python -m rag_core.qa_evaluation \
 
 输出 `qa_answer_evaluation.jsonl`、`qa_answer_evaluation_summary.json` 和 `qa_answer_evaluation_summary.md`。该评价与检索指标分开统计，便于区分“检索证据不足”和“答案生成质量不足”。
 
+同时会为每条问答计算不调用模型的机械指标：归一化 Exact Match、字符级 Precision/Recall/F1、ROUGE-L F1、数字事实 Precision/Recall/F1、遗漏/多答数字数量，以及答案与融合 Top5 证据的字符覆盖率。字符重叠和证据覆盖率是 lexical proxy，适合做版本间稳定对比，不能单独替代事实正确性评价。数字指标只在参考答案包含阿拉伯数字时纳入总体均值；每条明细指标保存在 `qa_answer_evaluation.jsonl` 的 `mechanical_metrics` 字段中。
+
 ## 7. 运行产物
 
 每次运行都写入独立的 `run-dir`，不会删除或覆盖其他运行：
