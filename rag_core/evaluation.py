@@ -324,7 +324,10 @@ def route_metrics(
 def _compact_result(item: Mapping[str, Any], gold_ids: set[str], text_chars: int) -> Dict[str, Any]:
     result = {}
     for key in (
-        "chunk_id", "rank", "score", "final_score", "source", "sem_rank", "dim_rank",
+        "chunk_id", "rank", "score", "final_score", "fused_score",
+        "semantic_score", "normalized_semantic_score",
+        "dimension_score", "normalized_dimension_score",
+        "source", "sem_rank", "dim_rank",
         "doc_id", "parent_doc_id", "doc_title", "chunk_gen_title", "source_file",
         "spot_name", "dimension_paths", "matched_dimensions", "matches",
         "fact_anchor_bonus", "fact_anchor_matches",

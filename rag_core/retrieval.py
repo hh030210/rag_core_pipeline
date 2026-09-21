@@ -485,6 +485,19 @@ class Retriever:
 
         sem_norm = self._normalize_scores(semantic)
         dim_norm = self._normalize_scores(dimension)
+        # Keep the route-local normalized scores on the candidates themselves.
+        # Fusion is computed from these values, so retaining them makes every
+        # ranking decision auditable instead of exposing only the final score.
+        for item in semantic:
+            item["semantic_score"] = item.get("score")
+            item["normalized_semantic_score"] = round(
+                sem_norm.get(str(item["chunk_id"]), 0.0), 8
+            )
+        for item in dimension:
+            item["dimension_score"] = item.get("score")
+            item["normalized_dimension_score"] = round(
+                dim_norm.get(str(item["chunk_id"]), 0.0), 8
+            )
         semantic_by_id = {item["chunk_id"]: item for item in semantic}
         dimension_by_id = {item["chunk_id"]: item for item in dimension}
         by_id = {}
@@ -493,9 +506,15 @@ class Retriever:
             if cid in semantic_by_id:
                 item["sem_rank"] = semantic_by_id[cid].get("rank")
                 item["semantic_score"] = semantic_by_id[cid].get("score")
+                item["normalized_semantic_score"] = sem_norm.get(cid, 0.0)
             if cid in dimension_by_id:
                 item["dim_rank"] = dimension_by_id[cid].get("rank")
                 item["dimension_score"] = dimension_by_id[cid].get("score")
+                item["normalized_dimension_score"] = dim_norm.get(cid, 0.0)
+            # A candidate absent from one route contributes zero from that
+            # route to the weighted fusion score.
+            item.setdefault("normalized_semantic_score", 0.0)
+            item.setdefault("normalized_dimension_score", 0.0)
             by_id[cid] = item
         fused_scores = {}
         for cid in by_id:
@@ -505,6 +524,7 @@ class Retriever:
             item = by_id[cid]
             item["score"] = score
             item["final_score"] = score
+            item["fused_score"] = score
             item["source"] = ("dimension" if cid in dim_norm else "") + ("+semantic" if cid in sem_norm else "")
             fusion_candidates.append(item)
         fusion = fusion_candidates[:top_k]

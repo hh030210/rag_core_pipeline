@@ -2,12 +2,24 @@
   "total": 435,
   "semantic_pool": 100,
   "dimension_pool": 20,
-  "fusion": "semantic_100_union_dimension_20_then_score",
+  "dim_alpha": 0.2,
+  "semantic_weight": 0.8,
+  "fusion": "0.8 * normalized_semantic_score + 0.2 * normalized_dimension_score",
+  "score_fields": [
+    "score",
+    "normalized_score",
+    "semantic_score",
+    "normalized_semantic_score",
+    "dimension_score",
+    "normalized_dimension_score",
+    "fused_score"
+  ],
   "semantic_count_min": 6,
   "semantic_count_max": 100,
   "dimension_count_min": 0,
   "dimension_count_max": 20,
-  "fusion_union_count_min": 7,
+  "fusion_union_count_min": 6,
   "fusion_union_count_max": 113,
+  "formula_check_errors": 0,
   "output": "/home/humq/rag_core_runs/real_merged7_deepseek_v4pro_rerank_20260920_run1/qa_rerun_20260921/retrieval_ids_sem100_dim20.jsonl"
 }
