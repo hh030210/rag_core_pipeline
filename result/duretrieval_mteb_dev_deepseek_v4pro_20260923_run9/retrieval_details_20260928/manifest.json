@@ -1,0 +1,47 @@
+{
+  "source_run": "duretrieval_mteb_dev_deepseek_v4pro_20260923_run9",
+  "source_evaluation": "evaluation_query_facet_evidence_v2_full_gpu0_20260928",
+  "source_results_rows": 2000,
+  "detail_file": "retrieval_details.jsonl.gz",
+  "chunk_text_included": false,
+  "candidate_fields_removed": [
+    "chunk_text",
+    "text_truncated"
+  ],
+  "candidate_counts_total": {
+    "semantic_results": 200000,
+    "dimension_results": 196162,
+    "fusion_results": 368902
+  },
+  "gold_candidate_counts_total": {
+    "semantic_results": 10868,
+    "dimension_results": 5498,
+    "fusion_results": 10902
+  },
+  "retrieval_routes": {
+    "semantic": "100 candidates/query",
+    "dimension": "100 candidates/query",
+    "fusion": "full union ranking; count varies by query"
+  },
+  "config": {
+    "run_dir": "result/duretrieval_mteb_dev_deepseek_v4pro_20260923_run9",
+    "dataset": "result/duretrieval_mteb_dev_deepseek_v4pro_20260923_run9/evaluation_freshschema_noexpansion_20260927/qa_dataset_gold_ids_only.json",
+    "output_dir": "result/duretrieval_mteb_dev_deepseek_v4pro_20260923_run9/evaluation_query_facet_evidence_v2_full_gpu0_20260928",
+    "top_k": 5,
+    "eval_depth": 100,
+    "ks": [
+      1,
+      3,
+      5,
+      10,
+      20,
+      50
+    ],
+    "backend": "qdrant",
+    "collection": "duretrieval_mteb_dev_qrels20k_dim_fresh_20260923",
+    "embedding_model": "/home/humq/rag_db_silm/model/bge-m3",
+    "query_expansion": false,
+    "query_parser_mode": "llm",
+    "query_parser_model": "DeepSeek-V4-Pro"
+  }
+}
