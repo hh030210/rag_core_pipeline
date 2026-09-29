@@ -75,7 +75,7 @@
     .alert { display: none; background: var(--red-soft); border: 1px solid #f2d4ce; color: #8e3535; border-radius: 10px; padding: 10px 12px; margin: 0 0 15px; }
     .alert.visible { display: block; }
     .alert strong { font-weight: 700; }
-    .routes { display: grid; grid-template-columns: repeat(5, minmax(210px, 1fr)); gap: 10px; overflow-x: auto; padding-bottom: 5px; }
+    .routes { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; overflow-x: auto; padding-bottom: 5px; }
     .route { min-width: 190px; border: 1px solid var(--line); border-radius: 11px; overflow: hidden; background: #fff; }
     .route-head { min-height: 66px; padding: 10px 11px; background: #f8fafb; border-bottom: 1px solid var(--line); }
     .route-title { font-weight: 700; font-size: 13px; }
@@ -84,6 +84,7 @@
     .candidate { border-radius: 8px; padding: 8px; margin: 3px 0; min-height: 58px; background: #fff; border: 1px solid transparent; }
     .candidate:hover { background: #f7f9fa; border-color: var(--line); }
     .candidate.is-gold { background: #fffaf0; border-color: #f1dcae; }
+    .candidate.is-linked-hover { background: #d8efed; border-color: #55a9a8; box-shadow: inset 0 0 0 1px rgba(8,126,131,.16); }
     .candidate.is-dropped { box-shadow: inset 3px 0 var(--red); }
     .candidate-top { display: flex; justify-content: space-between; gap: 5px; align-items: center; }
     .rank { color: var(--muted); font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
@@ -94,6 +95,26 @@
     .chunk-id { margin-top: 5px; font: 10px/1.35 ui-monospace, SFMono-Regular, Menlo, monospace; color: #425663; overflow-wrap: anywhere; }
     .chunk-link { display: block; width: 100%; padding: 0; border: 0; background: transparent; text-align: left; cursor: pointer; }
     .chunk-link:hover { color: var(--teal); text-decoration: underline; }
+    .question-dimensions { margin: 12px 0; padding: 12px; border: 1px solid #d9e5e7; border-radius: 11px; background: #f7fbfb; }
+    .dimension-panel-title { margin: 0 0 9px; font-size: 13px; }
+    .query-dimension-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(205px, 1fr)); gap: 7px; }
+    .query-dimension { padding: 8px; border: 1px solid #e3ebed; border-radius: 8px; background: white; }
+    .dimension-group-title { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-bottom: 5px; font-size: 11px; font-weight: 700; }
+    .dimension-path { color: var(--muted); font-size: 10px; font-weight: 400; }
+    .dimension-role { border-radius: 999px; padding: 1px 6px; color: #49626c; background: #eaf0f2; font-size: 9px; font-weight: 500; }
+    .dimension-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+    .dimension-chip { display: inline-flex; flex-wrap: wrap; gap: 3px; align-items: center; padding: 3px 6px; border: 1px solid #dce8e9; border-radius: 6px; color: #31525a; background: #f6fbfa; font-size: 10px; overflow-wrap: anywhere; }
+    .dimension-chip.intent { color: #755c32; border-color: #eee2c9; background: #fffaf0; }
+    .dimension-chip-score { color: var(--teal); font-variant-numeric: tabular-nums; }
+    .dimension-note { margin-top: 7px; color: var(--muted); font-size: 10px; }
+    .dimension-card-info { margin-top: 7px; }
+    .dimension-preview { display: flex; flex-wrap: wrap; gap: 3px; }
+    .dimension-info { margin-top: 7px; padding-top: 5px; border-top: 1px dashed #d3dce0; color: #52636b; font-size: 10px; }
+    .dimension-info summary { cursor: pointer; color: #326f70; }
+    .dimension-info-body { padding: 6px 0 2px; }
+    .dimension-group { margin: 5px 0 8px; }
+    .dimension-match-list { margin: 4px 0 0; padding-left: 15px; }
+    .dimension-match-list li { margin: 3px 0; line-height: 1.45; overflow-wrap: anywhere; }
     .chunk-dialog { width: min(820px, calc(100vw - 28px)); max-height: min(82vh, 900px); padding: 0; border: 1px solid var(--line); border-radius: 14px; color: var(--ink); box-shadow: 0 20px 70px rgba(12, 31, 41, .28); }
     .chunk-dialog::backdrop { background: rgba(13, 30, 39, .58); }
     .chunk-dialog-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 15px; padding: 17px 19px 12px; border-bottom: 1px solid var(--line); }
@@ -109,14 +130,14 @@
     .legend-bar { display: inline-block; width: 3px; height: 11px; margin: 0 6px -2px 0; background: var(--red); }
     .error { max-width: 750px; margin: 50px auto; background: white; border: 1px solid #efc9c2; border-radius: 12px; padding: 22px; color: #783535; }
     .error code { color: #542d2d; }
-    @media (max-width: 1250px) { .metrics { grid-template-columns: repeat(3, 1fr); } .routes { grid-template-columns: repeat(5, 240px); } }
+    @media (max-width: 1250px) { .metrics { grid-template-columns: repeat(3, 1fr); } .routes { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); } }
     @media (max-width: 760px) { .topbar-inner { align-items: flex-start; flex-direction: column; } .metrics { grid-template-columns: repeat(2, 1fr); } .layout { grid-template-columns: 1fr; } .list-panel { position: static; max-height: 300px; } .detail { padding: 13px; } .detail-top { flex-direction: column; } .navigation { width: 100%; } .question-title { font-size: 17px; } }
   </style>
 </head>
 <body>
   <header class="topbar">
     <div class="topbar-inner">
-      <div><h1>景区数据集双路检索与融合对比</h1><div class="subtitle">语义、维度双路检索，对比加权基线、DeepSeek Listwise 与 Answerability Rerank；Golden 标记用于离线评测，点击 chunk 编号查看完整正文。</div></div>
+      <div><h1>景区检索与融合对比</h1><div class="subtitle" id="subtitle">语义、维度与融合检索结果对比；点击 chunk 编号查看正文。</div></div>
       <div class="local-badge">本地静态数据 · 不请求模型或外部 API</div>
     </div>
   </header>
@@ -159,6 +180,16 @@
     let showAll = false;
     let chunkContents = null;
     let chunkContentsPromise = null;
+    let chunkDimensionTags = {};
+
+    const routeStats = [
+      ['semantic_results', '语义 Top-5 命中', 'semHit'],
+      ['dimension_results', '维度 Top-5 命中', 'dimHit'],
+      ['baseline_results', '加权基线 Top-5 命中', 'baselineHit'],
+      ['deepseek_results', 'DeepSeek Top-5 命中', 'deepseekHit'],
+      ['answerability_results', 'Answerability Top-5 命中', 'answerabilityHit'],
+    ];
+    function hasRoute(key) { return rows.some(row => Array.isArray(row[key]) && row[key].length > 0); }
 
     function rankMap(ids) { return Object.fromEntries((ids || []).map((id, index) => [id, index + 1])); }
     function top5(ids) { return new Set((ids || []).slice(0, 5)); }
@@ -190,14 +221,10 @@
     function renderMetrics() {
       const stats = rows.map(rowState);
       const count = (key) => stats.filter(s => s[key]).length;
-      const boxes = [
-        metric('问答数量', rows.length),
-        metric('语义 Top-5 命中', `${count('semHit')} / ${rows.length}`),
-        metric('维度 Top-5 命中', `${count('dimHit')} / ${rows.length}`),
-        metric('加权基线 Top-5 命中', `${count('baselineHit')} / ${rows.length}`),
-        metric('DeepSeek Top-5 命中', `${count('deepseekHit')} / ${rows.length}`),
-        metric('Answerability Top-5 命中', `${count('answerabilityHit')} / ${rows.length}`),
-      ];
+      const boxes = [metric('问答数量', rows.length)];
+      routeStats.filter(([key]) => hasRoute(key)).forEach(([, label, stateKey]) => {
+        boxes.push(metric(label, `${count(stateKey)} / ${rows.length}`));
+      });
       $('#metrics').replaceChildren(...boxes);
     }
     function passes(row, value) {
@@ -233,7 +260,10 @@
         const title = el('div', 'question-item-title', row.question || '(空问题)');
         const meta = el('div', 'question-item-meta');
         meta.append(el('span', '', `#${row.dataset_index ?? row.id ?? index + 1}`));
-        meta.append(el('span', `mini-state ${s.answerabilityHit ? 'hit' : 'lost'}`, s.answerabilityHit ? 'Answerability 命中' : 'Answerability 未命中'));
+        const status = hasRoute('answerability_results')
+          ? { hit: s.answerabilityHit, label: 'Answerability' }
+          : { hit: s.baselineHit, label: '融合基线' };
+        meta.append(el('span', `mini-state ${status.hit ? 'hit' : 'lost'}`, `${status.label} ${status.hit ? '命中' : '未命中'}`));
         button.append(title, meta);
         button.addEventListener('click', () => { activeIndex = index; renderList(); renderDetail(); });
         return button;
@@ -242,6 +272,109 @@
       if (!filtered.length) list.append(el('div', 'empty', '没有符合条件的问题'));
     }
     function fmtScore(value) { return typeof value === 'number' ? Number(value).toFixed(4) : null; }
+    function renderQuestionDimensions(row) {
+      const panel = el('section', 'question-dimensions');
+      panel.append(el('h3', 'dimension-panel-title', '问题维度标签'));
+      const dimensions = row.query_dimensions || [];
+      if (!dimensions.length) {
+        panel.append(el('div', 'dimension-note', '评测结果没有保存该问题的维度解析。'));
+        return panel;
+      }
+      const grid = el('div', 'query-dimension-grid');
+      dimensions.forEach(dimension => {
+        const group = el('div', 'query-dimension');
+        const title = el('div', 'dimension-group-title');
+        title.append(el('span', '', dimension.dimension_name || dimension.dimension_id));
+        if (dimension.dimension_path && dimension.dimension_path !== dimension.dimension_name) {
+          title.append(el('span', 'dimension-path', dimension.dimension_path));
+        }
+        title.append(el('span', 'dimension-role', `角色 ${dimension.role || 'auxiliary'}`));
+        group.append(title);
+        const chips = el('div', 'dimension-tags');
+        (dimension.labels || []).forEach(label => chips.append(el('span', 'dimension-chip', label)));
+        (dimension.intent_terms || []).forEach(term => chips.append(el('span', 'dimension-chip intent', `意图词：${term}`)));
+        if (!chips.childNodes.length) chips.append(el('span', 'dimension-note', '无标签或意图词'));
+        group.append(chips);
+        group.append(el('div', 'dimension-note', `匹配模式 ${dimension.match || 'ANY'} · 问题侧未提供标签独立得分`));
+        grid.append(group);
+      });
+      panel.append(grid);
+      return panel;
+    }
+    function matchSourceLabel(source) {
+      return ({ canonical_label: '标签匹配', intent_text: '意图词命中正文', dimension_vector: '维度向量匹配' })[source] || source || '—';
+    }
+    function renderDimensionInfo(item, chunkId) {
+      const chunk = chunkDimensionTags[chunkId] || {};
+      const dimensions = chunk.dimensions || [];
+      const matches = item?.matches || [];
+      const tagCount = dimensions.reduce((sum, dimension) => sum + (dimension.labels || []).length, 0);
+      if (!tagCount && !matches.length) return null;
+      const wrapper = el('div', 'dimension-card-info');
+      const preview = el('div', 'dimension-preview');
+      const previewTags = dimensions.flatMap(dimension => (dimension.labels || []).map(tag => ({ dimension, tag }))).slice(0, 3);
+      previewTags.forEach(({ dimension, tag }) => {
+        const chip = el('span', 'dimension-chip');
+        chip.append(document.createTextNode(`${dimension.dimension_name || dimension.dimension_id}：${tag.label || ''}`));
+        if (typeof tag.confidence === 'number') {
+          chip.append(el('span', 'dimension-chip-score', `置信 ${fmtScore(tag.confidence)}`));
+        }
+        const labelMatch = matches.find(match => match.dimension_id === dimension.dimension_id && match.label === tag.label);
+        if (labelMatch && typeof labelMatch.similarity === 'number') {
+          chip.append(el('span', 'dimension-chip-score', `匹配 ${fmtScore(labelMatch.similarity)}`));
+        }
+        preview.append(chip);
+      });
+      if (tagCount > previewTags.length) preview.append(el('span', 'dimension-note', `+${tagCount - previewTags.length} 个标签`));
+      if (preview.childNodes.length) wrapper.append(preview);
+      const details = el('details', 'dimension-info');
+      details.append(el('summary', '', `查看完整标签及匹配分（${tagCount} 个标签 · ${matches.length} 条匹配）`));
+      const body = el('div', 'dimension-info-body');
+      if (dimensions.length) {
+        dimensions.forEach(dimension => {
+          const group = el('div', 'dimension-group');
+          const heading = el('div', 'dimension-group-title');
+          heading.append(el('span', '', dimension.dimension_name || dimension.dimension_id));
+          if (dimension.dimension_path && dimension.dimension_path !== dimension.dimension_name) {
+            heading.append(el('span', 'dimension-path', dimension.dimension_path));
+          }
+          group.append(heading);
+          const chips = el('div', 'dimension-tags');
+          (dimension.labels || []).forEach(tag => {
+            const chip = el('span', 'dimension-chip');
+            chip.append(document.createTextNode(tag.label || ''));
+            if (typeof tag.confidence === 'number') {
+              chip.append(el('span', 'dimension-chip-score', `置信度 ${fmtScore(tag.confidence)}`));
+            }
+            chips.append(chip);
+          });
+          group.append(chips);
+          body.append(group);
+        });
+      } else {
+        body.append(el('div', 'dimension-note', '标签数据中未找到该 chunk 的维度标签。'));
+      }
+      if (matches.length) {
+        body.append(el('div', 'dimension-group-title', '问题约束匹配分（来自检索 matches）'));
+        const list = el('ul', 'dimension-match-list');
+        matches.forEach(match => {
+          const line = document.createElement('li');
+          const label = [match.dimension_path || match.dimension_id, match.label].filter(Boolean).join(' · ');
+          const scoreBits = [];
+          if (typeof match.similarity === 'number') scoreBits.push(`相似度 ${fmtScore(match.similarity)}`);
+          if (typeof match.idf_bonus === 'number') scoreBits.push(`IDF 加权 ${fmtScore(match.idf_bonus)}`);
+          if (match.role) scoreBits.push(`角色 ${match.role}`);
+          scoreBits.push(matchSourceLabel(match.source));
+          line.append(document.createTextNode(`${label} — ${scoreBits.join(' · ')}`));
+          if (match.evidence) line.title = match.evidence;
+          list.append(line);
+        });
+        body.append(list);
+      }
+      details.append(body);
+      wrapper.append(details);
+      return wrapper;
+    }
     function routeData(row) {
       const definitions = [
         ['semantic', '语义检索', '相似度排序', row.semantic_results || []],
@@ -250,7 +383,7 @@
         ['deepseek', 'DeepSeek Listwise', '同一候选池 · Listwise 重排', row.deepseek_results || []],
         ['answerability', 'Answerability Rerank', '同一候选池 · 可回答性重排', row.answerability_results || []],
       ];
-      return definitions.map(([key, title, description, items]) => ({
+      return definitions.filter(([key]) => hasRoute(`${key}_results`)).map(([key, title, description, items]) => ({
         key, title,
         sub: `${items.length} 个候选 · ${description}`,
         ids: items.map(item => item.chunk_id),
@@ -336,6 +469,17 @@
         const item = meta[chunkId];
         const isGold = state.gold.has(chunkId);
         const card = el('div', `candidate${isGold ? ' is-gold' : ''}`);
+        card.dataset.chunkId = chunkId;
+        card.addEventListener('mouseenter', () => {
+          document.querySelectorAll('.candidate[data-chunk-id]').forEach(candidate => {
+            candidate.classList.toggle('is-linked-hover', candidate.dataset.chunkId === chunkId);
+          });
+        });
+        card.addEventListener('mouseleave', () => {
+          document.querySelectorAll('.candidate.is-linked-hover').forEach(candidate => {
+            candidate.classList.remove('is-linked-hover');
+          });
+        });
         const top = el('div', 'candidate-top');
         top.append(el('span', 'rank', `#${rank}`));
         const flags = el('span', 'candidate-flags');
@@ -348,6 +492,10 @@
         card.append(top, chunkButton);
         const scoreText = routeScore(route, item);
         if (scoreText) card.append(el('div', 'score-line', scoreText));
+        if (route.key === 'dimension') {
+          const dimensionInfo = renderDimensionInfo(item, chunkId);
+          if (dimensionInfo) card.append(dimensionInfo);
+        }
         list.append(card);
         if (rank === 5 && ids.length > 5 && !showAll) list.append(el('div', 'cutline', `Top-5 截止线 · 后续 ${ids.length - 5} 个`));
       });
@@ -371,12 +519,12 @@
       next.addEventListener('click', () => { activeIndex++; renderList(); renderDetail(); });
       nav.append(prev, next); head.append(intro, nav);
       const badges = el('div', 'badges');
-      badges.append(el('span', `badge ${state.semHit ? 'hit' : 'miss'}`, `语义 Top-5 ${state.semHit ? '命中' : '未命中'}`));
-      badges.append(el('span', `badge ${state.dimHit ? 'hit' : 'miss'}`, `维度 Top-5 ${state.dimHit ? '命中' : '未命中'}`));
-      badges.append(el('span', `badge ${state.baselineHit ? 'hit' : 'miss'}`, `加权基线 Top-5 ${state.baselineHit ? '命中' : '未命中'}`));
-      badges.append(el('span', `badge ${state.deepseekHit ? 'hit' : 'miss'}`, `DeepSeek Top-5 ${state.deepseekHit ? '命中' : '未命中'}`));
-      badges.append(el('span', `badge ${state.answerabilityHit ? 'hit' : 'miss'}`, `Answerability Top-5 ${state.answerabilityHit ? '命中' : '未命中'}`));
+      routeStats.filter(([key]) => hasRoute(key)).forEach(([, label, stateKey]) => {
+        const shortLabel = label.replace(' 命中', '');
+        badges.append(el('span', `badge ${state[stateKey] ? 'hit' : 'miss'}`, `${shortLabel} ${state[stateKey] ? '命中' : '未命中'}`));
+      });
       badges.append(el('span', 'badge gold', `Golden ${state.gold.size} 个`));
+      const queryDimensions = renderQuestionDimensions(row);
       const routes = el('div', 'routes');
       routeData(row).forEach(route => routes.append(renderRoute(row, route, state)));
       const foot = el('div', 'detail-foot');
@@ -384,7 +532,7 @@
       foot.append(el('span', '', '候选来自离线 JSONL；本页不触发检索请求。'));
       const goldLegend = el('span', ''); goldLegend.append(el('i', 'legend-dot'), document.createTextNode('Golden chunk'));
       foot.append(goldLegend);
-      root.replaceChildren(head, badges, routes, foot);
+      root.replaceChildren(head, badges, queryDimensions, routes, foot);
     }
     function setShowAll() {
       showAll = !showAll;
@@ -405,7 +553,28 @@
           }
           return row;
         });
+        const tagResponse = await fetch('./chunk_dimension_tags.json', { cache: 'no-store' });
+        if (!tagResponse.ok) throw new Error(`读取 chunk 维度标签 chunk_dimension_tags.json 失败（HTTP ${tagResponse.status}）`);
+        chunkDimensionTags = await tagResponse.json();
+        if (!chunkDimensionTags || typeof chunkDimensionTags !== 'object' || Array.isArray(chunkDimensionTags)) {
+          throw new Error('chunk_dimension_tags.json 格式不正确');
+        }
         if (!Array.isArray(rows) || !rows.length) throw new Error('fusion_routes.json 为空或格式不正确');
+        const rerankAvailable = hasRoute('deepseek_results') || hasRoute('answerability_results');
+        $('#subtitle').textContent = rerankAvailable
+          ? '语义、维度与融合检索对比，包含当前数据提供的 rerank 路线；点击 chunk 编号查看正文。'
+          : '语义、维度与融合检索对比；当前原始数据未提供 rerank 结果。点击 chunk 编号查看正文。';
+        const unavailableFilters = {
+          'baseline-miss': 'baseline_results',
+          'deepseek-miss': 'deepseek_results',
+          'answerability-miss': 'answerability_results',
+          'semantic-miss': 'semantic_results',
+          'dimension-miss': 'dimension_results',
+        };
+        [...$('#filter').options].forEach(option => {
+          const routeKey = unavailableFilters[option.value];
+          if (routeKey) option.disabled = !hasRoute(routeKey);
+        });
         renderMetrics();
         $('#search').addEventListener('input', applyFilters);
         $('#filter').addEventListener('change', applyFilters);
