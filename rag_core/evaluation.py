@@ -143,6 +143,8 @@ def normalize_gold_record(raw: Mapping[str, Any], index: int) -> Dict[str, Any]:
         "reference_answer": str(reference_answer or ""),
         "question_type": str(_first_value(raw, ("question_type", "type", "category"), "") or ""),
         "spot": str(_first_value(raw, ("spot", "attraction", "scenic_spot"), "") or ""),
+        "rewritten_query": str(_first_value(raw, ("rewritten_query",), "") or "").strip(),
+        "multi_turn_context": str(_first_value(raw, ("multi_turn_context", "history"), "") or "").strip(),
         "answerable": bool(raw.get("answerable", True)),
     }
 
@@ -331,6 +333,7 @@ def _compact_result(item: Mapping[str, Any], gold_ids: set[str], text_chars: int
         "doc_id", "parent_doc_id", "doc_title", "chunk_gen_title", "source_file",
         "spot_name", "dimension_paths", "matched_dimensions", "matches",
         "fact_anchor_bonus", "fact_anchor_matches",
+        "entity_anchor_recall_bonus", "entity_anchor_matches",
     ):
         if key in item:
             result[key] = item[key]

@@ -79,6 +79,16 @@ def build_qdrant_payload_v2(doc_id, document_tags, schema, *, include_empty=True
     if not isinstance(paths, list):
         paths = [paths] if paths else []
     payload["dimension_paths"] = [normalize_text(path) for path in paths if normalize_text(path)]
+    raw_entities = document_tags.get("entity_mentions", []) if isinstance(document_tags, Mapping) else []
+    if not isinstance(raw_entities, list):
+        raw_entities = [raw_entities]
+    payload["entity_mentions"] = [item for item in raw_entities if isinstance(item, Mapping)]
+    # Facts are a separate, evidence-grounded index layer.  Keep their raw
+    # triples in the payload so a result can always show the source evidence.
+    raw_facts = document_tags.get("facts", []) if isinstance(document_tags, Mapping) else []
+    if not isinstance(raw_facts, list):
+        raw_facts = [raw_facts]
+    payload["facts"] = [item for item in raw_facts if isinstance(item, Mapping)]
     for leaf_id in maps["leaves"]:
         labels = list(tags.get(leaf_id, []))
         if labels or include_empty:
@@ -138,6 +148,7 @@ def build_index_v2(tag_output, schema):
     doc_count = 0
     multi_label_docs = {leaf_id: 0 for leaf_id in maps["leaves"]}
     tag_details_by_doc = {}
+    entity_postings: Dict[str, List[str]] = {}
     for raw_doc_id, document in _v2_documents(tag_output):
         doc_id = str(raw_doc_id)
         doc_count += 1
@@ -152,6 +163,16 @@ def build_index_v2(tag_output, schema):
                 if items:
                     details[dimension_id] = items
         tag_details_by_doc[doc_id] = details
+        for entity in document.get("entity_mentions", []) if isinstance(document, Mapping) else []:
+            if not isinstance(entity, Mapping):
+                continue
+            values = [entity.get("name", "")] + list(entity.get("aliases", []) or [])
+            for value in values:
+                key = normalize_label(value)
+                if key:
+                    entity_postings.setdefault(key, [])
+                    if doc_id not in entity_postings[key]:
+                        entity_postings[key].append(doc_id)
         for leaf_id in maps["leaves"]:
             labels = tags.get(leaf_id, [])
             if len(labels) > 1:
@@ -191,10 +212,12 @@ def build_index_v2(tag_output, schema):
         },
         "dimension_metadata": metadata,
         "tag_details": tag_details_by_doc,
+        "entity_postings": entity_postings,
         "stats": {
             "document_count": doc_count,
             "leaf_count": len(maps["leaves"]),
             "tag_count": sum(len(values) for values in postings.values()),
+            "entity_count": len(entity_postings),
             "multi_label_documents": multi_label_docs,
         },
     }
@@ -217,9 +240,14 @@ class IndexBuilderV2:
             "inverted_index": output_dir / "inverted_index_v2.json",
             "dimension_metadata": output_dir / "dimension_metadata_v2.json",
             "hierarchy": output_dir / "dimension_hierarchy_v2.json",
+            "entity_index": output_dir / "entity_index_v2.json",
         }
         for key, path in files.items():
-            value = index["postings"] if key == "inverted_index" else index[key]
+            value = (
+                index["postings"] if key == "inverted_index" else
+                index["entity_postings"] if key == "entity_index" else
+                index[key]
+            )
             path.write_text(json.dumps(value, ensure_ascii=False, indent=2), encoding="utf-8")
         return {key: str(path) for key, path in files.items()}
 

@@ -114,6 +114,9 @@
 import os
 os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
 import json
+import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
 try:
     from pymilvus import MilvusClient
 except ImportError:
@@ -171,7 +174,7 @@ class Config:
     ALL_DIMS = DIMS_ENUM + DIMS_NUM + DIMS_DES
 
 
-def build_tag_document_v2(doc_id, extracted, schema):
+def build_tag_document_v2(doc_id, extracted, schema, entity_mentions=None):
     """Normalize one document to array-valued v2 tags plus evidence."""
 
     schema = load_schema(schema, allow_legacy=False, strict=False)
@@ -181,10 +184,12 @@ def build_tag_document_v2(doc_id, extracted, schema):
         " / ".join(maps["nodes"][part]["name"] for part in maps["paths"][dimension_id])
         for dimension_id in tags
     })
+    entities = entity_mentions if isinstance(entity_mentions, list) else []
     return {
         "tags": tags,
         "tag_details": details,
         "dimension_paths": paths,
+        "entity_mentions": entities,
         "schema_version": SCHEMA_VERSION,
     }
 
@@ -203,8 +208,7 @@ class TagGeneratorV2:
             node for node in self.schema["dimensions"]
             if node.get("level") == 2 and node.get("indexable") is True
         ]
-        documents = {}
-        for record in records:
+        def tag_one(record):
             doc_id = str(record.get("doc_id", record.get("id", "")))
             text = str(record.get("doc_text", record.get("text", "")) or "")
             extracted = self.miner.extract_batch_dimensions_v2(
@@ -212,7 +216,43 @@ class TagGeneratorV2:
                 leaves,
                 max_dimensions_per_request=self.max_dimensions_per_request,
             ) if text else {}
-            documents[doc_id] = build_tag_document_v2(doc_id, extracted, self.schema)
+            entities = self.miner.extract_entities_v2(text) if text and hasattr(self.miner, "extract_entities_v2") else []
+            return doc_id, build_tag_document_v2(doc_id, extracted, self.schema, entities)
+
+        try:
+            workers = max(1, int(os.getenv("TAG_EXTRACTION_WORKERS", "1")))
+        except ValueError:
+            workers = 1
+        progress_path = os.getenv("TAG_EXTRACTION_PROGRESS_PATH", "").strip()
+
+        def write_progress(completed):
+            if not progress_path:
+                return
+            total = len(records)
+            Path(progress_path).write_text(json.dumps({
+                "stage": "llm_tag_extraction",
+                "completed": completed,
+                "total": total,
+                "percent": round(100.0 * completed / total, 2) if total else 100.0,
+            }, ensure_ascii=False, indent=2), encoding="utf-8")
+
+        documents = {}
+        if workers == 1 or len(records) < 2:
+            for completed, record in enumerate(records, start=1):
+                doc_id, document = tag_one(record)
+                documents[doc_id] = document
+                write_progress(completed)
+        else:
+            # This is document-level concurrency only: each document still uses
+            # the same schema, validation, and per-dimension extraction rules.
+            # Results are merged by doc id, so downstream index construction is
+            # deterministic with respect to the input corpus.
+            with ThreadPoolExecutor(max_workers=min(workers, len(records))) as executor:
+                futures = [executor.submit(tag_one, record) for record in records]
+                for completed, future in enumerate(as_completed(futures), start=1):
+                    doc_id, document = future.result()
+                    documents[doc_id] = document
+                    write_progress(completed)
 
         result = {"schema_version": SCHEMA_VERSION, "documents": documents}
         if output_path:

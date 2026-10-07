@@ -49,6 +49,7 @@ def run_ingest(settings: Settings, schema_path: str = "") -> Dict[str, Any]:
             "schema": str(settings.run_dir / "V_core_v2.json"),
             "tags": str(settings.run_dir / "tags_output_v2.json"),
             "inverted_index": str(settings.run_dir / "inverted_index_v2.json"),
+            "entity_index": str(settings.run_dir / "entity_index_v2.json"),
         },
     }
     (settings.run_dir / "run_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")

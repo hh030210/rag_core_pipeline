@@ -10,6 +10,7 @@ from typing import Any, Dict, Iterable, List
 
 from code_jyx.index_builder import build_qdrant_payload_v2
 from .schema_v2 import SCHEMA_VERSION, schema_maps
+from .entity_registry import extract_landmark_mentions
 
 
 def _point_id(chunk_id: str) -> str:
@@ -34,6 +35,23 @@ def make_payload(record: Dict[str, Any], document_tags: Dict[str, Any], schema: 
         "spot_name": str(record.get("spot_name", "")),
         "schema_version": SCHEMA_VERSION,
     })
+    # Persist a lightweight entity sidecar alongside dimension labels. This is
+    # derived from source text, not from evaluation cases, and lets new POIs
+    # become queryable without manually editing a registry.
+    inferred_entities = extract_landmark_mentions(
+        payload.get("doc_title", ""), payload.get("chunk_gen_title", ""),
+        payload.get("chunk_text_full", ""),
+    )
+    supplied_entities = payload.get("entity_mentions", [])
+    if not isinstance(supplied_entities, list):
+        supplied_entities = []
+    # Retain the structured LLM entities; append rule-derived landmarks only
+    # when they are not already represented by a canonical entity name.
+    supplied_names = {str(item.get("name", "")) for item in supplied_entities if isinstance(item, dict)}
+    payload["entity_mentions"] = [*supplied_entities, *[
+        {"name": name, "type": "auto_landmark", "aliases": [], "evidence": name}
+        for name in inferred_entities if name not in supplied_names
+    ]]
     return payload
 
 

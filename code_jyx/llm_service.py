@@ -210,6 +210,58 @@ PROMPT_EXTRACT_BATCH = """你是一个领域知识抽取专家。
 如果某个维度在文档中未提及，请不要包含在输出中。
 """
 
+PROMPT_EXTRACT_ENTITIES = """你是知识库实体抽取专家。请从下面的单个 chunk 中抽取可用于检索定位的明确命名实体。
+
+仅抽取文本中实际出现、具有区分度的专名，不要抽取“景区、建筑、游客、历史”等泛称，不要基于常识补全。
+允许的 type 仅为：poi（子景点/区域）、building（建筑）、person（人物）、artifact（文物/碑刻/作品）、event（事件/活动）、organization（机构）。
+每项必须给出原文 evidence；aliases 仅保留文本中明确出现的同义写法，没有则为空数组。最多输出 8 项。
+
+文本：
+---
+{text}
+---
+
+只输出 JSON：
+{{"entities":[{{"name":"实体原文","type":"poi","aliases":[],"evidence":"原文证据","confidence":0.95}}]}}
+"""
+
+PROMPT_EXTRACT_FACTS = """你是旅游知识库的事实抽取专家。请只从下面的单个 chunk 中抽取可被检索验证的事实三元组。
+
+每条事实都必须满足：subject、object 和 evidence 都能在当前 chunk 原文中逐字找到；不得依赖常识补全，不得跨 chunk 推断。predicate 必须从下列受控关系中选择：
+- built_by：建造者、设计者、题写者、创作者
+- built_time：建造、形成、命名、发生的时间
+- identity：人物身份、建筑/文物的性质或别称
+- located_in：明确的所在地、隶属关系或相邻关系
+- feature：明确的景观、建筑、艺术或文化特征
+- service_rule：开放、预约、游览、退款等服务规则
+- price：票价、收费或优惠价格
+- transport_route：到达、换乘、线路或步行路线
+
+不要抽取“景区很好看”这类主观泛化描述；最多 10 条。若没有可验证事实，返回空数组。
+
+文本：
+---
+{text}
+---
+
+只输出 JSON：
+{{"facts":[{{"subject":"原文主体","subject_type":"poi","predicate":"built_by","object":"原文属性或客体","evidence":"包含主体和客体的原文证据","confidence":0.95}}]}}
+"""
+
+PROMPT_EXTRACT_QUERY_FACTS = """你是检索查询的事实约束解析器。将问题中明确表达的事实需求转成受控关系约束。
+
+predicate 只能为 built_by、built_time、identity、located_in、feature、service_rule、price、transport_route。
+subject 必须是问题中出现的实体；object 是问题中明确出现的限定词，没有则为空字符串。不要猜测任何实体、时间或答案。最多返回 3 条。
+
+问题：
+---
+{query}
+---
+
+只输出 JSON：
+{{"facts":[{{"subject":"问题中的实体","predicate":"built_by","object":"问题中出现的限定词或空字符串","confidence":0.95}}]}}
+"""
+
 PROMPT_EXTRACT_MULTI_BATCH = """你是一个领域知识抽取专家。
 
 请分别阅读下面的多条文本，并为每条文本抽取指定维度的值。
@@ -1321,6 +1373,144 @@ class DimensionMiningWithQwen:
                 print(f"[Warning] v2 批量抽取失败，回退到多值逐维度接口: {exc}")
                 cleaned = self._extract_batch_fallback_v2(text, batch)
             self._merge_tag_maps(result, cleaned)
+        return result
+
+    def extract_entities_v2(self, text: str, *, max_text_chars: int = 1500) -> List[Dict[str, Any]]:
+        """Extract retrieval entities independently of the dimension schema."""
+        if not text:
+            return []
+        try:
+            raw = self._call_llm_json(
+                PROMPT_EXTRACT_ENTITIES.format(text=_clip_text(text, max_text_chars)),
+                temperature=0.0,
+            )
+        except Exception as exc:
+            print(f"[Warning] 实体抽取失败，跳过 LLM 实体: {exc}")
+            return []
+        raw_items = raw.get("entities", []) if isinstance(raw, dict) else []
+        if not isinstance(raw_items, list):
+            return []
+        allowed_types = {"poi", "building", "person", "artifact", "event", "organization"}
+        cleaned, seen = [], set()
+        for item in raw_items:
+            if not isinstance(item, dict):
+                continue
+            name = normalize_text(item.get("name", ""))
+            evidence = normalize_text(item.get("evidence", ""))
+            entity_type = str(item.get("type", "")).strip().lower()
+            if len(name) < 2 or entity_type not in allowed_types or name not in text or not evidence:
+                continue
+            key = normalize_label(name)
+            if not key or key in seen:
+                continue
+            aliases = item.get("aliases", [])
+            if isinstance(aliases, str):
+                aliases = [aliases]
+            aliases = [normalize_text(value) for value in aliases if normalize_text(value) in text]
+            cleaned_item = {"name": name, "type": entity_type, "aliases": list(dict.fromkeys(aliases)),
+                            "evidence": evidence}
+            try:
+                confidence = float(item.get("confidence", 0.0))
+                if 0.0 <= confidence <= 1.0:
+                    cleaned_item["confidence"] = confidence
+            except (TypeError, ValueError):
+                pass
+            cleaned.append(cleaned_item)
+            seen.add(key)
+            if len(cleaned) >= 8:
+                break
+        return cleaned
+
+    def extract_facts_v2(self, text: str, *, max_text_chars: int = 1800) -> List[Dict[str, Any]]:
+        """Extract source-grounded triples for the optional fact index.
+
+        This deliberately rejects plausible-looking LLM output unless all
+        endpoints and its evidence are literal substrings of the same chunk.
+        The invariant makes every retrieved triple inspectable downstream.
+        """
+        if not text:
+            return []
+        try:
+            raw = self._call_llm_json(
+                PROMPT_EXTRACT_FACTS.format(text=_clip_text(text, max_text_chars)),
+                temperature=0.0,
+            )
+        except Exception as exc:
+            print(f"[Warning] 事实抽取失败，跳过 LLM facts: {exc}")
+            return []
+        raw_items = raw.get("facts", []) if isinstance(raw, dict) else []
+        if not isinstance(raw_items, list):
+            return []
+        allowed_predicates = {
+            "built_by", "built_time", "identity", "located_in", "feature",
+            "service_rule", "price", "transport_route",
+        }
+        allowed_types = {"poi", "building", "person", "artifact", "organization", "event", ""}
+        cleaned, seen = [], set()
+        for item in raw_items:
+            if not isinstance(item, dict):
+                continue
+            subject = normalize_text(item.get("subject", ""))
+            obj = normalize_text(item.get("object", ""))
+            evidence = normalize_text(item.get("evidence", ""))
+            predicate = str(item.get("predicate", "")).strip().lower()
+            subject_type = str(item.get("subject_type", "")).strip().lower()
+            if (len(subject) < 2 or len(obj) < 1 or predicate not in allowed_predicates
+                    or subject_type not in allowed_types or subject not in text
+                    or obj not in text or not evidence or evidence not in text):
+                continue
+            key = (normalize_label(subject), predicate, normalize_label(obj))
+            if not all(key) or key in seen:
+                continue
+            result = {
+                "subject": subject, "subject_type": subject_type, "predicate": predicate,
+                "object": obj, "evidence": evidence,
+            }
+            try:
+                confidence = float(item.get("confidence", 0.0))
+                if 0.0 <= confidence <= 1.0:
+                    result["confidence"] = confidence
+            except (TypeError, ValueError):
+                pass
+            cleaned.append(result)
+            seen.add(key)
+            if len(cleaned) >= 10:
+                break
+        return cleaned
+
+    def extract_query_facts_v2(self, query: str) -> List[Dict[str, Any]]:
+        """Parse only explicit query fact constraints; never manufacture an answer."""
+        if not query:
+            return []
+        try:
+            raw = self._call_llm_json(PROMPT_EXTRACT_QUERY_FACTS.format(query=query), temperature=0.0)
+        except Exception as exc:
+            print(f"[Warning] 查询事实解析失败，跳过 fact constraints: {exc}")
+            return []
+        raw_items = raw.get("facts", []) if isinstance(raw, dict) else []
+        if not isinstance(raw_items, list):
+            return []
+        allowed_predicates = {
+            "built_by", "built_time", "identity", "located_in", "feature",
+            "service_rule", "price", "transport_route",
+        }
+        result, seen = [], set()
+        for item in raw_items:
+            if not isinstance(item, dict):
+                continue
+            subject = normalize_text(item.get("subject", ""))
+            obj = normalize_text(item.get("object", ""))
+            predicate = str(item.get("predicate", "")).strip().lower()
+            # Query-side terms must be explicitly written by the user.
+            if len(subject) < 2 or subject not in query or (obj and obj not in query) or predicate not in allowed_predicates:
+                continue
+            key = (normalize_label(subject), predicate, normalize_label(obj))
+            if key in seen:
+                continue
+            result.append({"subject": subject, "predicate": predicate, "object": obj})
+            seen.add(key)
+            if len(result) >= 3:
+                break
         return result
 
     def extract_batch_dimensions(
