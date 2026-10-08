@@ -73,6 +73,10 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--ks", default="1,3,5,10,20", help="评测 K，逗号分隔")
     evaluate.add_argument("--result-text-chars", type=int, default=800, help="JSONL 中每个结果保留的文本长度")
     evaluate.add_argument("--no-query-expansion", action="store_true", help="评测时不执行查询扩展")
+    evaluate.add_argument(
+        "--query-parser-mode", choices=("deterministic", "llm"), default="deterministic",
+        help="查询维度解析器；llm 使用配置的 DeepSeek/Qwen 等模型，独立于 query expansion",
+    )
     opt = sub.add_parser("optimize-prompt", help="用问答样本执行案例级 Prompt 迭代")
     _common(opt)
     opt.add_argument("--examples", required=True)
@@ -204,6 +208,7 @@ def main(argv=None) -> int:
                 ks=args.ks,
                 result_text_chars=args.result_text_chars,
                 query_expansion=not args.no_query_expansion,
+                query_parser_mode=args.query_parser_mode,
             )
             print(json.dumps(result, ensure_ascii=False, indent=2))
         elif args.command == "batch-ask":

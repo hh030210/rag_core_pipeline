@@ -118,39 +118,29 @@ else:
 # 提示词模板
 # ============================================================
 
-PROMPT_GENERATE_CANDIDATES = """你是一个专业的领域知识结构化专家。
+PROMPT_GENERATE_CANDIDATES = """你是一个知识库语料分析与信息架构专家。
 
-请从文档集合中建立最多两层的层次化维度 Schema。先归纳 5 至 8 个一级信息轴，
-再为每个一级信息轴拆分 2 至 6 个语义独立、可检索的二级叶子维度。
-对景区知识库，信息轴通常可以包括“对象与身份、地理位置、历史文化、景观特色、
-开放运营、票务规则、交通到达、游客服务”等属性类型；请根据文档选择其中至少 5 个，
-不要因为某一个信息轴在示例文本中出现较少就删除它。
+任务：只根据下面给出的本次数据集文档样本，归纳一个两层的维度 Schema，供后续
+对同一数据集的全部 chunk 抽取标签和检索使用。必须从这些样本的主题、事实类型、
+表达方式和信息需求中归纳维度；不得套用其他项目、领域或数据集的固定维度体系，
+尤其不得预设旅游/景区类目。文档样本是唯一依据，不足以支持的类别不要臆造。
 
-严格要求：
-1. 一级维度只负责分组，indexable 必须为 false，parent_id 必须为 null。
-2. 二级叶子维度必须有明确边界，能够从文本中抽取原子标签，indexable 必须为 true。
-3. 一级维度不能混合多个不同类型的信息；每个父维度至少有两个语义独立叶子。
-4. 不生成“其他、备注、综合信息”等兜底维度，不把具体实体或标签误当成维度。
-   维度必须是“信息的属性类型/字段”，不是文本中出现的具体值；不要把文本中的
-   地名、朝代、季节、价格、设施名称直接提升为维度。例如，
-   “地理位置”“开放时间”“票务信息”“交通方式”“历史文化”“景观特色”“游客服务”
-   可以作为维度；“浙江省”“北京市”“旺季”“淡季”“园林”“古迹”“单程票价”
-   只能作为该维度抽取出的标签，绝不能作为维度名称。
-5. id 使用稳定的英文或拼音 slug；同一语义的 id 在不同批次中保持稳定。
-6. 一级信息轴数量必须为 5 至 8 个；每个一级信息轴至少有两个、最多六个叶子。
+结构约束：
+1. 建立 5 至 8 个一级信息轴；每个一级轴下建立 2 至 6 个语义独立、边界清晰、可检索的叶子维度。
+2. 一级维度只做语义分组，indexable=false、parent_id=null；二级叶子 indexable=true，parent_id 指向所属一级。
+3. 叶子必须描述可从单个 chunk 中抽取的“信息类型/属性”，不能是具体实体、实例、答案、取值或某个文档主题的改写。
+4. 轴与叶子应覆盖样本中反复出现且对区分事实有用的信息类型；避免空泛兜底、语义重复、过细字段，以及把整篇文档主题直接当维度。
+5. 优先让不同一级轴相互区分；在 description 中说明叶子适用边界及与相邻叶子的区别。aliases 可放语料中真实出现的同义问法/表达，不要添加外部领域知识。
+6. id 使用稳定的小写英文或拼音 slug；同一节点的 id 应由其语义确定，不使用具体数据值。
 7. 只输出合法 JSON，不要 Markdown、解释或思考过程。
-
-请优先输出 6 个一级信息轴，每个一级信息轴输出至少 2 个叶子；叶子名称也必须是
-“位置层级、开放时段、票价类型、历史事件、景观组成、交通方式”这类属性类型，
-而不是“西湖、旺季、50元、园林”这类具体值。
 
 输出格式必须严格为：
 {{"schema_version":"2.0","dimensions":[
   {{"id":"stable_slug","name":"一级名称","parent_id":null,"level":1,"indexable":false,"description":"分组边界"}},
-  {{"id":"stable_leaf_slug","name":"叶子名称","parent_id":"stable_slug","level":2,"indexable":true,"description":"可抽取标签的边界"}}
+  {{"id":"stable_leaf_slug","name":"叶子名称","parent_id":"stable_slug","level":2,"indexable":true,"description":"本叶子的信息边界及适用范围","aliases":[]}}
 ]}}
 
-文档示例（共 {n} 篇，仅供参考）：
+以下是本次新数据集的分层抽样文档（共 {n} 篇）。请据此归纳，不要假定未出现在样本中的领域或属性：
 ---
 {docs_snippet}
 ---
@@ -278,7 +268,7 @@ PROMPT_EXTRACT_MULTI_BATCH = """你是一个领域知识抽取专家。
 6. 不要臆测文本中没有出现的信息，不允许跨 chunk 推断。
 
 输出格式示例：
-{{"记录ID-1": {{"place_slug": [{{"label":"衢州","evidence":"原文","confidence":0.95}}]}}, "记录ID-2": {{}}}}
+{{"记录ID-1": {{"attribute_leaf_slug": [{{"label":"原文中的原子值","evidence":"对应原文片段","confidence":0.95}}]}}, "记录ID-2": {{}}}}
 
 待处理记录：
 {records_block}
@@ -390,9 +380,8 @@ Schema（只允许使用这些精确的 dimension id）：
 2. 每个约束返回 0 到 N 个互相独立的原子标签。
 3. 同一维度多个标签默认 match=ANY。
 4. 如果查询表达了某个叶子维度，但没有出现可与候选标签逐字对应的值，保留该约束，
-   labels 返回空数组，并用 intent_terms 返回 1 到 8 个原始问题短语，例如“几点开门”、
-   “修建了多久”。intent_terms 只表示检索意图，不是数据库标签。
-5. 不要把景区名称作为普通维度标签；主体实体由上游单独处理。
+   labels 返回空数组，并用 intent_terms 返回 1 到 8 个原始问题短语。intent_terms 只表示检索意图，不是数据库标签。
+5. 不要把问题主体名称误作维度标签；只有所选叶子定义明确描述该主体属性时才输出。
 
 请严格输出 JSON：
 {{"schema_version":"2.0","constraints":[{{"dimension_id":"leaf_slug","labels":["值1","值2"],"intent_terms":["意图短语"],"match":"ANY"}}]}}
@@ -405,7 +394,7 @@ Schema（只允许使用这些精确的 dimension id）：
 PROMPT_PARSE_QUERY_V4 = """你是一个严格的查询结构化解析器。
 
 给定用户查询和可用的二级叶子维度，只能从给定维度中选择查询明确涉及的维度。
-不要创建新维度，不要把景区名称当成维度标签。
+不要创建新维度，不要把问题主体的名称误当成维度标签；遵循所选叶子的定义。
 
 可用叶子维度（只允许使用其中的 id）：
 {dims_list}
@@ -416,7 +405,7 @@ PROMPT_PARSE_QUERY_V4 = """你是一个严格的查询结构化解析器。
 1. 只输出合法 JSON，不要 Markdown、解释或思考过程。
 2. 只输出二级叶子维度（indexable=true）。
 3. 一个维度的 labels 必须是问题中明确出现、可与知识库标签对应的原子短语；没有这样的字面值时 labels 必须为空数组。
-4. 没有规范标签但有明确查询意图时，仍然必须保留该维度，并把原问题中的意图短语写入 intent_terms，例如“几点开门”“怎么预约”“修建了多久”。
+4. 没有规范标签但有明确查询意图时，仍然必须保留该维度，并把原问题中的相关短语写入 intent_terms。
 5. 一个维度可以有多个 labels 和多个 intent_terms；必须全部保留、去重，不能只返回第一个，也不能把多个概念拼成一个字符串。
 6. 同一维度的多个标签使用 match=ANY；不同维度分别输出。
 7. 不跨文档推断，不使用维度清单之外的 id。
@@ -428,13 +417,12 @@ PROMPT_PARSE_QUERY_V4 = """你是一个严格的查询结构化解析器。
 只输出 JSON："""
 
 
-PROMPT_FORMAT_REPAIR = """你是 JSON Schema 修复器。请修复下面的模型输出，使其满足要求：
+PROMPT_FORMAT_REPAIR = """你是 JSON Schema 修复器。请在保留原输出中有语料依据的语义内容的前提下，修复下面的模型输出，使其满足要求：
 1. 只输出合法 JSON；2. schema_version 必须为 "2.0"；3. dimensions 是两层树；
 4. 一级 indexable=false 且 parent_id=null；5. 二级 indexable=true 且 parent_id 指向一级；
 6. 一级节点必须有 5 至 8 个；7. 每个一级至少有两个、最多六个叶子；
-8. 维度名称必须是信息属性类型，而不是具体值。比如“地理位置”是维度，
-“浙江省”是标签；“开放时间”是维度，“旺季”是标签；“票务信息”是维度，
-“单程票价”是标签；9. 不添加“其他、备注、综合信息”等兜底维度。
+8. 维度必须是本次给定语料支持的信息类型，而不是具体实体、实例、答案或取值；
+9. 不添加“其他、备注、综合信息”等兜底维度，也不要引入语料样本无法支持的领域类别。
 
 结构校验错误：{errors}
 原始输出：
@@ -566,12 +554,20 @@ class DimensionMiningWithQwen:
             max_tokens = max(64, int(os.getenv("LLM_MAX_TOKENS", "512")))
         except ValueError:
             max_tokens = 512
+        try:
+            request_timeout = max(30.0, float(os.getenv("LLM_REQUEST_TIMEOUT", str(timeout))))
+        except ValueError:
+            request_timeout = float(timeout)
+        try:
+            empty_retries = max(0, int(os.getenv("LLM_EMPTY_RESPONSE_RETRIES", "2")))
+        except ValueError:
+            empty_retries = 2
         request_kwargs = {
             "model": self.model_name,
             "messages": [{"role": "user", "content": prompt}],
             "temperature": temperature,
             "top_p": 0.9,
-            "timeout": timeout,
+            "timeout": request_timeout,
             "max_tokens": max_tokens,
         }
         # Qwen3 默认可能输出较长的思考过程。维度标签只需要结构化短答案，
@@ -582,10 +578,18 @@ class DimensionMiningWithQwen:
                 "chat_template_kwargs": {"enable_thinking": False},
             }
 
-        resp = client.chat.completions.create(**request_kwargs)
-        if not resp.choices:
-            raise RuntimeError(f"OpenAI 兼容 LLM 返回空 choices: {resp}")
-        return (resp.choices[0].message.content or "").strip()
+        for attempt in range(empty_retries + 1):
+            resp = client.chat.completions.create(**request_kwargs)
+            if not resp.choices:
+                raise RuntimeError(f"OpenAI 兼容 LLM 返回空 choices: {resp}")
+            content = (resp.choices[0].message.content or "").strip()
+            if content:
+                return content
+            if attempt < empty_retries:
+                time.sleep(min(2 ** attempt, 4))
+        raise RuntimeError(
+            "OpenAI 兼容 LLM 连续返回空内容；可能是兼容代理的上游请求超时或 5xx"
+        )
 
     @staticmethod
     def _tolerant_json_text(value: str) -> str:
@@ -893,22 +897,28 @@ class DimensionMiningWithQwen:
             "generation_method": "llm_candidate_quality_gate_fallback",
         }
 
-    def generate_candidate_schema(self, docs: List[str]) -> Dict[str, Any]:
-        """Generate and validate the v2 two-level candidate schema."""
+    def generate_candidate_schema(
+        self, docs: List[str], *, allow_fallback: bool = True
+    ) -> Dict[str, Any]:
+        """Infer a v2 schema from the supplied corpus samples.
+
+        ``allow_fallback`` is retained for legacy callers. New-dataset
+        experiments should disable it so a failed corpus induction cannot be
+        silently replaced by a schema from another domain.
+        """
         if not docs:
             raise ValueError("文档列表为空")
 
-        # 使用分布更均匀的样本，而不是只取列表开头的文档；长度和数量可由
-        # 环境变量控制。维度发现阶段若只看 5*300 字，极易漏掉长文本后半段
-        # 和少数景区中的有效信息轴。
+        # 使用覆盖全体记录的均匀分层样本，而不是只取列表开头；样本长度和数量
+        # 可由环境变量控制，降低长尾主题或少数信息轴在归纳阶段被漏掉的风险。
         try:
-            max_docs = max(5, int(os.getenv("DIM_CANDIDATE_DOCS", "20")))
+            max_docs = max(5, int(os.getenv("DIM_CANDIDATE_DOCS", "48")))
         except ValueError:
-            max_docs = 20
+            max_docs = 48
         try:
-            max_chars = max(300, int(os.getenv("DIM_CANDIDATE_DOC_CHARS", "800")))
+            max_chars = max(300, int(os.getenv("DIM_CANDIDATE_DOC_CHARS", "1000")))
         except ValueError:
-            max_chars = 800
+            max_chars = 1000
 
         sample_count = min(max_docs, len(docs))
         if sample_count == 1:
@@ -933,7 +943,7 @@ class DimensionMiningWithQwen:
 
         raw = self._call_llm_json_with_repair(
             prompt,
-            temperature=0.7,
+            temperature=0.2,
             repair_errors="候选维度必须是合法的两层 v2 Schema",
         )
         schema = self._build_candidate_schema(raw)
@@ -941,16 +951,17 @@ class DimensionMiningWithQwen:
         parents = [node for node in schema.get("dimensions", []) if node.get("level") == 1]
         if not 5 <= len(parents) <= 8:
             errors.append(f"一级信息轴数量必须为 5 至 8 个，当前为 {len(parents)} 个")
-        # 这些是本景区语料中常见的标签值，用于拦截模型把值误当成维度。
-        # 这不是手工添加维度，只是对 LLM 结构输出做安全校验并触发修复重试。
-        forbidden_dimension_values = {
-            "浙江省", "北京市", "陕西省", "旺季", "淡季", "园林", "古迹",
-            "文化活动", "旅游设施", "单程票价", "押金",
+        parent_ids = [node.get("id") for node in parents]
+        leaf_counts = {
+            parent_id: sum(
+                node.get("level") == 2 and node.get("parent_id") == parent_id
+                for node in schema.get("dimensions", [])
+            )
+            for parent_id in parent_ids
         }
-        bad_values = [node.get("name") for node in schema.get("dimensions", [])
-                      if node.get("level") == 2 and node.get("name") in forbidden_dimension_values]
-        if bad_values:
-            errors.append("以下叶子名称看起来是标签值而非维度：" + "、".join(bad_values))
+        for parent_id, count in leaf_counts.items():
+            if not 2 <= count <= 6:
+                errors.append(f"一级信息轴 {parent_id} 必须有 2 至 6 个叶子，当前为 {count} 个")
         if errors:
             repair_prompt = PROMPT_FORMAT_REPAIR.format(
                 errors="; ".join(errors),
@@ -962,21 +973,24 @@ class DimensionMiningWithQwen:
             parents = [node for node in schema.get("dimensions", []) if node.get("level") == 1]
             if not 5 <= len(parents) <= 8:
                 errors.append(f"修复后一级信息轴数量必须为 5 至 8 个，当前为 {len(parents)} 个")
-            bad_values = [node.get("name") for node in schema.get("dimensions", [])
-                          if node.get("level") == 2 and node.get("name") in forbidden_dimension_values]
-            if bad_values:
-                errors.append("修复后仍有标签值被误当成维度：" + "、".join(bad_values))
-            if errors:
-                # The custom gateway may return a semantically plausible but
-                # structurally invalid schema even after the one permitted
-                # repair retry.  Do not write that schema to an index: switch
-                # to the validated attribute-type fallback and keep the LLM
-                # multi-label extraction stage active.
-                print(
-                    "[Warning] LLM v2 Schema 修复仍未通过质量门禁，使用安全属性 Schema："
-                    + "; ".join(errors)
+            parent_ids = [node.get("id") for node in parents]
+            leaf_counts = {
+                parent_id: sum(
+                    node.get("level") == 2 and node.get("parent_id") == parent_id
+                    for node in schema.get("dimensions", [])
                 )
+                for parent_id in parent_ids
+            }
+            for parent_id, count in leaf_counts.items():
+                if not 2 <= count <= 6:
+                    errors.append(f"修复后一级信息轴 {parent_id} 必须有 2 至 6 个叶子，当前为 {count} 个")
+            if errors:
+                if not allow_fallback:
+                    raise SchemaValidationError(errors)
+                print("[Warning] LLM v2 Schema 修复仍未通过质量门禁，使用兼容 fallback：" + "; ".join(errors))
                 return self._quality_gate_fallback_schema()
+        schema["generation_method"] = "llm_corpus_induced"
+        schema["source_sample_count"] = len(snippet_docs)
         return schema
 
     def generate_candidate_dimensions(self, docs: List[str]) -> List[str]:
@@ -1577,17 +1591,34 @@ class DimensionMiningWithQwen:
                     if cleaned:
                         self._merge_tag_maps(result.setdefault(doc_id, {}), cleaned)
             except Exception as exc:
-                print(f"[Warning] 多 chunk v2 批量抽取失败，回退到逐 chunk 多值接口: {exc}")
-                for record in records:
-                    doc_id = str(record.get("doc_id", ""))
-                    fallback = self.extract_batch_dimensions_v2(
-                        str(record.get("doc_text", "")),
-                        batch,
-                        max_dimensions_per_request=limit,
-                        max_text_chars=max_text_chars,
-                    )
-                    if fallback:
-                        self._merge_tag_maps(result.setdefault(doc_id, {}), fallback)
+                print(f"[Warning] 多 chunk v2 批量抽取失败: {exc}")
+                if len(records) > 1:
+                    # 一个大批次的 JSON 被截断或网关超时，不应退回到
+                    # records × dimensions 次请求。递归二分能降低上下文和
+                    # 输出长度，同时保留同一套维度抽取逻辑。
+                    midpoint = max(1, len(records) // 2)
+                    for part in (records[:midpoint], records[midpoint:]):
+                        if not part:
+                            continue
+                        partial = self.extract_multi_chunk_dimensions_v2(
+                            part,
+                            dimensions,
+                            max_text_chars=max_text_chars,
+                            max_dimensions_per_request=limit,
+                        )
+                        for doc_id, tag_map in partial.items():
+                            self._merge_tag_maps(result.setdefault(doc_id, {}), tag_map)
+                else:
+                    for record in records:
+                        doc_id = str(record.get("doc_id", ""))
+                        fallback = self.extract_batch_dimensions_v2(
+                            str(record.get("doc_text", "")),
+                            batch,
+                            max_dimensions_per_request=limit,
+                            max_text_chars=max_text_chars,
+                        )
+                        if fallback:
+                            self._merge_tag_maps(result.setdefault(doc_id, {}), fallback)
         return result
 
     def extract_multi_chunk_dimensions(
@@ -1820,6 +1851,8 @@ class DimensionMiningWithQwen:
         self,
         query_text: str,
         dimensions: List[Any],
+        *,
+        prefer_best_match: bool = False,
     ) -> Dict[str, Any]:
         """Parse v4 query constraints without dropping intent-only entries.
 
@@ -1852,6 +1885,12 @@ class DimensionMiningWithQwen:
             dims_list=json.dumps(descriptors, ensure_ascii=False),
             query_text=json.dumps(str(query_text), ensure_ascii=False),
         )
+        if prefer_best_match:
+            prompt += (
+                "\n这是一次空结果恢复：如果问题确实在询问知识，请从给定叶子中选择最贴近的一个或多个维度；"
+                "没有可逐字匹配的标签时，labels 返回空数组，并把问题中最能代表该维度意图的短语写入 intent_terms。"
+                "不要为了填充而选择明显不相关的维度；纯噪声、无法理解或完全超出 Schema 范围的问题仍可返回空 constraints。"
+            )
         raw: Any = {}
         llm_error = ""
         attempts = 0

@@ -3,15 +3,22 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import math
+import os
 import re
 from pathlib import Path
 from typing import Any, Dict, List
 
+try:
+    import numpy as np
+except ImportError:  # pragma: no cover - lightweight local environments
+    np = None
+
 from .dimension_labels import CanonicalLabelResolver
 from .entity_registry import CorpusEntityRegistry
 from .fact_index import FactIndex
-from .retrieval_fusion import fuse_retrieval_results
+from .retrieval_fusion.fusion_engine.fusion import _save_fusion_snapshot
 from .poi_registry import PoiRegistry
 from .schema_v2 import load_schema, normalize_label, normalize_text, schema_maps
 from .storage import VectorStore
@@ -51,6 +58,10 @@ FACT_ANCHOR_STOPWORDS = {
 
 def _unit_vector(values: List[float]) -> List[float]:
     """Return a plain, normalized list for repeated tag comparisons."""
+    if np is not None:
+        vector = np.asarray(values, dtype=np.float32)
+        norm = float(np.linalg.norm(vector))
+        return vector / norm if norm > 0 else vector
     numeric = [float(value) for value in values]
     norm = math.sqrt(math.fsum(value * value for value in numeric))
     return [value / norm for value in numeric] if norm > 0 else numeric
@@ -58,6 +69,8 @@ def _unit_vector(values: List[float]) -> List[float]:
 
 def _dot_unit_vectors(left: List[float], right: List[float]) -> float:
     """One-pass dot product for vectors normalized at cache time."""
+    if np is not None:
+        return float(np.dot(left, right))
     total = 0.0
     for index in range(min(len(left), len(right))):
         total += left[index] * right[index]
@@ -101,6 +114,21 @@ class Retriever:
         self.fact_index = FactIndex(self.run_dir / "fact_index_v1.json")
         self.tags_by_dim = {leaf_id: set((self.postings.get(leaf_id) or {}).keys())
                             for leaf_id in self.maps["leaves"]}
+        # Dimension scoring can only produce a positive score for payloads
+        # carrying at least one extracted leaf tag.  Keep the full point list
+        # for semantic retrieval, but avoid rescanning untagged chunks for
+        # every query during the dimension route.
+        self.dimension_points_by_leaf = {leaf_id: [] for leaf_id in self.maps["leaves"]}
+        self.dimension_points = []
+        for point in self.points:
+            payload = point.get("payload", {})
+            has_dimension_tags = False
+            for leaf_id in self.maps["leaves"]:
+                if payload.get(f"dim_{leaf_id}"):
+                    self.dimension_points_by_leaf[leaf_id].append(point)
+                    has_dimension_tags = True
+            if has_dimension_tags:
+                self.dimension_points.append(point)
         self.source_spot_names = sorted({
             str(point.get("payload", {}).get("source_file", "")).split("-", 1)[0].strip()
             for point in self.points
@@ -117,7 +145,7 @@ class Retriever:
         self._anchor_df_cache: Dict[str, int] = {}
         self.label_resolver = CanonicalLabelResolver(self.run_dir, self.tags_by_dim)
         self.concept_df: Dict[str, Dict[str, int]] = {}
-        tag_inputs, seen_tag_inputs = [], set()
+        tag_vector_keys, tag_vector_texts, seen_tag_inputs = [], [], set()
         for point in self.points:
             payload = point.get("payload", {})
             for leaf_id in self.maps["leaves"]:
@@ -129,14 +157,91 @@ class Retriever:
                 for concept in concepts:
                     counter[concept] = counter.get(concept, 0) + 1
                 for value in values:
-                    text = f"{leaf_id}:{value}"
-                    if str(value).strip() and text not in seen_tag_inputs:
-                        tag_inputs.append(text)
-                        seen_tag_inputs.add(text)
-        tag_vectors = self.embeddings.encode(tag_inputs) if tag_inputs else []
-        self.tag_vector_cache = {
-            text: _unit_vector(vector) for text, vector in zip(tag_inputs, tag_vectors)
-        }
+                    if not str(value).strip():
+                        continue
+                    evidence = self._tag_evidence(payload, leaf_id, value)
+                    cache_key = self._tag_vector_key(leaf_id, value, evidence)
+                    if cache_key not in seen_tag_inputs:
+                        tag_vector_keys.append(cache_key)
+                        tag_vector_texts.append(
+                            self._tag_embedding_text(leaf_id, str(value), evidence)
+                        )
+                        seen_tag_inputs.add(cache_key)
+        self.tag_vector_cache = {}
+        cache_identity = "|".join((
+            str(getattr(self.embeddings, "model_path", "")),
+            str(getattr(self.embeddings, "dimension", "")),
+            str(bool(getattr(self.embeddings, "mock", False))),
+            str(getattr(self.embeddings, "_mode", "")),
+        ))
+        cache_digest = hashlib.sha256(cache_identity.encode("utf-8"))
+        for text in tag_vector_texts:
+            cache_digest.update(text.encode("utf-8"))
+            cache_digest.update(b"\0")
+        cache_signature = cache_digest.hexdigest()
+        # Evidence-aware tag vectors are intentionally stored separately from
+        # the older label-only cache.  The cache signature includes every
+        # encoded evidence string, so stale vectors can never be reused.
+        vector_cache_path = self.run_dir / "dimension_tag_evidence_vectors_v2.npy"
+        vector_cache_meta_path = self.run_dir / "dimension_tag_evidence_vectors_v2.json"
+        matrix = None
+        cache_loaded = False
+        if np is not None and vector_cache_path.exists() and vector_cache_meta_path.exists():
+            try:
+                metadata = json.loads(vector_cache_meta_path.read_text(encoding="utf-8"))
+                if metadata.get("signature") == cache_signature and metadata.get("count") == len(tag_vector_keys):
+                    matrix = np.load(vector_cache_path, mmap_mode="r")
+                    if matrix.ndim != 2 or matrix.shape[0] != len(tag_vector_keys):
+                        matrix = None
+            except Exception as exc:
+                print(f"[维度检索] 标签向量缓存不可复用，将重新编码: {exc}", flush=True)
+                matrix = None
+        if matrix is not None:
+            cache_loaded = True
+            self.tag_vector_cache = {key: matrix[index] for index, key in enumerate(tag_vector_keys)}
+            print(f"[维度检索] 复用标签向量缓存 {len(tag_vector_keys)}/{len(tag_vector_keys)}", flush=True)
+        try:
+            cache_batch_size = max(1, int(os.getenv("TAG_VECTOR_CACHE_BATCH_SIZE", "4096")))
+        except ValueError:
+            cache_batch_size = 4096
+        for start in range(0, len(tag_vector_keys) if not cache_loaded else 0, cache_batch_size):
+            end = min(start + cache_batch_size, len(tag_vector_keys))
+            encode_compact = getattr(self.embeddings, "encode_compact", self.embeddings.encode)
+            vectors = encode_compact(tag_vector_texts[start:end])
+            if np is not None and vectors is not None and len(vectors) > 0:
+                matrix = np.asarray(vectors, dtype=np.float32)
+                norms = np.linalg.norm(matrix, axis=1, keepdims=True)
+                np.divide(matrix, norms, out=matrix, where=norms > 0)
+                for offset, key in enumerate(tag_vector_keys[start:end]):
+                    self.tag_vector_cache[key] = matrix[offset]
+            else:
+                for key, vector in zip(tag_vector_keys[start:end], vectors):
+                    self.tag_vector_cache[key] = _unit_vector(vector)
+            if end == len(tag_vector_keys) or end % (cache_batch_size * 4) == 0:
+                print(f"[维度检索] 标签向量缓存 {end}/{len(tag_vector_keys)}", flush=True)
+        if np is not None and not cache_loaded and tag_vector_keys:
+            try:
+                matrix = np.stack([self.tag_vector_cache[key] for key in tag_vector_keys]).astype(
+                    np.float32, copy=False
+                )
+                np.save(vector_cache_path, matrix)
+                temp_meta_path = vector_cache_meta_path.with_suffix(".json.tmp")
+                temp_meta_path.write_text(json.dumps({
+                    "signature": cache_signature,
+                    "count": len(tag_vector_keys),
+                    "dimension": int(matrix.shape[1]),
+                }), encoding="utf-8")
+                temp_meta_path.replace(vector_cache_meta_path)
+                matrix = np.load(vector_cache_path, mmap_mode="r")
+                self.tag_vector_cache = {key: matrix[index] for index, key in enumerate(tag_vector_keys)}
+                print(f"[维度检索] 标签向量缓存已持久化 {len(tag_vector_keys)} 条", flush=True)
+            except Exception as exc:
+                print(f"[维度检索] 持久化标签向量缓存失败，继续使用内存缓存: {exc}", flush=True)
+        self.tag_vector_matrix = matrix
+        self.tag_vector_index = (
+            {key: index for index, key in enumerate(tag_vector_keys)}
+            if np is not None and matrix is not None else {}
+        )
         self.query_parser = None
         try:
             from code_jyx.query_parser_v4 import QueryParserV4
@@ -240,6 +345,72 @@ class Retriever:
             "parser_diagnostics": parser_diagnostics,
         }
 
+    def _dimension_context_text(self, leaf_id: str) -> str:
+        node = self.maps["nodes"].get(leaf_id, {})
+        name_path = self.dimension_paths.get(leaf_id, str(node.get("name", leaf_id)))
+        description = str(node.get("description", "") or "").strip()
+        aliases = node.get("aliases", []) or []
+        if isinstance(aliases, str):
+            aliases = [aliases]
+        aliases_text = "、".join(str(alias).strip() for alias in aliases if str(alias).strip())
+        parts = [f"目标信息维度：{name_path}"]
+        if description:
+            parts.append(f"维度定义：{description}")
+        if aliases_text:
+            parts.append(f"维度常见表达：{aliases_text}")
+        return "。".join(parts)
+
+    def _tag_embedding_text(self, leaf_id: str, tag: str, evidence: str = "") -> str:
+        """Encode the specific tagged fact, not repeated long schema boilerplate."""
+        node = self.maps["nodes"].get(leaf_id, {})
+        dimension_name = str(node.get("name", leaf_id)).strip() or leaf_id
+        parts = [f"信息维度：{dimension_name}", f"事实标签：{tag}"]
+        if evidence:
+            parts.append(f"对应原文证据：{evidence[:500]}")
+        return "。".join(parts)
+
+    @staticmethod
+    def _tag_vector_key(leaf_id: str, tag: Any, evidence: str = "") -> str:
+        normalized_evidence = normalize_text(evidence)
+        evidence_digest = (
+            hashlib.sha1(normalized_evidence.encode("utf-8")).hexdigest()[:16]
+            if normalized_evidence else "no-evidence"
+        )
+        return f"{leaf_id}:{normalize_label(tag)}:{evidence_digest}"
+
+    @classmethod
+    def _tag_evidence(cls, payload: Dict[str, Any], leaf_id: str, tag: Any) -> str:
+        """Return the evidence attached to this leaf/tag pair, if available."""
+        target = normalize_label(tag)
+        if not target:
+            return ""
+        evidence = []
+        for detail in cls._details(payload, leaf_id):
+            if not isinstance(detail, dict):
+                continue
+            if normalize_label(detail.get("label", "")) != target:
+                continue
+            text = str(detail.get("evidence", "") or "").strip()
+            if text and text not in evidence:
+                evidence.append(text)
+        return "。".join(evidence)[:500]
+
+    def _dimension_query_text(
+        self, query: str, leaf_id: str, constraint: Dict[str, Any]
+    ) -> str:
+        terms = list(constraint.get("labels", []) or []) + list(
+            constraint.get("intent_terms", []) or []
+        )
+        terms = list(dict.fromkeys(str(term).strip() for term in terms if str(term).strip()))
+        target = "、".join(terms[:8]) or query
+        node = self.maps["nodes"].get(leaf_id, {})
+        dimension_name = str(node.get("name", leaf_id)).strip() or leaf_id
+        return (
+            f"信息维度：{dimension_name}。"
+            f"用户问题：{query}。"
+            f"用户要查找的信息：{target}"
+        )
+
     @staticmethod
     def _matches_spot(payload: Dict[str, Any], spot_names: List[str]) -> bool:
         if not spot_names:
@@ -251,11 +422,9 @@ class Retriever:
     def _anchor_document_frequency(self, term: str) -> int:
         if term not in self._anchor_df_cache:
             self._anchor_df_cache[term] = sum(
-                term in (
-                    str(point.get("payload", {}).get("doc_title", ""))
-                    + "\n" + str(point.get("payload", {}).get("chunk_gen_title", ""))
-                    + "\n" + str(point.get("payload", {}).get("chunk_text_full", ""))
-                )
+                term in str(point.get("payload", {}).get("doc_title", ""))
+                or term in str(point.get("payload", {}).get("chunk_gen_title", ""))
+                or term in str(point.get("payload", {}).get("chunk_text_full", ""))
                 for point in self.points
             )
         return self._anchor_df_cache[term]
@@ -488,12 +657,15 @@ class Retriever:
 
     def _dimension_score(self, query: str, query_vec: List[float], payload: Dict[str, Any],
                          analysis: Dict[str, Any],
-                         tag_similarity_cache: Dict[str, float] | None = None) -> tuple[float, List[Dict[str, Any]], set]:
+                         dimension_query_vecs: Dict[str, List[float]] | None = None,
+                         tag_similarity_cache: Dict[str, float] | None = None,
+                         tag_vector_inputs: Dict[tuple[int, str], List[tuple[str, str]]] | None = None
+                         ) -> tuple[float, List[Dict[str, Any]], set]:
         by_parent: Dict[str, List[float]] = {}
         matches: List[Dict[str, Any]] = []
         matched_dims = set()
         tags_by_dim = {}
-        for leaf_id in self.maps["leaves"]:
+        for leaf_id in analysis["constraints"]:
             values = payload.get(f"dim_{leaf_id}", [])
             if not isinstance(values, list):
                 values = [values]
@@ -522,22 +694,31 @@ class Retriever:
             role = str(constraint.get("role", "auxiliary"))
             # Vector matching is reserved for the explicitly routed property;
             # using it on every auxiliary noun is both noisy and expensive.
-            if best <= 0 and role in {"main", "secondary"} and query_vec and (q_labels or intent_terms):
-                tag_inputs = [f"{leaf_id}:{tag}" for tag in doc_tags]
+            routed_query_vec = (dimension_query_vecs or {}).get(leaf_id, query_vec)
+            if best <= 0 and role in {"main", "secondary"} and routed_query_vec is not None and (q_labels or intent_terms):
+                cached_inputs = (tag_vector_inputs or {}).get((id(payload), leaf_id))
+                tag_inputs = cached_inputs or [
+                    (tag, self._tag_vector_key(
+                        leaf_id, tag, self._tag_evidence(payload, leaf_id, tag)
+                    ))
+                    for tag in doc_tags
+                ]
                 scores = []
-                for text in tag_inputs:
+                scored_tags = []
+                for tag, text in tag_inputs:
                     if text not in self.tag_vector_cache:
                         continue
                     if tag_similarity_cache is not None and text in tag_similarity_cache:
                         score = tag_similarity_cache[text]
                     else:
-                        score = _dot_unit_vectors(query_vec, self.tag_vector_cache[text])
+                        score = _dot_unit_vectors(routed_query_vec, self.tag_vector_cache[text])
                         if tag_similarity_cache is not None:
                             tag_similarity_cache[text] = score
                     scores.append(score)
+                    scored_tags.append(tag)
                 if scores and max(scores) >= self._tag_vector_threshold(leaf_id):
                     best = max(scores)
-                    best_hits = [doc_tags[scores.index(best)]]
+                    best_hits = [scored_tags[scores.index(best)]]
             role_weight = {"main": 3.0, "secondary": 1.25, "auxiliary": 0.3}.get(role, 0.3)
             # Set iteration order is randomized across Python processes.  A
             # deterministic concept choice is required for reproducible
@@ -568,6 +749,89 @@ class Retriever:
         # 同一父维度只取最大叶子分数；不同父维度可以累加。
         score = sum(max(values) for values in by_parent.values())
         return score, matches, matched_dims
+
+    def _batch_tag_similarities(
+        self,
+        candidate_points: List[Dict[str, Any]],
+        constraints: Dict[str, Dict[str, Any]],
+        dimension_query_vecs: Dict[str, List[float]],
+        query_vec: List[float],
+        spot_names: List[str],
+    ) -> tuple[Dict[str, float], Dict[tuple[int, str], List[tuple[str, str]]]]:
+        """Compute routed tag similarities in a few matrix operations per query.
+
+        The previous scalar path called ``numpy.dot`` once per tag.  On a
+        corpus with hundreds of thousands of evidence-tag vectors, that Python
+        call overhead dominated retrieval.  Gather each query's candidate tag
+        rows, perform one matrix-vector product per routed leaf, then let the
+        normal scorer consume the same exact cosine values.
+        """
+        if np is None or self.tag_vector_matrix is None or not self.tag_vector_index:
+            return {}, {}
+
+        vectors_by_leaf: Dict[str, Dict[str, int]] = {}
+        inputs_by_payload: Dict[tuple[int, str], List[tuple[str, str]]] = {}
+        query_vectors = {}
+        for leaf_id, constraint in constraints.items():
+            if constraint.get("role") not in {"main", "secondary"}:
+                continue
+            if not (constraint.get("labels") or constraint.get("intent_terms")):
+                continue
+            routed_vec = dimension_query_vecs.get(leaf_id, query_vec)
+            if routed_vec is None:
+                continue
+            query_vectors[leaf_id] = np.asarray(routed_vec, dtype=np.float32)
+            vectors_by_leaf[leaf_id] = {}
+
+        if not vectors_by_leaf:
+            return {}, inputs_by_payload
+
+        for point in candidate_points:
+            payload = point.get("payload", {})
+            if not self._matches_spot(payload, spot_names):
+                continue
+            for leaf_id, keys_to_rows in vectors_by_leaf.items():
+                values = payload.get(f"dim_{leaf_id}", [])
+                if not isinstance(values, list):
+                    values = [values]
+                tag_inputs = []
+                for value in values:
+                    tag = str(value)
+                    if not tag.strip():
+                        continue
+                    cache_key = self._tag_vector_key(
+                        leaf_id, tag, self._tag_evidence(payload, leaf_id, tag)
+                    )
+                    tag_inputs.append((tag, cache_key))
+                    row_index = self.tag_vector_index.get(cache_key)
+                    if row_index is not None:
+                        keys_to_rows.setdefault(cache_key, row_index)
+                if tag_inputs:
+                    inputs_by_payload[(id(payload), leaf_id)] = tag_inputs
+
+        similarities: Dict[str, float] = {}
+        for leaf_id, keys_to_rows in vectors_by_leaf.items():
+            if not keys_to_rows:
+                continue
+            keys = list(keys_to_rows)
+            row_indices = [keys_to_rows[key] for key in keys]
+            matrix = np.asarray(self.tag_vector_matrix[row_indices], dtype=np.float32)
+            scores = matrix @ query_vectors[leaf_id]
+            similarities.update(
+                (key, float(score)) for key, score in zip(keys, scores)
+            )
+        return similarities, inputs_by_payload
+
+    @staticmethod
+    def _normalize_scores(results: List[Dict[str, Any]]) -> Dict[str, float]:
+        if not results:
+            return {}
+        scores = [float(item.get("score", 0.0)) for item in results]
+        low, high = min(scores), max(scores)
+        if high == low:
+            return {str(item["chunk_id"]): 1.0 for item in results}
+        return {str(item["chunk_id"]): (float(item.get("score", 0.0)) - low) / (high - low)
+                for item in results}
 
     def _lexical_fallback_terms(self, query: str) -> List[str]:
         """Return conservative literal terms for the no-candidate route only."""
@@ -656,11 +920,24 @@ class Retriever:
         analysis = self._parse_query(query)
         verified_fact_matches = self._fact_index_matches(query_facts or [])
         analysis["query_fact_count"] = len(query_facts or [])
-        analysis["verified_fact_match_count"] = sum(len(value) for value in verified_fact_matches.values())
-        # Semantic search always needs the query vector, including questions
-        # without a parsed dimension constraint. The same vector is reused by
-        # the routed dimension tag fallback when constraints are present.
-        query_vec = _unit_vector(self.embeddings.encode([query])[0])
+        analysis["verified_fact_match_count"] = sum(
+            len(value) for value in verified_fact_matches.values()
+        )
+        dimension_query_texts = {
+            leaf_id: self._dimension_query_text(query, leaf_id, constraint)
+            for leaf_id, constraint in analysis["constraints"].items()
+            if constraint.get("role") in {"main", "secondary"}
+            and (constraint.get("labels") or constraint.get("intent_terms"))
+        }
+        vector_inputs = [query] + list(dimension_query_texts.values())
+        encoded_vectors = self.embeddings.encode(vector_inputs)
+        query_vec = _unit_vector(encoded_vectors[0])
+        dimension_query_vecs = {
+            leaf_id: _unit_vector(vector)
+            for (leaf_id, _), vector in zip(
+                dimension_query_texts.items(), encoded_vectors[1:]
+            )
+        }
         dimension_policy = self._dimension_policy(analysis)
         fact_anchor_terms = (
             self._fact_anchor_terms(query, analysis)
@@ -678,49 +955,61 @@ class Retriever:
         for rank, item in enumerate(semantic, 1):
             item["rank"] = rank
 
-        scored_points = []
-        group_dimensions: Dict[str, set] = {}
-        tag_similarity_cache: Dict[str, float] = {}
-        for point in self.points:
-            payload = point.get("payload", {})
-            if not self._matches_spot(payload, analysis["spot_names"]):
-                continue
-            score, matches, matched_dims = self._dimension_score(
-                query, query_vec, payload, analysis, tag_similarity_cache
-            )
-            if score <= 0:
-                continue
-            fact_anchor_bonus, fact_anchor_matches = self._fact_anchor_bonus(payload, fact_anchor_terms)
-            entity_anchor_bonus, entity_anchor_matches = self._precise_entity_bonus(
-                payload, analysis.get("precise_entity_terms", []),
-            )
-            group_id = str(payload.get("parent_doc_id") or payload.get("doc_id") or
-                           payload.get("chunk_id") or point.get("id"))
-            group_dimensions.setdefault(group_id, set()).update(matched_dims)
-            scored_points.append((group_id, point, score + fact_anchor_bonus + entity_anchor_bonus, matches, matched_dims,
-                                  fact_anchor_bonus, fact_anchor_matches, entity_anchor_bonus, entity_anchor_matches))
         dimension = []
-        for group_id, point, score, matches, matched_dims, fact_anchor_bonus, fact_anchor_matches, entity_anchor_bonus, entity_anchor_matches in scored_points:
-            payload = point.get("payload", {})
-            group_matched = group_dimensions[group_id]
-            main = str(dimension_policy.get("main_dimension", ""))
-            secondary = set(dimension_policy.get("secondary_dimensions", []))
-            # Parent-level evidence is a ranking bonus only. It allows sibling
-            # chunks to reinforce a fact without excluding a candidate whose
-            # tag was missed by the extractor.
-            coverage_bonus = 0.20 * int(bool(main and main in group_matched))
-            coverage_bonus += 0.06 * len(secondary.intersection(group_matched))
-            coverage_bonus += 0.01 * len(group_matched - {main} - secondary)
-            dimension.append({"chunk_id": payload.get("chunk_id", point.get("id")),
-                              "score": score + coverage_bonus, "source": "dimension", **payload,
-                              "matched_dimensions": sorted(matched_dims),
-                              "match_group": group_id, "matches": matches})
-            dimension[-1]["fact_anchor_bonus"] = round(fact_anchor_bonus, 6)
-            dimension[-1]["fact_anchor_matches"] = fact_anchor_matches
-            dimension[-1]["precise_entity_bonus"] = round(entity_anchor_bonus, 6)
-            dimension[-1]["precise_entity_matches"] = entity_anchor_matches
-        dimension.sort(key=lambda item: item["score"], reverse=True)
-        dimension = dimension[:dimension_pool]
+        # DuRetrieval has no dimension/facet annotations in this run.  When
+        # every posting list is empty, scanning every point for every query is
+        # both wasteful and misleading: it cannot produce a dimension hit.
+        # Keep the route explicitly empty and let fusion reduce to semantic
+        # candidates instead of spending O(num_queries * num_points) time.
+        if any(self.tags_by_dim.values()):
+            scored_points = []
+            group_dimensions: Dict[str, set] = {}
+            candidate_points = {}
+            for leaf_id in analysis["constraints"]:
+                for point in self.dimension_points_by_leaf.get(leaf_id, []):
+                    candidate_points.setdefault(str(point.get("id", id(point))), point)
+            tag_similarity_cache, tag_vector_inputs = self._batch_tag_similarities(
+                list(candidate_points.values()), analysis["constraints"],
+                dimension_query_vecs, query_vec, analysis["spot_names"]
+            )
+            for point in candidate_points.values():
+                payload = point.get("payload", {})
+                if not self._matches_spot(payload, analysis["spot_names"]):
+                    continue
+                score, matches, matched_dims = self._dimension_score(
+                    query, query_vec, payload, analysis,
+                    dimension_query_vecs, tag_similarity_cache, tag_vector_inputs
+                )
+                if score <= 0:
+                    continue
+                fact_anchor_bonus, fact_anchor_matches = self._fact_anchor_bonus(payload, fact_anchor_terms)
+                entity_anchor_bonus, entity_anchor_matches = self._precise_entity_bonus(payload, analysis.get("precise_entity_terms", []))
+                group_id = str(payload.get("parent_doc_id") or payload.get("doc_id") or
+                               payload.get("chunk_id") or point.get("id"))
+                group_dimensions.setdefault(group_id, set()).update(matched_dims)
+                scored_points.append((group_id, point, score + fact_anchor_bonus + entity_anchor_bonus, matches, matched_dims,
+                                      fact_anchor_bonus, fact_anchor_matches, entity_anchor_bonus, entity_anchor_matches))
+            for group_id, point, score, matches, matched_dims, fact_anchor_bonus, fact_anchor_matches, entity_anchor_bonus, entity_anchor_matches in scored_points:
+                payload = point.get("payload", {})
+                group_matched = group_dimensions[group_id]
+                main = str(dimension_policy.get("main_dimension", ""))
+                secondary = set(dimension_policy.get("secondary_dimensions", []))
+                # Parent-level evidence is a ranking bonus only. It allows sibling
+                # chunks to reinforce a fact without excluding a candidate whose
+                # tag was missed by the extractor.
+                coverage_bonus = 0.20 * int(bool(main and main in group_matched))
+                coverage_bonus += 0.06 * len(secondary.intersection(group_matched))
+                coverage_bonus += 0.01 * len(group_matched - {main} - secondary)
+                dimension.append({"chunk_id": payload.get("chunk_id", point.get("id")),
+                                  "score": score + coverage_bonus, "source": "dimension", **payload,
+                                  "matched_dimensions": sorted(matched_dims),
+                                  "match_group": group_id, "matches": matches})
+                dimension[-1]["fact_anchor_bonus"] = round(fact_anchor_bonus, 6)
+                dimension[-1]["fact_anchor_matches"] = fact_anchor_matches
+                dimension[-1]["precise_entity_bonus"] = round(entity_anchor_bonus, 6)
+                dimension[-1]["precise_entity_matches"] = entity_anchor_matches
+            dimension.sort(key=lambda item: item["score"], reverse=True)
+            dimension = dimension[:dimension_pool]
         indexed_entity_ids = set(self.auto_entity_registry.candidate_chunk_ids(query)) if bool(
             getattr(self.settings, "auto_entity_registry_enabled", False)
         ) else set()
@@ -764,9 +1053,85 @@ class Retriever:
         for rank, item in enumerate(dimension, 1):
             item["rank"] = rank
 
-        fusion = fuse_retrieval_results(
+        sem_norm = self._normalize_scores(semantic)
+        dim_norm = self._normalize_scores(dimension)
+        # Keep the route-local normalized scores on the candidates themselves.
+        # Fusion is computed from these values, so retaining them makes every
+        # ranking decision auditable instead of exposing only the final score.
+        for item in semantic:
+            item["semantic_score"] = item.get("score")
+            item["normalized_semantic_score"] = round(
+                sem_norm.get(str(item["chunk_id"]), 0.0), 8
+            )
+        for item in dimension:
+            item["dimension_score"] = item.get("score")
+            item["normalized_dimension_score"] = round(
+                dim_norm.get(str(item["chunk_id"]), 0.0), 8
+            )
+        semantic_by_id = {item["chunk_id"]: item for item in semantic}
+        dimension_by_id = {item["chunk_id"]: item for item in dimension}
+        # The fusion strategy is deliberately applied only after both route
+        # searches are complete.  This keeps semantic/dimension retrieval
+        # unchanged and makes the candidate order an auditable tie-breaker.
+        candidate_order = list(dict.fromkeys([item["chunk_id"] for item in semantic + dimension]))
+        by_id = {}
+        for cid in candidate_order:
+            item = dict(dimension_by_id.get(cid) or semantic_by_id[cid])
+            if cid in semantic_by_id:
+                item["sem_rank"] = semantic_by_id[cid].get("rank")
+                item["semantic_score"] = semantic_by_id[cid].get("score")
+                item["normalized_semantic_score"] = sem_norm.get(cid, 0.0)
+            if cid in dimension_by_id:
+                item["dim_rank"] = dimension_by_id[cid].get("rank")
+                item["dimension_score"] = dimension_by_id[cid].get("score")
+                item["normalized_dimension_score"] = dim_norm.get(cid, 0.0)
+            # A candidate absent from one route contributes zero from that
+            # route to the weighted fusion score.
+            item.setdefault("normalized_semantic_score", 0.0)
+            item.setdefault("normalized_dimension_score", 0.0)
+            by_id[cid] = item
+        semantic_count = len(semantic)
+        dimension_count = len(dimension)
+        overlap5 = len(
+            set(item["chunk_id"] for item in semantic[:5])
+            & set(item["chunk_id"] for item in dimension[:5])
+        )
+        use_rank_aware = (
+            (semantic_count >= 40 and not (dimension_count >= 20 and overlap5 == 0))
+            or (
+                semantic_count < 40
+                and (
+                    (dimension_count == 10 and overlap5 <= 2)
+                    or (dimension_count >= 20 and overlap5 == 0)
+                )
+            )
+        )
+        fusion_branch = "dimension_rank_aware" if use_rank_aware else "score_weighted"
+        fused_scores = {}
+        for cid in candidate_order:
+            if use_rank_aware:
+                dim_rank = dimension_by_id.get(cid, {}).get("rank")
+                dim_rank_term = 0.6 / (int(dim_rank) + 1) if dim_rank else 0.0
+                fused_scores[cid] = 0.4 * sem_norm.get(cid, 0.0) + dim_rank_term
+            else:
+                fused_scores[cid] = 0.77 * sem_norm.get(cid, 0.0) + 0.23 * dim_norm.get(cid, 0.0)
+        fusion_candidates = []
+        for cid, score in sorted(
+            fused_scores.items(), key=lambda pair: pair[1], reverse=True
+        ):
+            item = by_id[cid]
+            item["score"] = score
+            item["final_score"] = score
+            item["fused_score"] = score
+            item["fusion_branch"] = fusion_branch
+            item["source"] = ("dimension" if cid in dim_norm else "") + ("+semantic" if cid in sem_norm else "")
+            fusion_candidates.append(item)
+        fusion = fusion_candidates[:top_k]
+        _save_fusion_snapshot(
             semantic,
             dimension,
+            fusion_candidates,
+            fusion,
             dim_alpha=self.settings.dim_alpha,
             top_k=top_k,
             query=query,
@@ -778,11 +1143,20 @@ class Retriever:
             "constraints": analysis["constraints"],
             "fact_anchor_terms": fact_anchor_terms,
             "query_facts": query_facts or [],
-            "semantic_candidates": fusion["semantic_candidates"],
-            "dimension_candidates": fusion["dimension_candidates"],
-            "fusion_candidates": fusion["fusion_candidates"],
-            "semantic_results": fusion["semantic_candidates"][:top_k],
-            "dimension_results": fusion["dimension_candidates"][:top_k],
-            "fusion_results": fusion["fusion_results"],
-            "top_chunks": fusion["fusion_results"],
+            "semantic_candidates": semantic,
+            "dimension_candidates": dimension,
+            "fusion_candidates": fusion_candidates,
+            "fusion_strategy": {
+                "name": "adaptive_report_v1",
+                "branch": fusion_branch,
+                "semantic_count": semantic_count,
+                "dimension_count": dimension_count,
+                "overlap5": overlap5,
+                "score_weighted": {"semantic": 0.77, "dimension": 0.23},
+                "rank_aware": {"semantic": 0.4, "dimension_rank": 0.6},
+                "candidate_order": "semantic_then_dimension_union",
+            },
+            "semantic_results": semantic[:top_k],
+            "dimension_results": dimension[:top_k],
+            "fusion_results": fusion, "top_chunks": fusion,
         }

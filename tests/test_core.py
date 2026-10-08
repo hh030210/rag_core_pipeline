@@ -10,6 +10,7 @@ from rag_core.evaluation import evaluate_row, load_gold_records, map_gold_to_chu
 from rag_core.prompting import PromptOptimizer
 from rag_core.prompt_module import PromptOptimizationModule
 from rag_core.retrieval import Retriever
+from rag_core import retrieval as retrieval_module
 from rag_core.settings import Settings
 from rag_core.storage import make_payload
 from rag_core.schema_v2 import load_schema
@@ -18,6 +19,39 @@ from rag_core.integrated_chunker import OpenAICompatClient
 
 
 class CorePipelineTests(unittest.TestCase):
+    @unittest.skipIf(retrieval_module.np is None, "NumPy is required for batched vector scoring")
+    def test_batch_tag_similarities_matches_scalar_cosine(self):
+        np = retrieval_module.np
+        retriever = Retriever.__new__(Retriever)
+        retriever.tag_vector_matrix = np.asarray(
+            [[1.0, 0.0], [0.0, 1.0]], dtype=np.float32
+        )
+        retriever.tag_vector_index = {
+            retriever._tag_vector_key("leaf", "tag-a"): 0,
+            retriever._tag_vector_key("leaf", "tag-b"): 1,
+        }
+        retriever.tag_vector_cache = {
+            key: retriever.tag_vector_matrix[index]
+            for key, index in retriever.tag_vector_index.items()
+        }
+        retriever.maps = {"nodes": {"leaf": {"name": "测试维度"}}}
+        payload = {
+            "dim_leaf": ["tag-a", "tag-b"],
+            "tag_details": {"leaf": []},
+        }
+        scores, inputs = retriever._batch_tag_similarities(
+            [{"payload": payload}],
+            {"leaf": {"role": "main", "labels": ["目标"], "intent_terms": []}},
+            {"leaf": [0.6, 0.8]},
+            [0.6, 0.8],
+            [],
+        )
+        key_a = retriever._tag_vector_key("leaf", "tag-a")
+        key_b = retriever._tag_vector_key("leaf", "tag-b")
+        self.assertAlmostEqual(scores[key_a], 0.6, places=6)
+        self.assertAlmostEqual(scores[key_b], 0.8, places=6)
+        self.assertEqual(inputs[(id(payload), "leaf")], [("tag-a", key_a), ("tag-b", key_b)])
+
     def test_v4_strict_intents_do_not_turn_subject_nouns_into_dimensions(self):
         from code_jyx.query_parser_v4 import QueryParserV4
 
@@ -33,6 +67,81 @@ class CorePipelineTests(unittest.TestCase):
             "entity_type",
             QueryParserV4._strict_intents("这座建筑有哪些艺术特色？"),
         )
+
+    def test_v4_retries_cached_empty_parse_after_llm_error_once(self):
+        from code_jyx.query_parser_v4 import QUERY_PARSER_V4_VERSION, QueryParserV4
+
+        class Miner:
+            def __init__(self):
+                self.calls = 0
+
+            def parse_query_intent_v4(self, query_text, dimensions, *, prefer_best_match=False):
+                self.calls += 1
+                return {
+                    "constraints": [{
+                        "dimension_id": "opening_period",
+                        "labels": [],
+                        "intent_terms": ["开放时间"],
+                    }],
+                    "diagnostics": {"llm_attempts": 1, "llm_constraint_count": 1},
+                }
+
+        schema = {
+            "schema_version": "2.0",
+            "generation_method": "llm_corpus_induced_strict",
+            "dimensions": [
+                {
+                    "id": "operation_service",
+                    "name": "运营信息",
+                    "parent_id": None,
+                    "level": 1,
+                    "indexable": False,
+                    "description": "运营信息维度",
+                    "aliases": [],
+                    "value_policy": "multi",
+                    "max_labels": 5,
+                },
+                {
+                    "id": "opening_period",
+                    "name": "开放时段",
+                    "parent_id": "operation_service",
+                    "level": 2,
+                    "indexable": True,
+                    "description": "开放时间及时间范围",
+                    "aliases": [],
+                    "value_policy": "multi",
+                    "max_labels": 5,
+                },
+            ],
+        }
+        miner = Miner()
+        with tempfile.TemporaryDirectory() as temp_dir:
+            cache_file = Path(temp_dir) / "query_cache.json"
+            parser = QueryParserV4(
+                schema, cache_file=str(cache_file), miner=miner, label_vocabulary={}
+            )
+            query = "开放时间是什么？"
+            key = parser._cache_key("online", query)
+            parser.cache[key] = {
+                "schema_version": "2.0",
+                "parser_version": QUERY_PARSER_V4_VERSION,
+                "constraints": [],
+                "routing": {"main_dimension": "", "secondary_dimensions": []},
+                "required_slots": [],
+                "diagnostics": {
+                    "llm_error": "RuntimeError: empty response",
+                    "empty_retry_attempted": True,
+                    "llm_attempts": 4,
+                },
+            }
+
+            result = parser.parse("online", query)
+            self.assertEqual(miner.calls, 1)
+            self.assertTrue(result["constraints"])
+            self.assertTrue(result["diagnostics"]["cached_error_retry"])
+
+            parser.parse("online", query)
+            self.assertEqual(miner.calls, 1)
 
     def test_retriever_runs_v4_deterministic_query_recovery_without_llm(self):
         def node(node_id, name, parent_id, level, indexable, description):
@@ -147,6 +256,18 @@ class CorePipelineTests(unittest.TestCase):
                 resolver.labels_in_text("ticket_policy", "大学生门票有优惠吗？"),
             )
 
+    def test_corpus_labels_do_not_become_substring_ontology_aliases(self):
+        from rag_core.dimension_labels import CanonicalLabelResolver
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            resolver = CanonicalLabelResolver(temp_dir, {
+                "custom_dimension": ["古城", "洛阳古城"],
+            })
+            self.assertNotEqual(
+                resolver.canonical("custom_dimension", "古城"),
+                resolver.canonical("custom_dimension", "洛阳古城"),
+            )
+
     def test_typed_tag_vector_thresholds_are_dimension_specific(self):
         retriever = object.__new__(Retriever)
         retriever.settings = type("SettingsStub", (), {
@@ -161,6 +282,34 @@ class CorePipelineTests(unittest.TestCase):
 
         left, right = [3.0, 4.0], [4.0, -3.0]
         self.assertAlmostEqual(_dot_unit_vectors(_unit_vector(left), _unit_vector(right)), 0.0)
+
+    def test_dimension_tag_vectors_include_leaf_scoped_tag_evidence(self):
+        retriever = object.__new__(Retriever)
+        retriever.maps = {"nodes": {"historical_event": {"name": "历史事件"}}}
+        payload = {
+            "tag_details": {
+                "historical_event": [
+                    {"label": "始建时间", "evidence": "始建于唐代。"},
+                    {"label": "修缮记录", "evidence": "清代曾进行修缮。"},
+                ],
+                "quantitative_attr": [
+                    {"label": "始建时间", "evidence": "不应跨维度取到。"},
+                ],
+            }
+        }
+
+        evidence = retriever._tag_evidence(payload, "historical_event", "始建时间")
+        vector_text = retriever._tag_embedding_text(
+            "historical_event", "始建时间", evidence
+        )
+
+        self.assertEqual(evidence, "始建于唐代。")
+        self.assertIn("始建于唐代", vector_text)
+        self.assertNotIn("不应跨维度取到", vector_text)
+        self.assertNotEqual(
+            retriever._tag_vector_key("historical_event", "始建时间", evidence),
+            retriever._tag_vector_key("historical_event", "始建时间", "清代曾进行修缮。"),
+        )
 
     def test_poi_registry_resolves_aliases_to_parent_scenic_areas(self):
         from rag_core.poi_registry import PoiRegistry
@@ -229,17 +378,20 @@ class CorePipelineTests(unittest.TestCase):
     def test_multilabel_tags_keep_arrays(self):
         schema = default_schema()
         records = [{"doc_id": "d1", "doc_text": "儿童和青少年可在北京景点参观，上午开放，门票免费。"}]
-        settings = Settings(run_dir=Path("/tmp/rag_core_test"), backend="local", mock=True)
-        output = build_tags(records, schema, settings)
-        tags = output["documents"]["d1"]["tags"]
-        self.assertIn("儿童", tags["content.entity"])
-        self.assertIn("青少年", tags["content.entity"])
-        self.assertIsInstance(tags["content.entity"], list)
-        index = build_inverted_index(output, schema)
-        self.assertIn("儿童", index["postings"]["content.entity"])
-        payload = make_payload({"chunk_id": "d1", "doc_id": "d1", "doc_text": records[0]["doc_text"]},
-                               output["documents"]["d1"], schema)
-        self.assertIsInstance(payload["dim_content.entity"], list)
+        with tempfile.TemporaryDirectory() as temp_dir:
+            settings = Settings(run_dir=Path(temp_dir), backend="local", mock=True)
+            output = build_tags(records, schema, settings)
+            tags = output["documents"]["d1"]["tags"]
+            self.assertIn("儿童", tags["content.entity"])
+            self.assertIn("青少年", tags["content.entity"])
+            self.assertIsInstance(tags["content.entity"], list)
+            index = build_inverted_index(output, schema)
+            self.assertIn("儿童", index["postings"]["content.entity"])
+            payload = make_payload(
+                {"chunk_id": "d1", "doc_id": "d1", "doc_text": records[0]["doc_text"]},
+                output["documents"]["d1"], schema,
+            )
+            self.assertIsInstance(payload["dim_content.entity"], list)
 
     def test_mock_embedding_is_deterministic(self):
         model = EmbeddingModel(dimension=8, mock=True)

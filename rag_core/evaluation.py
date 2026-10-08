@@ -555,6 +555,7 @@ def run_evaluation(
     ks: Sequence[int] = DEFAULT_KS,
     result_text_chars: int = 800,
     query_expansion: bool = True,
+    query_parser_mode: str = "deterministic",
 ) -> Dict[str, Any]:
     run_dir = Path(run_dir)
     output_dir = Path(output_dir)
@@ -563,6 +564,9 @@ def run_evaluation(
     records = load_gold_records(dataset_path)
     chunks = load_chunks(run_dir)
     records = [map_gold_to_chunks(record, chunks) for record in records]
+    query_parser_mode = str(query_parser_mode or "deterministic").strip().lower()
+    if query_parser_mode not in {"deterministic", "llm"}:
+        raise ValueError("query_parser_mode must be 'deterministic' or 'llm'")
     embeddings = EmbeddingModel(
         settings.model_path, settings.embedding_device, settings.vector_dim, settings.mock
     )
@@ -577,7 +581,26 @@ def run_evaluation(
             mock=settings.mock,
         )
         prompt_manager = PromptOptimizer(client=client, run_dir=run_dir)
-    retriever = Retriever(run_dir=run_dir, settings=settings, embeddings=embeddings, llm=None)
+    query_parser_llm = None
+    if query_parser_mode == "llm":
+        if settings.mock:
+            raise ValueError("LLM 查询解析不能在 mock 模式下运行")
+        if not settings.llm_api_key:
+            raise ValueError("LLM 查询解析需要配置 LLM_API_KEY 或 DASHSCOPE_API_KEY")
+        # DimensionMiningWithQwen resolves OpenAI-compatible mode and request
+        # interval from the environment; align those values with this run's
+        # explicit Settings before constructing it.
+        settings.apply_runtime_environment()
+        from code_jyx.llm_service import DimensionMiningWithQwen
+
+        query_parser_llm = DimensionMiningWithQwen(
+            api_key=settings.llm_api_key,
+            model_name=settings.llm_model,
+            base_url=settings.llm_base_url,
+        )
+    retriever = Retriever(
+        run_dir=run_dir, settings=settings, embeddings=embeddings, llm=query_parser_llm
+    )
     rows = []
     for index, record in enumerate(records, 1):
         if prompt_manager:
@@ -610,6 +633,8 @@ def run_evaluation(
         "collection": settings.collection,
         "embedding_model": settings.model_path or "configured_default",
         "query_expansion": bool(query_expansion),
+        "query_parser_mode": query_parser_mode,
+        "query_parser_model": settings.llm_model if query_parser_mode == "llm" else "",
     }
     results_path = output_dir / "results.jsonl"
     summary_path = output_dir / "summary.json"

@@ -37,7 +37,8 @@ class EmbeddingModel:
         except Exception as exc:
             print(f"[提示] FlagEmbedding 加载失败，尝试 SentenceTransformer: {exc}")
         from sentence_transformers import SentenceTransformer
-        self._model = SentenceTransformer(resolved, local_files_only=True)
+        target_device = "cpu" if self.device in {"cpu", "auto"} else self.device
+        self._model = SentenceTransformer(resolved, device=target_device, local_files_only=True)
         self._mode = "sentence_transformers"
 
     def _hash_vector(self, text: str) -> List[float]:
@@ -55,9 +56,46 @@ class EmbeddingModel:
             return [self._hash_vector(text) for text in items]
         if not items:
             return []
+        try:
+            batch_size = max(1, int(os.getenv("EMBEDDING_BATCH_SIZE", "8")))
+        except ValueError:
+            batch_size = 8
         if self._mode == "flag":
-            result = self._model.encode(items, return_dense=True)
+            result = self._model.encode(items, return_dense=True, batch_size=batch_size)
             vectors = result["dense_vecs"]
         else:
-            vectors = self._model.encode(items, normalize_embeddings=True, show_progress_bar=False)
+            vectors = self._model.encode(
+                items,
+                batch_size=batch_size,
+                normalize_embeddings=True,
+                show_progress_bar=False,
+            )
         return [vector.tolist() if hasattr(vector, "tolist") else list(vector) for vector in vectors]
+
+    def encode_compact(self, texts: Iterable[str]):
+        """Encode to a float32 matrix without expanding vectors into Python lists."""
+        try:
+            import numpy as np
+        except ImportError:
+            return self.encode(texts)
+        items = [str(text or "") for text in texts]
+        if self.mock:
+            return np.asarray([self._hash_vector(text) for text in items], dtype=np.float32)
+        if not items:
+            return np.empty((0, self.dimension), dtype=np.float32)
+        try:
+            batch_size = max(1, int(os.getenv("EMBEDDING_BATCH_SIZE", "8")))
+        except ValueError:
+            batch_size = 8
+        if self._mode == "flag":
+            result = self._model.encode(items, return_dense=True, batch_size=batch_size)
+            vectors = result["dense_vecs"]
+        else:
+            vectors = self._model.encode(
+                items,
+                batch_size=batch_size,
+                normalize_embeddings=True,
+                show_progress_bar=False,
+                convert_to_numpy=True,
+            )
+        return np.asarray(vectors, dtype=np.float32)

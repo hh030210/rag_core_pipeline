@@ -15,6 +15,8 @@ import hashlib
 import json
 import os
 import re
+import tempfile
+import threading
 from typing import Any, Dict, List, Mapping, Optional
 
 from .query_parser import QueryParserV2, _as_list, _clean_terms
@@ -75,6 +77,14 @@ _STRICT_INTENT_RULES = {
 class QueryParserV4(QueryParserV2):
     """Schema-constrained parser with intent-slot preservation and diagnostics."""
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._cache_lock = threading.RLock()
+        self._cached_error_retry_attempted: set[str] = set()
+        self._corpus_induced_schema = (
+            self.schema.get("generation_method") == "llm_corpus_induced_strict"
+        )
+
     @staticmethod
     def _strict_intents(query_text: str) -> Dict[str, List[str]]:
         query = normalize_text(query_text)
@@ -104,6 +114,37 @@ class QueryParserV4(QueryParserV2):
         self, query_text: str, llm_constraints: List[Dict[str, Any]]
     ) -> List[Dict[str, Any]]:
         broad = super()._recover_constraints(query_text, llm_constraints)
+        if self._corpus_induced_schema:
+            by_dimension = {item["dimension_id"]: dict(item) for item in broad}
+            llm_ids = [
+                str(item.get("dimension_id", ""))
+                for item in llm_constraints
+                if str(item.get("dimension_id", "")) in self.maps["leaves"]
+            ]
+            main_dimension = llm_ids[0] if llm_ids else ""
+            if not main_dimension:
+                cue_candidates = self._intent_candidates(query_text)
+                if cue_candidates:
+                    main_dimension = sorted(
+                        cue_candidates.items(),
+                        key=lambda pair: (-pair[1][0], pair[0]),
+                    )[0][0]
+                elif broad:
+                    main_dimension = str(broad[0].get("dimension_id", ""))
+
+            composite = bool(re.search(
+                r"同时|分别|以及|并且|还有|和.*(?:分别|各自)", normalize_text(query_text)
+            ))
+            secondary = set(llm_ids[1:]) if composite else set()
+            result = []
+            for dimension_id, item in by_dimension.items():
+                item["role"] = (
+                    "main" if dimension_id == main_dimension else
+                    "secondary" if dimension_id in secondary else "auxiliary"
+                )
+                result.append(item)
+            return result
+
         by_dimension = {item["dimension_id"]: item for item in broad}
         strict = self._strict_intents(query_text)
         if not strict:
@@ -224,18 +265,34 @@ class QueryParserV4(QueryParserV2):
         parent = os.path.dirname(self.cache_file)
         if parent:
             os.makedirs(parent, exist_ok=True)
-        with open(self.cache_file, "w", encoding="utf-8") as handle:
-            json.dump(
-                {
-                    "schema_version": SCHEMA_VERSION,
-                    "parser_version": QUERY_PARSER_V4_VERSION,
-                    "vocabulary_signature": self.vocabulary_signature,
-                    "items": self.cache,
-                },
-                handle,
-                ensure_ascii=False,
-                indent=2,
-            )
+        with self._cache_lock:
+            snapshot = dict(self.cache)
+            temp_path = ""
+            try:
+                with tempfile.NamedTemporaryFile(
+                    mode="w",
+                    encoding="utf-8",
+                    dir=parent or ".",
+                    prefix=f"{os.path.basename(self.cache_file)}.",
+                    suffix=".tmp",
+                    delete=False,
+                ) as handle:
+                    temp_path = handle.name
+                    json.dump(
+                        {
+                            "schema_version": SCHEMA_VERSION,
+                            "parser_version": QUERY_PARSER_V4_VERSION,
+                            "vocabulary_signature": self.vocabulary_signature,
+                            "items": snapshot,
+                        },
+                        handle,
+                        ensure_ascii=False,
+                        indent=2,
+                    )
+                os.replace(temp_path, self.cache_file)
+            finally:
+                if temp_path and os.path.exists(temp_path):
+                    os.unlink(temp_path)
 
     def _allowed_nodes(self) -> Dict[str, Dict[str, Any]]:
         """Only expose indexable leaves to the LLM and exact parser."""
@@ -265,14 +322,37 @@ class QueryParserV4(QueryParserV2):
 
     def parse(self, qid: Any, query_text: str) -> Dict[str, Any]:
         key = self._cache_key(qid, query_text)
-        if key in self.cache:
-            return self.cache[key]
+        retry_cached_error = False
+        with self._cache_lock:
+            if key in self.cache:
+                cached = dict(self.cache[key])
+                diagnostics = dict(cached.get("diagnostics", {}) or {})
+                # Entries in the LLM cache are only written by an LLM-backed
+                # parser. Older cache versions predate parser_mode diagnostics.
+                diagnostics.setdefault("parser_mode", "llm")
+                diagnostics.setdefault("llm_attempts", 1)
+                cached["diagnostics"] = diagnostics
+                # A prior empty-response/API error is transient state, not a
+                # successful negative parse. Retry it once per parser instance
+                # while keeping valid cached parses and genuine empty parses
+                # stable. The per-instance guard also prevents duplicate
+                # questions in one evaluation from repeatedly hitting the API.
+                retry_cached_error = (
+                    not cached.get("constraints")
+                    and bool(diagnostics.get("llm_error"))
+                    and key not in self._cached_error_retry_attempted
+                )
+                if retry_cached_error:
+                    self._cached_error_retry_attempted.add(key)
+                elif cached.get("constraints") or diagnostics.get("empty_retry_attempted"):
+                    return cached
 
         # Passing leaves only makes it impossible for a model to invent a
         # parent as a retrievable tag. Parent expansion remains a retrieval
         # operation when an explicitly stored parent constraint is encountered.
         nodes = [self.maps["nodes"][node_id] for node_id in self.maps["leaves"]]
         llm_error = ""
+        parser_method = None
         try:
             parser_method = getattr(self.miner, "parse_query_intent_v4", None)
             if parser_method is None:
@@ -285,6 +365,35 @@ class QueryParserV4(QueryParserV2):
 
         llm_constraints = self._clean_llm_constraints(parsed)
         constraints = self._recover_constraints(query_text, llm_constraints)
+        empty_retry_used = False
+        retry_attempts = 0
+        if not constraints and not llm_error and parser_method is not None:
+            # An empty parse is the one case where a valid but overly cautious
+            # LLM answer can silently disable dimension retrieval. Ask once for
+            # the best applicable leaf, while still allowing truly out-of-scope
+            # or malformed questions to remain unconstrained.
+            try:
+                retry_parsed = parser_method(
+                    query_text, nodes, prefer_best_match=True
+                )
+                retry_raw_diagnostics = (
+                    retry_parsed.get("diagnostics", {})
+                    if isinstance(retry_parsed, dict) else {}
+                )
+                retry_attempts = int(retry_raw_diagnostics.get("llm_attempts", 1) or 0)
+            except TypeError:
+                retry_parsed = {}
+            except Exception as exc:
+                retry_parsed = {}
+                llm_error = f"{type(exc).__name__}: {exc}"
+            if isinstance(retry_parsed, dict):
+                retry_constraints = self._clean_llm_constraints(retry_parsed)
+                retry_recovered = self._recover_constraints(query_text, retry_constraints)
+                if retry_recovered:
+                    parsed = retry_parsed
+                    llm_constraints = retry_constraints
+                    constraints = retry_recovered
+                empty_retry_used = True
         main_dimension = next(
             (item["dimension_id"] for item in constraints if item.get("role") == "main"), ""
         )
@@ -294,6 +403,14 @@ class QueryParserV4(QueryParserV2):
         raw_diagnostics = parsed.get("diagnostics", {}) if isinstance(parsed, dict) else {}
         if not isinstance(raw_diagnostics, dict):
             raw_diagnostics = {}
+        raw_attempts = raw_diagnostics.get("llm_attempts")
+        llm_attempts = int(raw_attempts) if raw_attempts is not None else 1
+        if empty_retry_used:
+            llm_attempts += retry_attempts
+        parser_mode = str(
+            raw_diagnostics.get("mode")
+            or ("llm" if raw_attempts is not None and llm_attempts > 0 else "deterministic")
+        )
         sources = sorted({str(item.get("source", "unknown")) for item in constraints})
         result = {
             "schema_version": SCHEMA_VERSION,
@@ -323,10 +440,14 @@ class QueryParserV4(QueryParserV2):
                     item.get("source") != "llm_v4" for item in constraints
                 ),
                 "recovery_sources": sources,
-                "llm_attempts": int(raw_diagnostics.get("llm_attempts", 1) or 1),
+                "parser_mode": parser_mode,
+                "llm_attempts": llm_attempts,
+                "empty_retry_attempted": empty_retry_used,
+                "cached_error_retry": retry_cached_error,
                 "llm_error": str(raw_diagnostics.get("llm_error", "") or llm_error),
             },
         }
-        self.cache[key] = result
-        self._save_cache()
+        with self._cache_lock:
+            self.cache[key] = result
+            self._save_cache()
         return result

@@ -107,18 +107,34 @@ class CanonicalLabelResolver:
                         target[_key(alias)] = str(concept)
                         self.curated_aliases.setdefault(dim, []).append(str(alias))
 
+        # Corpus labels are exact-match vocabulary, not an ontology.  Keep a
+        # compact snapshot of reviewed aliases for substring canonicalization;
+        # scanning the growing corpus vocabulary for every new label made
+        # initialization quadratic on large retrieval corpora.
+        self.curated_alias_to_concept = {
+            dim: dict(aliases) for dim, aliases in self.alias_to_concept.items()
+        }
+        self._curated_alias_items = {
+            dim: sorted(aliases.items(), key=lambda item: (len(item[0]), item[1]), reverse=True)
+            for dim, aliases in self.curated_alias_to_concept.items()
+        }
+
         # Every indexed value remains valid if no curated synonym exists.
         for dim, labels in vocabulary.items():
             target = self.alias_to_concept.setdefault(str(dim), {})
+            curated_items = self._curated_alias_items.get(str(dim), [])
             for label in labels:
                 normalized = _key(label)
-                if normalized:
-                    contained = [
-                        (len(alias), concept) for alias, concept in target.items()
+                if not normalized:
+                    continue
+                concept = next(
+                    (
+                        concept for alias, concept in curated_items
                         if len(alias) >= 2 and alias in normalized
-                    ]
-                    concept = max(contained)[1] if contained else f"label:{normalized}"
-                    target.setdefault(normalized, concept)
+                    ),
+                    f"label:{normalized}",
+                )
+                target.setdefault(normalized, concept)
 
     def canonical(self, dimension_id: str, label: Any) -> str:
         normalized = _key(label)
@@ -127,12 +143,9 @@ class CanonicalLabelResolver:
         aliases = self.alias_to_concept.get(str(dimension_id), {})
         if normalized in aliases:
             return aliases[normalized]
-        contained = [
-            (len(alias), concept) for alias, concept in aliases.items()
-            if len(alias) >= 2 and alias in normalized
-        ]
-        if contained:
-            return max(contained)[1]
+        for alias, concept in self._curated_alias_items.get(str(dimension_id), []):
+            if len(alias) >= 2 and alias in normalized:
+                return concept
         return f"label:{normalized}"
 
     def concepts(self, dimension_id: str, labels: Iterable[Any]) -> set[str]:

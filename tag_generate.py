@@ -114,9 +114,6 @@
 import os
 os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
 import json
-import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from pathlib import Path
 try:
     from pymilvus import MilvusClient
 except ImportError:
@@ -174,7 +171,7 @@ class Config:
     ALL_DIMS = DIMS_ENUM + DIMS_NUM + DIMS_DES
 
 
-def build_tag_document_v2(doc_id, extracted, schema, entity_mentions=None):
+def build_tag_document_v2(doc_id, extracted, schema):
     """Normalize one document to array-valued v2 tags plus evidence."""
 
     schema = load_schema(schema, allow_legacy=False, strict=False)
@@ -184,12 +181,10 @@ def build_tag_document_v2(doc_id, extracted, schema, entity_mentions=None):
         " / ".join(maps["nodes"][part]["name"] for part in maps["paths"][dimension_id])
         for dimension_id in tags
     })
-    entities = entity_mentions if isinstance(entity_mentions, list) else []
     return {
         "tags": tags,
         "tag_details": details,
         "dimension_paths": paths,
-        "entity_mentions": entities,
         "schema_version": SCHEMA_VERSION,
     }
 
@@ -202,185 +197,53 @@ class TagGeneratorV2:
         self.miner = miner or DimensionMiningWithQwen()
         self.max_dimensions_per_request = max(1, int(max_dimensions_per_request))
 
-    def run(
-        self,
-        records,
-        output_path=None,
-        batch_size=1,
-        *,
-        checkpoint_path=None,
-        resume=False,
-    ):
+    def run(self, records, output_path=None, batch_size=1):
         records = list(records or [])
         leaves = [
             node for node in self.schema["dimensions"]
             if node.get("level") == 2 and node.get("indexable") is True
         ]
-        record_ids = {
-            str(record.get("doc_id", record.get("id", ""))) for record in records
-        }
         documents = {}
-        if checkpoint_path and os.path.exists(checkpoint_path):
-            if not resume:
-                raise FileExistsError(
-                    f"标签 checkpoint 已存在；如需续跑请启用 resume: {checkpoint_path}"
-                )
-            with open(checkpoint_path, "r", encoding="utf-8") as checkpoint_file:
-                for line in checkpoint_file:
-                    if not line.strip():
-                        continue
-                    try:
-                        row = json.loads(line)
-                    except json.JSONDecodeError:
-                        continue
-                    doc_id = str(row.pop("doc_id", row.pop("id", "")))
-                    if doc_id in record_ids:
-                        row.pop("checkpoint_version", None)
-                        documents[doc_id] = row
-
-        pending_records = [
-            record for record in records
-            if str(record.get("doc_id", record.get("id", ""))) not in documents
-        ]
         batch_size = max(1, int(batch_size or 1))
-        try:
-            workers = max(1, int(os.getenv(
-                "DIMENSION_WORKERS", os.getenv("TAG_EXTRACTION_WORKERS", "1")
-            )))
-        except ValueError:
-            workers = 1
-
-        progress_path = os.getenv("TAG_EXTRACTION_PROGRESS_PATH", "").strip()
-
-        def write_progress(completed):
-            if not progress_path:
-                return
-            progress_file = Path(progress_path)
-            progress_file.parent.mkdir(parents=True, exist_ok=True)
-            total = len(records)
-            progress_file.write_text(json.dumps({
-                "stage": "llm_tag_extraction",
-                "completed": completed,
-                "total": total,
-                "percent": round(100.0 * completed / total, 2) if total else 100.0,
-            }, ensure_ascii=False, indent=2), encoding="utf-8")
-
-        checkpoint_file = None
-        if checkpoint_path:
-            checkpoint_path = str(checkpoint_path)
-            os.makedirs(os.path.dirname(checkpoint_path) or ".", exist_ok=True)
-            checkpoint_file = open(checkpoint_path, "a", encoding="utf-8")
-
-        def save_group(group, extracted_group):
-            for record in group:
+        if batch_size == 1:
+            for record in records:
                 doc_id = str(record.get("doc_id", record.get("id", "")))
                 text = str(record.get("doc_text", record.get("text", "")) or "")
-                entities = (
-                    self.miner.extract_entities_v2(text)
-                    if text and hasattr(self.miner, "extract_entities_v2")
-                    else []
-                )
-                tagged = build_tag_document_v2(
-                    doc_id, extracted_group.get(doc_id, {}), self.schema, entities
-                )
-                documents[doc_id] = tagged
-                if checkpoint_file:
-                    checkpoint_file.write(json.dumps(
-                        {"doc_id": doc_id, **tagged}, ensure_ascii=False
-                    ) + "\n")
-            if checkpoint_file:
-                checkpoint_file.flush()
-            write_progress(len(documents))
-
-        try:
-            if batch_size == 1:
-                for index, record in enumerate(pending_records, 1):
-                    doc_id = str(record.get("doc_id", record.get("id", "")))
-                    text = str(record.get("doc_text", record.get("text", "")) or "")
-                    extracted = self.miner.extract_batch_dimensions_v2(
-                        text,
-                        leaves,
-                        max_dimensions_per_request=self.max_dimensions_per_request,
-                    ) if text else {}
-                    save_group([record], {doc_id: extracted})
-                    if index % 25 == 0 or index == len(pending_records):
-                        print(
-                            f"[维度] {index}/{len(pending_records)} 条完成，"
-                            f"records={len(documents)}",
-                            flush=True,
-                        )
-            else:
-                # 已切好的短 passage 按组抽取，并在主线程逐组 checkpoint，
-                # 使 SSH 断连或进程重启后能从已完成 chunk 继续。
-                groups = [
-                    pending_records[start:start + batch_size]
-                    for start in range(0, len(pending_records), batch_size)
+                extracted = self.miner.extract_batch_dimensions_v2(
+                    text,
+                    leaves,
+                    max_dimensions_per_request=self.max_dimensions_per_request,
+                ) if text else {}
+                documents[doc_id] = build_tag_document_v2(doc_id, extracted, self.schema)
+        else:
+            # 对已经切好的短 passage 批量抽取，减少每个 chunk 一次 API 请求的
+            # 固定开销。extract_multi_chunk_dimensions_v2 仍按叶子维度分区，
+            # 并保留每条记录自己的 evidence/置信度。
+            for start in range(0, len(records), batch_size):
+                group = records[start:start + batch_size]
+                payload = [
+                    {
+                        "doc_id": str(record.get("doc_id", record.get("id", ""))),
+                        "doc_text": str(record.get("doc_text", record.get("text", "")) or ""),
+                    }
+                    for record in group
                 ]
+                extracted_group = self.miner.extract_multi_chunk_dimensions_v2(
+                    payload,
+                    leaves,
+                    max_dimensions_per_request=self.max_dimensions_per_request,
+                ) if leaves else {}
+                for record in group:
+                    doc_id = str(record.get("doc_id", record.get("id", "")))
+                    documents[doc_id] = build_tag_document_v2(
+                        doc_id, extracted_group.get(doc_id, {}), self.schema
+                    )
 
-                def extract_group(group):
-                    payload = [
-                        {
-                            "doc_id": str(record.get("doc_id", record.get("id", ""))),
-                            "doc_text": str(record.get("doc_text", record.get("text", "")) or ""),
-                        }
-                        for record in group
-                    ]
-                    extracted_group = self.miner.extract_multi_chunk_dimensions_v2(
-                        payload,
-                        leaves,
-                        max_dimensions_per_request=self.max_dimensions_per_request,
-                    ) if leaves else {}
-                    if payload and not any(extracted_group.values()):
-                        time.sleep(1.0)
-                        retry_group = self.miner.extract_multi_chunk_dimensions_v2(
-                            payload,
-                            leaves,
-                            max_dimensions_per_request=self.max_dimensions_per_request,
-                        ) if leaves else {}
-                        if any(retry_group.values()):
-                            extracted_group = retry_group
-                    return group, extracted_group
-
-                print(
-                    f"[维度] 批量抽取 pending_groups={len(groups)} batch_size={batch_size} "
-                    f"workers={workers} checkpointed_records={len(documents)}",
-                    flush=True,
-                )
-                completed_groups = 0
-                if workers == 1:
-                    for group in groups:
-                        save_group(*extract_group(group))
-                        completed_groups += 1
-                        if completed_groups % 25 == 0 or completed_groups == len(groups):
-                            print(
-                                f"[维度] {completed_groups}/{len(groups)} 批完成，"
-                                f"records={len(documents)}",
-                                flush=True,
-                            )
-                else:
-                    with ThreadPoolExecutor(max_workers=workers) as executor:
-                        futures = [executor.submit(extract_group, group) for group in groups]
-                        for future in as_completed(futures):
-                            save_group(*future.result())
-                            completed_groups += 1
-                            if completed_groups % 25 == 0 or completed_groups == len(futures):
-                                print(
-                                    f"[维度] {completed_groups}/{len(futures)} 批完成，"
-                                    f"records={len(documents)}",
-                                    flush=True,
-                                )
-        finally:
-            if checkpoint_file:
-                checkpoint_file.close()
-
-        write_progress(len(documents))
         result = {"schema_version": SCHEMA_VERSION, "documents": documents}
         if output_path:
             output_path = str(output_path)
-            temp_path = output_path + ".tmp"
-            with open(temp_path, "w", encoding="utf-8") as handle:
+            with open(output_path, "w", encoding="utf-8") as handle:
                 json.dump(result, handle, ensure_ascii=False, indent=2)
-            os.replace(temp_path, output_path)
         return result
 
 class LabelGeneratorFull:

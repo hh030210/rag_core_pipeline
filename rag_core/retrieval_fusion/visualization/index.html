@@ -37,6 +37,12 @@
     .metric-label { color: var(--muted); font-size: 12px; }
     .metric-value { margin-top: 3px; font-size: 23px; line-height: 1.2; font-weight: 720; font-variant-numeric: tabular-nums; }
     .metric-value.warn { color: var(--red); }
+    .strategy-notes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; margin: 0 0 18px; }
+    .strategy-notes[hidden] { display: none; }
+    .strategy-note { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); }
+    .strategy-note h2 { margin: 0 0 8px; font-size: 14px; }
+    .strategy-note p { margin: 6px 0; color: #425663; font-size: 12px; line-height: 1.65; }
+    .strategy-note strong { color: var(--ink); }
     .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 0 0 14px; }
     .search { flex: 1 1 300px; min-width: 220px; position: relative; }
     .search input, select { width: 100%; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 9px; padding: 10px 12px; outline: none; }
@@ -81,6 +87,8 @@
     .route-head { min-height: 66px; padding: 10px 11px; background: #f8fafb; border-bottom: 1px solid var(--line); }
     .route-title { font-weight: 700; font-size: 13px; }
     .route-sub { margin-top: 3px; color: var(--muted); font-size: 11px; }
+    .route-gold-rank { margin-top: 4px; font-size: 11px; font-weight: 700; color: var(--teal); }
+    .route-gold-rank.lost { color: var(--red); }
     .route-list { padding: 6px; }
     .candidate { border-radius: 8px; padding: 8px; margin: 3px 0; min-height: 58px; background: #fff; border: 1px solid transparent; }
     .candidate:hover { background: #f7f9fa; border-color: var(--line); }
@@ -131,6 +139,7 @@
     .legend-bar { display: inline-block; width: 3px; height: 11px; margin: 0 6px -2px 0; background: var(--red); }
     .error { max-width: 750px; margin: 50px auto; background: white; border: 1px solid #efc9c2; border-radius: 12px; padding: 22px; color: #783535; }
     .error code { color: #542d2d; }
+    @media (max-width: 1100px) { .strategy-notes { grid-template-columns: 1fr; } }
     @media (max-width: 1250px) { .metrics { grid-template-columns: repeat(3, 1fr); } .routes { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); } }
     @media (max-width: 760px) { .topbar-inner { align-items: flex-start; flex-direction: column; } .metrics { grid-template-columns: repeat(2, 1fr); } .layout { grid-template-columns: 1fr; } .list-panel { position: static; max-height: 300px; } .detail { padding: 13px; } .detail-top { flex-direction: column; } .navigation { width: 100%; } .question-title { font-size: 17px; } }
   </style>
@@ -139,18 +148,36 @@
   <header class="topbar">
     <div class="topbar-inner">
       <div><h1>景区检索与融合对比</h1><div class="subtitle" id="subtitle">语义、维度与融合检索结果对比；点击 chunk 编号查看正文。</div></div>
-      <div class="local-badge">本地静态数据 · 不请求模型或外部 API</div>
+      <div class="local-badge">本地快照 · 不请求模型或外部服务</div>
     </div>
   </header>
   <main class="page" id="app">
     <section class="metrics" id="metrics"></section>
+    <section class="strategy-notes" id="strategy-notes" aria-label="融合策略说明" hidden>
+      <article class="strategy-note">
+        <h2>1. 原本的融合策略</h2>
+        <p>语义与维度检索先各自排序，再合并同一 chunk。通常使用两路分数的最小最大归一化值：<strong>0.77 × 语义 + 0.23 × 维度</strong>。</p>
+        <p>候选量和两路重合度满足条件时，切换为维度排名分支：<strong>0.4 × 语义归一化分 + 0.6 ÷ (维度名次 + 1)</strong>。</p>
+      </article>
+      <article class="strategy-note">
+        <h2>2. 原本的问题与 badcase</h2>
+        <p>固定权重可能把维度路已排前列的 golden 压到融合 Top-5 之外；候选集中在相近语义分数时，单看归一化值也难区分文本是否真正回答问题。</p>
+        <p id="badcase-summary">正在统计原融合与新融合的排名变化…</p>
+      </article>
+      <article class="strategy-note">
+        <h2>3. 修改后的策略</h2>
+        <p>读取同一批候选的静态快照。语义 Top-1 与 Top-2 差距越小，维度权重从 <strong>0.2</strong> 增至最多 <strong>0.3</strong>；再加入查询与 chunk 正文的 2–4 字词组匹配分，权重为 <strong>0.3</strong>。</p>
+        <p>右侧“新融合”列来自 <code>output_new</code>，可直接对照原融合名次与新名次。该策略目前只做离线重排。</p>
+      </article>
+    </section>
     <section class="toolbar">
-      <label class="search"><input id="search" type="search" placeholder="搜索问题、ID 或 chunk ID…" autocomplete="off"></label>
+      <label class="search"><input id="search" type="search" placeholder="搜索问题或快照文件名…" autocomplete="off"></label>
       <select id="filter" aria-label="筛选问题">
         <option value="all">全部问题</option>
-        <option value="baseline-miss">加权基线 Top-5 未命中</option>
-        <option value="deepseek-miss">DeepSeek Top-5 未命中</option>
-        <option value="answerability-miss">Answerability Top-5 未命中</option>
+        <option value="baseline-miss">原融合 Top-5 未命中</option>
+        <option value="new-fusion-miss">新融合 Top-5 未命中</option>
+        <option value="rescued">新融合救回 Top-5</option>
+        <option value="harmed">新融合掉出 Top-5</option>
         <option value="semantic-miss">语义 Top-5 未命中</option>
         <option value="dimension-miss">维度 Top-5 未命中</option>
         <option value="both">语义与维度 Top-5 都命中</option>
@@ -173,440 +200,6 @@
     <div class="chunk-dialog-meta" id="chunk-dialog-meta"></div>
     <pre class="chunk-content" id="chunk-content"></pre>
   </dialog>
-  <script>
-    const $ = (selector) => document.querySelector(selector);
-    let rows = [];
-    let filtered = [];
-    let activeIndex = 0;
-    let showAll = false;
-    let chunkContents = null;
-    let chunkContentsPromise = null;
-    let chunkDimensionTags = {};
-
-    const routeStats = [
-      ['semantic_results', '语义 Top-5 命中', 'semHit'],
-      ['dimension_results', '维度 Top-5 命中', 'dimHit'],
-      ['baseline_results', '加权基线 Top-5 命中', 'baselineHit'],
-      ['deepseek_results', 'DeepSeek Top-5 命中', 'deepseekHit'],
-      ['answerability_results', 'Answerability Top-5 命中', 'answerabilityHit'],
-    ];
-    function hasRoute(key) { return rows.some(row => Array.isArray(row[key]) && row[key].length > 0); }
-
-    function rankMap(ids) { return Object.fromEntries((ids || []).map((id, index) => [id, index + 1])); }
-    function top5(ids) { return new Set((ids || []).slice(0, 5)); }
-    function rowState(row) {
-      const gold = new Set(row.gold_chunk_ids || []);
-      const sem5 = top5((row.semantic_results || []).map(x => x.chunk_id));
-      const dim5 = top5((row.dimension_results || []).map(x => x.chunk_id));
-      const baseline5 = top5((row.baseline_results || []).map(x => x.chunk_id));
-      const deepseek5 = top5((row.deepseek_results || []).map(x => x.chunk_id));
-      const answerability5 = top5((row.answerability_results || []).map(x => x.chunk_id));
-      const semHit = [...gold].some(id => sem5.has(id));
-      const dimHit = [...gold].some(id => dim5.has(id));
-      const baselineHit = [...gold].some(id => baseline5.has(id));
-      const deepseekHit = [...gold].some(id => deepseek5.has(id));
-      const answerabilityHit = [...gold].some(id => answerability5.has(id));
-      return { gold, evaluated: gold.size > 0, sem5, dim5, baseline5, deepseek5, answerability5, semHit, dimHit, baselineHit, deepseekHit, answerabilityHit };
-    }
-    function el(tag, className, text) {
-      const node = document.createElement(tag);
-      if (className) node.className = className;
-      if (text !== undefined && text !== null) node.textContent = String(text);
-      return node;
-    }
-    function metric(label, value, warn = false) {
-      const box = el('div', 'metric');
-      box.append(el('div', 'metric-label', label), el('div', `metric-value${warn ? ' warn' : ''}`, value));
-      return box;
-    }
-    function renderMetrics() {
-      const stats = rows.map(rowState).filter(s => s.evaluated);
-      if (!stats.length) {
-        const boxes = [metric('检索快照', rows.length), metric('Gold 评测', '未提供')];
-        $('#metrics').replaceChildren(...boxes);
-        return;
-      }
-      const count = (key) => stats.filter(s => s[key]).length;
-      const boxes = [metric('Gold 评测问答量', `${stats.length} / ${rows.length}`)];
-      routeStats.filter(([key]) => hasRoute(key)).forEach(([, label, stateKey]) => {
-        boxes.push(metric(label, `${count(stateKey)} / ${stats.length}`));
-      });
-      $('#metrics').replaceChildren(...boxes);
-    }
-    function passes(row, value) {
-      const s = rowState(row);
-      if (!s.evaluated && value !== 'all') return false;
-      if (value === 'baseline-miss') return !s.baselineHit;
-      if (value === 'deepseek-miss') return !s.deepseekHit;
-      if (value === 'answerability-miss') return !s.answerabilityHit;
-      if (value === 'semantic-miss') return !s.semHit;
-      if (value === 'dimension-miss') return !s.dimHit;
-      if (value === 'both') return s.semHit && s.dimHit;
-      return true;
-    }
-    function applyFilters() {
-      const query = $('#search').value.trim().toLocaleLowerCase();
-      const type = $('#filter').value;
-      filtered = rows.filter(row => {
-        const candidateIds = ['semantic_results', 'dimension_results', 'baseline_results', 'deepseek_results', 'answerability_results']
-          .flatMap(key => (row[key] || []).map(item => item.chunk_id));
-        const haystack = [row.id, row.dataset_index, row.question, row.retrieval_query, ...(row.gold_chunk_ids || []), ...candidateIds].join(' ').toLocaleLowerCase();
-        return (!query || haystack.includes(query)) && passes(row, type);
-      });
-      if (activeIndex >= filtered.length) activeIndex = Math.max(0, filtered.length - 1);
-      renderList();
-      renderDetail();
-    }
-    function renderList() {
-      $('#list-count').textContent = `${filtered.length} / ${rows.length}`;
-      const list = $('#question-list');
-      const nodes = filtered.map((row, index) => {
-        const s = rowState(row);
-        const button = el('button', `question-item${index === activeIndex ? ' active' : ''}`);
-        button.type = 'button';
-        const title = el('div', 'question-item-title', row.question || '(空问题)');
-        const meta = el('div', 'question-item-meta');
-        meta.append(el('span', '', `#${row.dataset_index ?? row.id ?? index + 1}`));
-        const status = !s.evaluated
-          ? { evaluated: false, label: 'Fusion snapshot' }
-          : hasRoute('answerability_results')
-          ? { hit: s.answerabilityHit, label: 'Answerability' }
-          : { hit: s.baselineHit, label: '融合基线' };
-        meta.append(el('span', `mini-state ${status.evaluated === false ? 'unrated' : status.hit ? 'hit' : 'lost'}`, status.evaluated === false ? status.label : `${status.label} ${status.hit ? '命中' : '未命中'}`));
-        button.append(title, meta);
-        button.addEventListener('click', () => { activeIndex = index; renderList(); renderDetail(); });
-        return button;
-      });
-      list.replaceChildren(...nodes);
-      if (!filtered.length) list.append(el('div', 'empty', '没有符合条件的问题'));
-    }
-    function fmtScore(value) { return typeof value === 'number' ? Number(value).toFixed(4) : null; }
-    function renderQuestionDimensions(row) {
-      const panel = el('section', 'question-dimensions');
-      panel.append(el('h3', 'dimension-panel-title', '问题维度标签'));
-      const dimensions = row.query_dimensions || [];
-      if (!dimensions.length) {
-        panel.append(el('div', 'dimension-note', '当前数据没有保存该问题的维度解析。'));
-        return panel;
-      }
-      const grid = el('div', 'query-dimension-grid');
-      dimensions.forEach(dimension => {
-        const group = el('div', 'query-dimension');
-        const title = el('div', 'dimension-group-title');
-        title.append(el('span', '', dimension.dimension_name || dimension.dimension_id));
-        if (dimension.dimension_path && dimension.dimension_path !== dimension.dimension_name) {
-          title.append(el('span', 'dimension-path', dimension.dimension_path));
-        }
-        title.append(el('span', 'dimension-role', `角色 ${dimension.role || 'auxiliary'}`));
-        group.append(title);
-        const chips = el('div', 'dimension-tags');
-        (dimension.labels || []).forEach(label => chips.append(el('span', 'dimension-chip', label)));
-        (dimension.intent_terms || []).forEach(term => chips.append(el('span', 'dimension-chip intent', `意图词：${term}`)));
-        if (!chips.childNodes.length) chips.append(el('span', 'dimension-note', '无标签或意图词'));
-        group.append(chips);
-        group.append(el('div', 'dimension-note', `匹配模式 ${dimension.match || 'ANY'} · 问题侧未提供标签独立得分`));
-        grid.append(group);
-      });
-      panel.append(grid);
-      return panel;
-    }
-    function matchSourceLabel(source) {
-      return ({ canonical_label: '标签匹配', intent_text: '意图词命中正文', dimension_vector: '维度向量匹配' })[source] || source || '—';
-    }
-    function renderDimensionInfo(item, chunkId) {
-      const chunk = chunkDimensionTags[chunkId] || {};
-      const dimensions = chunk.dimensions || [];
-      const matches = item?.matches || [];
-      const tagCount = dimensions.reduce((sum, dimension) => sum + (dimension.labels || []).length, 0);
-      if (!tagCount && !matches.length) return null;
-      const wrapper = el('div', 'dimension-card-info');
-      const preview = el('div', 'dimension-preview');
-      const previewTags = dimensions.flatMap(dimension => (dimension.labels || []).map(tag => ({ dimension, tag }))).slice(0, 3);
-      previewTags.forEach(({ dimension, tag }) => {
-        const chip = el('span', 'dimension-chip');
-        chip.append(document.createTextNode(`${dimension.dimension_name || dimension.dimension_id}：${tag.label || ''}`));
-        if (typeof tag.confidence === 'number') {
-          chip.append(el('span', 'dimension-chip-score', `置信 ${fmtScore(tag.confidence)}`));
-        }
-        const labelMatch = matches.find(match => match.dimension_id === dimension.dimension_id && match.label === tag.label);
-        if (labelMatch && typeof labelMatch.similarity === 'number') {
-          chip.append(el('span', 'dimension-chip-score', `匹配 ${fmtScore(labelMatch.similarity)}`));
-        }
-        preview.append(chip);
-      });
-      if (tagCount > previewTags.length) preview.append(el('span', 'dimension-note', `+${tagCount - previewTags.length} 个标签`));
-      if (preview.childNodes.length) wrapper.append(preview);
-      const details = el('details', 'dimension-info');
-      details.append(el('summary', '', `查看完整标签及匹配分（${tagCount} 个标签 · ${matches.length} 条匹配）`));
-      const body = el('div', 'dimension-info-body');
-      if (dimensions.length) {
-        dimensions.forEach(dimension => {
-          const group = el('div', 'dimension-group');
-          const heading = el('div', 'dimension-group-title');
-          heading.append(el('span', '', dimension.dimension_name || dimension.dimension_id));
-          if (dimension.dimension_path && dimension.dimension_path !== dimension.dimension_name) {
-            heading.append(el('span', 'dimension-path', dimension.dimension_path));
-          }
-          group.append(heading);
-          const chips = el('div', 'dimension-tags');
-          (dimension.labels || []).forEach(tag => {
-            const chip = el('span', 'dimension-chip');
-            chip.append(document.createTextNode(tag.label || ''));
-            if (typeof tag.confidence === 'number') {
-              chip.append(el('span', 'dimension-chip-score', `置信度 ${fmtScore(tag.confidence)}`));
-            }
-            chips.append(chip);
-          });
-          group.append(chips);
-          body.append(group);
-        });
-      } else {
-        body.append(el('div', 'dimension-note', '标签数据中未找到该 chunk 的维度标签。'));
-      }
-      if (matches.length) {
-        body.append(el('div', 'dimension-group-title', '问题约束匹配分（来自检索 matches）'));
-        const list = el('ul', 'dimension-match-list');
-        matches.forEach(match => {
-          const line = document.createElement('li');
-          const label = [match.dimension_path || match.dimension_id, match.label].filter(Boolean).join(' · ');
-          const scoreBits = [];
-          if (typeof match.similarity === 'number') scoreBits.push(`相似度 ${fmtScore(match.similarity)}`);
-          if (typeof match.idf_bonus === 'number') scoreBits.push(`IDF 加权 ${fmtScore(match.idf_bonus)}`);
-          if (match.role) scoreBits.push(`角色 ${match.role}`);
-          scoreBits.push(matchSourceLabel(match.source));
-          line.append(document.createTextNode(`${label} — ${scoreBits.join(' · ')}`));
-          if (match.evidence) line.title = match.evidence;
-          list.append(line);
-        });
-        body.append(list);
-      }
-      details.append(body);
-      wrapper.append(details);
-      return wrapper;
-    }
-    function routeData(row) {
-      const definitions = [
-        ['semantic', '语义检索', '相似度排序', row.semantic_results || []],
-        ['dimension', '维度检索', '维度匹配排序', row.dimension_results || []],
-        ['baseline', '加权基线融合', '基线候选池与加权排序', row.baseline_results || []],
-        ['deepseek', 'DeepSeek Listwise', '同一候选池 · Listwise 重排', row.deepseek_results || []],
-        ['answerability', 'Answerability Rerank', '同一候选池 · 可回答性重排', row.answerability_results || []],
-      ];
-      return definitions.filter(([key]) => hasRoute(`${key}_results`)).map(([key, title, description, items]) => ({
-        key, title,
-        sub: `${items.length} 个候选 · ${description}`,
-        ids: items.map(item => item.chunk_id),
-        meta: Object.fromEntries(items.map(item => [item.chunk_id, item])),
-      }));
-    }
-    function routeScore(route, item) {
-      if (!item) return '';
-      const bits = [];
-      if (route.key === 'semantic') {
-        const score = fmtScore(item.normalized_semantic_score ?? item.semantic_score ?? item.score);
-        if (score !== null) bits.push(`语义分 ${score}`);
-      } else if (route.key === 'dimension') {
-        const score = fmtScore(item.normalized_dimension_score ?? item.dimension_score ?? item.score);
-        if (score !== null) bits.push(`维度分 ${score}`);
-      } else if (route.key === 'baseline') {
-        const score = fmtScore(item.fused_score ?? item.final_score ?? item.score ?? item.base_score);
-        if (score !== null) bits.push(`融合分 ${score}`);
-        if (item.normalized_semantic_score != null) bits.push(`语义 ${fmtScore(item.normalized_semantic_score)}`);
-        if (item.normalized_dimension_score != null) bits.push(`维度 ${fmtScore(item.normalized_dimension_score)}`);
-      } else if (route.key === 'deepseek') {
-        if (item.rerank_score != null) bits.push(`重排分 ${fmtScore(item.rerank_score)}`);
-        if (item.base_score != null) bits.push(`基线分 ${fmtScore(item.base_score)}`);
-        if (item.semantic_rank != null) bits.push(`原语义名次 ${item.semantic_rank}`);
-        if (item.dimension_rank != null) bits.push(`原维度名次 ${item.dimension_rank}`);
-      } else if (route.key === 'answerability') {
-        if (item.answerability != null) bits.push(`可回答性 ${fmtScore(item.answerability)}`);
-        if (item.quality_score != null) bits.push(`质量 ${fmtScore(item.quality_score)}`);
-        if (item.rerank_score != null) bits.push(`重排分 ${fmtScore(item.rerank_score)}`);
-      }
-      return bits.join(' · ');
-    }
-    async function loadChunkContents() {
-      if (chunkContents) return chunkContents;
-      if (!chunkContentsPromise) {
-        chunkContentsPromise = fetch('./rerank_chunk_contents.json', { cache: 'no-store' })
-          .then(response => {
-            if (!response.ok) throw new Error(`读取景区数据集 chunk 正文失败（HTTP ${response.status}）`);
-            return response.json();
-          }).then(contents => {
-            chunkContents = contents;
-            return chunkContents;
-        }).catch(error => {
-          chunkContentsPromise = null;
-          throw error;
-        });
-      }
-      return chunkContentsPromise;
-    }
-    async function showChunk(chunkId, routeTitle, rank) {
-      const dialog = $('#chunk-dialog');
-      $('#chunk-dialog-title').textContent = chunkId;
-      $('#chunk-dialog-meta').textContent = `${routeTitle} · 排名 #${rank} · 正在读取正文…`;
-      $('#chunk-content').textContent = '加载中…';
-      if (!dialog.open) dialog.showModal();
-      try {
-        const contents = await loadChunkContents();
-        const chunk = contents[chunkId];
-        if (!chunk) {
-          $('#chunk-dialog-meta').textContent = `${routeTitle} · 排名 #${rank}`;
-          $('#chunk-content').textContent = '静态 chunk 正文数据中没有找到这个编号。';
-          return;
-        }
-        const source = [chunk.title, chunk.source_file].filter(Boolean).join(' · ');
-        $('#chunk-dialog-meta').textContent = `${routeTitle} · 排名 #${rank}${source ? ` · ${source}` : ''}`;
-        $('#chunk-content').textContent = chunk.text || '该 chunk 没有可显示的正文。';
-      } catch (error) {
-        $('#chunk-dialog-meta').textContent = `${routeTitle} · 排名 #${rank}`;
-        $('#chunk-content').textContent = `${error.message}。请确认静态服务器提供了景区数据集对应的 rerank_chunk_contents.json。`;
-      }
-    }
-    function renderRoute(row, route, state) {
-      const box = el('section', 'route');
-      const head = el('div', 'route-head');
-      head.append(el('div', 'route-title', route.title), el('div', 'route-sub', route.sub));
-      box.append(head);
-      const list = el('div', 'route-list');
-      const ids = route.ids || [];
-      const visible = showAll ? ids : ids.slice(0, 5);
-      const meta = route.meta || {};
-      visible.forEach((chunkId, index) => {
-        const rank = index + 1;
-        const item = meta[chunkId];
-        const isGold = state.gold.has(chunkId);
-        const card = el('div', `candidate${isGold ? ' is-gold' : ''}`);
-        card.dataset.chunkId = chunkId;
-        card.addEventListener('mouseenter', () => {
-          document.querySelectorAll('.candidate[data-chunk-id]').forEach(candidate => {
-            candidate.classList.toggle('is-linked-hover', candidate.dataset.chunkId === chunkId);
-          });
-        });
-        card.addEventListener('mouseleave', () => {
-          document.querySelectorAll('.candidate.is-linked-hover').forEach(candidate => {
-            candidate.classList.remove('is-linked-hover');
-          });
-        });
-        const top = el('div', 'candidate-top');
-        top.append(el('span', 'rank', `#${rank}`));
-        const flags = el('span', 'candidate-flags');
-        if (isGold) flags.append(el('span', 'flag gold', 'GOLDEN'));
-        top.append(flags);
-        const chunkButton = el('button', 'chunk-id chunk-link', chunkId);
-        chunkButton.type = 'button';
-        chunkButton.title = '点击查看 chunk 完整内容';
-        chunkButton.addEventListener('click', () => showChunk(chunkId, route.title, rank));
-        card.append(top, chunkButton);
-        const scoreText = routeScore(route, item);
-        if (scoreText) card.append(el('div', 'score-line', scoreText));
-        if (route.key === 'dimension') {
-          const dimensionInfo = renderDimensionInfo(item, chunkId);
-          if (dimensionInfo) card.append(dimensionInfo);
-        }
-        list.append(card);
-        if (rank === 5 && ids.length > 5 && !showAll) list.append(el('div', 'cutline', `Top-5 截止线 · 后续 ${ids.length - 5} 个`));
-      });
-      if (!visible.length) list.append(el('div', 'empty', '该路由没有候选'));
-      box.append(list);
-      return box;
-    }
-    function renderDetail() {
-      const root = $('#detail');
-      const row = filtered[activeIndex];
-      if (!row) { root.replaceChildren(el('div', 'empty', '没有符合条件的问题')); return; }
-      const state = rowState(row);
-      const head = el('div', 'detail-top');
-      const intro = document.createElement('div');
-      intro.append(el('h2', 'question-title', row.question || '(空问题)'));
-      intro.append(el('div', 'query-line', `${row.source_type === 'fusion_engine' ? 'Fusion 快照' : '数据集行'} ${row.dataset_index ?? '—'} · ID ${row.id || '—'}${row.retrieval_query ? ` · 检索 query：${row.retrieval_query}` : ''}${row.created_at ? ` · ${row.created_at}` : ''}`));
-      const nav = el('div', 'navigation');
-      const prev = el('button', 'button', '← 上一题'); prev.type = 'button'; prev.disabled = activeIndex <= 0;
-      prev.addEventListener('click', () => { activeIndex--; renderList(); renderDetail(); });
-      const next = el('button', 'button primary', '下一题 →'); next.type = 'button'; next.disabled = activeIndex >= filtered.length - 1;
-      next.addEventListener('click', () => { activeIndex++; renderList(); renderDetail(); });
-      nav.append(prev, next); head.append(intro, nav);
-      const badges = el('div', 'badges');
-      routeStats.filter(([key]) => hasRoute(key)).forEach(([, label, stateKey]) => {
-        const shortLabel = label.replace(' 命中', '');
-        const result = state.evaluated ? (state[stateKey] ? '命中' : '未命中') : '未评测';
-        badges.append(el('span', `badge${state.evaluated ? (state[stateKey] ? ' hit' : ' miss') : ''}`, `${shortLabel} ${result}`));
-      });
-      badges.append(el('span', `badge${state.evaluated ? ' gold' : ''}`, state.evaluated ? `Golden ${state.gold.size} 个` : 'Gold 未提供'));
-      const queryDimensions = renderQuestionDimensions(row);
-      const routes = el('div', 'routes');
-      routeData(row).forEach(route => routes.append(renderRoute(row, route, state)));
-      const foot = el('div', 'detail-foot');
-      foot.append(el('span', 'chunk-hint', '点击任意 chunk 编号可查看完整内容。'));
-      foot.append(el('span', '', row.source_type === 'fusion_engine'
-        ? '候选来自 fusion_engine 输出快照；本页不触发检索请求。'
-        : '候选来自离线评测 JSONL；本页不触发检索请求。'));
-      if (state.evaluated) {
-        const goldLegend = el('span', ''); goldLegend.append(el('i', 'legend-dot'), document.createTextNode('Golden chunk'));
-        foot.append(goldLegend);
-      }
-      root.replaceChildren(head, badges, queryDimensions, routes, foot);
-    }
-    function setShowAll() {
-      showAll = !showAll;
-      $('#show-all').textContent = showAll ? '仅显示 Top-5' : '展开全部候选';
-      renderDetail();
-    }
-    async function start() {
-      try {
-        const response = await fetch('./fusion_routes.json', { cache: 'no-store' });
-        if (!response.ok) throw new Error(`读取景区检索结果 fusion_routes.json 失败（HTTP ${response.status}）`);
-        const sourceRows = await response.json();
-        if (!Array.isArray(sourceRows) || !sourceRows.length) throw new Error('fusion_routes.json 为空或格式不正确');
-        rows = sourceRows.map((row, index) => {
-          if (Number(row.dataset_index) !== index + 1) throw new Error(`第 ${index + 1} 行数据集编号错位`);
-          const routeKeys = ['semantic_results', 'dimension_results', 'baseline_results', 'deepseek_results', 'answerability_results'];
-          if (!Array.isArray(row.gold_chunk_ids) || routeKeys.some(key => !Array.isArray(row[key]))) {
-            throw new Error(`第 ${index + 1} 行缺少 Golden 或景区数据集检索路线结果`);
-          }
-          return row;
-        });
-        const tagResponse = await fetch('./chunk_dimension_tags.json', { cache: 'no-store' });
-        if (!tagResponse.ok) throw new Error(`读取 chunk 维度标签 chunk_dimension_tags.json 失败（HTTP ${tagResponse.status}）`);
-        chunkDimensionTags = await tagResponse.json();
-        if (!chunkDimensionTags || typeof chunkDimensionTags !== 'object' || Array.isArray(chunkDimensionTags)) {
-          throw new Error('chunk_dimension_tags.json 格式不正确');
-        }
-        if (!Array.isArray(rows) || !rows.length) throw new Error('fusion_routes.json 为空或格式不正确');
-        const rerankAvailable = hasRoute('deepseek_results') || hasRoute('answerability_results');
-        const fusionSnapshots = rows.some(row => row.source_type === 'fusion_engine');
-        $('#subtitle').textContent = fusionSnapshots
-          ? '数据直接来自 fusion_engine 检索快照；快照不含 Gold 标注，因此不计算命中率。点击 chunk 编号查看正文。'
-          : rerankAvailable
-            ? '语义、维度与融合检索对比，包含当前数据提供的 rerank 路线；点击 chunk 编号查看正文。'
-            : '语义、维度与融合检索对比；当前原始数据未提供 rerank 结果。点击 chunk 编号查看正文。';
-        const unavailableFilters = {
-          'baseline-miss': 'baseline_results',
-          'deepseek-miss': 'deepseek_results',
-          'answerability-miss': 'answerability_results',
-          'semantic-miss': 'semantic_results',
-          'dimension-miss': 'dimension_results',
-        };
-        [...$('#filter').options].forEach(option => {
-          const routeKey = unavailableFilters[option.value];
-          if (routeKey) option.disabled = !hasRoute(routeKey) || !rows.some(row => (row.gold_chunk_ids || []).length > 0);
-          if (option.value === 'both') option.disabled = !rows.some(row => (row.gold_chunk_ids || []).length > 0);
-        });
-        renderMetrics();
-        $('#search').addEventListener('input', applyFilters);
-        $('#filter').addEventListener('change', applyFilters);
-        $('#show-all').addEventListener('click', setShowAll);
-        $('#chunk-dialog-close').addEventListener('click', () => $('#chunk-dialog').close());
-        applyFilters();
-      } catch (error) {
-        const box = el('div', 'error');
-        box.append(el('h2', '', '未能加载可视化数据'), el('p', '', error.message));
-        box.append(el('p', '', '请确认当前目录包含 fusion_routes.json 和 rerank_chunk_contents.json，然后刷新本页。'));
-        $('#app').replaceChildren(box);
-      }
-    }
-    start();
-  </script>
+  <script src="./viewer.js" defer></script>
 </body>
 </html>
