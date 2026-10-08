@@ -39,8 +39,8 @@ class Settings:
     tag_text_chars: int = 3000
     top_k: int = 5
     dim_alpha: float = 0.2
-    semantic_pool: int = 20
-    dimension_pool: int = 100
+    semantic_pool: int = 100
+    dimension_pool: int = 20
     prompt_iterations: int = 0
     cluster_prompt_enabled: bool = False
     cluster_top_k: int = 1

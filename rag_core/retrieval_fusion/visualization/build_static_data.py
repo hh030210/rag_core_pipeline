@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 from pathlib import Path
 
@@ -42,6 +43,77 @@ def compact(items: list[dict]) -> list[dict]:
         {"rank": rank, **{key: item[key] for key in COMPACT_FIELDS if key in item}}
         for rank, item in enumerate(items, 1)
     ]
+
+
+def first_gold_rank(items: list[dict], gold: set[str]) -> int | None:
+    return next((rank for rank, item in enumerate(items, 1) if item.get("chunk_id") in gold), None)
+
+
+def ndcg_at_5(items: list[dict], gold: set[str]) -> float:
+    ideal_count = min(len(gold), 5)
+    if not ideal_count:
+        return 0.0
+    ideal = sum(1 / math.log2(rank + 1) for rank in range(1, ideal_count + 1))
+    actual = sum(
+        1 / math.log2(rank + 1)
+        for rank, item in enumerate(items[:5], 1)
+        if item.get("chunk_id") in gold
+    )
+    return actual / ideal
+
+
+def evaluation_summary(paths: list[Path], old_dir: Path, new_dir: Path,
+                       comparison_by_name: dict[str, dict]) -> dict:
+    systems = {
+        "semantic": {"label": "语义检索"},
+        "dimension": {"label": "维度检索"},
+        "fusion": {"label": "融合检索（修改前）"},
+        "fusion_new": {"label": "新融合检索（修改后）"},
+    }
+    mapped = 0
+    for path in paths:
+        comparison = comparison_by_name.get(path.name, {})
+        gold = set(comparison.get("gold_chunk_ids") or [])
+        if not gold:
+            continue
+        mapped += 1
+        old = read_json(old_dir / path.name)
+        new_path = new_dir / path.name
+        new = read_json(new_path) if new_path.is_file() else {}
+        rankings = {
+            "semantic": old.get("semantic_candidates") or [],
+            "dimension": old.get("dimension_candidates") or [],
+            "fusion": old.get("fusion_candidates") or old.get("fusion_results") or [],
+            "fusion_new": new.get("fusion_candidates") or [],
+        }
+        for key, items in rankings.items():
+            rank = first_gold_rank(items, gold)
+            values = systems[key]
+            values["hit1"] = values.get("hit1", 0) + int(rank is not None and rank <= 1)
+            values["hit5"] = values.get("hit5", 0) + int(rank is not None and rank <= 5)
+            values["hit10"] = values.get("hit10", 0) + int(rank is not None and rank <= 10)
+            values["mrr10"] = values.get("mrr10", 0.0) + (1 / rank if rank is not None and rank <= 10 else 0.0)
+            values["ndcg5"] = values.get("ndcg5", 0.0) + ndcg_at_5(items, gold)
+
+    metrics = [
+        ("Hit@1", "hit1"), ("Hit@5", "hit5"), ("Hit@10", "hit10"),
+        ("MRR@10", "mrr10"), ("nDCG@5", "ndcg5"),
+    ]
+    return {
+        "mapped_queries": mapped,
+        "unmapped_queries": len(paths) - mapped,
+        "metrics": [
+            {
+                "key": key,
+                "label": values["label"],
+                "scores": {
+                    metric: (values.get(source, 0.0) / mapped * 100 if mapped else 0.0)
+                    for metric, source in metrics
+                },
+            }
+            for key, values in systems.items()
+        ],
+    }
 
 
 def detail_row(name: str, old_dir: Path, new_dir: Path, comparison: dict) -> dict:
@@ -146,7 +218,11 @@ def main() -> int:
         output_path.write_text(script, encoding="utf-8")
         total_detail_bytes += output_path.stat().st_size
 
-    manifest = {"items": items, "detail_files": detail_files}
+    manifest = {
+        "items": items,
+        "detail_files": detail_files,
+        "evaluation": evaluation_summary(paths, old_dir, new_dir, comparison_by_name),
+    }
     manifest_payload = json.dumps(manifest, ensure_ascii=False, separators=(",", ":"))
     (assets_dir / "snapshot_index.js").write_text(
         f"window.RETRIEVAL_FUSION_INDEX = {manifest_payload};\n",

@@ -68,6 +68,40 @@ function renderMetrics() {
     metric('新融合 Top-5', `${count('newHit')}`),
   );
 }
+function renderEvaluation(summary) {
+  const panel = $('#evaluation-panel');
+  if (!summary?.metrics?.length) {
+    panel.hidden = true;
+    return;
+  }
+  const metrics = ['Hit@1', 'Hit@5', 'Hit@10', 'MRR@10', 'nDCG@5'];
+  const head = el('div', 'evaluation-head');
+  const title = el('h2', '', '检索效果汇总');
+  title.id = 'evaluation-title';
+  head.append(title);
+  head.append(el('div', 'evaluation-note', `按 ${summary.mapped_queries} 条 golden 映射成功的查询计算；排除 ${summary.unmapped_queries} 条未映射查询`));
+  const table = el('table', 'evaluation-table');
+  const thead = el('thead');
+  const header = el('tr');
+  header.append(el('th', '', '检索方式'));
+  for (const name of metrics) header.append(el('th', '', name));
+  thead.append(header);
+  const tbody = el('tbody');
+  for (const system of summary.metrics) {
+    const row = el('tr', system.key === 'fusion_new' ? 'is-new' : '');
+    row.append(el('th', '', system.label));
+    for (const name of metrics) {
+      const value = system.scores?.[name];
+      row.append(el('td', '', typeof value === 'number' ? `${value.toFixed(2)}%` : '—'));
+    }
+    tbody.append(row);
+  }
+  table.append(thead, tbody);
+  const wrap = el('div', 'evaluation-table-wrap');
+  wrap.append(table);
+  panel.replaceChildren(head, wrap);
+  panel.hidden = false;
+}
 function renderNotes() {
   const mapped = rows.filter(row => state(row).mapped);
   const oldLost = mapped.filter(row => { const s = state(row); return (s.semHit || s.dimHit) && !s.oldHit; }).length;
@@ -316,6 +350,7 @@ function start() {
   rows = source.items;
   $('#subtitle').textContent = '静态快照已内置在页面目录中；点击 chunk 编号查看正文。';
   renderMetrics();
+  renderEvaluation(source.evaluation);
   renderNotes();
   const hasGold = rows.some(row => state(row).mapped);
   for (const option of $('#filter').options) if (option.value !== 'all') option.disabled = !hasGold;

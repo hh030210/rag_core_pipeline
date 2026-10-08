@@ -37,6 +37,19 @@
     .metric-label { color: var(--muted); font-size: 12px; }
     .metric-value { margin-top: 3px; font-size: 23px; line-height: 1.2; font-weight: 720; font-variant-numeric: tabular-nums; }
     .metric-value.warn { color: var(--red); }
+    .evaluation-panel { margin: 0 0 18px; padding: 16px 18px 13px; overflow: hidden; }
+    .evaluation-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 11px; }
+    .evaluation-head h2 { margin: 0; font-size: 16px; }
+    .evaluation-note { color: var(--muted); font-size: 12px; }
+    .evaluation-table-wrap { overflow-x: auto; }
+    .evaluation-table { width: 100%; min-width: 680px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+    .evaluation-table th, .evaluation-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+    .evaluation-table thead th { color: var(--muted); background: #f7f9fa; font-size: 12px; font-weight: 650; }
+    .evaluation-table th:first-child, .evaluation-table td:first-child { text-align: left; }
+    .evaluation-table tbody th { font-size: 13px; font-weight: 650; }
+    .evaluation-table tbody tr:last-child th, .evaluation-table tbody tr:last-child td { border-bottom: 0; }
+    .evaluation-table tbody tr.is-new { background: #f0f8f6; }
+    .evaluation-table tbody tr.is-new th { color: var(--teal); }
     .strategy-notes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; margin: 0 0 18px; }
     .strategy-notes[hidden] { display: none; }
     .strategy-note { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); }
@@ -153,6 +166,7 @@
   </header>
   <main class="page" id="app">
     <section class="metrics" id="metrics"></section>
+    <section class="panel evaluation-panel" id="evaluation-panel" aria-labelledby="evaluation-title" hidden></section>
     <section class="strategy-notes" id="strategy-notes" aria-label="融合策略说明" hidden>
       <article class="strategy-note">
         <h2>1. 稳定策略与对比基准</h2>
