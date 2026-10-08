@@ -1,5 +1,16 @@
 {
   "snapshots": 435,
+  "strategy": "raw_head_lexical",
+  "configuration": {
+    "mode": "raw_lex_head",
+    "beta": 0,
+    "lexical": 0.1,
+    "missing_penalty": 0.025,
+    "head": 9,
+    "threshold": 0.1,
+    "boost": 0,
+    "lexical_boost": 0.025
+  },
   "labeled_queries": 435,
   "gold_mapped": 402,
   "baseline": {
@@ -11,13 +22,13 @@
     "single_route_top5_lost": 21
   },
   "fusion_new": {
-    "hit_at_1": 243,
-    "hit_at_5": 355,
-    "hit_at_10": 372,
-    "mrr_at_10": 0.662748,
-    "ndcg_at_5": 0.657942,
-    "single_route_top5_lost": 10
+    "hit_at_1": 247,
+    "hit_at_5": 357,
+    "hit_at_10": 374,
+    "mrr_at_10": 0.674488,
+    "ndcg_at_5": 0.668983,
+    "single_route_top5_lost": 13
   },
-  "rescued_at_5": 17,
-  "harmed_at_5": 1
+  "rescued_at_5": 25,
+  "harmed_at_5": 7
 }

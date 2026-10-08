@@ -1,0 +1,162 @@
+"""Build static viewer data files so index.html can be opened without a server."""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+from pathlib import Path
+
+VIEWER_DIR = Path(__file__).resolve().parent
+ENGINE_DIR = VIEWER_DIR.parent / "fusion_engine"
+SNAPSHOT_NAME = re.compile(r"^retrieval_fusion_[^/\\]+\.json$")
+COMPACT_FIELDS = (
+    "chunk_id", "score", "semantic_score", "dimension_score",
+    "normalized_semantic_score", "normalized_dimension_score", "lexical_score",
+    "original_fusion_rank", "original_fusion_score", "effective_semantic_score",
+    "semantic_score_imputed", "score_components", "semantic_rank", "dimension_rank",
+    "fusion_branch", "dimension_paths", "matched_dimensions", "matches",
+)
+
+
+def read_json(path: Path) -> dict:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def comparisons(new_dir: Path) -> dict[str, dict]:
+    path = new_dir / "comparison.jsonl"
+    if not path.is_file():
+        return {}
+    result = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        row = json.loads(line)
+        name = row.get("source_snapshot")
+        if isinstance(name, str) and SNAPSHOT_NAME.fullmatch(name):
+            result[name] = row
+    return result
+
+
+def compact(items: list[dict]) -> list[dict]:
+    return [
+        {"rank": rank, **{key: item[key] for key in COMPACT_FIELDS if key in item}}
+        for rank, item in enumerate(items, 1)
+    ]
+
+
+def detail_row(name: str, old_dir: Path, new_dir: Path, comparison: dict) -> dict:
+    old = read_json(old_dir / name)
+    new_path = new_dir / name
+    new = read_json(new_path) if new_path.is_file() else None
+    if new and new.get("query") != old.get("query"):
+        raise ValueError(f"原/新快照 query 不一致：{name}")
+
+    semantic = old.get("semantic_candidates") or []
+    dimension = old.get("dimension_candidates") or []
+    original = old.get("fusion_candidates") or old.get("fusion_results") or []
+    updated = (new.get("fusion_candidates") or []) if new else []
+    if new and {item["chunk_id"] for item in original} != {item["chunk_id"] for item in updated}:
+        raise ValueError(f"原/新快照候选集不一致：{name}")
+
+    routes = {
+        "semantic": compact(semantic),
+        "dimension": compact(dimension),
+        "old": compact(original),
+        "new": compact(updated),
+    }
+    chunks = {}
+    for item in semantic + dimension + original + updated:
+        chunk_id = str(item.get("chunk_id") or "")
+        if not chunk_id or (chunks.get(chunk_id) or {}).get("text"):
+            continue
+        chunks[chunk_id] = {
+            "title": item.get("chunk_gen_title") or item.get("doc_title") or "",
+            "source_file": item.get("source_file") or "",
+            "text": item.get("chunk_text_full") or item.get("chunk_text") or "",
+        }
+
+    diagnostics = (new.get("diagnostics") or {}) if new else {}
+    return {
+        "name": name,
+        "query": old.get("query") or "",
+        "created_at": old.get("created_at"),
+        "query_analysis": old.get("query_analysis") or {},
+        "strategy": new.get("strategy") if new else None,
+        "configuration": (new.get("configuration") or {}) if new else {},
+        "diagnostics": diagnostics,
+        "semantic_top1_gap": (
+            new.get("semantic_top1_gap", diagnostics.get("semantic_top1_gap")) if new else None
+        ),
+        "effective_dimension_weight": (
+            new.get("effective_dimension_weight", diagnostics.get("effective_dimension_weight"))
+            if new else None
+        ),
+        "gold": comparison,
+        "routes": routes,
+        "chunks": chunks,
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, default=ENGINE_DIR / "output")
+    parser.add_argument("--output-new", type=Path, default=ENGINE_DIR / "output_new")
+    parser.add_argument("--assets-dir", type=Path, default=VIEWER_DIR)
+    args = parser.parse_args()
+    old_dir = args.output.expanduser().resolve()
+    new_dir = args.output_new.expanduser().resolve()
+    assets_dir = args.assets_dir.expanduser().resolve()
+    if not old_dir.is_dir():
+        parser.error(f"Missing original fusion output: {old_dir}")
+    if not new_dir.is_dir():
+        parser.error(f"Missing new fusion output: {new_dir}")
+
+    comparison_by_name = comparisons(new_dir)
+    paths = sorted(path for path in old_dir.glob("retrieval_fusion_*.json") if SNAPSHOT_NAME.fullmatch(path.name))
+    if not paths:
+        parser.error(f"No retrieval snapshots found in {old_dir}")
+
+    detail_dir = assets_dir / "snapshot_details"
+    detail_dir.mkdir(parents=True, exist_ok=True)
+    items, detail_files = [], {}
+    total_detail_bytes = 0
+    for index, path in enumerate(paths):
+        name = path.name
+        comparison = comparison_by_name.get(name, {})
+        has_new = (new_dir / name).is_file()
+        detail = detail_row(name, old_dir, new_dir, comparison)
+        items.append({
+            "name": name,
+            "query": comparison.get("query") or detail["query"] or path.stem,
+            "has_new": has_new,
+            "gold_count": comparison.get("gold_count"),
+            "semantic_rank": comparison.get("semantic_rank"),
+            "dimension_rank": comparison.get("dimension_rank"),
+            "old_rank": comparison.get("old_rank"),
+            "new_rank": comparison.get("new_rank") if has_new else None,
+        })
+        detail_path = f"snapshot_details/detail_{index:04d}.js"
+        detail_files[name] = detail_path
+        payload = json.dumps(detail, ensure_ascii=False, separators=(",", ":"))
+        script = (
+            "window.RETRIEVAL_FUSION_DETAILS = window.RETRIEVAL_FUSION_DETAILS || {};\n"
+            f"window.RETRIEVAL_FUSION_DETAILS[{json.dumps(name, ensure_ascii=False)}] = {payload};\n"
+        )
+        output_path = assets_dir / detail_path
+        output_path.write_text(script, encoding="utf-8")
+        total_detail_bytes += output_path.stat().st_size
+
+    manifest = {"items": items, "detail_files": detail_files}
+    manifest_payload = json.dumps(manifest, ensure_ascii=False, separators=(",", ":"))
+    (assets_dir / "snapshot_index.js").write_text(
+        f"window.RETRIEVAL_FUSION_INDEX = {manifest_payload};\n",
+        encoding="utf-8",
+    )
+    print(f"Built static snapshot data: {len(items)} questions")
+    print(f"Index: {assets_dir / 'snapshot_index.js'}")
+    print(f"Details: {detail_dir} ({total_detail_bytes / (1024 * 1024):.1f} MiB)")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

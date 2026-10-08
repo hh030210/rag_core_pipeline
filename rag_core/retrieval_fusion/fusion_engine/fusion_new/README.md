@@ -1,35 +1,45 @@
-# Static fusion replay
+# 最新离线融合策略
 
-`run.py` reads the saved JSON snapshots in `../output` and writes one new ranking per query to `../output_new`. It does not call retrieval, embedding, a language model, or the live RAG pipeline.
+`fusion_new` 只保留最新离线策略。`run.py` 默认读取 `../output`，并将重排结果覆盖到 `../output_new`。稳定融合实现位于 `../fusion.py`。
 
-## Why this strategy
+## 当前公式
 
-The 435 existing snapshots match 435 evaluation queries. In 21 queries, a golden chunk appeared in the top 5 of at least one route but dropped below top 5 after the original fusion. The original score-weighted branch is used in 404 queries; the dimension-rank-aware branch is used in 31. The median semantic top1-to-top2 raw score gap is 0.0306; when the semantic top1 is golden it is 0.0482. These observations motivated a query-dependent route weight rather than a fixed one.
-
-For a candidate, `score = (1 - alpha) * normalized_semantic + alpha * normalized_dimension + 0.3 * lexical`, where `alpha = 0.2 + 0.1 * max(0, 1 - semantic_top1_gap / 0.05)`. The lexical term measures query character 2/3/4-gram coverage in the candidate's first 4,000 text characters, weighted by inverse document frequency among this query's candidates and normalized to the best lexical candidate. A large semantic top1 gap keeps the dimension weight at 0.2; a small gap raises it toward 0.3. Gold labels never enter this score.
-
-## Run
-
-From the repository root:
-
-```bash
-python3 rag_core/retrieval_fusion/fusion_engine/fusion_new/run.py \
-  --evaluation-results /home/humq/rag_core_runs/real_merged7_deepseek_v4pro_rerank_20260920_run1/evaluation_once/results.jsonl
+```text
+g = max(s[i] - s[i+1]), i = 1,...,min(9, 语义候选数-1)
+u = max(0, 1 - g / 0.1)
+F = S* + (0.1 + 0.025*u) * L
 ```
 
-Omit `--evaluation-results` to rank without generating labeled comparisons. `--input-dir` and `--output-dir` override the default snapshot folders. Each output JSON records the original rank and score, the new rank and score, route ranks, the lexical score, and candidate text. `output_new/summary.json` and `comparison.jsonl` record the evaluation.
+`S*` 使用原始语义分；语义路未召回时估计为 `max(0, 最低已召回语义分 - 0.025)`，语义路为空时为 0。维度路提供候选，当前维度分数权重为 0。`L` 是查询字符 2/3/4-gram 在文本前 4,000 字符中的 IDF 加权覆盖率，再按候选最大值归一化。归一化检索分仅用于审计。
 
-## Replay result
+语义头部 `0.89, 0.88, 0.70` 的最大相邻断层为 0.18，位置在第二、第三名之间。
 
-| Metric (435 queries; 402 mapped gold) | Original | New |
+## 运行
+
+从仓库根目录直接运行，无需选择版本：
+
+```powershell
+py -3.14 rag_core/retrieval_fusion/fusion_engine/fusion_new/run.py --evaluation-results result/real_merged7_deepseek_v4pro_rerank_20260920_run1/alpha_sweep_20260921/alpha_0.2/evaluation/results.jsonl
+```
+
+`py -3.14` 可替换为环境中的 `python`。不传标签也能排名；`--input-dir`、`--output-dir` 可更换目录，`--config` 可指定参数 JSON。默认参数位于 `selected_config.json`。
+
+## 输出与结果
+
+`output_new` 保存最新候选排序、`summary.json`、`comparison.jsonl`、`badcase_analysis.jsonl`。评测基准为输入快照保存的原融合结果。`evaluation_analysis.json` 保存本次研究的开发/保留结果，其中前次离线实验仅作历史对比。
+
+| 指标（435 查询，402 条有映射标签） | 原融合快照 | 最新离线策略 |
 | --- | ---: | ---: |
-| Hit@1 | 223 | 243 |
-| Hit@5 | 339 | 355 |
-| Hit@10 | 368 | 372 |
-| MRR@10 | 0.624445 | 0.662748 |
-| nDCG@5 | 0.622212 | 0.657942 |
-| Single-route top-5 gold lost after fusion | 21 | 10 |
+| Hit@1 | 223 | 247 |
+| Hit@5 | 339 | 357 |
+| Hit@10 | 368 | 374 |
+| MRR@10 | 0.624445 | 0.674488 |
+| nDCG@5 | 0.622212 | 0.668983 |
 
-The new ranking rescues 17 former top-5 misses and causes one former top-5 hit to fall out. That query is `我想了解明代帝陵的建筑规制，比较长陵和定陵在地面建筑方面的异同。` (rank 5 to 7). Examples of rescued cases include `西湖有没有能看到钱塘江的地方？` (rank 12 to 4) and `我想买往返观光车票，但只坐单程可以吗？票价是分开的。` (rank 14 to 4).
+相对前次离线实验，Hit@5 从 355 到 357；94 条保留查询从 75 到 74。数据此前用于调参，第一轮保留结果也被查看过，这是回顾性回放，稳定性仍需新数据检验。详细公式、消融和 badcase 见 [EXPERIMENT.md](EXPERIMENT.md)。
 
-For a SHA-256 query split used during parameter exploration, the 349-query development portion goes from 269 to 284 Hit@5, while the 86-query held-out portion goes from 70 to 71. The held-out MRR@10 goes from 0.620976 to 0.650175. This is a replay on the available snapshot set; the held-out scores were inspected while choosing the final configuration, so they should not be treated as a fully independent future-data estimate.
+检查命令：
+
+```powershell
+py -3.14 rag_core/retrieval_fusion/fusion_engine/fusion_new/test_strategies.py
+```

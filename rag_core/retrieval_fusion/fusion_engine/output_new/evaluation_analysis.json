@@ -1,0 +1,109 @@
+{
+  "configuration": {
+    "mode": "raw_lex_head",
+    "beta": 0,
+    "lexical": 0.1,
+    "missing_penalty": 0.025,
+    "head": 9,
+    "threshold": 0.1,
+    "boost": 0,
+    "lexical_boost": 0.025
+  },
+  "study": {
+    "development_queries": 341,
+    "holdout_queries": 94,
+    "searched_configurations": 14966
+  },
+  "caveat": "Retrospective evaluation on the same 435-query dataset previously used to tune the previous offline experiment. Stage-one holdout results were inspected; this is not an independent estimate on future data.",
+  "evaluation": {
+    "development": {
+      "baseline": {
+        "queries": 341,
+        "gold_mapped": 313,
+        "hit1": 178,
+        "hit5": 268,
+        "hit10": 290,
+        "mrr10": 0.633054,
+        "ndcg5": 0.628457
+      },
+      "previous_experiment": {
+        "queries": 341,
+        "gold_mapped": 313,
+        "hit1": 191,
+        "hit5": 280,
+        "hit10": 292,
+        "mrr10": 0.665843,
+        "ndcg5": 0.659183
+      },
+      "fusion_new": {
+        "queries": 341,
+        "gold_mapped": 313,
+        "hit1": 195,
+        "hit5": 283,
+        "hit10": 294,
+        "mrr10": 0.680421,
+        "ndcg5": 0.672164
+      }
+    },
+    "holdout": {
+      "baseline": {
+        "queries": 94,
+        "gold_mapped": 89,
+        "hit1": 45,
+        "hit5": 71,
+        "hit10": 78,
+        "mrr10": 0.593216,
+        "ndcg5": 0.599559
+      },
+      "previous_experiment": {
+        "queries": 94,
+        "gold_mapped": 89,
+        "hit1": 52,
+        "hit5": 75,
+        "hit10": 80,
+        "mrr10": 0.65152,
+        "ndcg5": 0.653439
+      },
+      "fusion_new": {
+        "queries": 94,
+        "gold_mapped": 89,
+        "hit1": 52,
+        "hit5": 74,
+        "hit10": 80,
+        "mrr10": 0.652968,
+        "ndcg5": 0.657445
+      }
+    },
+    "all": {
+      "baseline": {
+        "queries": 435,
+        "gold_mapped": 402,
+        "hit1": 223,
+        "hit5": 339,
+        "hit10": 368,
+        "mrr10": 0.624445,
+        "ndcg5": 0.622212
+      },
+      "previous_experiment": {
+        "queries": 435,
+        "gold_mapped": 402,
+        "hit1": 243,
+        "hit5": 355,
+        "hit10": 372,
+        "mrr10": 0.662748,
+        "ndcg5": 0.657942
+      },
+      "fusion_new": {
+        "queries": 435,
+        "gold_mapped": 402,
+        "hit1": 247,
+        "hit5": 357,
+        "hit10": 374,
+        "mrr10": 0.674488,
+        "ndcg5": 0.668983
+      }
+    }
+  },
+  "rescued_vs_previous_experiment_at5": 9,
+  "harmed_vs_previous_experiment_at5": 7
+}
