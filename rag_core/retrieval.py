@@ -1,4 +1,4 @@
-"""维度检索、语义检索和归一化融合。"""
+"""维度与语义候选召回及打分。"""
 
 from __future__ import annotations
 
@@ -11,6 +11,7 @@ from typing import Any, Dict, List
 from .dimension_labels import CanonicalLabelResolver
 from .entity_registry import CorpusEntityRegistry
 from .fact_index import FactIndex
+from .fusion import fuse_retrieval_results
 from .poi_registry import PoiRegistry
 from .schema_v2 import load_schema, normalize_label, normalize_text, schema_maps
 from .storage import VectorStore
@@ -568,17 +569,6 @@ class Retriever:
         score = sum(max(values) for values in by_parent.values())
         return score, matches, matched_dims
 
-    @staticmethod
-    def _normalize_scores(results: List[Dict[str, Any]]) -> Dict[str, float]:
-        if not results:
-            return {}
-        scores = [float(item.get("score", 0.0)) for item in results]
-        low, high = min(scores), max(scores)
-        if high == low:
-            return {str(item["chunk_id"]): 1.0 for item in results}
-        return {str(item["chunk_id"]): (float(item.get("score", 0.0)) - low) / (high - low)
-                for item in results}
-
     def _lexical_fallback_terms(self, query: str) -> List[str]:
         """Return conservative literal terms for the no-candidate route only."""
         stop_chars = set("的了是在有和与或把被给对从到去来能会想问我你他她它们这那哪什么怎么吗呢吧啊")
@@ -774,61 +764,23 @@ class Retriever:
         for rank, item in enumerate(dimension, 1):
             item["rank"] = rank
 
-        sem_norm = self._normalize_scores(semantic)
-        dim_norm = self._normalize_scores(dimension)
-        # Keep the route-local normalized scores on the candidates themselves.
-        # Fusion is computed from these values, so retaining them makes every
-        # ranking decision auditable instead of exposing only the final score.
-        for item in semantic:
-            item["semantic_score"] = item.get("score")
-            item["normalized_semantic_score"] = round(
-                sem_norm.get(str(item["chunk_id"]), 0.0), 8
-            )
-        for item in dimension:
-            item["dimension_score"] = item.get("score")
-            item["normalized_dimension_score"] = round(
-                dim_norm.get(str(item["chunk_id"]), 0.0), 8
-            )
-        semantic_by_id = {item["chunk_id"]: item for item in semantic}
-        dimension_by_id = {item["chunk_id"]: item for item in dimension}
-        by_id = {}
-        for cid in dict.fromkeys([item["chunk_id"] for item in semantic + dimension]):
-            item = dict(dimension_by_id.get(cid) or semantic_by_id[cid])
-            if cid in semantic_by_id:
-                item["sem_rank"] = semantic_by_id[cid].get("rank")
-                item["semantic_score"] = semantic_by_id[cid].get("score")
-                item["normalized_semantic_score"] = sem_norm.get(cid, 0.0)
-            if cid in dimension_by_id:
-                item["dim_rank"] = dimension_by_id[cid].get("rank")
-                item["dimension_score"] = dimension_by_id[cid].get("score")
-                item["normalized_dimension_score"] = dim_norm.get(cid, 0.0)
-            # A candidate absent from one route contributes zero from that
-            # route to the weighted fusion score.
-            item.setdefault("normalized_semantic_score", 0.0)
-            item.setdefault("normalized_dimension_score", 0.0)
-            by_id[cid] = item
-        fused_scores = {}
-        for cid in by_id:
-            fused_scores[cid] = self.settings.dim_alpha * dim_norm.get(cid, 0.0) + (1 - self.settings.dim_alpha) * sem_norm.get(cid, 0.0)
-        fusion_candidates = []
-        for cid, score in sorted(fused_scores.items(), key=lambda pair: pair[1], reverse=True):
-            item = by_id[cid]
-            item["score"] = score
-            item["final_score"] = score
-            item["fused_score"] = score
-            item["source"] = ("dimension" if cid in dim_norm else "") + ("+semantic" if cid in sem_norm else "")
-            fusion_candidates.append(item)
-        fusion = fusion_candidates[:top_k]
+        fusion = fuse_retrieval_results(
+            semantic,
+            dimension,
+            dim_alpha=self.settings.dim_alpha,
+            top_k=top_k,
+        )
         return {
             "query": query, "query_analysis": analysis,
             "dimension_policy": dimension_policy,
             "constraints": analysis["constraints"],
             "fact_anchor_terms": fact_anchor_terms,
             "query_facts": query_facts or [],
-            "semantic_candidates": semantic,
-            "dimension_candidates": dimension,
-            "fusion_candidates": fusion_candidates,
-            "semantic_results": semantic[:top_k],
-            "dimension_results": dimension[:top_k],
-            "fusion_results": fusion, "top_chunks": fusion,
+            "semantic_candidates": fusion["semantic_candidates"],
+            "dimension_candidates": fusion["dimension_candidates"],
+            "fusion_candidates": fusion["fusion_candidates"],
+            "semantic_results": fusion["semantic_candidates"][:top_k],
+            "dimension_results": fusion["dimension_candidates"][:top_k],
+            "fusion_results": fusion["fusion_results"],
+            "top_chunks": fusion["fusion_results"],
         }
