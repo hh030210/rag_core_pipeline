@@ -590,7 +590,7 @@ class Retriever:
         return candidates[:limit]
 
     def _fact_index_matches(self, query_facts: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
-        if not bool(getattr(self.settings, "fact_index_candidate_recall_enabled", False)):
+        if not bool(getattr(self.settings, "fact_index_candidate_recall_enabled", True)):
             return {}
         return self.fact_index.matches(query_facts)
 
@@ -1031,7 +1031,7 @@ class Retriever:
             {str(item.get("chunk_id", "")) for item in dimension},
         )
         if fact_index_candidates:
-            tail_start = max(0, int(getattr(self.settings, "fact_index_tail_insertion_rank", 0)))
+            tail_start = max(0, int(getattr(self.settings, "fact_index_tail_insertion_rank", 10)))
             if tail_start:
                 # Preserve high-confidence dimension ranks.  Verified facts
                 # are a recall supplement, so they are deliberately placed

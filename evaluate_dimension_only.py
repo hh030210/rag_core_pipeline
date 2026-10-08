@@ -44,12 +44,18 @@ def main() -> None:
                         help="Use dataset-provided context-resolved queries when available (multi-turn evaluation only).")
     parser.add_argument("--enable-no-candidate-lexical-fallback", action="store_true",
                         help="Use constrained BM25-style fact recall only when the dimension route is empty.")
-    parser.add_argument("--enable-verified-fact-index", action="store_true",
-                        help="Union exact subject+relation matches from fact_index_v1.json.")
+    fact_index_group = parser.add_mutually_exclusive_group()
+    fact_index_group.add_argument("--enable-verified-fact-index", dest="verified_fact_index",
+                                  action="store_true",
+                                  help="Enable exact subject+relation matches from fact_index_v1.json (default).")
+    fact_index_group.add_argument("--disable-verified-fact-index", dest="verified_fact_index",
+                                  action="store_false",
+                                  help="Disable verified fact candidate recall for this evaluation.")
+    parser.set_defaults(verified_fact_index=None)
     parser.add_argument("--query-fact-cache", type=Path,
                         help="JSON facts pre-parsed from evaluation queries; required to activate fact matching.")
-    parser.add_argument("--verified-fact-tail-start", default=0, type=int,
-                        help="Insert verified fact candidates after this base rank; 0 mixes by score.")
+    parser.add_argument("--verified-fact-tail-start", default=None, type=int,
+                        help="Insert verified fact candidates after this rank (default: 10; 0 mixes by score).")
     args = parser.parse_args()
 
     args.output.mkdir(parents=True, exist_ok=True)
@@ -64,8 +70,10 @@ def main() -> None:
     settings.auto_entity_registry_enabled = args.enable_auto_entity_registry
     settings.high_precision_entity_anchor_enabled = args.enable_high_precision_entity_anchor
     settings.no_candidate_lexical_fallback_enabled = args.enable_no_candidate_lexical_fallback
-    settings.fact_index_candidate_recall_enabled = args.enable_verified_fact_index
-    settings.fact_index_tail_insertion_rank = max(0, args.verified_fact_tail_start)
+    if args.verified_fact_index is not None:
+        settings.fact_index_candidate_recall_enabled = args.verified_fact_index
+    if args.verified_fact_tail_start is not None:
+        settings.fact_index_tail_insertion_rank = max(0, args.verified_fact_tail_start)
     query_fact_cache = {}
     if args.query_fact_cache:
         cache = json.loads(args.query_fact_cache.read_text(encoding="utf-8"))
@@ -73,6 +81,12 @@ def main() -> None:
         for item in entries if isinstance(entries, list) else []:
             if isinstance(item, dict) and str(item.get("query", "")).strip():
                 query_fact_cache[str(item["query"])] = item.get("facts", [])
+    fact_index_path = args.run_dir / "fact_index_v1.json"
+    if settings.fact_index_candidate_recall_enabled:
+        if not fact_index_path.exists():
+            print(f"[验证事实索引] 未找到 {fact_index_path}，本次不会召回事实候选。", flush=True)
+        if not query_fact_cache:
+            print("[验证事实索引] 查询事实缓存为空；请传入 --query-fact-cache，事实匹配才会生效。", flush=True)
     retriever = Retriever(
         run_dir=args.run_dir,
         settings=settings,
@@ -150,7 +164,9 @@ def main() -> None:
         "high_precision_entity_anchor_enabled": settings.high_precision_entity_anchor_enabled,
         "no_candidate_lexical_fallback_enabled": settings.no_candidate_lexical_fallback_enabled,
         "verified_fact_index_enabled": settings.fact_index_candidate_recall_enabled,
+        "verified_fact_index_file_exists": fact_index_path.exists(),
         "query_fact_cache": str(args.query_fact_cache) if args.query_fact_cache else "",
+        "query_fact_cache_query_count": len(query_fact_cache),
         "verified_fact_tail_start": settings.fact_index_tail_insertion_rank,
         "use_rewritten_query": args.use_rewritten_query,
     }

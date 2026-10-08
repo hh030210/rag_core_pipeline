@@ -52,10 +52,10 @@ class Settings:
     auto_entity_registry_enabled: bool = False
     high_precision_entity_anchor_enabled: bool = False
     no_candidate_lexical_fallback_enabled: bool = False
-    fact_index_candidate_recall_enabled: bool = False
+    fact_index_candidate_recall_enabled: bool = True
     # 0 means score-mixed legacy behavior.  A positive value preserves the
     # leading dimension ranks and inserts verified fact candidates afterwards.
-    fact_index_tail_insertion_rank: int = 0
+    fact_index_tail_insertion_rank: int = 10
     mock: bool = False
 
     @classmethod
@@ -92,8 +92,8 @@ class Settings:
             "auto_entity_registry_enabled": _env_bool("AUTO_ENTITY_REGISTRY", False),
             "high_precision_entity_anchor_enabled": _env_bool("HIGH_PRECISION_ENTITY_ANCHOR", False),
             "no_candidate_lexical_fallback_enabled": _env_bool("NO_CANDIDATE_LEXICAL_FALLBACK", False),
-            "fact_index_candidate_recall_enabled": _env_bool("FACT_INDEX_CANDIDATE_RECALL", False),
-            "fact_index_tail_insertion_rank": int(os.getenv("FACT_INDEX_TAIL_INSERTION_RANK", "0")),
+            "fact_index_candidate_recall_enabled": _env_bool("FACT_INDEX_CANDIDATE_RECALL", True),
+            "fact_index_tail_insertion_rank": int(os.getenv("FACT_INDEX_TAIL_INSERTION_RANK", "10")),
             "mock": _env_bool("RAG_MOCK", False),
         }
         values.update(overrides)
