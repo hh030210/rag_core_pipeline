@@ -1,0 +1,27 @@
+{
+  "project": "rag_core_pipeline",
+  "dataset": "DuRetrieval/MTEB dev",
+  "prepared_root": "data/dev_external/duretrieval_mteb/prepared_qrels20k",
+  "run_dir": "result/duretrieval_mteb_dev_deepseek_v4pro_20260922_run7",
+  "backend": "qdrant",
+  "collection": "duretrieval_mteb_dev_qrels20k_v4_20260922",
+  "point_count": 32764,
+  "experiment_config": {
+    "semantic_pool": 20,
+    "dimension_pool": 100,
+    "top_k": 5,
+    "dim_alpha": 0.2,
+    "dimension_batch_size": 32,
+    "dimension_workers": 8,
+    "dimension_mode": "empty",
+    "embedding_model": "/home/humq/rag_db_silm/model/bge-m3",
+    "llm_model": "DeepSeek-V4-Pro",
+    "llm_base_url": "http://127.0.0.1:8911/v1"
+  },
+  "artifacts": {
+    "chunks": "result/duretrieval_mteb_dev_deepseek_v4pro_20260922_run7/chunks.json",
+    "schema": "result/duretrieval_mteb_dev_deepseek_v4pro_20260922_run7/V_core_v2.json",
+    "tags": "result/duretrieval_mteb_dev_deepseek_v4pro_20260922_run7/tags_output_v2.json",
+    "inverted_index": "result/duretrieval_mteb_dev_deepseek_v4pro_20260922_run7/inverted_index_v2.json"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "content": {
+    "id": "content",
+    "name": "内容属性",
+    "parent_id": null,
+    "level": 1,
+    "path": "内容属性",
+    "description": "文本描述的对象、地点和历史信息分组。",
+    "indexable": false,
+    "value_policy": "multi",
+    "max_labels": 5,
+    "unique_label_count": 0,
+    "multi_label_document_count": 0
+  },
+  "service": {
+    "id": "service",
+    "name": "服务属性",
+    "parent_id": null,
+    "level": 1,
+    "path": "服务属性",
+    "description": "面向游客的时间、票务和交通信息分组。",
+    "indexable": false,
+    "value_policy": "multi",
+    "max_labels": 5,
+    "unique_label_count": 0,
+    "multi_label_document_count": 0
+  },
+  "content.entity": {
+    "id": "content.entity",
+    "name": "涉及对象",
+    "parent_id": "content",
+    "level": 2,
+    "path": "内容属性 / 涉及对象",
+    "description": "文本中明确出现的人群或对象。",
+    "indexable": true,
+    "value_policy": "multi",
+    "max_labels": 5,
+    "unique_label_count": 0,
+    "multi_label_document_count": 0
+  },
+  "content.location": {
+    "id": "content.location",
+    "name": "地理位置",
+    "parent_id": "content",
+    "level": 2,
+    "path": "内容属性 / 地理位置",
+    "description": "文本中明确出现的地点、区域或景区位置。",
+    "indexable": true,
+    "value_policy": "multi",
+    "max_labels": 5,
+    "unique_label_count": 0,
+    "multi_label_document_count": 0
+  },
+  "service.opening_hours": {
+    "id": "service.opening_hours",
+    "name": "开放时间",
+    "parent_id": "service",
+    "level": 2,
+    "path": "服务属性 / 开放时间",
+    "description": "文本中明确出现的开放、营业或参观时间。",
+    "indexable": true,
+    "value_policy": "multi",
+    "max_labels": 5,
+    "unique_label_count": 0,
+    "multi_label_document_count": 0
+  },
+  "service.ticketing": {
+    "id": "service.ticketing",
+    "name": "票务信息",
+    "parent_id": "service",
+    "level": 2,
+    "path": "服务属性 / 票务信息",
+    "description": "文本中明确出现的票价、门票或购票信息。",
+    "indexable": true,
+    "value_policy": "multi",
+    "max_labels": 5,
+    "unique_label_count": 0,
+    "multi_label_document_count": 0
+  }
+}

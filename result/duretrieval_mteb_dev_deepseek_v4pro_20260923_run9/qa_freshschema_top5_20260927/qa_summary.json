@@ -1,0 +1,16 @@
+{
+  "dataset": "/home/humq/rag_core_pipeline/data/dev_external/duretrieval_mteb/prepared_qrels20k/qa_dataset.json",
+  "output": "/home/humq/rag_core_pipeline/result/duretrieval_mteb_dev_deepseek_v4pro_20260923_run9/qa_freshschema_top5_20260927/qa_results.jsonl",
+  "total": 2000,
+  "completed": 2000,
+  "failed": 0,
+  "parallel_workers": 4,
+  "per_worker_concurrency": 1,
+  "llm_interval_seconds": 2,
+  "worker_outputs": [
+    "/home/humq/rag_core_pipeline/result/duretrieval_mteb_dev_deepseek_v4pro_20260923_run9/qa_freshschema_top5_20260927/parallel_attempt_1/worker_0/qa_results.jsonl",
+    "/home/humq/rag_core_pipeline/result/duretrieval_mteb_dev_deepseek_v4pro_20260923_run9/qa_freshschema_top5_20260927/parallel_attempt_1/worker_1/qa_results.jsonl",
+    "/home/humq/rag_core_pipeline/result/duretrieval_mteb_dev_deepseek_v4pro_20260923_run9/qa_freshschema_top5_20260927/parallel_attempt_1/worker_2/qa_results.jsonl",
+    "/home/humq/rag_core_pipeline/result/duretrieval_mteb_dev_deepseek_v4pro_20260923_run9/qa_freshschema_top5_20260927/parallel_attempt_1/worker_3/qa_results.jsonl"
+  ]
+}
