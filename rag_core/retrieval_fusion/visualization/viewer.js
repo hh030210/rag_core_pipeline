@@ -10,41 +10,12 @@ let filtered = [];
 let selectedName = null;
 let showAll = false;
 const detailCache = new Map();
-let pendingDetails = new Map();
-let dataMode = 'static';
-async function fetchJson(url) {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-  return response.json();
-}
-function readDetail(name) {
-  const cachedPayload = window.RETRIEVAL_FUSION_DETAILS?.[name];
-  if (cachedPayload) return Promise.resolve(cachedPayload);
-  if (pendingDetails.has(name)) return pendingDetails.get(name);
-  const path = window.RETRIEVAL_FUSION_INDEX?.detail_files?.[name];
-  if (!path) return Promise.reject(new Error(`静态数据包中找不到 ${name}`));
 
-  const promise = new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = `./${path}`;
-    script.onload = () => {
-      script.remove();
-      const detail = window.RETRIEVAL_FUSION_DETAILS?.[name];
-      if (!detail) reject(new Error(`未能加载快照详情：${name}`));
-      else {
-        delete window.RETRIEVAL_FUSION_DETAILS[name];
-        resolve(detail);
-      }
-    };
-    script.onerror = () => {
-      script.remove();
-      reject(new Error(`读取静态快照失败：${name}`));
-    };
-    document.head.append(script);
-  });
-  pendingDetails.set(name, promise);
-  promise.then(() => pendingDetails.delete(name), () => pendingDetails.delete(name));
-  return promise;
+async function fetchJson(url) {
+  const response = await fetch(url, { cache: 'no-store' });
+  const value = await response.json();
+  if (!response.ok) throw new Error(value.error || `HTTP ${response.status}`);
+  return value;
 }
 function isRank(rank, limit = 5) { return Number.isInteger(rank) && rank > 0 && rank <= limit; }
 function state(row) {
@@ -74,40 +45,6 @@ function renderMetrics() {
     metric('新融合 Top-5', `${count('newHit')}`),
   );
 }
-function renderEvaluation(summary) {
-  const panel = $('#evaluation-panel');
-  if (!summary?.metrics?.length) {
-    panel.hidden = true;
-    return;
-  }
-  const metrics = ['Hit@1', 'Hit@5', 'Hit@10', 'MRR@10', 'nDCG@5'];
-  const head = el('div', 'evaluation-head');
-  const title = el('h2', '', '检索效果汇总');
-  title.id = 'evaluation-title';
-  head.append(title);
-  head.append(el('div', 'evaluation-note', `按 ${summary.mapped_queries} 条 golden 映射成功的查询计算；排除 ${summary.unmapped_queries} 条未映射查询`));
-  const table = el('table', 'evaluation-table');
-  const thead = el('thead');
-  const header = el('tr');
-  header.append(el('th', '', '检索方式'));
-  for (const name of metrics) header.append(el('th', '', name));
-  thead.append(header);
-  const tbody = el('tbody');
-  for (const system of summary.metrics) {
-    const row = el('tr', system.key === 'fusion_new' ? 'is-new' : '');
-    row.append(el('th', '', system.label));
-    for (const name of metrics) {
-      const value = system.scores?.[name];
-      row.append(el('td', '', typeof value === 'number' ? `${value.toFixed(2)}%` : '—'));
-    }
-    tbody.append(row);
-  }
-  table.append(thead, tbody);
-  const wrap = el('div', 'evaluation-table-wrap');
-  wrap.append(table);
-  panel.replaceChildren(head, wrap);
-  panel.hidden = false;
-}
 function renderNotes() {
   const mapped = rows.filter(row => state(row).mapped);
   const oldLost = mapped.filter(row => { const s = state(row); return (s.semHit || s.dimHit) && !s.oldHit; }).length;
@@ -116,7 +53,7 @@ function renderNotes() {
   const harmed = mapped.filter(row => { const s = state(row); return s.oldHit && !s.newHit; }).length;
   $('#strategy-notes').hidden = false;
   $('#badcase-summary').textContent = mapped.length
-    ? `以 output 中保存的原融合为基准：当前 ${rows.length} 条快照中，单路已进 Top-5、原融合却掉出的查询有 ${oldLost} 条；新融合后还有 ${newLost} 条。新融合救回 ${rescued} 条，同时使 ${harmed} 条原本命中的查询掉出 Top-5。`
+    ? `当前 ${rows.length} 条快照中，单路已进 Top-5、原融合却掉出的查询有 ${oldLost} 条；新融合后还有 ${newLost} 条。新融合救回 ${rescued} 条，同时使 ${harmed} 条原本命中的查询掉出 Top-5。`
     : 'output_new/comparison.jsonl 不存在或没有 Gold 排名；仍可逐条比较原融合与新融合候选。';
 }
 function passes(row, filter) {
@@ -188,33 +125,10 @@ function renderConstraints(detail) {
   return panel;
 }
 function scoreText(route, item) {
-  if (route === 'semantic') return `语义原分 ${fmt(item.semantic_score ?? item.score) || '—'} · 归一化（审计）${fmt(item.normalized_semantic_score) || '—'}`;
-  if (route === 'dimension') return `维度原分 ${fmt(item.dimension_score ?? item.score) || '—'} · 归一化（审计）${fmt(item.normalized_dimension_score) || '—'}`;
-  if (route === 'old') return `原融合分 ${fmt(item.score) || '—'} · 语义归一化 ${fmt(item.normalized_semantic_score) || '—'} · 维度归一化 ${fmt(item.normalized_dimension_score) || '—'}`;
-  const semantic = item.semantic_score_imputed
-    ? `语义估计 ${fmt(item.effective_semantic_score) || '—'}（语义路未召回）`
-    : `语义原分 ${fmt(item.semantic_score) || '—'}`;
-  const contribution = item.score_components;
-  const components = contribution
-    ? ` · 词面贡献 ${fmt(contribution.lexical) || '—'} · 维度贡献 ${fmt(contribution.dimension) || '—'}`
-    : '';
-  return `新融合分 ${fmt(item.score) || '—'} · ${semantic} · 词面分 L ${fmt(item.lexical_score) || '—'}${components} · 原融合 #${item.original_fusion_rank ?? '—'}`;
-}
-function renderFusionDiagnostics(detail) {
-  const d = detail.diagnostics || {};
-  const panel = el('section', 'question-dimensions');
-  panel.append(el('h3', 'dimension-panel-title', '当前查询的融合参数'));
-  if (typeof d.semantic_head_gap !== 'number') {
-    panel.append(el('div', 'dimension-note', '当前快照未保存头部断层诊断。'));
-    return panel;
-  }
-  const scores = d.semantic_head_scores || [];
-  const position = d.semantic_head_gap_position;
-  const boundary = Number.isInteger(position) ? `（第 ${position} → ${position + 1} 名）` : '（不足两个语义候选）';
-  panel.append(el('p', 'dimension-note', `最大相邻断层 g = ${fmt(d.semantic_head_gap)} ${boundary} · 调节量 u = ${fmt(d.uncertainty)} · 词面权重 λ = ${fmt(d.effective_lexical_weight)} · 维度权重 = ${fmt(d.effective_dimension_weight)}`));
-  panel.append(el('p', 'dimension-note', scores.length ? `语义头部原分：${scores.map(fmt).join('、')}` : '语义路未召回候选。'));
-  panel.append(el('p', 'dimension-note', `语义路未召回时的估计 S* = ${fmt(d.semantic_missing_estimate)}；候选卡片会标明使用原始分还是估计值。`));
-  return panel;
+  if (route === 'semantic') return `语义分 ${fmt(item.semantic_score ?? item.score) || '—'} · 归一化 ${fmt(item.normalized_semantic_score) || '—'}`;
+  if (route === 'dimension') return `维度分 ${fmt(item.dimension_score ?? item.score) || '—'} · 归一化 ${fmt(item.normalized_dimension_score) || '—'}`;
+  if (route === 'old') return `原融合分 ${fmt(item.score) || '—'} · 语义 ${fmt(item.normalized_semantic_score) || '—'} · 维度 ${fmt(item.normalized_dimension_score) || '—'}`;
+  return `新融合分 ${fmt(item.score) || '—'} · 词组 ${fmt(item.lexical_score) || '—'} · 原融合 #${item.original_fusion_rank ?? '—'}`;
 }
 function renderMatchInfo(item) {
   const matches = item.matches || [];
@@ -309,12 +223,12 @@ function renderDetail(detail, row) {
     renderRoute(detail, row, 'semantic', '语义检索', '相似度排序', 'semantic_rank'),
     renderRoute(detail, row, 'dimension', '维度检索', '维度匹配排序', 'dimension_rank'),
     renderRoute(detail, row, 'old', '原融合', '来自 output', 'old_rank'),
-    renderRoute(detail, row, 'new', '新融合', '原始语义分 + 动态词面贡献', 'new_rank'),
+    renderRoute(detail, row, 'new', '新融合', '来自 output_new', 'new_rank'),
   );
   const foot = el('div', 'detail-foot');
   foot.append(el('span', 'chunk-hint', '点击 chunk 编号查看快照中保存的正文。'));
   if (state(row).mapped) foot.append(el('span', '', 'Gold 标记显示各路首个 golden；排名统计来自 output_new/comparison.jsonl。'));
-  root.replaceChildren(head, badges, renderFusionDiagnostics(detail), renderConstraints(detail), routes, foot);
+  root.replaceChildren(head, badges, renderConstraints(detail), routes, foot);
 }
 async function loadDetail() {
   const root = $('#detail');
@@ -322,61 +236,37 @@ async function loadDetail() {
   if (!row) { root.replaceChildren(el('div', 'empty', '没有符合条件的问题')); return; }
   const name = row.name;
   if (detailCache.has(name)) { renderDetail(detailCache.get(name), row); return; }
-  root.replaceChildren(el('div', 'empty', '正在读取所选文件夹中的快照…'));
+  root.replaceChildren(el('div', 'empty', '正在从 output 和 output_new 读取快照…'));
   try {
-    const detail = dataMode === 'api'
-      ? await fetchJson(`/api/question?name=${encodeURIComponent(name)}`)
-      : await readDetail(name);
+    const detail = await fetchJson(`/api/question?name=${encodeURIComponent(name)}`);
     if (detailCache.size >= 8) detailCache.delete(detailCache.keys().next().value);
     detailCache.set(name, detail);
-    if (!comparisonsByName.has(name) && detail.query) {
-      row.query = detail.query;
-      renderList();
-    }
     if (selectedName === name) renderDetail(detail, row);
   } catch (error) {
     if (selectedName === name) root.replaceChildren(el('div', 'error', `读取快照失败：${error.message}`));
   }
 }
-function bindInteractions() {
-  $('#search').addEventListener('input', applyFilters);
-  $('#filter').addEventListener('change', applyFilters);
-  $('#show-all').addEventListener('click', () => {
-    showAll = !showAll;
-    $('#show-all').textContent = showAll ? '仅显示 Top-5' : '展开全部候选';
-    loadDetail();
-  });
-  $('#chunk-dialog-close').addEventListener('click', () => $('#chunk-dialog').close());
-}
 async function start() {
-  bindInteractions();
-  let source = null;
-  if (window.location.protocol !== 'file:') {
-    try {
-      const apiSource = await fetchJson('/api/questions');
-      if (Array.isArray(apiSource?.items) && apiSource.items.length) {
-        source = apiSource;
-        dataMode = 'api';
-      }
-    } catch (_) {}
+  try {
+    const source = await fetchJson('/api/questions');
+    if (!Array.isArray(source.items) || !source.items.length) throw new Error('output 中没有检索快照');
+    rows = source.items;
+    $('#subtitle').textContent = '页面按需读取 fusion_engine/output 与 output_new；点击 chunk 编号查看正文。';
+    renderMetrics();
+    renderNotes();
+    const hasGold = rows.some(row => state(row).mapped);
+    for (const option of $('#filter').options) if (option.value !== 'all') option.disabled = !hasGold;
+    $('#search').addEventListener('input', applyFilters);
+    $('#filter').addEventListener('change', applyFilters);
+    $('#show-all').addEventListener('click', () => {
+      showAll = !showAll;
+      $('#show-all').textContent = showAll ? '仅显示 Top-5' : '展开全部候选';
+      loadDetail();
+    });
+    $('#chunk-dialog-close').addEventListener('click', () => $('#chunk-dialog').close());
+    applyFilters();
+  } catch (error) {
+    $('#app').replaceChildren(el('div', 'error', `未能加载融合快照：${error.message}`));
   }
-  if (!source) {
-    source = window.RETRIEVAL_FUSION_INDEX;
-    dataMode = 'static';
-  }
-  if (!Array.isArray(source?.items) || !source.items.length) {
-    $('#app').replaceChildren(el('div', 'error', '没有加载到快照数据；请检查静态数据包或本地快照目录。'));
-    return;
-  }
-  rows = source.items;
-  $('#subtitle').textContent = dataMode === 'api'
-    ? '页面按需读取 fusion_engine/output 与 output_new；点击 chunk 编号查看正文。'
-    : '静态快照已内置在页面目录中；点击 chunk 编号查看正文。';
-  renderMetrics();
-  if (source.evaluation) renderEvaluation(source.evaluation);
-  renderNotes();
-  const hasGold = rows.some(row => state(row).mapped);
-  for (const option of $('#filter').options) if (option.value !== 'all') option.disabled = !hasGold;
-  applyFilters();
 }
 start();

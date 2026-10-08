@@ -13,19 +13,19 @@
 #     MILVUS_DB = "experiment_data.db"
 #     TARGET_COLLECTION = "CmedqaRetrieval_Sampled"
 #     PATH_RAW_TAGS = os.path.join(DATA_DIR, "tags_pro_sampled_med.json")
-
+    
 #     # 你的维度列表 (保持不变)
 #     DIMS_ENUM = ['适宜人群', '适用阶段']
 #     DIMS_NUM = ['性能指标', '量化技术指标', '工艺与操作参数']
 #     DIMS_DES = [
-#         '材料构成', '适配条件', '操作步骤', '病因机制', '治疗方案',
-#         '功效作用', '临床表现', '适用场景', '作用原理', '使用禁忌',
-#         '注意事项', '适用环境', '预防措施', '产品型号', '质量评价属性',
+#         '材料构成', '适配条件', '操作步骤', '病因机制', '治疗方案', 
+#         '功效作用', '临床表现', '适用场景', '作用原理', '使用禁忌', 
+#         '注意事项', '适用环境', '预防措施', '产品型号', '质量评价属性', 
 #         '专业技术术语', '运行设备类型与能力', '运行环境与兼容性'
 #     ]
 #     ALL_DIMS = DIMS_ENUM + DIMS_NUM + DIMS_DES
-
-#     MIN_DOC_COUNT = 5000
+    
+#     MIN_DOC_COUNT = 5000 
 
 # if not os.path.exists(Config.DATA_DIR):
 #     os.makedirs(Config.DATA_DIR)
@@ -37,7 +37,7 @@
 
 #     def extract_all_tags(self):
 #         print(f">>> [Step 3] 开始全量标签生成 (带标准化)...")
-
+        
 #         processed_ids = set()
 #         results = {}
 #         if os.path.exists(Config.PATH_RAW_TAGS):
@@ -50,53 +50,53 @@
 #             iterator = self.client.query_iterator(
 #                 collection_name=Config.TARGET_COLLECTION,
 #                 output_fields=["id", "text"],
-#                 batch_size=50
+#                 batch_size=50 
 #             )
 #         except Exception as e:
 #             print(f"初始化迭代器失败: {e}")
 #             return
-
+        
 #         save_interval = 50
 #         count = 0
-
+        
 #         try:
 #             while True:
 #                 batch = iterator.next()
 #                 if not batch: break
-
+                
 #                 # 使用 tqdm 显示进度
 #                 for doc in tqdm(batch, desc="标准化抽取中"):
 #                     doc_id = doc['id']
 #                     text = doc['text']
-
+                    
 #                     if doc_id in processed_ids: continue
-
+                    
 #                     doc_tags = {}
-
+                    
 #                     if len(text) > 10:
 #                         # 1. 调用新的标准化 Prompt
 #                         extracted_dict = self.miner.extract_batch_dimensions(text, Config.ALL_DIMS)
-
+                        
 #                         has_valid_content = False
 #                         for dim, val_list in extracted_dict.items():
 #                             if val_list is not None and len(val_list) > 0:
 #                                 doc_tags[dim] = val_list
 #                                 has_valid_content = True
-
+                        
 #                         # 2. 兜底策略 (Fallback)
 #                         if not has_valid_content:
 #                             keywords = self.miner.extract_keywords_fallback(text)
 #                             if keywords:
 #                                 # 这里的 keywords 是一个 list
-#                                 doc_tags["补充关键词"] = keywords
-
+#                                 doc_tags["补充关键词"] = keywords 
+                    
 #                     results[doc_id] = doc_tags
 #                     processed_ids.add(doc_id)
 #                     count += 1
-
+                    
 #                     if count % save_interval == 0:
 #                         self._save_json(results)
-
+                        
 #         except Exception as e:
 #             print(f"抽取过程中断: {e}")
 #         finally:
@@ -107,7 +107,7 @@
 #         with open(Config.PATH_RAW_TAGS, 'w', encoding='utf-8') as f:
 #             json.dump(data, f, ensure_ascii=False, indent=2)
 
-# if __name__ == "__main__":
+# if __name__ == "__main__":    
 #     generator = LabelGenerator()
 #     generator.extract_all_tags()
 
@@ -153,22 +153,22 @@ class Config:
     MILVUS_DB = "experiment_data.db"
     TARGET_COLLECTION = "CmedqaRetrieval_Sampled"
     SQLITE_PATH = "texts.db"
-    QUERY_TABLE_NAME = "CmedqaQueries"
+    QUERY_TABLE_NAME = "CmedqaQueries" 
     DOC_TABLE_NAME = "CmedqaRetrieval"
-
+    
     # 关联关系文件 (用于获取所有需要抽取的 Doc IDs)
     PATH_QRELS = os.path.join(DATA_DIR, "sampled_qrels_med.json")
-
+    
     # 抽取结果保存路径 (如果之前是 tags_debug_top10.json，你可以继续用它，或者改名)
     PATH_TAGS_OUTPUT = os.path.join(DATA_DIR, "tags_debug_top10.json")
-
+    
     # 维度列表
     DIMS_ENUM = ['适宜人群', '适用阶段']
     DIMS_NUM = ['性能指标', '量化技术指标', '工艺与操作参数']
     DIMS_DES =[
-        '材料构成', '适配条件', '操作步骤', '疾病类别', '病因机制', '治疗方案',
-        '功效作用', '临床表现', '适用场景', '作用原理', '注意事项',
-        '适用环境', '预防措施', '产品型号', '质量评价属性',
+        '材料构成', '适配条件', '操作步骤', '疾病类别', '病因机制', '治疗方案', 
+        '功效作用', '临床表现', '适用场景', '作用原理', '注意事项', 
+        '适用环境', '预防措施', '产品型号', '质量评价属性', 
         '专业技术术语', '运行设备类型与能力', '运行环境与兼容性'
     ]
     ALL_DIMS = DIMS_ENUM + DIMS_NUM + DIMS_DES
@@ -390,7 +390,7 @@ class LabelGeneratorFull:
         self.doc_store = TextStore(db_path=Config.SQLITE_PATH, table_name=Config.DOC_TABLE_NAME)
         self.results = {}
         self.processed_ids = set()
-
+        
         # 1. 加载历史进度 (断点续传)
         if os.path.exists(Config.PATH_TAGS_OUTPUT):
             print(f"发现已有结果文件 {Config.PATH_TAGS_OUTPUT}，正在加载历史进度...")
@@ -407,21 +407,21 @@ class LabelGeneratorFull:
 
         with open(Config.PATH_QRELS, 'r', encoding='utf-8') as f:
             qrels = json.load(f)
-
+        
         target_doc_ids = set()
         for qid, pids in qrels.items():
             if isinstance(pids, list):
                 for pid in pids: target_doc_ids.add(str(pid))
             elif isinstance(pids, dict):
                 for pid in pids.keys(): target_doc_ids.add(str(pid))
-
+                
         target_doc_ids = list(target_doc_ids)
         print(f"Qrels 中共涉及 {len(target_doc_ids)} 篇正样本文档。")
 
         # 3. 过滤掉已经处理过的 ID
         remaining_ids =[doc_id for doc_id in target_doc_ids if doc_id not in self.processed_ids]
         print(f"过滤已处理文档后，剩余需要抽取的文档数: {len(remaining_ids)}")
-
+        
         if not remaining_ids:
             print("所有文档均已抽取完毕！")
             return
@@ -429,11 +429,11 @@ class LabelGeneratorFull:
         # 4. 逐个提取并保存
         save_interval = 50 # 每处理 50 个保存一次
         count = 0
-
+        
         # 使用 tqdm 监控剩余任务的进度
         for doc_id in tqdm(remaining_ids, desc="标签抽取中"):
             text = self.doc_store.get_text(doc_id)
-
+            
             if not text:
                 print(f"[Warning] 数据库中未找到文档 ID: {doc_id}，已跳过。")
                 # 记录为空，防止下次再查
@@ -446,7 +446,7 @@ class LabelGeneratorFull:
                 try:
                     # A. 标准提取
                     extracted_dict = self.miner.extract_batch_dimensions(text, Config.ALL_DIMS)
-
+                    
                     # 过滤空值
                     has_valid_content = False
                     if extracted_dict: # 防止 API 返回 None
@@ -454,24 +454,24 @@ class LabelGeneratorFull:
                             if val_list is not None and len(val_list) > 0:
                                 doc_tags[dim] = val_list
                                 has_valid_content = True
-
+                    
                     # B. 兜底提取
                     if not has_valid_content:
                         # print(f"\n[ID: {doc_id}] 标准维度未命中，尝试兜底...")
                         keywords = self.miner.extract_keywords_fallback(text)
                         if keywords:
                             doc_tags["其他"] = keywords
-
+                            
                 except Exception as e:
                     print(f"\n[Error] 提取文档 {doc_id} 时发生错误: {e}")
                     # 发生错误时不记录到 results 中，这样下次运行还能重试
                     continue
-
+            
             # 将成功抽取(或确定为空)的结果存入内存
             self.results[doc_id] = doc_tags
             self.processed_ids.add(doc_id)
             count += 1
-
+            
             # 5. 定期保存
             if count % save_interval == 0:
                 self._save_json()
@@ -479,7 +479,7 @@ class LabelGeneratorFull:
         # 6. 循环结束，做最后一次保存
         if count % save_interval != 0:
             self._save_json()
-
+            
         print(f"\n✅ 本次运行成功提取了 {count} 篇文档。总计已完成 {len(self.processed_ids)} 篇。")
 
     def _save_json(self):

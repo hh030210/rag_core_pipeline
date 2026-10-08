@@ -1,0 +1,23 @@
+{
+  "snapshots": 435,
+  "labeled_queries": 435,
+  "gold_mapped": 402,
+  "baseline": {
+    "hit_at_1": 223,
+    "hit_at_5": 339,
+    "hit_at_10": 368,
+    "mrr_at_10": 0.624445,
+    "ndcg_at_5": 0.622212,
+    "single_route_top5_lost": 21
+  },
+  "fusion_new": {
+    "hit_at_1": 243,
+    "hit_at_5": 355,
+    "hit_at_10": 372,
+    "mrr_at_10": 0.662748,
+    "ndcg_at_5": 0.657942,
+    "single_route_top5_lost": 10
+  },
+  "rescued_at_5": 17,
+  "harmed_at_5": 1
+}
