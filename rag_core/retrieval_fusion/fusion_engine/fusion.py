@@ -2,7 +2,49 @@
 
 from __future__ import annotations
 
+import json
+from datetime import datetime
+from pathlib import Path
 from typing import Any, Dict, List
+
+
+def _save_fusion_snapshot(
+    semantic: List[Dict[str, Any]],
+    dimension: List[Dict[str, Any]],
+    fusion_candidates: List[Dict[str, Any]],
+    fusion_results: List[Dict[str, Any]],
+    *,
+    dim_alpha: float,
+    top_k: int,
+) -> Path:
+    """Save one complete retrieval/fusion result under the project output dir."""
+    output_dir = Path(__file__).resolve().parent / "output"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    created_at = datetime.now().astimezone()
+    timestamp = created_at.strftime("%Y%m%d_%H%M%S_%f%z")
+    snapshot = {
+        "created_at": created_at.isoformat(timespec="microseconds"),
+        "dim_alpha": dim_alpha,
+        "top_k": top_k,
+        "semantic_candidates": semantic,
+        "dimension_candidates": dimension,
+        "fusion_candidates": fusion_candidates,
+        "fusion_results": fusion_results,
+    }
+    serialized = json.dumps(snapshot, ensure_ascii=False, indent=2)
+
+    suffix = 0
+    while True:
+        suffix_text = f"_{suffix}" if suffix else ""
+        path = output_dir / f"retrieval_fusion_{timestamp}{suffix_text}.json"
+        try:
+            with path.open("x", encoding="utf-8") as handle:
+                handle.write(serialized)
+                handle.write("\n")
+            return path
+        except FileExistsError:
+            suffix += 1
 
 
 def _normalize_scores(results: List[Dict[str, Any]]) -> Dict[str, float]:
@@ -84,9 +126,18 @@ def fuse_retrieval_results(
         )
         fusion_candidates.append(item)
 
-    return {
+    result = {
         "semantic_candidates": semantic,
         "dimension_candidates": dimension,
         "fusion_candidates": fusion_candidates,
         "fusion_results": fusion_candidates[:top_k],
     }
+    _save_fusion_snapshot(
+        result["semantic_candidates"],
+        result["dimension_candidates"],
+        result["fusion_candidates"],
+        result["fusion_results"],
+        dim_alpha=dim_alpha,
+        top_k=top_k,
+    )
+    return result

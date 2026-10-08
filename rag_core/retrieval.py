@@ -11,7 +11,7 @@ from typing import Any, Dict, List
 from .dimension_labels import CanonicalLabelResolver
 from .entity_registry import CorpusEntityRegistry
 from .fact_index import FactIndex
-from .fusion import fuse_retrieval_results
+from .retrieval_fusion import fuse_retrieval_results
 from .poi_registry import PoiRegistry
 from .schema_v2 import load_schema, normalize_label, normalize_text, schema_maps
 from .storage import VectorStore

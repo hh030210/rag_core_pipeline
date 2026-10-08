@@ -10,7 +10,7 @@ from typing import Any, Iterable
 
 
 VIEWER_DIR = Path(__file__).resolve().parent
-REPO_ROOT = VIEWER_DIR.parent
+REPO_ROOT = VIEWER_DIR.parents[2]
 DEFAULT_RUN_DIR = REPO_ROOT / "result" / "real_merged7_deepseek_v4pro_rerank_20260920_run1"
 
 ROUTE_FIELDS = {
