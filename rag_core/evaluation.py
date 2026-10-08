@@ -613,6 +613,7 @@ def run_evaluation(
             top_k=top_k,
             semantic_pool=max(int(eval_depth), int(settings.semantic_pool)),
             dimension_pool=max(int(eval_depth), int(settings.dimension_pool)),
+            original_query=record["question"],
         )
         retrieval["query"] = retrieval_query
         row = evaluate_row(record, retrieval, ks, eval_depth, result_text_chars)

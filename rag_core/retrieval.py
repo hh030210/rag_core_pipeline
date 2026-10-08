@@ -913,7 +913,8 @@ class Retriever:
                semantic_pool: int | None = None,
                dimension_pool: int | None = None,
                dimension_only: bool = False,
-               query_facts: List[Dict[str, Any]] | None = None) -> Dict[str, Any]:
+               query_facts: List[Dict[str, Any]] | None = None,
+               original_query: str | None = None) -> Dict[str, Any]:
         top_k = top_k or self.settings.top_k
         semantic_pool = max(top_k, int(semantic_pool or getattr(self.settings, "semantic_pool", 20)))
         dimension_pool = max(top_k, int(dimension_pool or getattr(self.settings, "dimension_pool", 100)))
@@ -1131,10 +1132,10 @@ class Retriever:
             semantic,
             dimension,
             fusion_candidates,
-            fusion,
             dim_alpha=self.settings.dim_alpha,
             top_k=top_k,
             query=query,
+            original_query=original_query or query,
             query_analysis=analysis,
         )
         return {

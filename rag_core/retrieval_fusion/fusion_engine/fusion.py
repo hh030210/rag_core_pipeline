@@ -8,15 +8,64 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 
+_COMMON_CANDIDATE_FIELDS = (
+    "chunk_id", "score", "rank", "dimension_paths",
+)
+_ROUTE_CANDIDATE_FIELDS = {
+    "semantic": ("normalized_semantic_score",),
+    "dimension": (
+        "matched_dimensions", "matches", "fact_anchor_bonus",
+        "precise_entity_bonus", "normalized_dimension_score",
+    ),
+    "fusion": (
+        "semantic_score", "dimension_score", "normalized_semantic_score",
+        "normalized_dimension_score", "sem_rank", "dim_rank",
+        "fusion_branch", "matched_dimensions", "matches",
+    ),
+}
+
+
+def _compact_candidates(items: List[Dict[str, Any]], route: str) -> List[Dict[str, Any]]:
+    """Keep only route scores and annotations needed for replay and viewer."""
+    fields = _COMMON_CANDIDATE_FIELDS + _ROUTE_CANDIDATE_FIELDS[route]
+    compacted = []
+    for item in items:
+        saved = {key: item[key] for key in fields if key in item}
+        if isinstance(saved.get("matches"), list):
+            saved["matches"] = [
+                {key: match[key] for key in ("dimension_id", "dimension_path", "label", "similarity")
+                 if key in match}
+                for match in saved["matches"] if isinstance(match, dict)
+            ]
+        compacted.append(saved)
+    return compacted
+
+
+def _compact_chunks(items: List[Dict[str, Any]]) -> Dict[str, Dict[str, str]]:
+    """Store display text once per chunk instead of repeating it per route."""
+    chunks: Dict[str, Dict[str, str]] = {}
+    for item in items:
+        chunk_id = str(item.get("chunk_id", ""))
+        if not chunk_id or chunk_id in chunks:
+            continue
+        text = str(item.get("chunk_text_full") or item.get("chunk_text") or "")
+        chunks[chunk_id] = {
+            "title": str(item.get("chunk_gen_title") or item.get("doc_title") or ""),
+            "source_file": str(item.get("source_file") or ""),
+            "text": text,
+        }
+    return chunks
+
+
 def _save_fusion_snapshot(
     semantic: List[Dict[str, Any]],
     dimension: List[Dict[str, Any]],
     fusion_candidates: List[Dict[str, Any]],
-    fusion_results: List[Dict[str, Any]],
     *,
     dim_alpha: float,
     top_k: int,
     query: str | None = None,
+    original_query: str | None = None,
     query_analysis: Dict[str, Any] | None = None,
 ) -> Path:
     """Save one complete retrieval/fusion result under the project output dir."""
@@ -29,15 +78,32 @@ def _save_fusion_snapshot(
         "created_at": created_at.isoformat(timespec="microseconds"),
         "dim_alpha": dim_alpha,
         "top_k": top_k,
-        "semantic_candidates": semantic,
-        "dimension_candidates": dimension,
-        "fusion_candidates": fusion_candidates,
-        "fusion_results": fusion_results,
+        "semantic_candidates": _compact_candidates(semantic, "semantic"),
+        "dimension_candidates": _compact_candidates(dimension, "dimension"),
+        "fusion_candidates": _compact_candidates(fusion_candidates, "fusion"),
+        "chunks": _compact_chunks(fusion_candidates),
     }
     if query is not None:
         snapshot["query"] = query
+        # query remains for compatibility; retrieval_query explicitly names
+        # the exact text that Retriever.search encoded for semantic search.
+        snapshot["retrieval_query"] = query
+    if original_query is not None:
+        snapshot["original_query"] = original_query
     if query_analysis is not None:
-        snapshot["query_analysis"] = query_analysis
+        # The offline fusion strategy does not need parser diagnostics. The
+        # viewer only uses constraints, so retain that small, useful subset.
+        snapshot["query_analysis"] = {
+            "constraints": {
+                dimension: {
+                    key: value[key]
+                    for key in ("labels", "intent_terms", "role")
+                    if key in value
+                }
+                for dimension, value in query_analysis.get("constraints", {}).items()
+                if isinstance(value, dict)
+            }
+        }
     serialized = json.dumps(snapshot, ensure_ascii=False, indent=2)
 
     suffix = 0
@@ -74,6 +140,7 @@ def fuse_retrieval_results(
     dim_alpha: float,
     top_k: int,
     query: str | None = None,
+    original_query: str | None = None,
     query_analysis: Dict[str, Any] | None = None,
 ) -> Dict[str, List[Dict[str, Any]]]:
     """Normalize two route result lists and return their weighted fusion.
@@ -144,10 +211,10 @@ def fuse_retrieval_results(
         result["semantic_candidates"],
         result["dimension_candidates"],
         result["fusion_candidates"],
-        result["fusion_results"],
         dim_alpha=dim_alpha,
         top_k=top_k,
         query=query,
+        original_query=original_query,
         query_analysis=query_analysis,
     )
     return result

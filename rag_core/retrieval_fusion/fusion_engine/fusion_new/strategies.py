@@ -21,8 +21,11 @@ def prepare_features(snapshot):
     old = snapshot['fusion_candidates']
     sm = {str(x['chunk_id']): x for x in sem}
     dm = {str(x['chunk_id']): x for x in dim}
-    qgrams = grams(snapshot.get('query', '') or '')
-    bags = [grams(str(x.get('chunk_text', ''))[:4000]) for x in old]
+    retrieval_query = snapshot.get('retrieval_query') or snapshot.get('query') or ''
+    chunks = snapshot.get('chunks') or {}
+    qgrams = grams(retrieval_query)
+    bags = [grams(str(x.get('chunk_text') or chunks.get(str(x['chunk_id']), {}).get('text', ''))[:4000])
+            for x in old]
     df = Counter(g for bag in bags for g in bag if g in qgrams)
     weights = {g: math.log((len(old)+1)/(df[g]+0.5)) for g in qgrams}
     total = sum(weights.values()) or 1.0
@@ -47,12 +50,14 @@ def prepare_features(snapshot):
             'l': lex/best if best else 0.0, 'lc': lex,
             'lb': {b: adjusted[b][index] for b in adjusted},
             'sr': s.get('rank'), 'dr': d.get('rank'), 'old_rank': index+1,
-            'text': str(item.get('chunk_text', ''))[:500],
+            'text': str(item.get('chunk_text') or chunks.get(cid, {}).get('text', ''))[:500],
         })
     scores = sorted((float(x['score']) for x in sem), reverse=True)
     if any(not math.isfinite(c[k]) for c in candidates for k in ('s', 'd', 'a')):
         raise ValueError('Retrieval scores must be finite')
-    return {'query': snapshot.get('query'), 'candidates': candidates, 'scores': scores,
+    return {'query': retrieval_query, 'retrieval_query': retrieval_query,
+            'original_query': snapshot.get('original_query'),
+            'candidates': candidates, 'scores': scores,
             'gaps': [scores[i]-scores[i+1] for i in range(min(len(scores)-1, 9))]}
 
 
@@ -118,6 +123,7 @@ def fuse_raw(snapshot, config):
     features = prepare_features(snapshot)
     ranked, diagnostics = rank_features(features, **config)
     old = {str(x['chunk_id']): x for x in snapshot['fusion_candidates']}
+    chunks = snapshot.get('chunks') or {}
     results = []
     for rank, c in enumerate(ranked, 1):
         item = old[c['chunk_id']]
@@ -132,10 +138,13 @@ def fuse_raw(snapshot, config):
             'lexical_score': c['effective_lexical_score'], 'anchor_score': c['a'],
             'score_components': c['components'],
             'original_fusion_rank': c['old_rank'], 'original_fusion_score': item.get('score'),
-            'doc_title': item.get('doc_title'), 'source_file': item.get('source_file'),
-            'chunk_text': item.get('chunk_text', ''),
+            'doc_title': item.get('doc_title') or chunks.get(c['chunk_id'], {}).get('title'),
+            'source_file': item.get('source_file') or chunks.get(c['chunk_id'], {}).get('source_file'),
+            'chunk_text': item.get('chunk_text') or chunks.get(c['chunk_id'], {}).get('text', '')[:500],
         })
     top_k = int(snapshot.get('top_k', 10))
-    return {'query': snapshot.get('query'), 'strategy': 'raw_head_lexical',
+    retrieval_query = snapshot.get('retrieval_query') or snapshot.get('query')
+    return {'query': retrieval_query, 'retrieval_query': retrieval_query,
+            'original_query': snapshot.get('original_query'), 'strategy': 'raw_head_lexical',
             'configuration': config, 'diagnostics': diagnostics, 'top_k': top_k,
             'fusion_candidates': results, 'fusion_results': results[:top_k]}

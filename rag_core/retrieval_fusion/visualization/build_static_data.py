@@ -136,7 +136,7 @@ def detail_row(name: str, old_dir: Path, new_dir: Path, comparison: dict) -> dic
         "old": compact(original),
         "new": compact(updated),
     }
-    chunks = {}
+    chunks = old.get("chunks") if isinstance(old.get("chunks"), dict) else {}
     for item in semantic + dimension + original + updated:
         chunk_id = str(item.get("chunk_id") or "")
         if not chunk_id or (chunks.get(chunk_id) or {}).get("text"):
@@ -150,7 +150,8 @@ def detail_row(name: str, old_dir: Path, new_dir: Path, comparison: dict) -> dic
     diagnostics = (new.get("diagnostics") or {}) if new else {}
     return {
         "name": name,
-        "query": old.get("query") or "",
+        "query": old.get("original_query") or old.get("query") or "",
+        "retrieval_query": old.get("retrieval_query") or old.get("query") or "",
         "created_at": old.get("created_at"),
         "query_analysis": old.get("query_analysis") or {},
         "strategy": new.get("strategy") if new else None,
