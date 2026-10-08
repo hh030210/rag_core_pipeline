@@ -1,0 +1,18 @@
+{
+  "total": 2000,
+  "qa_results": "/home/humq/rag_core_pipeline/result/duretrieval_mteb_dev_deepseek_v4pro_20260923_run9/qa_freshschema_top5_20260927/qa_results_final.jsonl",
+  "metrics": {
+    "correctness": 1.742424,
+    "completeness": 1.559848,
+    "relevance": 1.833838,
+    "groundedness": 1.722727,
+    "unsupported_claims": 0.27702,
+    "evidence_overlap": 0.815378
+  },
+  "judge_failures": 20,
+  "valid_llm_judgments": 1980,
+  "blank_answers": 33,
+  "answer_rows": 2000,
+  "unique_qa_ids": 2000,
+  "dataset": "/home/humq/rag_core_pipeline/data/dev_external/duretrieval_mteb/prepared_qrels20k/qa_dataset.json"
+}

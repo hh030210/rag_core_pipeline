@@ -1,0 +1,84 @@
+{
+  "children": {
+    "factual_operation": [
+      "step_by_step",
+      "prerequisite",
+      "workaround"
+    ],
+    "causality_mechanism": [
+      "risk_factor",
+      "action_effect",
+      "working_principle"
+    ],
+    "attribute_definition": [
+      "entity_identity",
+      "quantitative_attr",
+      "classification"
+    ],
+    "temporal_event": [
+      "event_process",
+      "scheduled_time"
+    ],
+    "norm_criteria": [
+      "quality_criteria",
+      "proper_usage"
+    ],
+    "condition_state": [
+      "existing_problem",
+      "manifestation"
+    ]
+  },
+  "ancestors": {
+    "factual_operation": [],
+    "step_by_step": [
+      "factual_operation"
+    ],
+    "prerequisite": [
+      "factual_operation"
+    ],
+    "workaround": [
+      "factual_operation"
+    ],
+    "causality_mechanism": [],
+    "risk_factor": [
+      "causality_mechanism"
+    ],
+    "action_effect": [
+      "causality_mechanism"
+    ],
+    "working_principle": [
+      "causality_mechanism"
+    ],
+    "attribute_definition": [],
+    "entity_identity": [
+      "attribute_definition"
+    ],
+    "quantitative_attr": [
+      "attribute_definition"
+    ],
+    "classification": [
+      "attribute_definition"
+    ],
+    "temporal_event": [],
+    "event_process": [
+      "temporal_event"
+    ],
+    "scheduled_time": [
+      "temporal_event"
+    ],
+    "norm_criteria": [],
+    "quality_criteria": [
+      "norm_criteria"
+    ],
+    "proper_usage": [
+      "norm_criteria"
+    ],
+    "condition_state": [],
+    "existing_problem": [
+      "condition_state"
+    ],
+    "manifestation": [
+      "condition_state"
+    ]
+  }
+}

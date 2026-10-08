@@ -1,0 +1,18 @@
+{
+  "dataset": "/home/humq/rag_core_pipeline/data/dev_external/duretrieval_mteb/prepared_qrels20k/qa_dataset.json",
+  "qa_results": "/home/humq/rag_core_pipeline/result/duretrieval_mteb_dev_deepseek_v4pro_20260923_run9/qa_freshschema_top5_20260927/recovery_20260927/qa_results_final.jsonl",
+  "total": 2000,
+  "metrics": {
+    "correctness": 1.740122,
+    "completeness": 1.559017,
+    "relevance": 1.832827,
+    "groundedness": 1.719858,
+    "unsupported_claims": 0.277862,
+    "evidence_overlap": 0.812914
+  },
+  "judge_failures": 26,
+  "successful_answer_repairs": 77,
+  "answer_repair_candidates": 114,
+  "judge_retry_candidates": 139,
+  "judge_retry_successes": 113
+}

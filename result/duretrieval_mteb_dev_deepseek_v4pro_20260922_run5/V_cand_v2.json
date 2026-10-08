@@ -1,0 +1,215 @@
+{
+  "schema_version": "2.0",
+  "dimensions": [
+    {
+      "id": "object_identity",
+      "name": "对象与身份",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "描述实体的定义、分类、角色、主体属性",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "entity_category",
+      "name": "类别归属",
+      "parent_id": "object_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "实体所属的类型、种类或行业分类",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "identity_role",
+      "name": "身份角色",
+      "parent_id": "object_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "实体在特定领域中的身份、职位或社会角色",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "composition_attribute",
+      "name": "组成属性",
+      "parent_id": "object_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "实体的结构、成分、物理或抽象构成特征",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "geographic_location",
+      "name": "地理位置",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "实体的空间位置、坐标、范围及籍贯信息",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "spatial_scope",
+      "name": "空间范围",
+      "parent_id": "geographic_location",
+      "level": 2,
+      "indexable": true,
+      "description": "实体所在地域范围、层级或起源地",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "coordinates_address",
+      "name": "坐标与地址",
+      "parent_id": "geographic_location",
+      "level": 2,
+      "indexable": true,
+      "description": "实体的具体地址、地理坐标或相对位置关系",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "historic_cultural",
+      "name": "历史文化",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "实体的历史背景、文化渊源、传统与相关事件",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "historic_event",
+      "name": "历史事件",
+      "parent_id": "historic_cultural",
+      "level": 2,
+      "indexable": true,
+      "description": "实体经历或相关的关键历史事件、成立过程",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "cultural_connotation",
+      "name": "文化寓意",
+      "parent_id": "historic_cultural",
+      "level": 2,
+      "indexable": true,
+      "description": "名称含义、象征意义、吉祥寓意或文化背景",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "functional_feature",
+      "name": "功能特色",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "实体的核心功能、性能参数、内部机制或技术特征",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "technical_spec",
+      "name": "技术规格",
+      "parent_id": "functional_feature",
+      "level": 2,
+      "indexable": true,
+      "description": "实体的技术参数、性能指标、配置或物理属性",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "system_mechanism",
+      "name": "系统机制",
+      "parent_id": "functional_feature",
+      "level": 2,
+      "indexable": true,
+      "description": "实体的工作原理、运行流程、逻辑机制或拓扑结构",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "operation_access",
+      "name": "开放运营",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "实体的运营状态、开放时间、服务规则及相关操",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "operating_status",
+      "name": "运营状态",
+      "parent_id": "operation_access",
+      "level": 2,
+      "indexable": true,
+      "description": "实体现行运营状况、可用性或时效性状态",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "rule_of_play",
+      "name": "玩法规则",
+      "parent_id": "operation_access",
+      "level": 2,
+      "indexable": true,
+      "description": "参与、使用或操作实体需遵循的规则、流程或限制条件",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "economic_rule",
+      "name": "经济规则",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "与实体相关的价格、货币化模式、交易限制或财务条款",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "price_type",
+      "name": "价格类型",
+      "parent_id": "economic_rule",
+      "level": 2,
+      "indexable": true,
+      "description": "与实体相关的定价模式、价格水平或优惠类型",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "transaction_condition",
+      "name": "交易条件",
+      "parent_id": "economic_rule",
+      "level": 2,
+      "indexable": true,
+      "description": "购买、结算或提现时的规则、门槛与币种要求",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    }
+  ],
+  "generation_method": "code_jyx_llm_v2"
+}

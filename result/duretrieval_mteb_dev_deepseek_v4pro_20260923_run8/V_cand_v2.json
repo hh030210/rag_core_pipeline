@@ -1,0 +1,237 @@
+{
+  "schema_version": "2.0",
+  "dimensions": [
+    {
+      "id": "object_identity",
+      "name": "对象与身份",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景区对象、名称和类型属性。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "object_identity.entity_name",
+      "name": "对象名称",
+      "parent_id": "object_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中明确出现的景区、景点或相关对象名称。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "object_identity.scenic_type",
+      "name": "对象类型",
+      "parent_id": "object_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中明确出现的景区、景点、遗址或旅游对象类型。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "location",
+      "name": "地理位置",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景区所在区域和空间位置属性。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "location.region",
+      "name": "所在地区",
+      "parent_id": "location",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中明确出现的省、市、区县或地理区域。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "location.location_detail",
+      "name": "位置关系",
+      "parent_id": "location",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中明确出现的地址、方位、范围或邻接关系。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "history_culture",
+      "name": "历史文化",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景区历史、文化遗产和相关事件属性。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "history_culture.history",
+      "name": "历史沿革",
+      "parent_id": "history_culture",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中明确出现的历史时期、沿革、建造或变迁信息。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "history_culture.cultural_significance",
+      "name": "文化内涵",
+      "parent_id": "history_culture",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中明确出现的文化价值、人物、事件或称号。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "landscape",
+      "name": "景观特色",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景区自然、人文景观和核心游览内容属性。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "landscape.attractions",
+      "name": "核心景点",
+      "parent_id": "landscape",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中明确出现的景点、景观或游览对象名称。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "landscape.feature_composition",
+      "name": "景观组成",
+      "parent_id": "landscape",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中明确出现的建筑、自然地貌、展陈或景观组成。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "operation",
+      "name": "开放运营",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景区开放、营业和季节运营属性。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "operation.opening_hours",
+      "name": "开放时间",
+      "parent_id": "operation",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中明确出现的开放、营业或参观时间。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "operation.seasonal_schedule",
+      "name": "季节安排",
+      "parent_id": "operation",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中明确出现的旺季、淡季、季节性开放或运营安排。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "ticket_access",
+      "name": "票务与到达",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "游客购票、费用和交通到达属性。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "ticket_access.ticketing",
+      "name": "票务信息",
+      "parent_id": "ticket_access",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中明确出现的门票、票价、优惠、预约或购票规则。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "ticket_access.transportation",
+      "name": "交通方式",
+      "parent_id": "ticket_access",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中明确出现的公交、地铁、自驾、步行或到达路线。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "visitor_service",
+      "name": "游客服务",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "游览支持、设施和注意事项属性。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "visitor_service.facilities",
+      "name": "服务设施",
+      "parent_id": "visitor_service",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中明确出现的停车、卫生间、餐饮、导览或其他服务设施。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "visitor_service.visitor_guidance",
+      "name": "游览提示",
+      "parent_id": "visitor_service",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中明确出现的游览路线、注意事项、限制或服务提示。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    }
+  ],
+  "generation_method": "code_jyx_llm_v2"
+}

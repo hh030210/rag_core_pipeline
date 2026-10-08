@@ -1,0 +1,71 @@
+{
+  "schema_version": "2.0",
+  "dimensions": [
+    {
+      "id": "content",
+      "name": "内容属性",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "文本描述的对象、地点和历史信息分组。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "service",
+      "name": "服务属性",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "面向游客的时间、票务和交通信息分组。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "content.entity",
+      "name": "涉及对象",
+      "parent_id": "content",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中明确出现的人群或对象。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "content.location",
+      "name": "地理位置",
+      "parent_id": "content",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中明确出现的地点、区域或景区位置。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "service.opening_hours",
+      "name": "开放时间",
+      "parent_id": "service",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中明确出现的开放、营业或参观时间。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "service.ticketing",
+      "name": "票务信息",
+      "parent_id": "service",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中明确出现的票价、门票或购票信息。",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    }
+  ]
+}

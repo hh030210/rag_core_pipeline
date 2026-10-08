@@ -1,0 +1,226 @@
+{
+  "schema_version": "2.0",
+  "dimensions": [
+    {
+      "id": "object_identity",
+      "name": "对象与身份",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景区、人物、机构或物品的基本身份与属性信息",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "entity_type",
+      "name": "实体类型",
+      "parent_id": "object_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "对象的基本分类,如自然景观、人文古迹、度假区等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "name_alias",
+      "name": "名称与别称",
+      "parent_id": "object_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "对象的标准名称、曾用名或俗名",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "founding_year",
+      "name": "始建年代",
+      "parent_id": "object_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "景区或实体的创建或始建年份",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "geographic_location",
+      "name": "地理位置",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景区的空间坐标与行政归属",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "administrative_region",
+      "name": "所属行政区划",
+      "parent_id": "geographic_location",
+      "level": 2,
+      "indexable": true,
+      "description": "景区隶属的省、市、区县等行政区域",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "natural_environment",
+      "name": "自然地理特征",
+      "parent_id": "geographic_location",
+      "level": 2,
+      "indexable": true,
+      "description": "景区所处的山脉、河流、气候带等自然环境",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "historical_culture",
+      "name": "历史文化",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景区的历史沿革与文化内涵",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "historical_period",
+      "name": "历史时期",
+      "parent_id": "historical_culture",
+      "level": 2,
+      "indexable": true,
+      "description": "景区所关联的朝代或历史阶段",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "cultural_connotation",
+      "name": "文化内涵",
+      "parent_id": "historical_culture",
+      "level": 2,
+      "indexable": true,
+      "description": "景区的宗教、民俗、文学等文化属性",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "historical_figure",
+      "name": "关联人物",
+      "parent_id": "historical_culture",
+      "level": 2,
+      "indexable": true,
+      "description": "与景区历史或建造相关的重要人物",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "landscape_feature",
+      "name": "景观特色",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景区核心的景观构成与美学特征",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "landscape_composition",
+      "name": "景观组成",
+      "parent_id": "landscape_feature",
+      "level": 2,
+      "indexable": true,
+      "description": "构成景区的主要景观元素,如山、水、建筑、植被等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "aesthetic_category",
+      "name": "美学主题",
+      "parent_id": "landscape_feature",
+      "level": 2,
+      "indexable": true,
+      "description": "景区的美学风格或观赏主题,如险峻、秀丽、古典园林等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "operation_ticketing",
+      "name": "运营票务",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景区的开放状态、时间与票价信息",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "open_season",
+      "name": "开放季节",
+      "parent_id": "operation_ticketing",
+      "level": 2,
+      "indexable": true,
+      "description": "景区全年开放、季节性开放或特定闭园时段",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "ticket_type",
+      "name": "票价类型",
+      "parent_id": "operation_ticketing",
+      "level": 2,
+      "indexable": true,
+      "description": "门票的种类划分,如成人票、优惠票、联票等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "tourist_service",
+      "name": "游客服务",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景区提供的配套服务与设施",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "guided_service",
+      "name": "导览服务",
+      "parent_id": "tourist_service",
+      "level": 2,
+      "indexable": true,
+      "description": "景区提供的导游、语音讲解或路线指引服务",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "accessibility_facility",
+      "name": "无障碍设施",
+      "parent_id": "tourist_service",
+      "level": 2,
+      "indexable": true,
+      "description": "为残障人士或行动不便者提供的便利设施",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    }
+  ],
+  "generation_method": "code_jyx_llm_v2"
+}

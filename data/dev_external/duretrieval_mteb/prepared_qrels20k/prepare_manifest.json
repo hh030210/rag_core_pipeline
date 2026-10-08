@@ -1,0 +1,29 @@
+{
+  "dataset": "DuRetrieval/MTEB dev",
+  "input_root": "data/dev_external/duretrieval_mteb",
+  "corpus_passages": 29792,
+  "queries": 2000,
+  "positive_qrels": 9839,
+  "unique_positive_passages": 9792,
+  "chunks": 32764,
+  "candidate_mode": "qrels_plus_random",
+  "negative_count": 20000,
+  "random_seed": 20260922,
+  "chunking": {
+    "implementation": "rag_core.integrated_chunker.IntegratedChunker",
+    "stages": [
+      "round1_structure_default_recommendation",
+      "round2_denoise_boundary",
+      "round3_length_merge"
+    ],
+    "l_min": 400,
+    "l_max": 1000,
+    "denoise_method": "mechanical",
+    "llm_length_recommendation": false,
+    "reason": "DuRetrieval rows are already atomic passages; per-row recommendation would create 100K LLM calls."
+  },
+  "outputs": {
+    "chunks": "data/dev_external/duretrieval_mteb/prepared_qrels20k/chunks.json",
+    "qa_dataset": "data/dev_external/duretrieval_mteb/prepared_qrels20k/qa_dataset.json"
+  }
+}

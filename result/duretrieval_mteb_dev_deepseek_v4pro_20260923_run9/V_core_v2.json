@@ -1,0 +1,338 @@
+{
+  "schema_version": "2.0",
+  "dimensions": [
+    {
+      "id": "factual_operation",
+      "name": "操作方法与步骤",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "关于某件事的具体做法、流程、步骤和操作指南类信息",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "step_by_step",
+      "name": "分步操作指南",
+      "parent_id": "factual_operation",
+      "level": 2,
+      "indexable": true,
+      "description": "按顺序排列的、可逐一执行的步骤说明,如使用软件、烹饪或维修步骤",
+      "aliases": [
+        "步骤",
+        "怎么做",
+        "流程",
+        "如何操作"
+      ],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "prerequisite",
+      "name": "准备与前置条件",
+      "parent_id": "factual_operation",
+      "level": 2,
+      "indexable": true,
+      "description": "在执行操作之前需要满足的条件、环境设置或需要准备的物品与状态",
+      "aliases": [
+        "事先准备",
+        "需要什么条件",
+        "前提",
+        "开始前要做什么"
+      ],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "workaround",
+      "name": "故障或异常处理",
+      "parent_id": "factual_operation",
+      "level": 2,
+      "indexable": true,
+      "description": "针对操作中出现的问题、错误状态或非预期结果的排查与修复方法",
+      "aliases": [
+        "如果不行怎么办",
+        "报错怎么处理",
+        "修复",
+        "排查"
+      ],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "causality_mechanism",
+      "name": "原因与作用机理",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "解释现象背后的成因、影响因素、作用原理及相关推断",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "risk_factor",
+      "name": "致因与风险因素",
+      "parent_id": "causality_mechanism",
+      "level": 2,
+      "indexable": true,
+      "description": "描述导致某种结果或问题的内在与外在原因、诱因以及风险来源",
+      "aliases": [
+        "是什么引起的",
+        "病因",
+        "原因",
+        "为什么会这样",
+        "诱因"
+      ],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "action_effect",
+      "name": "行为影响与后果",
+      "parent_id": "causality_mechanism",
+      "level": 2,
+      "indexable": true,
+      "description": "某动作、物质或状态对个体、系统产生的正面或负面影响及可能后果",
+      "aliases": [
+        "有什么作用",
+        "影响",
+        "好处",
+        "坏处",
+        "副作用",
+        "后果"
+      ],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "working_principle",
+      "name": "作用原理",
+      "parent_id": "causality_mechanism",
+      "level": 2,
+      "indexable": true,
+      "description": "从科学、技术或生理角度解释某事物如何运作或如何产生效果的深层机理",
+      "aliases": [
+        "原理",
+        "机制",
+        "为什么有效",
+        "是怎么起作用的"
+      ],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "attribute_definition",
+      "name": "实体属性与定义",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "具体实体(人物、地点、物品、概念)的特征、参数、解释或概念界定",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "entity_identity",
+      "name": "基本身份与定义",
+      "parent_id": "attribute_definition",
+      "level": 2,
+      "indexable": true,
+      "description": "实体的定义、含义、本质特征或基本身份描述,如人物身份、词汇定义、概念解释",
+      "aliases": [
+        "是什么意思",
+        "是什么",
+        "属于什么",
+        "定义为",
+        "身份",
+        "是指"
+      ],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "quantitative_attr",
+      "name": "数量与参数属性",
+      "parent_id": "attribute_definition",
+      "level": 2,
+      "indexable": true,
+      "description": "实体的数量、数值、尺寸、时长、价格、构成比例等可量化属性",
+      "aliases": [
+        "多少",
+        "多大",
+        "价格",
+        "数值",
+        "时长",
+        "比例",
+        "剂量",
+        "产量"
+      ],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "classification",
+      "name": "分类与归属",
+      "parent_id": "attribute_definition",
+      "level": 2,
+      "indexable": true,
+      "description": "实体所属的类别、等级、类型或行政区划归属,以及与其他同类事物的区别",
+      "aliases": [
+        "种类",
+        "有哪些",
+        "属于哪里",
+        "级别",
+        "型号",
+        "分区",
+        "属于什么类型"
+      ],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "temporal_event",
+      "name": "事件与时间线",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "描述特定时间点、时间段或顺序发生的事件经过与状态变化",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "event_process",
+      "name": "事件经过与过程",
+      "parent_id": "temporal_event",
+      "level": 2,
+      "indexable": true,
+      "description": "某一次具体行动、历史或新闻事件的动态发展过程、行为序列或现场描述",
+      "aliases": [
+        "经过",
+        "当时情况",
+        "发生了什么",
+        "过程",
+        "事情是这样的"
+      ],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "scheduled_time",
+      "name": "时间点与时效",
+      "parent_id": "temporal_event",
+      "level": 2,
+      "indexable": true,
+      "description": "事件发生、操作执行或状态持续的具体时间点、期限、时机或时效性要求",
+      "aliases": [
+        "什么时候",
+        "时间",
+        "多久",
+        "期限",
+        "何时开始",
+        "第几集"
+      ],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "norm_criteria",
+      "name": "规范与评判标准",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "评价事物、做出判断所依据的标准、规则、规范或推荐做法",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "quality_criteria",
+      "name": "质量与效果评判",
+      "parent_id": "norm_criteria",
+      "level": 2,
+      "indexable": true,
+      "description": "判断产品、成果或动作好坏、优劣、成功与否的依据和比较标准",
+      "aliases": [
+        "好不好",
+        "效果如何",
+        "怎样算好",
+        "评判标准",
+        "如何判断",
+        "是什么样的"
+      ],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "proper_usage",
+      "name": "正确用法与合规建议",
+      "parent_id": "norm_criteria",
+      "level": 2,
+      "indexable": true,
+      "description": "为确保安全、有效或合规而提出的正确使用方法、推荐操作或注意事项",
+      "aliases": [
+        "应该怎么做",
+        "注意什么",
+        "要这样用",
+        "建议",
+        "不能怎样",
+        "正确方法"
+      ],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "condition_state",
+      "name": "状态与条件描述",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "对某个对象或环境当前所处的情形、状态、客观限制或特定表现的描述",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "existing_problem",
+      "name": "问题与缺陷",
+      "parent_id": "condition_state",
+      "level": 2,
+      "indexable": true,
+      "description": "事物存在的故障、不足、矛盾、不符合标准或危险的状况",
+      "aliases": [
+        "毛病",
+        "短板",
+        "缺点",
+        "问题出在哪",
+        "不足",
+        "异常"
+      ],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "manifestation",
+      "name": "现象与表征",
+      "parent_id": "condition_state",
+      "level": 2,
+      "indexable": true,
+      "description": "可观察到的外在表现、症状、显示形态或行为特征",
+      "aliases": [
+        "表现",
+        "症状",
+        "样子",
+        "看起来",
+        "特征",
+        "显示"
+      ],
+      "value_policy": "multi",
+      "max_labels": 5
+    }
+  ],
+  "generation_method": "llm_corpus_induced_strict",
+  "source_sample_count": 48,
+  "schema_source_record_count": 32764,
+  "schema_source_fingerprint": "f408c62170b4925636aab0948e8b58abeb59df84f4a3eab7767e072739e10ecd"
+}

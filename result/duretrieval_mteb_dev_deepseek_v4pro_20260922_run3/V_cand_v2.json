@@ -1,0 +1,270 @@
+{
+  "schema_version": "2.0",
+  "dimensions": [
+    {
+      "id": "object_identity",
+      "name": "对象与身份",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "涉及实体对象、产品型号、人物角色等身份标识信息",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "identity_type",
+      "name": "对象类型",
+      "parent_id": "object_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "如电子产品、菜品、车型、游戏、药物等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "identity_name",
+      "name": "对象名称",
+      "parent_id": "object_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "具体产品名、菜名、角色名等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "identity_version",
+      "name": "版本型号",
+      "parent_id": "object_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "系统版本、产品型号、代际等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "identity_brand",
+      "name": "品牌/厂商",
+      "parent_id": "object_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "制造或发布实体对象的品牌与机构",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "geographic_location",
+      "name": "地理位置",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "事件发生地、发布区域、产地等空间信息",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "location_venue",
+      "name": "场所/地点",
+      "parent_id": "geographic_location",
+      "level": 2,
+      "indexable": true,
+      "description": "餐厅、发射场、拍卖会等具体地点",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "location_region",
+      "name": "行政/文化区域",
+      "parent_id": "geographic_location",
+      "level": 2,
+      "indexable": true,
+      "description": "国家、省市、流域等区域划分",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "temporal_info",
+      "name": "时间信息",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "涵盖日期、节假日、活动时间、版本时间等时序属性",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "temporal_date",
+      "name": "具体日期/年份",
+      "parent_id": "temporal_info",
+      "level": 2,
+      "indexable": true,
+      "description": "年、月、日或具体时间点",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "temporal_festival",
+      "name": "节假日/时期",
+      "parent_id": "temporal_info",
+      "level": 2,
+      "indexable": true,
+      "description": "春节、国庆等法定节日或特定时期",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "operational_activity",
+      "name": "运营与活动",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "举办的活动、销售、拍卖、促销、赛事等运营相关行为",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "activity_event",
+      "name": "事件/活动名称",
+      "parent_id": "operational_activity",
+      "level": 2,
+      "indexable": true,
+      "description": "拍卖会、发射任务、红包活动等具体事件",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "activity_process",
+      "name": "流程/环节",
+      "parent_id": "operational_activity",
+      "level": 2,
+      "indexable": true,
+      "description": "如关卡、回合、导入步骤、丧礼流程等操作步骤",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "activity_status",
+      "name": "执行状态",
+      "parent_id": "operational_activity",
+      "level": 2,
+      "indexable": true,
+      "description": "取消、成功、进行中、已结束等状态标识",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "feature_attribute",
+      "name": "特征与属性",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "对象的技术参数、口味、材质、性能、画面表现等描述性特征",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "feature_taste",
+      "name": "口味/风味",
+      "parent_id": "feature_attribute",
+      "level": 2,
+      "indexable": true,
+      "description": "鲜、辣、脆、嫩等味觉或口感描述",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "feature_composition",
+      "name": "成分/组成",
+      "parent_id": "feature_attribute",
+      "level": 2,
+      "indexable": true,
+      "description": "食材、材质、零件、角色阵容等构成元素",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "feature_performance",
+      "name": "性能/表现",
+      "parent_id": "feature_attribute",
+      "level": 2,
+      "indexable": true,
+      "description": "动力、伤害、兼容性、流畅度等技术表现",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "feature_appearance",
+      "name": "外观/视觉",
+      "parent_id": "feature_attribute",
+      "level": 2,
+      "indexable": true,
+      "description": "居中、颜色、风格、界面等视觉属性",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "rules_pricing",
+      "name": "规则与数值",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "涉及价格、数值、条文、机制、限制等可量化规则信息",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "rules_price",
+      "name": "金额/价格",
+      "parent_id": "rules_pricing",
+      "level": 2,
+      "indexable": true,
+      "description": "成交价、估价、优惠幅度、票价等货币数值",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "rules_mechanic",
+      "name": "机制/规则",
+      "parent_id": "rules_pricing",
+      "level": 2,
+      "indexable": true,
+      "description": "游戏机制、CSS对齐规则、法定假期调休规则等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "rules_condition",
+      "name": "触发条件/限制",
+      "parent_id": "rules_pricing",
+      "level": 2,
+      "indexable": true,
+      "description": "泪水条件、奖励条件、使用限制、系统要求等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    }
+  ],
+  "generation_method": "code_jyx_llm_v2"
+}

@@ -1,0 +1,3899 @@
+{
+  "schema_version": "2.0",
+  "parser_version": "4.4",
+  "vocabulary_signature": "e2160a529e67",
+  "items": {
+    "2.0:query_parser_4.4:e2160a529e67:online:2b5e7418248f2054ee7c6ad07d3b6957bbfe16da": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:8eb7cb68d02b0548b3372e0647f2140e69f7bbcd": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:f6ede7836ae1c2c661be448447e60f41bf04d27b": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "ticket_access.transportation",
+          "labels": [
+            "湖南卫视"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "湖南卫视"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "location.region",
+          "labels": [
+            "湖南卫视"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [
+            "湖南卫视"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "平台"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "ticket_access.transportation",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "ticket_access.transportation",
+          "labels": [
+            "湖南卫视"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "湖南卫视"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_3",
+          "dimension_id": "location.region",
+          "labels": [
+            "湖南卫视"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_4",
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [
+            "湖南卫视"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_5",
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "平台"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 5,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:d5b6fc56fa4208e31f0eef17b3c09e8b680033a9": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "软件"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "软件"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "object_identity.scenic_type",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "软件"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "软件"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 2,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:060d0de7c41f357d50b1f2c6e1615a8348719fa5": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "visitor_service.visitor_guidance",
+          "labels": [
+            "关闭"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "visitor_service.visitor_guidance",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "visitor_service.visitor_guidance",
+          "labels": [
+            "关闭"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:19a93be7f0fea7182e1c454cd04aa1440c57ca53": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "visitor_service.visitor_guidance",
+          "labels": [
+            "服务"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "徐州"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "location.region",
+          "labels": [
+            "徐州"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "visitor_service.visitor_guidance",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "visitor_service.visitor_guidance",
+          "labels": [
+            "服务"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "徐州"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_3",
+          "dimension_id": "location.region",
+          "labels": [
+            "徐州"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 3,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:3a4350cb2bc6b7f3ba48e4f58314e32e34d26c43": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "operation.seasonal_schedule",
+          "labels": [
+            "法定节假日"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "history_culture.history",
+          "labels": [
+            "法定节假日"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "国家"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "国家",
+            "中国"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "location.region",
+          "labels": [
+            "中国"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "operation.seasonal_schedule",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "operation.seasonal_schedule",
+          "labels": [
+            "法定节假日"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "history_culture.history",
+          "labels": [
+            "法定节假日"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_3",
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "国家"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_4",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "国家",
+            "中国"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_5",
+          "dimension_id": "location.region",
+          "labels": [
+            "中国"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 5,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:898b16fe5b401b381f078f8d87294054e18bf19b": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:e711df4b7844a4ebcc3adf49071b7a3226db3a9a": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:a5624cba2a3af2fe267c217e789234b2810013b1": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [
+            "爱国诗人"
+          ],
+          "intent_terms": [
+            "第一个伟大成就爱国诗人",
+            "爱国诗人鼻祖",
+            "最早的伟大爱国诗人"
+          ],
+          "match": "ANY",
+          "source": "llm+lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "中国"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "location.region",
+          "labels": [
+            "我国",
+            "中国"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "history_culture.history",
+          "labels": [
+            "古代"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "history_culture.cultural_significance",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [
+            "爱国诗人"
+          ],
+          "intent_terms": [
+            "第一个伟大成就爱国诗人",
+            "爱国诗人鼻祖",
+            "最早的伟大爱国诗人"
+          ],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "中国"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_3",
+          "dimension_id": "location.region",
+          "labels": [
+            "我国",
+            "中国"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_4",
+          "dimension_id": "history_culture.history",
+          "labels": [
+            "古代"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 1,
+        "llm_intent_only_count": 1,
+        "recovered_constraint_count": 4,
+        "fallback_used": false,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "llm+lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:98876615f8339a505e7c6b930fdd1e7da998c16c": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "公司"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "location.region",
+          "labels": [
+            "宝鸡"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "ticket_access.ticketing",
+          "labels": [],
+          "intent_terms": [
+            "价格",
+            "费用"
+          ],
+          "match": "ANY",
+          "source": "intent_cue+strict_intent",
+          "confidence": 0.9,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "ticket_access.ticketing",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "公司"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "location.region",
+          "labels": [
+            "宝鸡"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_3",
+          "dimension_id": "ticket_access.ticketing",
+          "labels": [],
+          "intent_terms": [
+            "价格",
+            "费用"
+          ],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 3,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "intent_cue+strict_intent",
+          "lexical_label"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:7f1e8d9dc93daebd1b3ce89621ce128f836ab624": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "淘宝"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "object_identity.entity_name",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "淘宝"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:2277760fd93cd0be5d09529658cdc5b0246cc913": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "电视",
+            "电脑"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "长虹"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "电脑"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "visitor_service.facilities",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "电视",
+            "电脑"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "长虹"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_3",
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "电脑"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 3,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:077144a98b6f993e51692c6aa78f71cbe23f5188": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:147ffb45a51682a6c1417722aa8a88a72b2fafbd": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:6f250379d685166321ac209d721bb866d2dea5e9": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "CAD"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "签名"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "object_identity.entity_name",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "CAD"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "签名"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 2,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:56b146cd33eecba5a0c93d82b810969792a6d188": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "商洛学院"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "学校"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "学校"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "object_identity.entity_name",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "商洛学院"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "学校"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_3",
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "学校"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 3,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:0848d2396052f785e7ee1d4c3c90fb85b611587e": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:6f699d744a9c057d1fd26147cc5c7f47f176bb9b": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "游戏"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "object_identity.scenic_type",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "游戏"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:82b31cfbc66f9c7abfa21e42f05ce9ecb0c54f71": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "CAD"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "object_identity.entity_name",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "CAD"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:0fc11b99d8fe4772a92e24f173f5965f40d5114b": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "服务器"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "visitor_service.visitor_guidance",
+          "labels": [
+            "服务"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "visitor_service.facilities",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "服务器"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "visitor_service.visitor_guidance",
+          "labels": [
+            "服务"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 2,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:e0a390357469a3ec01e844746acd51224401cc68": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "location.location_detail",
+          "labels": [
+            "右边"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "location.location_detail",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "location.location_detail",
+          "labels": [
+            "右边"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:89ea556bdfdf34ca1cba0363b21278280a9e2559": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "消灾吉祥神咒"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [
+            "吉祥"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "object_identity.entity_name",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "消灾吉祥神咒"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [
+            "吉祥"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 2,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:f27378667b65352b0d37fc779a94e806c481184c": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "维生素"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "landscape.feature_composition",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "维生素"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:25c03258f464338d71ae82c7fb2183a16d7054e9": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "landscape.feature_composition",
+          "labels": [],
+          "intent_terms": [
+            "布局"
+          ],
+          "match": "ANY",
+          "source": "intent_cue",
+          "confidence": 0.55,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "landscape.feature_composition",
+          "labels": [],
+          "intent_terms": [
+            "布局"
+          ],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "intent_cue"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:52147de6d575d8af577416604d640aa4f0ca74ff": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "招聘会"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "visitor_service.facilities",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "招聘会"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:8c1d243ab455c1507714d82f120a080f2ecf8f85": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "东坡家事"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "object_identity.entity_name",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "东坡家事"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:04a4ff589d3c4c2df9bc2405bc6c5a84fddf10c7": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "硬件"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "硬件"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "visitor_service.facilities",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "硬件"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "硬件"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 2,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:589e393c97ef4996045ca1c0b02d8c79755a7fc6": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:f123389e86cc0ea0281cecc54d29ea8e64df6ce2": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "蓝牙"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "visitor_service.facilities",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "蓝牙"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:6a9bcea13f59548466f2a31126765ca5efe05646": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:f18af9e4530df946ffb792a8b3d9cde3d185e0ca": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "电脑"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "电脑"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "visitor_service.facilities",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "电脑"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "电脑"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 2,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:dfc55f66453d1bf823026e231644373a7749b985": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "landscape.feature_composition",
+          "labels": [],
+          "intent_terms": [
+            "结构"
+          ],
+          "match": "ANY",
+          "source": "intent_cue",
+          "confidence": 0.55,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "landscape.feature_composition",
+          "labels": [],
+          "intent_terms": [
+            "结构"
+          ],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "intent_cue"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:26715a26e9c3cecaf9c021ff69ced74485acc511": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:edcd318fc40616401f00f907d7a164a7baf8d81e": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "淘宝"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "店铺"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "visitor_service.visitor_guidance",
+          "labels": [],
+          "intent_terms": [
+            "注意事项"
+          ],
+          "match": "ANY",
+          "source": "intent_cue",
+          "confidence": 0.55,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "淘宝"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "店铺"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_3",
+          "dimension_id": "visitor_service.visitor_guidance",
+          "labels": [],
+          "intent_terms": [
+            "注意事项"
+          ],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 3,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "intent_cue",
+          "lexical_label"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:eaf105d5847f81e96f5d1c598614949180440a41": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "品牌"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "object_identity.scenic_type",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "品牌"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:bc7087e9275a1f3463791b035dfd9338399e3ab5": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:9472a854a0ec1259df64b785108acf58325840c3": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "火炮"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "object_identity.scenic_type",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "火炮"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:d1248574d81ae3d70f82cb5d075772697bc16b27": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "大学"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [
+            "大学"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "object_identity.scenic_type",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "大学"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [
+            "大学"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 2,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:fbd4db0b7e73f3c6425037b67be3e57b1c7e2ea9": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "visitor_service.visitor_guidance",
+          "labels": [
+            "关闭"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "安装"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "visitor_service.visitor_guidance",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "visitor_service.visitor_guidance",
+          "labels": [
+            "关闭"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "安装"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 2,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:44a9f41d1e1138487aead9d71b8ef8d94f416e9b": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:ce1ddc6038ee06fe861b828a85711a548bf4a63c": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:47c88b49881b48a9af22b8ccccfcb5b3cc745fdf": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "history_culture.history",
+          "labels": [
+            "2015年"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "梦幻西游",
+            "云游道人"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [
+            "云游道人"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "活动"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "history_culture.history",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "history_culture.history",
+          "labels": [
+            "2015年"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "梦幻西游",
+            "云游道人"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_3",
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [
+            "云游道人"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_4",
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "活动"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 4,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:ce3ad3ef814358dd417e94a97f64283381afe8fa": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [
+            "队长"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "history_culture.cultural_significance",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [
+            "队长"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:a6e57b28bda3a7a24c294b0ef74a6cd4a6e4fe95": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:b9b20fd542016ad33323fb96253971de73eb02c3": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "wifi"
+          ],
+          "intent_terms": [
+            "wifi"
+          ],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "360"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "wifi"
+          ],
+          "intent_terms": [
+            "wifi"
+          ],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "360"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 2,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:8d764352ec533f18df69f55cd0a69ac876dc9c7c": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "ticket_access.ticketing",
+          "labels": [
+            "禁忌"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "visitor_service.visitor_guidance",
+          "labels": [],
+          "intent_terms": [
+            "注意事项"
+          ],
+          "match": "ANY",
+          "source": "intent_cue",
+          "confidence": 0.55,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "ticket_access.ticketing",
+          "labels": [
+            "禁忌"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "visitor_service.visitor_guidance",
+          "labels": [],
+          "intent_terms": [
+            "注意事项"
+          ],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 2,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "intent_cue",
+          "lexical_label"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:2e18828f9771d96ebb0e9d005fccabb2b1435a2c": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "ticket_access.transportation",
+          "labels": [],
+          "intent_terms": [
+            "如何进"
+          ],
+          "match": "ANY",
+          "source": "llm+strict_intent",
+          "confidence": 0.9,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "ticket_access.transportation",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "ticket_access.transportation",
+          "labels": [],
+          "intent_terms": [
+            "如何进"
+          ],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 1,
+        "llm_intent_only_count": 1,
+        "recovered_constraint_count": 1,
+        "fallback_used": false,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "llm+strict_intent"
+        ],
+        "llm_attempts": 2,
+        "llm_error": "ValueError: LLM 输出无法解析为 JSON:\n"
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:6487b7797fb211470f2a9baa9ae1c7da9cc09148": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:fef56a3df0db5ad6631f94ac84790ea365e3f9f7": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:b5e5601631b31fd6c3716ca51ae3ce12316ac2b4": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "演员"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [
+            "博士"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "object_identity.scenic_type",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "演员"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [
+            "博士"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 2,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:9011698a8f6ecc3e755f032a95ce0cae4bb37b06": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "加格达奇",
+            "宾馆",
+            "酒店"
+          ],
+          "intent_terms": [
+            "住宿"
+          ],
+          "match": "ANY",
+          "source": "llm",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "operation.opening_hours",
+          "labels": [],
+          "intent_terms": [
+            "推荐",
+            "评价"
+          ],
+          "match": "ANY",
+          "source": "llm",
+          "confidence": 0.55,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "酒店",
+            "宾馆",
+            "住宿"
+          ],
+          "intent_terms": [
+            "住宿"
+          ],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "ticket_access.ticketing",
+          "labels": [
+            "酒店"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "酒店",
+            "宾馆"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "酒店",
+            "住宿"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "加格达奇",
+            "宾馆",
+            "酒店"
+          ],
+          "intent_terms": [
+            "住宿"
+          ],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "operation.opening_hours",
+          "labels": [],
+          "intent_terms": [
+            "推荐",
+            "评价"
+          ],
+          "required": true
+        },
+        {
+          "slot_id": "slot_3",
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "酒店",
+            "宾馆",
+            "住宿"
+          ],
+          "intent_terms": [
+            "住宿"
+          ],
+          "required": true
+        },
+        {
+          "slot_id": "slot_4",
+          "dimension_id": "ticket_access.ticketing",
+          "labels": [
+            "酒店"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_5",
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "酒店",
+            "宾馆"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_6",
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "酒店",
+            "住宿"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 2,
+        "llm_intent_only_count": 1,
+        "recovered_constraint_count": 6,
+        "fallback_used": false,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "llm"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:ae56d32fdb910899b685c23ef60c0e04c99bd409": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "温泉蛋"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "温泉"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "landscape.attractions",
+          "labels": [
+            "温泉"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "landscape.feature_composition",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "温泉蛋"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "温泉"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_3",
+          "dimension_id": "landscape.attractions",
+          "labels": [
+            "温泉"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 3,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:72c41b306c2b7fa9fdbc51835166d9e1622afbc9": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "手机",
+            "其他"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "object_identity.scenic_type",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "手机",
+            "其他"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:d7f565c57eaf634207ce426a98cfe3541f27cb2f": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "均瑶集团"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "公司"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "object_identity.entity_name",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "均瑶集团"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "公司"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 2,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:6d1dcb2c143a21e62bf793c6c8aac345f23c47f0": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:6640984b4564907de143315ee9a87a78bb241ee3": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "visitor_service.visitor_guidance",
+          "labels": [
+            "摄影"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "visitor_service.visitor_guidance",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "visitor_service.visitor_guidance",
+          "labels": [
+            "摄影"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:9de495f31196bf89f4030b273859c4254a1ec963": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [],
+          "intent_terms": [
+            "信仰"
+          ],
+          "match": "ANY",
+          "source": "intent_cue",
+          "confidence": 0.55,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [],
+          "intent_terms": [
+            "信仰"
+          ],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "intent_cue"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:0897be71ea5bba65e3a380971de346cd8020b265": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "Surface"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "object_identity.entity_name",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "Surface"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:64709e647fc6b92ca182a15946b4b35b23103210": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "visitor_service.visitor_guidance",
+          "labels": [
+            "关闭"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "ticket_access.transportation",
+          "labels": [
+            "微信"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "visitor_service.visitor_guidance",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "visitor_service.visitor_guidance",
+          "labels": [
+            "关闭"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "ticket_access.transportation",
+          "labels": [
+            "微信"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 2,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:c462d99ffd6a4113e2dbbfa97188c134de9dd571": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:379373daf2596fd843b1dae4833161d4b80bdb32": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "乌龟"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "object_identity.entity_name",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "乌龟"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:a2a6f3276180f505247f7b523891a96700148d62": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "淘宝"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        }
+      ],
+      "routing": {
+        "main_dimension": "object_identity.entity_name",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "淘宝"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:9a61f51730cc4fda934536192379031fc9051714": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "电脑"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "电脑"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "visitor_service.facilities",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "visitor_service.facilities",
+          "labels": [
+            "电脑"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "电脑"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 2,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:29dd7f7f63c39661aa89fbbc4f18ff4e8f5c7862": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "landscape.attractions",
+          "labels": [
+            "花千骨"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [
+            "花千骨",
+            "白子画"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "神器"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "landscape.attractions",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "landscape.attractions",
+          "labels": [
+            "花千骨"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [
+            "花千骨",
+            "白子画"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_3",
+          "dimension_id": "object_identity.scenic_type",
+          "labels": [
+            "神器"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 3,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:72dd07761990d0af812fbd7fd896a9c2d1cb6d36": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:5ee8aa8a0a8fd91677e61fdac452d781a257c989": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "visitor_service.visitor_guidance",
+          "labels": [
+            "晒太阳"
+          ],
+          "intent_terms": [
+            "注意事项"
+          ],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "visitor_service.visitor_guidance",
+          "labels": [
+            "晒太阳"
+          ],
+          "intent_terms": [
+            "注意事项"
+          ],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:ee5dc1b4b074659fed91c4b642021f2dde802b56": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:c709bc724e704c56f859d086a76d440fefc586fe": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "淘宝"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "淘宝"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:f52a75460c8c791e32d83907dcf09836c2f1f73e": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "关羽",
+            "解州",
+            "解县"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "llm+lexical_label+strict_intent",
+          "confidence": 1.0,
+          "role": "main"
+        },
+        {
+          "dimension_id": "location.region",
+          "labels": [
+            "河东郡",
+            "解县"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "llm+lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "location.location_detail",
+          "labels": [
+            "解州"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "llm",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "history_culture.history",
+          "labels": [
+            "故乡",
+            "籍贯",
+            "出生地",
+            "故里"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "llm",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "生地"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        },
+        {
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [
+            "关羽"
+          ],
+          "intent_terms": [],
+          "match": "ANY",
+          "source": "lexical_label",
+          "confidence": 1.0,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "object_identity.entity_name",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "object_identity.entity_name",
+          "labels": [
+            "关羽",
+            "解州",
+            "解县"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_2",
+          "dimension_id": "location.region",
+          "labels": [
+            "河东郡",
+            "解县"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_3",
+          "dimension_id": "location.location_detail",
+          "labels": [
+            "解州"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_4",
+          "dimension_id": "history_culture.history",
+          "labels": [
+            "故乡",
+            "籍贯",
+            "出生地",
+            "故里"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_5",
+          "dimension_id": "landscape.feature_composition",
+          "labels": [
+            "生地"
+          ],
+          "intent_terms": [],
+          "required": true
+        },
+        {
+          "slot_id": "slot_6",
+          "dimension_id": "history_culture.cultural_significance",
+          "labels": [
+            "关羽"
+          ],
+          "intent_terms": [],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 4,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 6,
+        "fallback_used": false,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "lexical_label",
+          "llm",
+          "llm+lexical_label",
+          "llm+lexical_label+strict_intent"
+        ],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:e3cc294aaee4fdb932d7d78e3ba653780bed9481": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:2263b66bcc5be20e7889a99f23efbd5f57187c34": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [
+        {
+          "dimension_id": "ticket_access.ticketing",
+          "labels": [],
+          "intent_terms": [
+            "多少钱"
+          ],
+          "match": "ANY",
+          "source": "intent_cue",
+          "confidence": 0.55,
+          "role": "auxiliary"
+        }
+      ],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [
+        {
+          "slot_id": "slot_1",
+          "dimension_id": "ticket_access.ticketing",
+          "labels": [],
+          "intent_terms": [
+            "多少钱"
+          ],
+          "required": true
+        }
+      ],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 1,
+        "fallback_used": true,
+        "deterministic_enrichment_used": true,
+        "recovery_sources": [
+          "intent_cue"
+        ],
+        "llm_attempts": 2,
+        "llm_error": "ValueError: LLM 输出无法解析为 JSON:\n"
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:94c63a2b2ce92c0b1f2e49ba1398998991fa5111": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:86a6cdf5b26e3b5b7900abc9dd5bf647197ed964": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:36ee19ff809e1eb777b638e6ec1018c49bbbfdc8": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:f272f2e5220e39d5271ccfdacf8b891b0ac402b3": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""
+      }
+    },
+    "2.0:query_parser_4.4:e2160a529e67:online:79975b01d9c387e40a973799b516cef1a1e28e8c": {
+      "schema_version": "2.0",
+      "parser_version": "4.4",
+      "constraints": [],
+      "routing": {
+        "main_dimension": "",
+        "secondary_dimensions": []
+      },
+      "required_slots": [],
+      "diagnostics": {
+        "llm_constraint_count": 0,
+        "llm_intent_only_count": 0,
+        "recovered_constraint_count": 0,
+        "fallback_used": true,
+        "deterministic_enrichment_used": false,
+        "recovery_sources": [],
+        "llm_attempts": 1,
+        "llm_error": ""

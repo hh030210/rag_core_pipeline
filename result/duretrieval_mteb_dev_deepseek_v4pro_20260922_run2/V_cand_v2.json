@@ -1,0 +1,270 @@
+{
+  "schema_version": "2.0",
+  "dimensions": [
+    {
+      "id": "entity_identity",
+      "name": "对象与身份",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景区/场所的核心定性与类别归属",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "name_alias",
+      "name": "名称与别称",
+      "parent_id": "entity_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "官方名称、旧称、简称与俗称",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "category_type",
+      "name": "类型与等级",
+      "parent_id": "entity_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "景区类别、质量等级与行业评定",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "subject_tag",
+      "name": "主题标签",
+      "parent_id": "entity_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "文化主题、活动主题或功能主题",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "geo_location",
+      "name": "地理位置",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "空间位置与行政归属",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "admin_region",
+      "name": "所属行政区",
+      "parent_id": "geo_location",
+      "level": 2,
+      "indexable": true,
+      "description": "省/市/区县行政区划",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "specific_address",
+      "name": "具体地址",
+      "parent_id": "geo_location",
+      "level": 2,
+      "indexable": true,
+      "description": "街道门牌、村组或地理参照",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "spatial_relation",
+      "name": "周边区位",
+      "parent_id": "geo_location",
+      "level": 2,
+      "indexable": true,
+      "description": "坐落方位、与自然地标或交通枢纽的相对位置",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "culture_history",
+      "name": "历史文化",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "历史沿革与文化内涵",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "historical_period",
+      "name": "所属年代",
+      "parent_id": "culture_history",
+      "level": 2,
+      "indexable": true,
+      "description": "始建朝代、关键历史时段或考古年代",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "historical_event",
+      "name": "历史事件",
+      "parent_id": "culture_history",
+      "level": 2,
+      "indexable": true,
+      "description": "关联战役、典故、重建或保护事件",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "cultural_connotation",
+      "name": "文化内涵",
+      "parent_id": "culture_history",
+      "level": 2,
+      "indexable": true,
+      "description": "宗教、民俗、艺术或文学关联",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "scenic_feature",
+      "name": "景观特色",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景观构成与特色风貌",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "landscape_composition",
+      "name": "景观构成",
+      "parent_id": "scenic_feature",
+      "level": 2,
+      "indexable": true,
+      "description": "山水、植被、建筑群落等景观元素",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "highlight_view",
+      "name": "核心景观",
+      "parent_id": "scenic_feature",
+      "level": 2,
+      "indexable": true,
+      "description": "标志性景点、最佳观景点或特色片区",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "seasonal_feature",
+      "name": "季节性特征",
+      "parent_id": "scenic_feature",
+      "level": 2,
+      "indexable": true,
+      "description": "季相变化、花期、红叶季、冰雪季等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "ticketing_rules",
+      "name": "票务规则",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "门票销售与使用规则",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "price_type",
+      "name": "票价类型",
+      "parent_id": "ticketing_rules",
+      "level": 2,
+      "indexable": true,
+      "description": "全价、优惠、联票、套票等价格种类",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "purchase_method",
+      "name": "购票方式",
+      "parent_id": "ticketing_rules",
+      "level": 2,
+      "indexable": true,
+      "description": "线上、现场、预约、实名制等渠道",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "validity_policy",
+      "name": "使用政策",
+      "parent_id": "ticketing_rules",
+      "level": 2,
+      "indexable": true,
+      "description": "有效期、退改签、免票或折扣条件",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "operation_service",
+      "name": "开放运营与游客服务",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "开放运营与服务设施",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "open_schedule",
+      "name": "开放时段",
+      "parent_id": "operation_service",
+      "level": 2,
+      "indexable": true,
+      "description": "日常、节假日及淡旺季开放时间",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "traffic_access",
+      "name": "交通方式",
+      "parent_id": "operation_service",
+      "level": 2,
+      "indexable": true,
+      "description": "自驾、公交、轨道、水运等抵达方式",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "facility_service",
+      "name": "设施服务",
+      "parent_id": "operation_service",
+      "level": 2,
+      "indexable": true,
+      "description": "停车、餐饮、导览、无障碍等配套",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    }
+  ],
+  "generation_method": "code_jyx_llm_v2"
+}
