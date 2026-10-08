@@ -61,6 +61,7 @@
     .mini-state { border-radius: 999px; padding: 2px 7px; background: #edf1f3; color: #687780; }
     .mini-state.hit { background: var(--teal-soft); color: var(--teal); }
     .mini-state.lost { background: var(--red-soft); color: var(--red); }
+    .mini-state.unrated { background: #edf1f3; color: #687780; }
     .detail { min-width: 0; padding: 19px; }
     .detail-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
     .question-title { margin: 0; font-size: 20px; line-height: 1.45; }
@@ -205,7 +206,7 @@
       const baselineHit = [...gold].some(id => baseline5.has(id));
       const deepseekHit = [...gold].some(id => deepseek5.has(id));
       const answerabilityHit = [...gold].some(id => answerability5.has(id));
-      return { gold, sem5, dim5, baseline5, deepseek5, answerability5, semHit, dimHit, baselineHit, deepseekHit, answerabilityHit };
+      return { gold, evaluated: gold.size > 0, sem5, dim5, baseline5, deepseek5, answerability5, semHit, dimHit, baselineHit, deepseekHit, answerabilityHit };
     }
     function el(tag, className, text) {
       const node = document.createElement(tag);
@@ -219,16 +220,22 @@
       return box;
     }
     function renderMetrics() {
-      const stats = rows.map(rowState);
+      const stats = rows.map(rowState).filter(s => s.evaluated);
+      if (!stats.length) {
+        const boxes = [metric('检索快照', rows.length), metric('Gold 评测', '未提供')];
+        $('#metrics').replaceChildren(...boxes);
+        return;
+      }
       const count = (key) => stats.filter(s => s[key]).length;
-      const boxes = [metric('问答数量', rows.length)];
+      const boxes = [metric('Gold 评测问答量', `${stats.length} / ${rows.length}`)];
       routeStats.filter(([key]) => hasRoute(key)).forEach(([, label, stateKey]) => {
-        boxes.push(metric(label, `${count(stateKey)} / ${rows.length}`));
+        boxes.push(metric(label, `${count(stateKey)} / ${stats.length}`));
       });
       $('#metrics').replaceChildren(...boxes);
     }
     function passes(row, value) {
       const s = rowState(row);
+      if (!s.evaluated && value !== 'all') return false;
       if (value === 'baseline-miss') return !s.baselineHit;
       if (value === 'deepseek-miss') return !s.deepseekHit;
       if (value === 'answerability-miss') return !s.answerabilityHit;
@@ -260,10 +267,12 @@
         const title = el('div', 'question-item-title', row.question || '(空问题)');
         const meta = el('div', 'question-item-meta');
         meta.append(el('span', '', `#${row.dataset_index ?? row.id ?? index + 1}`));
-        const status = hasRoute('answerability_results')
+        const status = !s.evaluated
+          ? { evaluated: false, label: 'Fusion snapshot' }
+          : hasRoute('answerability_results')
           ? { hit: s.answerabilityHit, label: 'Answerability' }
           : { hit: s.baselineHit, label: '融合基线' };
-        meta.append(el('span', `mini-state ${status.hit ? 'hit' : 'lost'}`, `${status.label} ${status.hit ? '命中' : '未命中'}`));
+        meta.append(el('span', `mini-state ${status.evaluated === false ? 'unrated' : status.hit ? 'hit' : 'lost'}`, status.evaluated === false ? status.label : `${status.label} ${status.hit ? '命中' : '未命中'}`));
         button.append(title, meta);
         button.addEventListener('click', () => { activeIndex = index; renderList(); renderDetail(); });
         return button;
@@ -277,7 +286,7 @@
       panel.append(el('h3', 'dimension-panel-title', '问题维度标签'));
       const dimensions = row.query_dimensions || [];
       if (!dimensions.length) {
-        panel.append(el('div', 'dimension-note', '评测结果没有保存该问题的维度解析。'));
+        panel.append(el('div', 'dimension-note', '当前数据没有保存该问题的维度解析。'));
         return panel;
       }
       const grid = el('div', 'query-dimension-grid');
@@ -511,7 +520,7 @@
       const head = el('div', 'detail-top');
       const intro = document.createElement('div');
       intro.append(el('h2', 'question-title', row.question || '(空问题)'));
-      intro.append(el('div', 'query-line', `数据集行 ${row.dataset_index ?? '—'} · ID ${row.id || '—'}${row.retrieval_query ? ` · 检索 query：${row.retrieval_query}` : ''}`));
+      intro.append(el('div', 'query-line', `${row.source_type === 'fusion_engine' ? 'Fusion 快照' : '数据集行'} ${row.dataset_index ?? '—'} · ID ${row.id || '—'}${row.retrieval_query ? ` · 检索 query：${row.retrieval_query}` : ''}${row.created_at ? ` · ${row.created_at}` : ''}`));
       const nav = el('div', 'navigation');
       const prev = el('button', 'button', '← 上一题'); prev.type = 'button'; prev.disabled = activeIndex <= 0;
       prev.addEventListener('click', () => { activeIndex--; renderList(); renderDetail(); });
@@ -521,17 +530,22 @@
       const badges = el('div', 'badges');
       routeStats.filter(([key]) => hasRoute(key)).forEach(([, label, stateKey]) => {
         const shortLabel = label.replace(' 命中', '');
-        badges.append(el('span', `badge ${state[stateKey] ? 'hit' : 'miss'}`, `${shortLabel} ${state[stateKey] ? '命中' : '未命中'}`));
+        const result = state.evaluated ? (state[stateKey] ? '命中' : '未命中') : '未评测';
+        badges.append(el('span', `badge${state.evaluated ? (state[stateKey] ? ' hit' : ' miss') : ''}`, `${shortLabel} ${result}`));
       });
-      badges.append(el('span', 'badge gold', `Golden ${state.gold.size} 个`));
+      badges.append(el('span', `badge${state.evaluated ? ' gold' : ''}`, state.evaluated ? `Golden ${state.gold.size} 个` : 'Gold 未提供'));
       const queryDimensions = renderQuestionDimensions(row);
       const routes = el('div', 'routes');
       routeData(row).forEach(route => routes.append(renderRoute(row, route, state)));
       const foot = el('div', 'detail-foot');
       foot.append(el('span', 'chunk-hint', '点击任意 chunk 编号可查看完整内容。'));
-      foot.append(el('span', '', '候选来自离线 JSONL；本页不触发检索请求。'));
-      const goldLegend = el('span', ''); goldLegend.append(el('i', 'legend-dot'), document.createTextNode('Golden chunk'));
-      foot.append(goldLegend);
+      foot.append(el('span', '', row.source_type === 'fusion_engine'
+        ? '候选来自 fusion_engine 输出快照；本页不触发检索请求。'
+        : '候选来自离线评测 JSONL；本页不触发检索请求。'));
+      if (state.evaluated) {
+        const goldLegend = el('span', ''); goldLegend.append(el('i', 'legend-dot'), document.createTextNode('Golden chunk'));
+        foot.append(goldLegend);
+      }
       root.replaceChildren(head, badges, queryDimensions, routes, foot);
     }
     function setShowAll() {
@@ -561,9 +575,12 @@
         }
         if (!Array.isArray(rows) || !rows.length) throw new Error('fusion_routes.json 为空或格式不正确');
         const rerankAvailable = hasRoute('deepseek_results') || hasRoute('answerability_results');
-        $('#subtitle').textContent = rerankAvailable
-          ? '语义、维度与融合检索对比，包含当前数据提供的 rerank 路线；点击 chunk 编号查看正文。'
-          : '语义、维度与融合检索对比；当前原始数据未提供 rerank 结果。点击 chunk 编号查看正文。';
+        const fusionSnapshots = rows.some(row => row.source_type === 'fusion_engine');
+        $('#subtitle').textContent = fusionSnapshots
+          ? '数据直接来自 fusion_engine 检索快照；快照不含 Gold 标注，因此不计算命中率。点击 chunk 编号查看正文。'
+          : rerankAvailable
+            ? '语义、维度与融合检索对比，包含当前数据提供的 rerank 路线；点击 chunk 编号查看正文。'
+            : '语义、维度与融合检索对比；当前原始数据未提供 rerank 结果。点击 chunk 编号查看正文。';
         const unavailableFilters = {
           'baseline-miss': 'baseline_results',
           'deepseek-miss': 'deepseek_results',
@@ -573,7 +590,8 @@
         };
         [...$('#filter').options].forEach(option => {
           const routeKey = unavailableFilters[option.value];
-          if (routeKey) option.disabled = !hasRoute(routeKey);
+          if (routeKey) option.disabled = !hasRoute(routeKey) || !rows.some(row => (row.gold_chunk_ids || []).length > 0);
+          if (option.value === 'both') option.disabled = !rows.some(row => (row.gold_chunk_ids || []).length > 0);
         });
         renderMetrics();
         $('#search').addEventListener('input', applyFilters);

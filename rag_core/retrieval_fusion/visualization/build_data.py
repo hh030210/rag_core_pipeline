@@ -12,6 +12,7 @@ from typing import Any, Iterable
 VIEWER_DIR = Path(__file__).resolve().parent
 REPO_ROOT = VIEWER_DIR.parents[2]
 DEFAULT_RUN_DIR = REPO_ROOT / "result" / "real_merged7_deepseek_v4pro_rerank_20260920_run1"
+DEFAULT_FUSION_OUTPUT_DIR = VIEWER_DIR.parent / "fusion_engine" / "output"
 
 ROUTE_FIELDS = {
     "semantic_results": "semantic",
@@ -101,6 +102,15 @@ def find_default_run_dir() -> Path:
     if complete_runs:
         return max(complete_runs, key=lambda item: item[0])[1]
     return DEFAULT_RUN_DIR
+
+
+def _fusion_snapshot_files(source: str | Path) -> list[Path]:
+    path = _resolve_path(source)
+    if path.is_file():
+        return [path]
+    if not path.is_dir():
+        return []
+    return sorted(path.glob("retrieval_fusion_*.json"))
 
 
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -420,6 +430,121 @@ def _write_json_atomic(path: Path, value: Any) -> None:
     temporary.replace(path)
 
 
+def _build_from_fusion_output(
+    source: Path,
+    snapshot_files: list[Path],
+    chunks_path: str | Path | None,
+    tags_path: str | Path | None,
+    dimension_metadata_path: str | Path | None,
+) -> dict[str, Any]:
+    artifact_root = source if source.is_dir() else source.parent
+    tags_source = _discover_run_artifact(artifact_root, "tags_output_v2.json", tags_path)
+    dimension_metadata_source = _discover_run_artifact(
+        artifact_root, "dimension_metadata_v2.json", dimension_metadata_path
+    )
+    dimension_metadata = _load_dimension_metadata(dimension_metadata_source)
+    chunk_dimension_tags = _load_chunk_dimension_tags(tags_source, dimension_metadata)
+    chunk_contents = _load_chunks(_resolve_path(chunks_path)) if chunks_path else {}
+
+    output_rows: list[dict[str, Any]] = []
+    candidate_ids: set[str] = set()
+    available_routes: set[str] = set()
+    for index, path in enumerate(snapshot_files, start=1):
+        snapshot = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(snapshot, dict):
+            raise ValueError(f"Fusion snapshot must contain a JSON object: {path}")
+
+        try:
+            top_k = int(snapshot["top_k"]) if snapshot.get("top_k") is not None else 0
+        except (TypeError, ValueError):
+            top_k = 0
+        semantic_source = _as_items(
+            snapshot.get("semantic_candidates", snapshot.get("semantic_results", [])),
+            "semantic_candidates",
+        )
+        dimension_source = _as_items(
+            snapshot.get("dimension_candidates", snapshot.get("dimension_results", [])),
+            "dimension_candidates",
+        )
+        fusion_source = _as_items(
+            snapshot.get("fusion_results") or snapshot.get("fusion_candidates", []),
+            "fusion_results",
+        )
+        if top_k > 0:
+            semantic_source = semantic_source[:top_k]
+            dimension_source = dimension_source[:top_k]
+            fusion_source = fusion_source[:top_k]
+        semantic = _compact_route(semantic_source, "semantic")
+        dimension = _compact_route(dimension_source, "dimension")
+        for rank, item in enumerate(fusion_source, start=1):
+            item["rank"] = rank
+        fusion = _compact_route(fusion_source, "fusion")
+
+        routes = {
+            "semantic_results": semantic,
+            "dimension_results": dimension,
+            "fusion_base_results": fusion,
+            "baseline_results": fusion,
+            "deepseek_results": [],
+            "answerability_results": [],
+        }
+        for route_name, route_items in routes.items():
+            if route_items:
+                available_routes.add(route_name)
+            for item in route_items:
+                candidate_ids.add(item["chunk_id"])
+                _add_missing_content(chunk_contents, (item,))
+
+        query = snapshot.get("query") or snapshot.get("retrieval_query") or snapshot.get("question")
+        row_id = str(snapshot.get("id") or path.stem)
+        output_rows.append(
+            {
+                "dataset_index": index,
+                "id": row_id,
+                "question": str(query or f"Fusion snapshot {path.stem}"),
+                "retrieval_query": str(query or ""),
+                "query_dimensions": _query_dimensions(snapshot, dimension_metadata),
+                "source_type": "fusion_engine",
+                "source_run": path.stem,
+                "created_at": snapshot.get("created_at"),
+                "dim_alpha": snapshot.get("dim_alpha"),
+                "gold_chunk_ids": [],
+                "semantic_count": len(semantic),
+                "semantic_chunk_ids": [item["chunk_id"] for item in semantic],
+                "semantic_results": semantic,
+                "dimension_count": len(dimension),
+                "dimension_chunk_ids": [item["chunk_id"] for item in dimension],
+                "dimension_results": dimension,
+                "fusion_base_results": fusion,
+                "baseline_strategy": "fusion_engine output snapshot",
+                "baseline_results": fusion,
+                "deepseek_results": [],
+                "answerability_results": [],
+            }
+        )
+
+    if not output_rows:
+        raise ValueError(f"No fusion snapshots found in {source}")
+    _write_json_atomic(VIEWER_DIR / "fusion_routes.json", output_rows)
+    _write_json_atomic(VIEWER_DIR / "rerank_chunk_contents.json", chunk_contents)
+    _write_json_atomic(VIEWER_DIR / "chunk_dimension_tags.json", chunk_dimension_tags)
+    return {
+        "source_type": "fusion_engine",
+        "fusion_output": source,
+        "fusion_snapshots": len(snapshot_files),
+        "evaluation": None,
+        "chunks": _resolve_path(chunks_path) if chunks_path else None,
+        "tags": tags_source,
+        "dimension_metadata": dimension_metadata_source,
+        "question_count": len(output_rows),
+        "chunk_count": len(chunk_contents),
+        "tagged_chunk_count": len(chunk_dimension_tags),
+        "candidate_chunk_count": len(candidate_ids),
+        "available_routes": sorted(available_routes),
+        "rerank_input": None,
+    }
+
+
 def build_viewer_data(
     run_dir: str | Path | None = None,
     evaluation_path: str | Path | None = None,
@@ -427,7 +552,24 @@ def build_viewer_data(
     rerank_path: str | Path | None = None,
     tags_path: str | Path | None = None,
     dimension_metadata_path: str | Path | None = None,
+    fusion_output_path: str | Path | None = None,
 ) -> dict[str, Any]:
+    fusion_source = _resolve_path(fusion_output_path) if fusion_output_path else DEFAULT_FUSION_OUTPUT_DIR
+    snapshots = _fusion_snapshot_files(fusion_source)
+    use_fusion_output = fusion_output_path is not None or (
+        run_dir is None and evaluation_path is None and rerank_path is None and bool(snapshots)
+    )
+    if use_fusion_output:
+        if not snapshots:
+            raise FileNotFoundError(f"No retrieval_fusion_*.json snapshots found in {fusion_source}")
+        return _build_from_fusion_output(
+            fusion_source,
+            snapshots,
+            chunks_path,
+            tags_path,
+            dimension_metadata_path,
+        )
+
     run_dir = find_default_run_dir() if run_dir is None else _resolve_path(run_dir)
     evaluation, chunks = resolve_sources(run_dir, evaluation_path, chunks_path)
     tags_source = _discover_run_artifact(run_dir, "tags_output_v2.json", tags_path)
@@ -516,6 +658,8 @@ def build_viewer_data(
     _write_json_atomic(VIEWER_DIR / "rerank_chunk_contents.json", chunk_contents)
     _write_json_atomic(VIEWER_DIR / "chunk_dimension_tags.json", chunk_dimension_tags)
     return {
+        "source_type": "evaluation",
+        "fusion_output": None,
         "evaluation": evaluation,
         "chunks": chunks,
         "tags": tags_source,
@@ -533,10 +677,14 @@ def add_source_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--run-dir",
         default=None,
-        help="Run directory containing evaluation results and chunk data (default: newest complete run under runs/)",
+        help="Use evaluation JSONL and chunk data from this run directory (overrides automatic fusion snapshot selection)",
     )
     parser.add_argument("--evaluation", help="Explicit evaluation results.jsonl path")
     parser.add_argument("--chunks", help="Explicit chunk corpus JSON path")
+    parser.add_argument(
+        "--fusion-output",
+        help="Fusion snapshot JSON file or output directory (default: prefer fusion_engine/output when snapshots exist)",
+    )
     parser.add_argument("--tags", help="Optional tags_output_v2.json path for chunk dimension labels")
     parser.add_argument(
         "--dimension-metadata",
@@ -559,6 +707,7 @@ def main() -> int:
         args.rerank_results,
         args.tags,
         args.dimension_metadata,
+        args.fusion_output,
     )
     print(f"Updated {VIEWER_DIR / 'fusion_routes.json'}")
     print(f"Updated {VIEWER_DIR / 'rerank_chunk_contents.json'}")

@@ -22,6 +22,7 @@ def main() -> int:
         args.rerank_results,
         args.tags,
         args.dimension_metadata,
+        args.fusion_output,
     )
     handler = functools.partial(SimpleHTTPRequestHandler, directory=str(VIEWER_DIR))
 
@@ -36,8 +37,12 @@ def main() -> int:
         server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
 
     url = f"http://127.0.0.1:{server.server_port}/index.html"
-    print(f"Updated viewer data from: {result['evaluation']}")
-    print(f"Chunk source: {result['chunks']}")
+    if result["source_type"] == "fusion_engine":
+        print(f"Updated viewer data from {result['fusion_snapshots']} fusion snapshot(s): {result['fusion_output']}")
+        print("Gold labels are not included in fusion snapshots; hit-rate metrics are unavailable.")
+    else:
+        print(f"Updated viewer data from evaluation: {result['evaluation']}")
+    print(f"Chunk source: {result['chunks'] or 'embedded in fusion snapshots'}")
     print(f"Chunk dimension tags: {result['tags'] or 'not found'}")
     print(f"Questions: {result['question_count']}; candidate chunks: {result['candidate_chunk_count']}")
     print("Available routes: " + ", ".join(result["available_routes"]))

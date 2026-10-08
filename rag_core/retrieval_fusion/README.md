@@ -6,6 +6,8 @@ Fusion retrieval code, experiment output, and its visualization assets are group
 - `fusion_engine/output/` stores one timestamped JSON snapshot per fusion call.
 - `visualization/` contains the standalone retrieval comparison viewer and its bundled data.
 
+The viewer prefers snapshots from `fusion_engine/output/` when any exist. Each retrieval call writes its query and candidate routes there. These snapshots have no gold labels; use `visualization/start.bat --run-dir <run>` to view evaluation results and hit rates instead.
+
 Run the viewer from any working directory with:
 
 ```bat

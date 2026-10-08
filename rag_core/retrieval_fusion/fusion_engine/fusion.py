@@ -16,6 +16,8 @@ def _save_fusion_snapshot(
     *,
     dim_alpha: float,
     top_k: int,
+    query: str | None = None,
+    query_analysis: Dict[str, Any] | None = None,
 ) -> Path:
     """Save one complete retrieval/fusion result under the project output dir."""
     output_dir = Path(__file__).resolve().parent / "output"
@@ -32,6 +34,10 @@ def _save_fusion_snapshot(
         "fusion_candidates": fusion_candidates,
         "fusion_results": fusion_results,
     }
+    if query is not None:
+        snapshot["query"] = query
+    if query_analysis is not None:
+        snapshot["query_analysis"] = query_analysis
     serialized = json.dumps(snapshot, ensure_ascii=False, indent=2)
 
     suffix = 0
@@ -67,6 +73,8 @@ def fuse_retrieval_results(
     *,
     dim_alpha: float,
     top_k: int,
+    query: str | None = None,
+    query_analysis: Dict[str, Any] | None = None,
 ) -> Dict[str, List[Dict[str, Any]]]:
     """Normalize two route result lists and return their weighted fusion.
 
@@ -139,5 +147,7 @@ def fuse_retrieval_results(
         result["fusion_results"],
         dim_alpha=dim_alpha,
         top_k=top_k,
+        query=query,
+        query_analysis=query_analysis,
     )
     return result

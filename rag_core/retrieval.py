@@ -769,6 +769,8 @@ class Retriever:
             dimension,
             dim_alpha=self.settings.dim_alpha,
             top_k=top_k,
+            query=query,
+            query_analysis=analysis,
         )
         return {
             "query": query, "query_analysis": analysis,
