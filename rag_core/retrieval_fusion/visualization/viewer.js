@@ -11,6 +11,12 @@ let selectedName = null;
 let showAll = false;
 const detailCache = new Map();
 let pendingDetails = new Map();
+let dataMode = 'static';
+async function fetchJson(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+  return response.json();
+}
 function readDetail(name) {
   const cachedPayload = window.RETRIEVAL_FUSION_DETAILS?.[name];
   if (cachedPayload) return Promise.resolve(cachedPayload);
@@ -318,7 +324,9 @@ async function loadDetail() {
   if (detailCache.has(name)) { renderDetail(detailCache.get(name), row); return; }
   root.replaceChildren(el('div', 'empty', '正在读取所选文件夹中的快照…'));
   try {
-    const detail = await readDetail(name);
+    const detail = dataMode === 'api'
+      ? await fetchJson(`/api/question?name=${encodeURIComponent(name)}`)
+      : await readDetail(name);
     if (detailCache.size >= 8) detailCache.delete(detailCache.keys().next().value);
     detailCache.set(name, detail);
     if (!comparisonsByName.has(name) && detail.query) {
@@ -340,17 +348,32 @@ function bindInteractions() {
   });
   $('#chunk-dialog-close').addEventListener('click', () => $('#chunk-dialog').close());
 }
-function start() {
+async function start() {
   bindInteractions();
-  const source = window.RETRIEVAL_FUSION_INDEX;
+  let source = null;
+  if (window.location.protocol !== 'file:') {
+    try {
+      const apiSource = await fetchJson('/api/questions');
+      if (Array.isArray(apiSource?.items) && apiSource.items.length) {
+        source = apiSource;
+        dataMode = 'api';
+      }
+    } catch (_) {}
+  }
+  if (!source) {
+    source = window.RETRIEVAL_FUSION_INDEX;
+    dataMode = 'static';
+  }
   if (!Array.isArray(source?.items) || !source.items.length) {
-    $('#app').replaceChildren(el('div', 'error', '没有加载到静态快照数据，请运行 build_static_data.py 生成数据文件。'));
+    $('#app').replaceChildren(el('div', 'error', '没有加载到快照数据；请检查静态数据包或本地快照目录。'));
     return;
   }
   rows = source.items;
-  $('#subtitle').textContent = '静态快照已内置在页面目录中；点击 chunk 编号查看正文。';
+  $('#subtitle').textContent = dataMode === 'api'
+    ? '页面按需读取 fusion_engine/output 与 output_new；点击 chunk 编号查看正文。'
+    : '静态快照已内置在页面目录中；点击 chunk 编号查看正文。';
   renderMetrics();
-  renderEvaluation(source.evaluation);
+  if (source.evaluation) renderEvaluation(source.evaluation);
   renderNotes();
   const hasGold = rows.some(row => state(row).mapped);
   for (const option of $('#filter').options) if (option.value !== 'all') option.disabled = !hasGold;

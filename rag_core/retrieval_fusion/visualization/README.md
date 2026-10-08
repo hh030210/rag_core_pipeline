@@ -34,3 +34,13 @@ F = S* + λ * L
 每题展示快照中保存的头部原始分数、最大断层及位置、词面权重、维度权重和缺失语义估计值。新融合候选卡片区分原始语义分与估计分，并展示词面、维度的实际分数贡献。
 
 badcase 统计与筛选统一以 `output` 原融合为基准，通过 `output_new/comparison.jsonl` 动态计算，不以之前的离线实验结果为基准。
+
+## 本地动态读取（可选）
+
+若服务器上已有 `fusion_engine/output/` 和 `fusion_engine/output_new/` 快照，可启动只读服务直接读取这些目录。HTTP 页面会优先使用服务端接口；直接打开 `index.html` 时使用仓库内的静态快照包。
+
+```bash
+python3 rag_core/retrieval_fusion/visualization/serve_ui.py --no-browser
+```
+
+服务默认监听 `127.0.0.1:8765`。远端主机可通过 SSH 转发该端口后访问 `http://127.0.0.1:8765/index.html`。需要更换快照目录时可传入 `--fusion-output` 和 `--fusion-output-new`。
