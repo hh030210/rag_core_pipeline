@@ -99,16 +99,22 @@ def evaluation_summary(paths: list[Path], old_dir: Path, new_dir: Path,
         ("Hit@1", "hit1"), ("Hit@5", "hit5"), ("Hit@10", "hit10"),
         ("MRR@10", "mrr10"), ("nDCG@5", "ndcg5"),
     ]
+    total_queries = len(paths)
     return {
+        "total_queries": total_queries,
         "mapped_queries": mapped,
-        "unmapped_queries": len(paths) - mapped,
+        "unmapped_queries": total_queries - mapped,
         "metrics": [
             {
                 "key": key,
                 "label": values["label"],
-                "scores": {
-                    metric: (values.get(source, 0.0) / mapped * 100 if mapped else 0.0)
-                    for metric, source in metrics
+                "hits": {
+                    metric: values.get(source, 0)
+                    for metric, source in metrics[:3]
+                },
+                "ranking_scores": {
+                    metric: (values.get(source, 0.0) / total_queries if total_queries else 0.0)
+                    for metric, source in metrics[3:]
                 },
             }
             for key, values in systems.items()

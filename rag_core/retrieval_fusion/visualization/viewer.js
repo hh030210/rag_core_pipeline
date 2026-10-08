@@ -10,13 +10,8 @@ let filtered = [];
 let selectedName = null;
 let showAll = false;
 const detailCache = new Map();
-
-async function fetchJson(url) {
-  const response = await fetch(url, { cache: 'no-store' });
-  const value = await response.json();
-  if (!response.ok) throw new Error(value.error || `HTTP ${response.status}`);
-  return value;
-}
+const detailLoads = new Map();
+let manifest = null;
 function isRank(rank, limit = 5) { return Number.isInteger(rank) && rank > 0 && rank <= limit; }
 function state(row) {
   const mapped = Number.isInteger(row.gold_count) && row.gold_count > 0;
@@ -33,17 +28,69 @@ function metric(label, value) {
   card.append(el('div', 'metric-label', label), el('div', 'metric-value', value));
   return card;
 }
-function renderMetrics() {
-  const mapped = rows.filter(row => state(row).mapped);
-  const count = key => mapped.length ? `${mapped.filter(row => state(row)[key]).length} / ${rows.length}` : '未标注';
+function renderMetrics(evaluation) {
+  const mapped = evaluation?.mapped_queries ?? rows.filter(row => state(row).mapped).length;
+  const unmapped = evaluation?.unmapped_queries ?? rows.length - mapped;
+  const total = evaluation?.total_queries ?? rows.length;
   $('#metrics').replaceChildren(
-    metric('融合快照', rows.length),
-    metric('Gold 已映射', `${mapped.length} / ${rows.length}`),
-    metric('语义 Top-5', `${count('semHit')}`),
-    metric('维度 Top-5', `${count('dimHit')}`),
-    metric('原融合 Top-5', `${count('oldHit')}`),
-    metric('新融合 Top-5', `${count('newHit')}`),
+    metric('融合快照', total),
+    metric('Gold 已映射', `${mapped} / ${total}`),
+    metric('未映射', unmapped),
   );
+}
+function renderEvaluation(evaluation) {
+  const panel = $('#evaluation-panel');
+  const metrics = ['Hit@1', 'Hit@5', 'Hit@10', 'MRR@10', 'nDCG@5'];
+  if (!evaluation?.metrics?.length) {
+    panel.hidden = true;
+    return;
+  }
+  const head = el('div', 'evaluation-head');
+  head.append(el('h2', '', '四路检索效果对比'));
+  const total = evaluation.total_queries ?? rows.length;
+  head.append(el(
+    'div',
+    'evaluation-note',
+    `Hit 显示命中条数（分母 ${evaluation.mapped_queries} 条有 Gold 映射的查询）；MRR@10 与 nDCG@5 按全部 ${total} 条快照计算。`,
+  ));
+  const table = el('table', 'evaluation-table');
+  const thead = document.createElement('thead');
+  const headerRow = document.createElement('tr');
+  headerRow.append(el('th', '', '检索路线'));
+  for (const label of metrics) headerRow.append(el('th', '', label));
+  thead.append(headerRow);
+  const tbody = document.createElement('tbody');
+  for (const row of evaluation.metrics) {
+    const tr = document.createElement('tr');
+    if (row.key === 'fusion_new') tr.className = 'is-new';
+    tr.append(el('th', '', row.label));
+    for (const label of metrics) {
+      const td = document.createElement('td');
+      if (label.startsWith('Hit@')) {
+        const count = row.hits?.[label] ?? (
+          typeof row.scores?.[label] === 'number'
+            ? Math.round(row.scores[label] * evaluation.mapped_queries / 100)
+            : null
+        );
+        td.textContent = Number.isInteger(count) ? `${count} / ${evaluation.mapped_queries}` : '—';
+      } else {
+        const legacyPercent = row.scores?.[label];
+        const value = row.ranking_scores?.[label] ?? (
+          typeof legacyPercent === 'number'
+            ? legacyPercent / 100 * evaluation.mapped_queries / total
+            : null
+        );
+        td.textContent = typeof value === 'number' ? value.toFixed(6) : '—';
+      }
+      tr.append(td);
+    }
+    tbody.append(tr);
+  }
+  table.append(thead, tbody);
+  const wrap = el('div', 'evaluation-table-wrap');
+  wrap.append(table);
+  panel.replaceChildren(head, wrap);
+  panel.hidden = false;
 }
 function renderNotes() {
   const mapped = rows.filter(row => state(row).mapped);
@@ -236,9 +283,42 @@ async function loadDetail() {
   if (!row) { root.replaceChildren(el('div', 'empty', '没有符合条件的问题')); return; }
   const name = row.name;
   if (detailCache.has(name)) { renderDetail(detailCache.get(name), row); return; }
-  root.replaceChildren(el('div', 'empty', '正在从 output 和 output_new 读取快照…'));
+  root.replaceChildren(el('div', 'empty', '正在读取本地静态详情…'));
   try {
-    const detail = await fetchJson(`/api/question?name=${encodeURIComponent(name)}`);
+    let detail = window.RETRIEVAL_FUSION_DETAILS?.[name];
+    if (!detail) {
+      let load = detailLoads.get(name);
+      if (!load) {
+        const path = manifest?.detail_files?.[name];
+        if (!path) throw new Error('静态索引中没有这条问题的详情文件');
+        load = new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = `./${path}`;
+          script.onload = () => {
+            script.remove();
+            const details = window.RETRIEVAL_FUSION_DETAILS;
+            const loaded = details?.[name];
+            if (loaded) {
+              delete details[name];
+              resolve(loaded);
+            } else reject(new Error('详情文件已加载，但没有找到对应数据'));
+          };
+          script.onerror = () => {
+            script.remove();
+            reject(new Error(`无法读取静态详情文件：${path}`));
+          };
+          document.head.append(script);
+        });
+        detailLoads.set(name, load);
+      }
+      try {
+        detail = await load;
+        detailLoads.delete(name);
+      } catch (error) {
+        detailLoads.delete(name);
+        throw error;
+      }
+    }
     if (detailCache.size >= 8) detailCache.delete(detailCache.keys().next().value);
     detailCache.set(name, detail);
     if (selectedName === name) renderDetail(detail, row);
@@ -248,11 +328,14 @@ async function loadDetail() {
 }
 async function start() {
   try {
-    const source = await fetchJson('/api/questions');
-    if (!Array.isArray(source.items) || !source.items.length) throw new Error('output 中没有检索快照');
-    rows = source.items;
-    $('#subtitle').textContent = '页面按需读取 fusion_engine/output 与 output_new；点击 chunk 编号查看正文。';
-    renderMetrics();
+    manifest = window.RETRIEVAL_FUSION_INDEX;
+    if (!Array.isArray(manifest?.items) || !manifest.items.length) {
+      throw new Error('静态索引为空；请重新运行 build_static_data.py 生成页面数据包');
+    }
+    rows = manifest.items;
+    $('#subtitle').textContent = '语义、维度与两种融合结果对比；页面直接读取本地静态快照。';
+    renderMetrics(manifest.evaluation);
+    renderEvaluation(manifest.evaluation);
     renderNotes();
     const hasGold = rows.some(row => state(row).mapped);
     for (const option of $('#filter').options) if (option.value !== 'all') option.disabled = !hasGold;

@@ -32,7 +32,7 @@
     .subtitle { margin-top: 5px; color: #b5cbd0; font-size: 13px; }
     .local-badge { flex: none; border: 1px solid #53737c; color: #cce8e6; border-radius: 999px; padding: 6px 11px; font-size: 12px; }
     .page { max-width: 1760px; margin: auto; padding: 22px clamp(14px, 2.2vw, 32px) 40px; }
-    .metrics { display: grid; grid-template-columns: repeat(6, minmax(120px, 1fr)); gap: 11px; margin-bottom: 18px; }
+    .metrics { display: grid; grid-template-columns: repeat(3, minmax(120px, 1fr)); gap: 11px; margin-bottom: 18px; }
     .metric { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 13px 15px; box-shadow: var(--shadow); min-height: 77px; }
     .metric-label { color: var(--muted); font-size: 12px; }
     .metric-value { margin-top: 3px; font-size: 23px; line-height: 1.2; font-weight: 720; font-variant-numeric: tabular-nums; }
@@ -153,7 +153,7 @@
     .error { max-width: 750px; margin: 50px auto; background: white; border: 1px solid #efc9c2; border-radius: 12px; padding: 22px; color: #783535; }
     .error code { color: #542d2d; }
     @media (max-width: 1100px) { .strategy-notes { grid-template-columns: 1fr; } }
-    @media (max-width: 1250px) { .metrics { grid-template-columns: repeat(3, 1fr); } .routes { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); } }
+    @media (max-width: 1250px) { .routes { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); } }
     @media (max-width: 760px) { .topbar-inner { align-items: flex-start; flex-direction: column; } .metrics { grid-template-columns: repeat(2, 1fr); } .layout { grid-template-columns: 1fr; } .list-panel { position: static; max-height: 300px; } .detail { padding: 13px; } .detail-top { flex-direction: column; } .navigation { width: 100%; } .question-title { font-size: 17px; } }
   </style>
 </head>
