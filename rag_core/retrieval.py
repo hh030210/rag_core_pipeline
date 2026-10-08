@@ -1132,7 +1132,6 @@ class Retriever:
             semantic,
             dimension,
             fusion_candidates,
-            fusion,
             dim_alpha=self.settings.dim_alpha,
             top_k=top_k,
             query=query,
