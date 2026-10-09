@@ -253,6 +253,16 @@
       </article>
     </section>
     <section class="metrics" id="metrics"></section>
+    <div class="toolbar" aria-label="指标数据与统计口径">
+      <label>指标分母 <select id="metric-denominator">
+        <option value="mapped">Gold 已映射查询</option>
+        <option value="all">全部查询（与 evaluate 原生摘要一致）</option>
+      </select></label>
+      <button class="button" id="recalculate-metrics" type="button">重新读取并计算</button>
+      <label>导入评测结果 <input id="import-evaluation" type="file" accept=".jsonl,.ndjson,.json"></label>
+      <button class="button" id="restore-snapshots" type="button">返回历史快照</button>
+      <span id="metric-status" role="status" aria-live="polite"></span>
+    </div>
     <section class="panel evaluation-panel" id="evaluation-panel" aria-labelledby="evaluation-title" hidden></section>
     <section class="panel route-fusion-panel" id="route-fusion-panel" aria-labelledby="route-fusion-title">
     <div class="retrieval-controls" aria-label="条形图策略与 Top-K 设置">
@@ -323,6 +333,7 @@
   </dialog>
   <script src="./snapshot_index.js" defer></script>
   <script src="./recommended_index.js" defer></script>
+  <script src="./data_metrics.js" defer></script>
   <script src="./viewer.js" defer></script>
 </body>
 </html>

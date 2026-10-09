@@ -1,4 +1,4 @@
-﻿"""Build static viewer data files so index.html can be opened without a server."""
+"""Build static viewer data files so index.html can be opened without a server."""
 from __future__ import annotations
 
 import argparse
@@ -8,7 +8,7 @@ import re
 from pathlib import Path
 
 VIEWER_DIR = Path(__file__).resolve().parent
-ENGINE_DIR = VIEWER_DIR.parent / "fusion_engine"
+ENGINE_DIR = VIEWER_DIR.parent
 SNAPSHOT_NAME = re.compile(r"^retrieval_fusion_[^/\\]+\.json$")
 COMPACT_FIELDS = (
     "chunk_id", "score", "semantic_score", "dimension_score",
@@ -311,11 +311,11 @@ def detail_row(name: str, old_dir: Path, new_dir: Path, comparison: dict) -> dic
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=ENGINE_DIR / "output")
-    parser.add_argument("--output-new", type=Path, default=ENGINE_DIR / "output_new")
+    parser.add_argument("--output", type=Path, default=ENGINE_DIR / "experiments" / "01_online_snapshots" / "output")
+    parser.add_argument("--output-new", type=Path, default=ENGINE_DIR / "experiments" / "06_dimension_score" / "output")
     parser.add_argument("--assets-dir", type=Path, default=VIEWER_DIR)
     parser.add_argument("--experiment-dir", type=Path,
-                        default=ENGINE_DIR / "output_new")
+                        default=ENGINE_DIR / "experiments" / "06_dimension_score" / "output")
     args = parser.parse_args()
     old_dir = args.output.expanduser().resolve()
     new_dir = args.output_new.expanduser().resolve()

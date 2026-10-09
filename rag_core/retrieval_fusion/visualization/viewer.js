@@ -1,4 +1,4 @@
-﻿const $ = selector => document.querySelector(selector);
+const $ = selector => document.querySelector(selector);
 const el = (tag, className = '', value = null) => {
   const node = document.createElement(tag);
   if (className) node.className = className;
@@ -20,8 +20,6 @@ const chartResizeObserver = new ResizeObserver(entries => {
   }
 });
 const detailCache = new Map();
-const detailLoads = new Map();
-const recommendedLoads = new Map();
 let manifest = null;
 let activeStrategy = 'recommended';
 function offlineLabel() {
@@ -59,20 +57,20 @@ function renderMetrics(evaluation) {
 }
 function renderEvaluation(evaluation) {
   const panel = $('#evaluation-panel');
-  const metrics = ['Hit@1', 'Hit@5', 'Hit@10', 'MRR@10', 'nDCG@5'];
+  const metrics = ['Hit@1', 'Hit@5', 'Hit@10', 'Hit@15', 'MRR@10', 'nDCG@5'];
   if (!evaluation?.metrics?.length) {
     panel.hidden = true;
     return;
   }
   const head = el('div', 'evaluation-head');
-  const title = el('h2', '', '检索路线与融合策略对比（固定评估指标）');
+  const title = el('h2', '', '检索路线与融合策略对比（根据候选现算）');
   title.id = 'evaluation-title';
   head.append(title);
-  const total = evaluation.total_queries ?? rows.length;
+  const total = evaluation.denominator;
   head.append(el(
     'div',
     'evaluation-note',
-    `指标均为百分制。Hit 分母为 ${evaluation.mapped_queries} 条 Gold 已映射查询；MRR@10 与 nDCG@5 按全部 ${total} 条快照计算。`,
+    `由逐题候选与 Golden 计算，所有指标分母为 ${total} 条${evaluation.denominator_mode === 'all' ? '全部' : 'Gold 已映射'}查询；Gold 未映射 ${evaluation.unmapped_queries} 条。候选列表已截断时，只能评估其保存深度。`,
   ));
   const makeTable = (rowsFor, mappedQueries, totalQueries) => {
     const table = el('table', 'evaluation-table');
@@ -89,22 +87,13 @@ function renderEvaluation(evaluation) {
       for (const label of metrics) {
         const td = document.createElement('td');
         if (label.startsWith('Hit@')) {
-          const count = row.hits?.[label] ?? (
-            typeof row.scores?.[label] === 'number'
-              ? Math.round(row.scores[label] * mappedQueries / 100)
-              : null
-          );
-          td.textContent = Number.isInteger(count) && mappedQueries
-            ? `${(count / mappedQueries * 100).toFixed(2)}% (${count}/${mappedQueries})`
+          const count = row.hits[label];
+          td.textContent = row.complete && totalQueries
+            ? `${(count / totalQueries * 100).toFixed(2)}% (${count}/${totalQueries})`
             : '—';
         } else {
-          const legacyPercent = row.scores?.[label];
-          const value = row.ranking_scores?.[label] ?? (
-            typeof legacyPercent === 'number'
-              ? legacyPercent / 100 * mappedQueries / totalQueries
-              : null
-          );
-          td.textContent = typeof value === 'number' ? `${(value * 100).toFixed(2)}%` : '—';
+          const value = row.ranking_scores[label];
+          td.textContent = row.complete && totalQueries ? `${(value * 100).toFixed(2)}%` : '—';
         }
         tr.append(td);
       }
@@ -115,7 +104,7 @@ function renderEvaluation(evaluation) {
     wrap.append(table);
     return wrap;
   };
-  panel.replaceChildren(head, makeTable([...evaluation.metrics, ...(window.RECOMMENDED_INDEX?.metrics || [])], evaluation.mapped_queries, total));
+  panel.replaceChildren(head, makeTable(evaluation.metrics, evaluation.mapped_queries, total));
   panel.hidden = false;
 }
 function renderRouteFusionChart() {
@@ -387,7 +376,7 @@ function renderDetail(detail, row) {
   head.append(intro, nav);
 
   const badges = el('div', 'badges');
-  for (const [name, key] of [['语义', 'semantic_rank'], ['维度', 'dimension_rank'], ['线上融合', 'old_rank'], ['推荐融合', 'recommended_rank']]) {
+  for (const [name, key] of [['语义', 'semantic_rank'], ['维度', 'dimension_rank'], ['线上融合', 'old_rank'], ...(detail.recommended ? [['推荐融合', 'recommended_rank']] : [])]) {
     const limit = key === 'semantic_rank' ? caseTopK.semantic : key === 'dimension_rank' ? caseTopK.dimension : caseTopK.fusion;
     const rank = row[key], hit = isRank(rank, limit);
     const status = !state(row).mapped ? '未标注' : hit ? `Top-${limit} 命中 #${rank}` : Number.isInteger(rank) ? '第 ' + rank + ' 名' : '未召回';
@@ -400,7 +389,7 @@ function renderDetail(detail, row) {
     renderRoute(detail, row, 'semantic', '语义检索', '相似度排序', 'semantic_rank'),
     renderRoute(detail, row, 'dimension', '维度检索', '维度匹配排序', 'dimension_rank'),
     renderRoute(detail, row, 'old', '线上融合', '线上快照排名', 'old_rank'),
-    renderRoute(routeDetail, row, 'recommended', '推荐融合', '维度角色校准', 'recommended_rank'),
+    ...(detail.recommended ? [renderRoute(routeDetail, row, 'recommended', '推荐融合', '维度角色校准', 'recommended_rank')] : []),
   );
   renderRecommended(detail, row, routes);
   const foot = el('div', 'detail-foot');
@@ -413,64 +402,23 @@ async function loadDetail() {
   const row = filtered.find(item => item.name === selectedName);
   if (!row) { root.replaceChildren(el('div', 'empty', '没有符合条件的问题')); return; }
   const name = row.name;
-  if (detailCache.has(name) && detailCache.get(name).recommended) { renderDetail(detailCache.get(name), row); return; }
-  root.replaceChildren(el('div', 'empty', '正在读取本地静态详情…'));
+  root.replaceChildren(el('div', 'empty', '正在读取详情…'));
   try {
-    let detail = detailCache.get(name) || window.RETRIEVAL_FUSION_DETAILS?.[name];
+    let detail = importedDetails?.get(name) || detailCache.get(name);
     if (!detail) {
-      let load = detailLoads.get(name);
-      if (!load) {
-        const path = manifest?.detail_files?.[name];
-        if (!path) throw new Error('静态索引中没有这条问题的详情文件');
-        load = new Promise((resolve, reject) => {
-          const script = document.createElement('script');
-          script.src = `./${path}`;
-          script.onload = () => {
-            script.remove();
-            const details = window.RETRIEVAL_FUSION_DETAILS;
-            const loaded = details?.[name];
-            if (loaded) {
-              delete details[name];
-              resolve(loaded);
-            } else reject(new Error('详情文件已加载，但没有找到对应数据'));
-          };
-          script.onerror = () => {
-            script.remove();
-            reject(new Error(`无法读取静态详情文件：${path}`));
-          };
-          document.head.append(script);
-        });
-        detailLoads.set(name, load);
-      }
-      try {
-        detail = await load;
-        detailLoads.delete(name);
-      } catch (error) {
-        detailLoads.delete(name);
-        throw error;
-      }
+      const path = manifest?.detail_files?.[name];
+      if (!path) throw new Error('缺少详情文件：' + name);
+      detail = await staticPayload(path, 'RETRIEVAL_FUSION_DETAILS', name);
     }
-    const recommendedPath = window.RECOMMENDED_INDEX?.detail_files?.[name];
-    if (recommendedPath && !detail.recommended) {
-      let load = recommendedLoads.get(name);
-      if (!load) load = new Promise((resolve, reject) => {
-        const script = document.createElement('script'); script.src = `./${recommendedPath}`;
-        script.onload = () => {
-          script.remove(); const payload = window.RECOMMENDED_DETAILS?.[name];
-          if (!payload) { reject(new Error('Recommended detail missing')); return; }
-          delete window.RECOMMENDED_DETAILS[name]; resolve(payload);
-        };
-        script.onerror = () => { script.remove(); reject(new Error(`Cannot read ${recommendedPath}`)); };
-        document.head.append(script);
-      });
-      recommendedLoads.set(name, load);
-      try { detail.recommended = await load; } finally { recommendedLoads.delete(name); }
+    if (!importedDetails && !detail.recommended) {
+      const recPath = window.RECOMMENDED_INDEX?.detail_files?.[name];
+      if (recPath) detail.recommended = await staticPayload(recPath, 'RECOMMENDED_DETAILS', name);
     }
     if (detailCache.size >= 8) detailCache.delete(detailCache.keys().next().value);
     detailCache.set(name, detail);
     if (selectedName === name) renderDetail(detail, row);
   } catch (error) {
-    if (selectedName === name) root.replaceChildren(el('div', 'error', `读取快照失败：${error.message}`));
+    if (selectedName === name) root.replaceChildren(el('div', 'error', '读取详情失败：' + error.message));
   }
 }
 async function start() {
@@ -497,8 +445,14 @@ async function start() {
       });
     }
     $('#subtitle').textContent = '按策略和 Top-K 查看命中组合；逐题固定对比语义、维度、线上融合与推荐融合。';
-    renderMetrics(manifest.evaluation);
-    renderEvaluation(manifest.evaluation);
+    $('#metric-denominator').addEventListener('change', refreshCalculatedTable);
+    $('#recalculate-metrics').addEventListener('click', calculateLiveMetrics);
+    $('#import-evaluation').addEventListener('change', async event => {
+      const file = event.target.files[0]; if (!file) return;
+      try { await importEvaluation(file); } catch (error) { $('#metric-status').textContent = '导入失败：' + error.message; }
+      event.target.value = '';
+    });
+    $('#restore-snapshots').addEventListener('click', () => location.reload());
     const hasGold = rows.some(row => state(row).mapped);
     const unmappedCount = rows.filter(row => !state(row).mapped).length;
     const unmappedOption = $('#filter').querySelector('option[value="unmapped"]');
@@ -514,7 +468,7 @@ async function start() {
     });
     for (const key of ['semantic', 'dimension', 'fusion']) {
       const select = $(`#case-${key}-topk`);
-      select.replaceChildren(...[1, 3, 5, 10, 20, 50, 100].map(value => {
+      select.replaceChildren(...[1, 3, 5, 10, 15, 20, 50, 100].map(value => {
         const option = el('option', '', value);
         option.value = String(value);
         return option;
@@ -526,12 +480,108 @@ async function start() {
       });
     }
     $('#chunk-dialog-close').addEventListener('click', () => $('#chunk-dialog').close());
-    renderRouteFusionChart();
-    refreshCasePanel();
+    await calculateLiveMetrics();
   } catch (error) {
     $('#app').replaceChildren(el('div', 'error', `未能加载融合快照：${error.message}`));
   }
 }
+
+const rawPayloadLoads = new Map();
+let importedDetails = null;
+let liveAccumulator = null;
+let metricGeneration = 0;
+let metricSource = '历史快照详情';
+function refreshCalculatedTable() {
+  if (!liveAccumulator) return;
+  const evaluation = liveAccumulator.result($('#metric-denominator').value);
+  renderMetrics(evaluation);
+  renderEvaluation(evaluation);
+}
+function staticPayload(path, globalName, name) {
+  const key = globalName + ':' + name;
+  if (rawPayloadLoads.has(key)) return rawPayloadLoads.get(key);
+  const load = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = './' + path + '?metrics=' + Date.now();
+    script.onload = () => {
+      script.remove();
+      const value = window[globalName]?.[name];
+      if (!value) { reject(new Error('详情数据缺失：' + name)); return; }
+      delete window[globalName][name];
+      resolve(value);
+    };
+    script.onerror = () => { script.remove(); reject(new Error('无法读取：' + path)); };
+    document.head.append(script);
+  }).finally(() => rawPayloadLoads.delete(key));
+  rawPayloadLoads.set(key, load);
+  return load;
+}
+async function calculateLiveMetrics() {
+  const generation = ++metricGeneration;
+  const acc = RetrievalMetrics.accumulator();
+  const updated = rows.map(r => ({...r}));
+  $('#recalculate-metrics').disabled = true;
+  $('#evaluation-panel').hidden = false;
+  $('#evaluation-panel').replaceChildren(el('div', 'evaluation-note', '正在根据候选与 Golden 计算指标…'));
+  try {
+    for (let offset = 0; offset < updated.length; offset += 4) {
+      await Promise.all(updated.slice(offset, offset + 4).map(async row => {
+        let detail = importedDetails?.get(row.name);
+        if (!detail) {
+          const path = manifest.detail_files[row.name];
+          if (!path) throw new Error('缺少详情路径：' + row.name);
+          detail = await staticPayload(path, 'RETRIEVAL_FUSION_DETAILS', row.name);
+          const recommendedPath = window.RECOMMENDED_INDEX?.detail_files?.[row.name];
+          if (recommendedPath) detail.recommended = await staticPayload(
+              recommendedPath, 'RECOMMENDED_DETAILS', row.name);
+        }
+        Object.assign(row, acc.add(detail));
+      }));
+      if (generation !== metricGeneration) return;
+      $('#metric-status').textContent = '计算中 ' + Math.min(offset + 4, updated.length) + '/' + updated.length;
+    }
+    rows = updated;
+    const hasGold = rows.some(row => state(row).mapped);
+    for (const option of $('#filter').options) {
+      if (option.value !== 'all') option.disabled = !hasGold && option.value !== 'unmapped';
+    }
+    $('#filter').querySelector('option[value="unmapped"]').textContent =
+      '未映射（' + rows.filter(row => !state(row).mapped).length + '）';
+    liveAccumulator = acc;
+    if (!importedDetails) detailCache.clear();
+    refreshCalculatedTable();
+    renderRouteFusionChart();
+    refreshCasePanel();
+    $('#metric-status').textContent = metricSource + ' · 已根据 ' + rows.length + ' 条详情计算';
+  } catch (error) {
+    if (generation === metricGeneration) {
+      liveAccumulator = null;
+      $('#evaluation-panel').replaceChildren(el('div', 'error', '指标计算失败：' + error.message));
+      $('#metric-status').textContent = '计算失败；未使用预存汇总值';
+    }
+  } finally {
+    if (generation === metricGeneration) $('#recalculate-metrics').disabled = false;
+  }
+}
+async function importEvaluation(file) {
+  const details = RetrievalMetrics.evaluationDetails(await file.text());
+  importedDetails = new Map(details.map(d => [d.name, d]));
+  metricSource = '导入评测：' + file.name;
+  rows = details.map(d => ({name:d.name,query:d.query,gold_count:d.gold.gold_chunk_ids.length}));
+  selectedName = null;
+  detailCache.clear();
+  for (const id of ['strategy-select', 'case-strategy-select']) {
+    const select = $('#' + id);
+    for (const option of select.options) option.disabled = option.value !== 'old';
+    select.value = 'old';
+  }
+  activeStrategy = caseStrategy = 'old';
+  $('#filter').value = 'all';
+  $('#search').value = '';
+  await calculateLiveMetrics();
+}
+
+
 start();
 
 function renderRecommended(detail, row, routes) {

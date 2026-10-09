@@ -25,3 +25,18 @@ VectorRetriever 初始化时注入：
 上层先将查询子句解析、编码，并把已经编码的主查询向量传入 search()；向量封装使用 semantic_pool 调用向量存储，再执行现有景区范围过滤和排名编号。若独立调用时没有传 query_vector，封装会自行编码拼接后的子查询文本。
 
 top_k 仍由上层用于最终融合结果截断；它不是语义向量召回池大小。维度检索与融合逻辑仍由 Retriever 和 retrieval_fusion 负责。
+
+
+## 实验目录（2026-10-09 重整）
+当前向量策略保留在根部 search.py，生产导入仍为 rag_core.vector_retrieval.VectorRetriever。
+- experiments/01_query_composition/code/：七种查询组合策略的运行、分析和验证代码。
+- experiments/01_query_composition/output/：原冒烟/全量结果和日志。
+- experiments/02_evaluate_rerun/code/launch.py：隔离运行原 run.py evaluate 的入口。
+- experiments/02_evaluate_rerun/output/：原重跑数据及结果；再次运行会生成独立时间戳子目录。
+
+从仓库根目录运行：
+~~bash
+PYTHONDONTWRITEBYTECODE=1 /home/humq/envs/denoise_qa/bin/python -m rag_core.vector_retrieval.experiments.01_query_composition.code.run --help
+PYTHONDONTWRITEBYTECODE=1 /home/humq/envs/denoise_qa/bin/python -m rag_core.vector_retrieval.experiments.02_evaluate_rerun.code.launch
+~~
+编号目录通过 python -m 模块入口执行；实验内部使用相对导入。主流程未改为采用实验获胜策略。

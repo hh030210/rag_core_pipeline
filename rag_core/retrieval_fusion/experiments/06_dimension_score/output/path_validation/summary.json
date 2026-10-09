@@ -1,0 +1,22 @@
+{
+  "snapshots": 435,
+  "strategy": "normalized_dimension_score_blend_v1",
+  "metrics": {
+    "labeled_queries": 435,
+    "gold_mapped": 402,
+    "online": {
+      "hit_at_1": 223,
+      "hit_at_5": 339,
+      "hit_at_10": 368,
+      "mrr_at_10": 0.624445,
+      "ndcg_at_5": 0.622212
+    },
+    "dimension_score_blend": {
+      "hit_at_1": 249,
+      "hit_at_5": 354,
+      "hit_at_10": 374,
+      "mrr_at_10": 0.677271,
+      "ndcg_at_5": 0.667597
+    }
+  }
+}

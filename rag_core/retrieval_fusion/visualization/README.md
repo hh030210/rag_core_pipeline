@@ -2,7 +2,7 @@
 
 打开 `index.html` 查看检索结果。融合策略选择、三路 Top-K 控件与命中组合条形图位于同一个 panel。下拉框支持推荐融合、维度分数离线基准和线上融合，默认选中推荐融合。语义、维度、融合 Top-K 可独立调整，均默认为 5；选择仅影响该 panel 内的图表统计。
 
-首表全部指标采用百分制。Hit 分母为 402 条 Gold 已映射查询；MRR@10 和 nDCG@5 按全部 435 条快照计算。33 条未映射问题有独立标记和筛选，不纳入命中统计。
+首表在页面加载时读取逐题候选列表与 gold.gold_chunk_ids，实时计算 Hit@1/5/10/15、MRR@10 和 nDCG@5，不读取预存汇总分数或预存排名。默认所有指标都以 Gold 已映射查询为分母；也可选择全部查询，与 run.py evaluate 的原生摘要口径一致。未映射问题单独标记。
 
 命中组合表按语义与维度的命中／未命中划分为四组，每行展示查询总数及双色彩带，并显示组内融合命中率。四条彩带使用共同的查询数量刻度，最长组铺满绘图区，其余组和各色段长度严格按数量缩放。命中和未命中数量标在对应色段内，窄色段数字移至相邻上方或下方，避免为容纳文字改变长度；零数量不绘制色段。各路命中以其独立设置的 Top-K 为准，未映射问题不参与统计。
 
@@ -17,9 +17,22 @@
 重建静态数据（仓库根目录）：
 
 ```powershell
-py -3 rag_core/retrieval_fusion/fusion_engine/fusion_new/run.py
+py -3 rag_core/retrieval_fusion/experiments/06_dimension_score/code/run.py
 py -3 rag_core/retrieval_fusion/visualization/build_static_data.py
-py -3 rag_core/retrieval_fusion/fusion_engine/fusion_new/recommended.py
+py -3 rag_core/retrieval_fusion/experiments/07_recommended_fusion/code/run.py
 ```
 
-基准数据为 `snapshot_index.js`、`snapshot_details/`；推荐数据为 `recommended_index.js`、`recommended_details/`。详情按题懒加载。方法与结果口径见 `../fusion_engine/fusion_new/README.md`。
+基准数据为 `snapshot_index.js`、`snapshot_details/`；推荐数据为 `recommended_index.js`、`recommended_details/`。详情按题懒加载。方法与结果口径见 `../README.md`。
+
+## 页面内重新计算与导入新评测
+
+- 打开或刷新页面：从 snapshot_details/ 和 recommended_details/ 读取原始候选与 Golden，重新计算汇总及逐题首个Golden排名。历史数据不会自动变成新的检索结果。
+- 点击“重新读取并计算”：重新加载当前历史详情；导入模式下重新计算已导入文件。读取失败显示错误，不回退为旧汇总分数。
+- “导入评测结果”：选择 run.py evaluate 输出的 results.jsonl（也接受记录数组JSON）。页面直接从候选顺序和 Golden 计算，忽略文件中已有的 retrieval_metrics；同步更新命中图、问题筛选及详情。导入数据只保存在当前页面内存，刷新后返回历史快照。
+- 新评测只含语义、维度、线上融合时，禁用不存在的历史离线/推荐策略，避免混用数据。
+- 分母切换控制所有指标，Hit 显示命中数/分母；候选已截断时只能评估已保存排名深度。nDCG使用二值Golden相关性，与当前景区数据一致。
+
+本次重跑文件位于 /home/humq/rag_core_pipeline/rag_core/vector_retrieval/experiments/02_evaluate_rerun/output/evaluation/results.jsonl。导入后语义 Hit@5=315/402（78.36%）；历史快照仍为331/402（82.34%）。
+
+
+当前计算模块为本目录 data_metrics.js；viewer.js 直接从候选排名与 Golden 标注计算指标，不依赖已删除的探索实验。
