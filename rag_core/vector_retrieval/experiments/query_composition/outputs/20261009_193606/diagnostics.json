@@ -1,0 +1,520 @@
+{
+  "paired_vs_subqueries_concat": {
+    "original_only": {
+      "rescued_at15": 17,
+      "lost_at15": 6,
+      "unchanged_at15": 379,
+      "net": 11
+    },
+    "subqueries_concat": {
+      "rescued_at15": 0,
+      "lost_at15": 0,
+      "unchanged_at15": 402,
+      "net": 0
+    },
+    "original_plus_subqueries_concat": {
+      "rescued_at15": 4,
+      "lost_at15": 3,
+      "unchanged_at15": 395,
+      "net": 1
+    },
+    "original_plus_subqueries_dedup": {
+      "rescued_at15": 3,
+      "lost_at15": 3,
+      "unchanged_at15": 396,
+      "net": 0
+    },
+    "subqueries_comma": {
+      "rescued_at15": 4,
+      "lost_at15": 1,
+      "unchanged_at15": 397,
+      "net": 3
+    },
+    "original_subqueries_centroid_w2": {
+      "rescued_at15": 14,
+      "lost_at15": 1,
+      "unchanged_at15": 387,
+      "net": 13
+    },
+    "original_subqueries_rrf": {
+      "rescued_at15": 13,
+      "lost_at15": 2,
+      "unchanged_at15": 387,
+      "net": 11
+    }
+  },
+  "groups": {
+    "original_only": {
+      "spot:明十三陵": {
+        "count": 49,
+        "control_hits15": 49,
+        "hits15": 49
+      },
+      "subquery_count:2": {
+        "count": 21,
+        "control_hits15": 20,
+        "hits15": 21
+      },
+      "subquery_count:3": {
+        "count": 179,
+        "control_hits15": 167,
+        "hits15": 170
+      },
+      "subquery_count:4": {
+        "count": 182,
+        "control_hits15": 162,
+        "hits15": 169
+      },
+      "spot:unrestricted": {
+        "count": 122,
+        "control_hits15": 101,
+        "hits15": 108
+      },
+      "subquery_count:1": {
+        "count": 20,
+        "control_hits15": 18,
+        "hits15": 18
+      },
+      "spot:南孔庙": {
+        "count": 49,
+        "control_hits15": 44,
+        "hits15": 45
+      },
+      "spot:龙门石窟": {
+        "count": 32,
+        "control_hits15": 30,
+        "hits15": 31
+      },
+      "spot:少林寺": {
+        "count": 30,
+        "control_hits15": 28,
+        "hits15": 30
+      },
+      "spot:西湖": {
+        "count": 31,
+        "control_hits15": 29,
+        "hits15": 29
+      },
+      "spot:颐和园": {
+        "count": 40,
+        "control_hits15": 40,
+        "hits15": 39
+      },
+      "spot:颐和园 / 西湖": {
+        "count": 1,
+        "control_hits15": 1,
+        "hits15": 1
+      },
+      "spot:张家界": {
+        "count": 48,
+        "control_hits15": 45,
+        "hits15": 46
+      }
+    },
+    "subqueries_concat": {
+      "spot:明十三陵": {
+        "count": 49,
+        "control_hits15": 49,
+        "hits15": 49
+      },
+      "subquery_count:2": {
+        "count": 21,
+        "control_hits15": 20,
+        "hits15": 20
+      },
+      "subquery_count:3": {
+        "count": 179,
+        "control_hits15": 167,
+        "hits15": 167
+      },
+      "subquery_count:4": {
+        "count": 182,
+        "control_hits15": 162,
+        "hits15": 162
+      },
+      "spot:unrestricted": {
+        "count": 122,
+        "control_hits15": 101,
+        "hits15": 101
+      },
+      "subquery_count:1": {
+        "count": 20,
+        "control_hits15": 18,
+        "hits15": 18
+      },
+      "spot:南孔庙": {
+        "count": 49,
+        "control_hits15": 44,
+        "hits15": 44
+      },
+      "spot:龙门石窟": {
+        "count": 32,
+        "control_hits15": 30,
+        "hits15": 30
+      },
+      "spot:少林寺": {
+        "count": 30,
+        "control_hits15": 28,
+        "hits15": 28
+      },
+      "spot:西湖": {
+        "count": 31,
+        "control_hits15": 29,
+        "hits15": 29
+      },
+      "spot:颐和园": {
+        "count": 40,
+        "control_hits15": 40,
+        "hits15": 40
+      },
+      "spot:颐和园 / 西湖": {
+        "count": 1,
+        "control_hits15": 1,
+        "hits15": 1
+      },
+      "spot:张家界": {
+        "count": 48,
+        "control_hits15": 45,
+        "hits15": 45
+      }
+    },
+    "original_plus_subqueries_concat": {
+      "spot:明十三陵": {
+        "count": 49,
+        "control_hits15": 49,
+        "hits15": 49
+      },
+      "subquery_count:2": {
+        "count": 21,
+        "control_hits15": 20,
+        "hits15": 19
+      },
+      "subquery_count:3": {
+        "count": 179,
+        "control_hits15": 167,
+        "hits15": 169
+      },
+      "subquery_count:4": {
+        "count": 182,
+        "control_hits15": 162,
+        "hits15": 161
+      },
+      "spot:unrestricted": {
+        "count": 122,
+        "control_hits15": 101,
+        "hits15": 104
+      },
+      "subquery_count:1": {
+        "count": 20,
+        "control_hits15": 18,
+        "hits15": 19
+      },
+      "spot:南孔庙": {
+        "count": 49,
+        "control_hits15": 44,
+        "hits15": 44
+      },
+      "spot:龙门石窟": {
+        "count": 32,
+        "control_hits15": 30,
+        "hits15": 30
+      },
+      "spot:少林寺": {
+        "count": 30,
+        "control_hits15": 28,
+        "hits15": 28
+      },
+      "spot:西湖": {
+        "count": 31,
+        "control_hits15": 29,
+        "hits15": 28
+      },
+      "spot:颐和园": {
+        "count": 40,
+        "control_hits15": 40,
+        "hits15": 39
+      },
+      "spot:颐和园 / 西湖": {
+        "count": 1,
+        "control_hits15": 1,
+        "hits15": 1
+      },
+      "spot:张家界": {
+        "count": 48,
+        "control_hits15": 45,
+        "hits15": 45
+      }
+    },
+    "original_plus_subqueries_dedup": {
+      "spot:明十三陵": {
+        "count": 49,
+        "control_hits15": 49,
+        "hits15": 49
+      },
+      "subquery_count:2": {
+        "count": 21,
+        "control_hits15": 20,
+        "hits15": 19
+      },
+      "subquery_count:3": {
+        "count": 179,
+        "control_hits15": 167,
+        "hits15": 169
+      },
+      "subquery_count:4": {
+        "count": 182,
+        "control_hits15": 162,
+        "hits15": 161
+      },
+      "spot:unrestricted": {
+        "count": 122,
+        "control_hits15": 101,
+        "hits15": 103
+      },
+      "subquery_count:1": {
+        "count": 20,
+        "control_hits15": 18,
+        "hits15": 18
+      },
+      "spot:南孔庙": {
+        "count": 49,
+        "control_hits15": 44,
+        "hits15": 44
+      },
+      "spot:龙门石窟": {
+        "count": 32,
+        "control_hits15": 30,
+        "hits15": 30
+      },
+      "spot:少林寺": {
+        "count": 30,
+        "control_hits15": 28,
+        "hits15": 28
+      },
+      "spot:西湖": {
+        "count": 31,
+        "control_hits15": 29,
+        "hits15": 28
+      },
+      "spot:颐和园": {
+        "count": 40,
+        "control_hits15": 40,
+        "hits15": 39
+      },
+      "spot:颐和园 / 西湖": {
+        "count": 1,
+        "control_hits15": 1,
+        "hits15": 1
+      },
+      "spot:张家界": {
+        "count": 48,
+        "control_hits15": 45,
+        "hits15": 45
+      }
+    },
+    "subqueries_comma": {
+      "spot:明十三陵": {
+        "count": 49,
+        "control_hits15": 49,
+        "hits15": 49
+      },
+      "subquery_count:2": {
+        "count": 21,
+        "control_hits15": 20,
+        "hits15": 20
+      },
+      "subquery_count:3": {
+        "count": 179,
+        "control_hits15": 167,
+        "hits15": 169
+      },
+      "subquery_count:4": {
+        "count": 182,
+        "control_hits15": 162,
+        "hits15": 163
+      },
+      "spot:unrestricted": {
+        "count": 122,
+        "control_hits15": 101,
+        "hits15": 104
+      },
+      "subquery_count:1": {
+        "count": 20,
+        "control_hits15": 18,
+        "hits15": 18
+      },
+      "spot:南孔庙": {
+        "count": 49,
+        "control_hits15": 44,
+        "hits15": 44
+      },
+      "spot:龙门石窟": {
+        "count": 32,
+        "control_hits15": 30,
+        "hits15": 30
+      },
+      "spot:少林寺": {
+        "count": 30,
+        "control_hits15": 28,
+        "hits15": 28
+      },
+      "spot:西湖": {
+        "count": 31,
+        "control_hits15": 29,
+        "hits15": 28
+      },
+      "spot:颐和园": {
+        "count": 40,
+        "control_hits15": 40,
+        "hits15": 40
+      },
+      "spot:颐和园 / 西湖": {
+        "count": 1,
+        "control_hits15": 1,
+        "hits15": 1
+      },
+      "spot:张家界": {
+        "count": 48,
+        "control_hits15": 45,
+        "hits15": 46
+      }
+    },
+    "original_subqueries_centroid_w2": {
+      "spot:明十三陵": {
+        "count": 49,
+        "control_hits15": 49,
+        "hits15": 49
+      },
+      "subquery_count:2": {
+        "count": 21,
+        "control_hits15": 20,
+        "hits15": 21
+      },
+      "subquery_count:3": {
+        "count": 179,
+        "control_hits15": 167,
+        "hits15": 170
+      },
+      "subquery_count:4": {
+        "count": 182,
+        "control_hits15": 162,
+        "hits15": 171
+      },
+      "spot:unrestricted": {
+        "count": 122,
+        "control_hits15": 101,
+        "hits15": 109
+      },
+      "subquery_count:1": {
+        "count": 20,
+        "control_hits15": 18,
+        "hits15": 18
+      },
+      "spot:南孔庙": {
+        "count": 49,
+        "control_hits15": 44,
+        "hits15": 45
+      },
+      "spot:龙门石窟": {
+        "count": 32,
+        "control_hits15": 30,
+        "hits15": 30
+      },
+      "spot:少林寺": {
+        "count": 30,
+        "control_hits15": 28,
+        "hits15": 30
+      },
+      "spot:西湖": {
+        "count": 31,
+        "control_hits15": 29,
+        "hits15": 29
+      },
+      "spot:颐和园": {
+        "count": 40,
+        "control_hits15": 40,
+        "hits15": 40
+      },
+      "spot:颐和园 / 西湖": {
+        "count": 1,
+        "control_hits15": 1,
+        "hits15": 1
+      },
+      "spot:张家界": {
+        "count": 48,
+        "control_hits15": 45,
+        "hits15": 47
+      }
+    },
+    "original_subqueries_rrf": {
+      "spot:明十三陵": {
+        "count": 49,
+        "control_hits15": 49,
+        "hits15": 49
+      },
+      "subquery_count:2": {
+        "count": 21,
+        "control_hits15": 20,
+        "hits15": 21
+      },
+      "subquery_count:3": {
+        "count": 179,
+        "control_hits15": 167,
+        "hits15": 169
+      },
+      "subquery_count:4": {
+        "count": 182,
+        "control_hits15": 162,
+        "hits15": 170
+      },
+      "spot:unrestricted": {
+        "count": 122,
+        "control_hits15": 101,
+        "hits15": 108
+      },
+      "subquery_count:1": {
+        "count": 20,
+        "control_hits15": 18,
+        "hits15": 18
+      },
+      "spot:南孔庙": {
+        "count": 49,
+        "control_hits15": 44,
+        "hits15": 45
+      },
+      "spot:龙门石窟": {
+        "count": 32,
+        "control_hits15": 30,
+        "hits15": 30
+      },
+      "spot:少林寺": {
+        "count": 30,
+        "control_hits15": 28,
+        "hits15": 30
+      },
+      "spot:西湖": {
+        "count": 31,
+        "control_hits15": 29,
+        "hits15": 29
+      },
+      "spot:颐和园": {
+        "count": 40,
+        "control_hits15": 40,
+        "hits15": 40
+      },
+      "spot:颐和园 / 西湖": {
+        "count": 1,
+        "control_hits15": 1,
+        "hits15": 1
+      },
+      "spot:张家界": {
+        "count": 48,
+        "control_hits15": 45,
+        "hits15": 46
+      }
+    }
+  },
+  "subquery_source_counts": {
+    "retrieval_query split by |": 402
+  }
+}
