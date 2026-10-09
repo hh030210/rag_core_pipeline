@@ -8,25 +8,38 @@ const el = (tag, className = '', value = null) => {
 let rows = [];
 let filtered = [];
 let selectedName = null;
-let showAll = false;
+const topK = { semantic: 5, dimension: 5, fusion: 5 };
+const caseTopK = { semantic: 5, dimension: 5, fusion: 5 };
+let caseStrategy = 'recommended';
+const chartResizeObserver = new ResizeObserver(entries => {
+  for (const { target } of entries) {
+    for (const segment of target.querySelectorAll('.fusion-band')) {
+      const label = segment.querySelector('.fusion-band-label');
+      segment.classList.toggle('compact', segment.getBoundingClientRect().width < label.scrollWidth + 8);
+    }
+  }
+});
 const detailCache = new Map();
 const detailLoads = new Map();
 const recommendedLoads = new Map();
 let manifest = null;
 let activeStrategy = 'recommended';
-function offlineRank(row) { return activeStrategy === 'new' ? row.new_rank : row[`${activeStrategy}_rank`]; }
 function offlineLabel() {
-  return activeStrategy === 'recommended' ? window.RECOMMENDED_INDEX.label : '离线融合（维度分数基准）';
+  return strategyLabel(activeStrategy);
+}
+function strategyLabel(strategy) {
+  return strategy === 'recommended' ? '推荐融合'
+    : strategy === 'old' ? '线上融合' : '离线融合（维度分数基准）';
 }
 function isRank(rank, limit = 5) { return Number.isInteger(rank) && rank > 0 && rank <= limit; }
-function state(row) {
+function state(row, strategy = 'recommended', limits = { semantic: 5, dimension: 5, fusion: 5 }) {
   const mapped = Number.isInteger(row.gold_count) && row.gold_count > 0;
   return {
     mapped,
-    semHit: mapped && isRank(row.semantic_rank),
-    dimHit: mapped && isRank(row.dimension_rank),
-    oldHit: mapped && isRank(row.old_rank),
-    newHit: mapped && isRank(offlineRank(row)),
+    semHit: mapped && isRank(row.semantic_rank, limits.semantic),
+    dimHit: mapped && isRank(row.dimension_rank, limits.dimension),
+    oldHit: mapped && isRank(row.old_rank, limits.fusion),
+    newHit: mapped && isRank(row[`${strategy}_rank`], limits.fusion),
   };
 }
 function metric(label, value) {
@@ -52,7 +65,9 @@ function renderEvaluation(evaluation) {
     return;
   }
   const head = el('div', 'evaluation-head');
-  head.append(el('h2', '', '检索路线与融合策略对比'));
+  const title = el('h2', '', '检索路线与融合策略对比（固定评估指标）');
+  title.id = 'evaluation-title';
+  head.append(title);
   const total = evaluation.total_queries ?? rows.length;
   head.append(el(
     'div',
@@ -104,109 +119,118 @@ function renderEvaluation(evaluation) {
   panel.hidden = false;
 }
 function renderRouteFusionChart() {
-  const panel = $('#route-fusion-panel');
   const categories = [
-    { key: 'dimensionOnly', label: '仅维度检索 Top-5 命中' },
-    { key: 'semanticOnly', label: '仅语义检索 Top-5 命中' },
-    { key: 'bothRoutes', label: '语义与维度都命中' },
-    { key: 'neitherRoute', label: '语义与维度都未命中' },
+    { key: 'both', label: '语义命中 · 维度命中', sem: true, dim: true },
+    { key: 'semantic', label: '语义命中 · 维度未命中', sem: true, dim: false },
+    { key: 'dimension', label: '语义未命中 · 维度命中', sem: false, dim: true },
+    { key: 'neither', label: '语义未命中 · 维度未命中', sem: false, dim: false },
   ];
-  const outcomes = [
-    { key: 'bothFusion', label: '线上 + 离线都命中', short: '双融合命中', color: '#0b7a75' },
-    { key: 'onlineOnly', label: '仅线上融合命中', short: '仅线上', color: '#4776a8' },
-    { key: 'offlineOnly', label: '仅离线融合命中', short: '仅离线', color: '#d17a22' },
-    { key: 'neitherFusion', label: '线上、离线都未命中', short: '双融合未中', color: '#89969d' },
-  ];
-  const buckets = Object.fromEntries(categories.map(category => [category.key, {
-    total: 0, ...Object.fromEntries(outcomes.map(outcome => [outcome.key, 0])),
-  }]));
-  for (const row of rows) {
-    const status = state(row);
-    if (!status.mapped) continue;
-    const category = status.dimHit
-      ? (status.semHit ? 'bothRoutes' : 'dimensionOnly')
-      : (status.semHit ? 'semanticOnly' : 'neitherRoute');
-    const outcome = status.oldHit
-      ? (status.newHit ? 'bothFusion' : 'onlineOnly')
-      : (status.newHit ? 'offlineOnly' : 'neitherFusion');
-    buckets[category].total += 1;
-    buckets[category][outcome] += 1;
-  }
-  const mappedCount = rows.filter(row => state(row).mapped).length;
-  const maxCategoryCount = Math.max(1, ...categories.map(category => buckets[category.key].total));
+  const mapped = rows.filter(row => state(row, activeStrategy, topK).mapped);
+  const groups = categories.map(category => mapped.filter(row => {
+    const s = state(row, activeStrategy, topK);
+    return s.semHit === category.sem && s.dimHit === category.dim;
+  }));
+  const maxCount = Math.max(1, ...groups.map(group => group.length));
   const head = el('div', 'route-fusion-head');
-  const title = el('h2', '', '两路 Top-5 命中组合与融合结果');
+  const title = el('h2', '', '两路命中组合与当前融合结果');
   title.id = 'route-fusion-title';
-  head.append(title);
-  head.append(el('div', 'route-fusion-note', `当前离线策略：${offlineLabel()}。仅统计 Gold 已映射的 ${mappedCount} 条查询；条块总长度按组内查询数缩放，颜色分段表示线上与当前离线策略的命中关系。`));
-  const legend = el('div', 'route-fusion-legend');
-  for (const outcome of outcomes) {
-    const item = document.createElement('span');
-    const dot = el('i', 'legend-dot');
-    dot.style.backgroundColor = outcome.color;
-    item.append(dot, document.createTextNode(outcome.label));
+  head.append(title, el('div', 'route-fusion-note',
+    offlineLabel() + ' · 语义 Top-' + topK.semantic + ' / 维度 Top-' + topK.dimension + ' / 融合 Top-' + topK.fusion + ' · Gold 已映射 ' + mapped.length + ' 条'));
+  const table = el('table', 'fusion-table');
+  const thead = el('thead'), header = el('tr');
+  for (const label of ['两路检索命中情况', '查询总数', '融合结果 · 查询数量', '命中率']) header.append(el('th', '', label));
+  thead.append(header);
+  const tbody = el('tbody');
+  for (const [index, category] of categories.entries()) {
+    const group = groups[index];
+    const hits = group.filter(row => state(row, activeStrategy, topK).newHit).length;
+    const misses = group.length - hits;
+    const tr = el('tr'); tr.dataset.category = category.key;
+    const label = el('th', '', category.label); label.scope = 'row';
+    tr.append(label, el('td', 'fusion-total', group.length));
+    const result = el('td', 'fusion-result');
+    const scale = el('div', 'fusion-scale');
+    const track = el('div', 'fusion-rate-track');
+    track.style.width = `${group.length / maxCount * 100}%`;
+    track.setAttribute('role', 'group');
+    track.setAttribute('aria-label', '融合命中 ' + hits + ' 条，未命中 ' + misses + ' 条');
+    for (const [count, kind, label] of [[hits, 'hit', '融合命中'], [misses, 'miss', '融合未命中']]) {
+      if (!count) continue;
+      const segment = el('button', `fusion-band ${kind}`);
+      segment.type = 'button';
+      const filter = `combination-${Number(category.sem)}${Number(category.dim)}${kind === 'hit' ? '1' : '0'}`;
+      segment.dataset.filter = filter;
+      segment.setAttribute('aria-label', `${category.label} · ${label}，${count} 条，点击查看 ${offlineLabel()} 对应详情`);
+      segment.addEventListener('click', () => showChartCases(filter));
+      segment.append(el('span', 'fusion-band-label', count));
+      segment.style.flexGrow = String(count);
+      segment.dataset.count = String(count);
+      segment.title = `${category.label} · ${label} ${count} 条，点击查看详情`;
+      track.append(segment);
+    }
+    scale.append(track);
+    if (!group.length) scale.append(el('span', 'fusion-band-empty', '无查询'));
+    result.append(scale);
+    tr.append(result, el('td', 'fusion-rate', group.length ? (hits / group.length * 100).toFixed(1) + '%' : '—'));
+    tbody.append(tr);
+  }
+  table.append(thead, tbody);
+  const wrap = el('div', 'evaluation-table-wrap'); wrap.append(table);
+  const hits = mapped.filter(row => state(row, activeStrategy, topK).newHit).length;
+  const legend = el('div', 'fusion-band-legend');
+  for (const [kind, label] of [['hit', '融合命中'], ['miss', '融合未命中']]) {
+    const item = el('span');
+    item.append(el('i', `fusion-band-swatch ${kind}`), document.createTextNode(label));
     legend.append(item);
   }
-  const chartRows = el('div', 'route-fusion-rows');
-  for (const category of categories) {
-    const bucket = buckets[category.key];
-    const line = el('div', 'route-fusion-row');
-    const label = el('div', 'route-fusion-label');
-    label.append(el('strong', '', category.label), el('span', '', `${bucket.total} 条`));
-    const track = el('div', 'route-fusion-track');
-    const bar = el('div', 'route-fusion-bar');
-    bar.style.width = `${bucket.total / maxCategoryCount * 100}%`;
-    bar.setAttribute('role', 'img');
-    bar.setAttribute('aria-label', `${category.label}，共 ${bucket.total} 条`);
-    for (const outcome of outcomes) {
-      const count = bucket[outcome.key];
-      if (!count) continue;
-      const segment = el('div', 'route-fusion-segment', count);
-      segment.style.flexGrow = String(count);
-      segment.style.backgroundColor = outcome.color;
-      segment.title = `${outcome.label}：${count} 条`;
-      bar.append(segment);
-    }
-    track.append(bar);
-    const counts = el('div', 'route-fusion-counts');
-    for (const outcome of outcomes) {
-      const count = el('div', 'route-fusion-count');
-      count.title = outcome.label;
-      count.append(el('strong', '', bucket[outcome.key]), document.createTextNode(outcome.short));
-      counts.append(count);
-    }
-    line.append(label, track, counts);
-    chartRows.append(line);
-  }
-  if (!mappedCount) chartRows.append(el('div', 'route-fusion-empty', '没有可统计的 Gold 映射数据。'));
-  panel.replaceChildren(head, legend, chartRows);
+  $('#route-fusion-chart').replaceChildren(head, legend, wrap,
+    el('div', 'route-fusion-note', '合计：融合命中 ' + hits + ' 条，未命中 ' + (mapped.length - hits) + ' 条。点击色段查看对应类别详情。条带长度与数量成正比；窄色段数字显示在相邻上方或下方。未映射问题不参与统计。'));
+  chartResizeObserver.disconnect();
+  for (const track of wrap.querySelectorAll('.fusion-rate-track')) chartResizeObserver.observe(track);
 }
-function renderNotes() {
-  const mapped = rows.filter(row => state(row).mapped);
-  const oldLost = mapped.filter(row => { const s = state(row); return (s.semHit || s.dimHit) && !s.oldHit; }).length;
-  const newLost = mapped.filter(row => { const s = state(row); return (s.semHit || s.dimHit) && !s.newHit; }).length;
-  const rescued = mapped.filter(row => { const s = state(row); return !s.oldHit && s.newHit; }).length;
-  const harmed = mapped.filter(row => { const s = state(row); return s.oldHit && !s.newHit; }).length;
-  $('#strategy-notes').hidden = false;
-  $('#badcase-summary').textContent = mapped.length
-    ? `当前 ${rows.length} 条快照中，单路已进 Top-5、原融合却掉出的查询有 ${oldLost} 条；${offlineLabel()} 后还有 ${newLost} 条。相对线上融合，当前离线策略救回 ${rescued} 条、使 ${harmed} 条原 Top-5 命中掉出。`
-    : '没有 Gold 排名；仍可逐条比较各路与离线融合结果。';
+function showChartCases(filter) {
+  caseStrategy = activeStrategy;
+  $('#case-strategy-select').value = caseStrategy;
+  for (const key of ['semantic', 'dimension', 'fusion']) {
+    const value = topK[key];
+    caseTopK[key] = value;
+    const select = $(`#case-${key}-topk`);
+    if (![...select.options].some(option => Number(option.value) === value)) {
+      const option = el('option', '', value);
+      option.value = String(value);
+      const next = [...select.options].find(item => Number(item.value) > value);
+      select.add(option, next || null);
+    }
+    select.value = String(value);
+  }
+  $('#search').value = '';
+  $('#filter').value = filter;
+  selectedName = null;
+  refreshCasePanel();
+  $('#filter').focus({ preventScroll: true });
+  $('#case-panel').scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
 }
 function passes(row, filter) {
   if (filter === 'all') return true;
-  const s = state(row);
+  const s = state(row, caseStrategy, caseTopK);
   if (filter === 'unmapped') return !s.mapped;
   if (!s.mapped) return false;
-  if (filter === 'baseline-miss') return !s.oldHit;
-  if (filter === 'new-fusion-miss') return !s.newHit;
-  if (filter === 'rescued') return !s.oldHit && s.newHit;
-  if (filter === 'harmed') return s.oldHit && !s.newHit;
-  if (filter === 'offline-rescued') return !isRank(row.new_rank) && s.newHit;
-  if (filter === 'offline-harmed') return isRank(row.new_rank) && !s.newHit;
+  if (filter === 'fusion-miss') return !s.newHit;
   if (filter === 'semantic-miss') return !s.semHit;
   if (filter === 'dimension-miss') return !s.dimHit;
-  if (filter === 'both') return s.semHit && s.dimHit;
+  const combination = /^combination-([01])([01])([01])$/.exec(filter);
+  if (combination) return [s.semHit, s.dimHit, s.newHit].every((hit, index) => hit === (combination[index + 1] === '1'));
   return true;
+}
+function refreshCasePanel() {
+  const labels = {
+    'semantic-miss': `语义 Top-${caseTopK.semantic} 未命中`,
+    'dimension-miss': `维度 Top-${caseTopK.dimension} 未命中`,
+    'fusion-miss': `融合 Top-${caseTopK.fusion} 未命中`,
+  };
+  for (const option of $('#filter').options) if (labels[option.value]) option.textContent = labels[option.value];
+  $('#case-settings-note').textContent = `仅影响本 panel：${strategyLabel(caseStrategy)}，语义 Top-${caseTopK.semantic} / 维度 Top-${caseTopK.dimension} / 融合 Top-${caseTopK.fusion}。详情始终对比四路并展示全部候选。`;
+  applyFilters();
 }
 function applyFilters() {
   const text = $('#search').value.trim().toLocaleLowerCase();
@@ -222,8 +246,8 @@ function renderList() {
   const cards = filtered.map((row, index) => {
     const button = el('button', `question-item${row.name === selectedName ? ' active' : ''}`);
     button.type = 'button';
-    const status = state(row);
-    const label = !status.mapped ? '未映射 · 不计 Gold 指标' : `${offlineLabel()} ${status.newHit ? '命中' : '未命中'}`;
+    const status = state(row, caseStrategy, caseTopK);
+    const label = !status.mapped ? '未映射 · 不计 Gold 指标' : `${strategyLabel(caseStrategy)} Top-${caseTopK.fusion} ${status.newHit ? '命中' : '未命中'}`;
     const kind = !status.mapped ? 'unrated' : status.newHit ? 'hit' : 'lost';
     const meta = el('div', 'question-item-meta');
     meta.append(el('span', '', `#${index + 1}`), el('span', `mini-state ${kind}`, label));
@@ -310,15 +334,17 @@ function showChunk(detail, chunkId, title, rank) {
 }
 function renderRoute(detail, row, key, title, description, rankKey) {
   const items = detail.routes[key] || [];
+  const limit = caseTopK[key] ?? caseTopK.fusion;
   const box = el('section', 'route');
   const head = el('div', 'route-head');
-  head.append(el('div', 'route-title', title), el('div', 'route-sub', `${items.length} 个候选 · ${description}`));
+  head.append(el('div', 'route-title', title), el('div', 'route-sub', `${description} · 全部 ${items.length} 个候选`));
   const goldRank = row[rankKey];
-  if (state(row).mapped) head.append(el('div', `route-gold-rank${!isRank(goldRank) ? ' lost' : ''}`, goldLabel(goldRank, true)));
+  if (state(row).mapped) head.append(el('div', `route-gold-rank${!isRank(goldRank, limit) ? ' lost' : ''}`, `${goldLabel(goldRank, true)} · Top-${limit} ${isRank(goldRank, limit) ? '命中' : '未命中'}`));
   box.append(head);
   const list = el('div', 'route-list');
-  const visible = showAll ? items : items.slice(0, 5);
-  for (const item of visible) {
+  list.tabIndex = 0;
+  list.setAttribute('aria-label', `${title} 全部候选，可滚动查看`);
+  for (const item of items) {
     const rank = item.rank;
     const firstGold = state(row).mapped && rank === goldRank;
     const card = el('div', `candidate${firstGold ? ' is-gold' : ''}`);
@@ -338,7 +364,6 @@ function renderRoute(detail, row, key, title, description, rankKey) {
     }
     list.append(card);
   }
-  if (!showAll && items.length > 5) list.append(el('div', 'cutline', `Top-5 截止线 · 后续 ${items.length - 5} 个`));
   if (!items.length) list.append(el('div', 'empty', '该路由没有候选'));
   box.append(list);
   return box;
@@ -362,30 +387,25 @@ function renderDetail(detail, row) {
   head.append(intro, nav);
 
   const badges = el('div', 'badges');
-  for (const [name, key] of [['语义', 'semantic_rank'], ['维度', 'dimension_rank'], ['原融合', 'old_rank'], ['维度分数离线融合', 'new_rank']]) {
-    const rank = row[key];
-    const status = !state(row).mapped ? '未标注' : isRank(rank) ? `Top-5 命中 #${rank}` : Number.isInteger(rank) ? `第 ${rank} 名` : '未召回';
-    badges.append(el('span', `badge${state(row).mapped ? isRank(rank) ? ' hit' : ' miss' : ''}`, `${name} ${status}`));
+  for (const [name, key] of [['语义', 'semantic_rank'], ['维度', 'dimension_rank'], ['线上融合', 'old_rank'], ['推荐融合', 'recommended_rank']]) {
+    const limit = key === 'semantic_rank' ? caseTopK.semantic : key === 'dimension_rank' ? caseTopK.dimension : caseTopK.fusion;
+    const rank = row[key], hit = isRank(rank, limit);
+    const status = !state(row).mapped ? '未标注' : hit ? `Top-${limit} 命中 #${rank}` : Number.isInteger(rank) ? '第 ' + rank + ' 名' : '未召回';
+    badges.append(el('span', 'badge' + (state(row).mapped ? hit ? ' hit' : ' miss' : ''), name + ' ' + status));
   }
-  badges.append(el('span', 'badge gold', state(row).mapped ? `Golden ${row.gold_count} 个` : 'Gold 未映射'));
-  if (activeStrategy !== 'new') {
-    const rank = offlineRank(row);
-    badges.append(el('span', `badge${state(row).mapped ? isRank(rank) ? ' hit' : ' miss' : ''}`,
-      `${offlineLabel()} · ${state(row).mapped ? goldLabel(rank, true) : 'Gold 未映射'}`));
-    if (state(row).mapped) badges.append(el('span', 'badge',
-      `相对维度分数基准：${!isRank(row.new_rank) && isRank(rank) ? '救回 Top-5' : isRank(row.new_rank) && !isRank(rank) ? '掉出 Top-5' : 'Top-5 命中状态相同'}`));
-  }
+  badges.append(el('span', 'badge gold', state(row).mapped ? 'Golden ' + row.gold_count + ' 个' : 'Gold 未映射'));
   const routes = el('div', 'routes');
+  const routeDetail = {...detail, routes: {...detail.routes, recommended: detail.recommended?.candidates || []}};
   routes.append(
     renderRoute(detail, row, 'semantic', '语义检索', '相似度排序', 'semantic_rank'),
     renderRoute(detail, row, 'dimension', '维度检索', '维度匹配排序', 'dimension_rank'),
-    renderRoute(detail, row, 'old', '原融合', '来自 output', 'old_rank'),
-    renderRoute(detail, row, 'new', '离线融合（维度分数）', '保留基准 · output_new', 'new_rank'),
+    renderRoute(detail, row, 'old', '线上融合', '线上快照排名', 'old_rank'),
+    renderRoute(routeDetail, row, 'recommended', '推荐融合', '维度角色校准', 'recommended_rank'),
   );
   renderRecommended(detail, row, routes);
   const foot = el('div', 'detail-foot');
   foot.append(el('span', 'chunk-hint', '点击 chunk 编号查看快照中保存的正文。'));
-  if (state(row).mapped) foot.append(el('span', '', 'Gold 标记显示各路首个 golden；维度分数融合在离线快照上计算，线上策略保持不变。'));
+  foot.append(el('span', '', '各列可独立滚动查看全部已保存候选；命中标记采用本 panel 的 Top-K，融合筛选采用本 panel 所选策略。'));
   root.replaceChildren(head, badges, renderConstraints(detail), routes, foot);
 }
 async function loadDetail() {
@@ -460,12 +480,25 @@ async function start() {
       throw new Error('静态索引为空；请重新运行 build_static_data.py 生成页面数据包');
     }
     rows = manifest.items.map(row => ({...row, ...(window.RECOMMENDED_INDEX?.items?.[row.name] || {})}));
-    setupRecommended();
-    $('#subtitle').textContent = '比较语义检索、维度检索、线上融合、维度分数基准和推荐融合；支持逐题诊断。';
+    if (!window.RECOMMENDED_INDEX) {
+      activeStrategy = 'new';
+      caseStrategy = 'new';
+      $('#strategy-select').value = 'new';
+      $('#case-strategy-select').value = 'new';
+      $('#strategy-select').querySelector('option[value="recommended"]').disabled = true;
+      $('#case-strategy-select').querySelector('option[value="recommended"]').disabled = true;
+    }
+    $('#strategy-select').addEventListener('change', () => { activeStrategy = $('#strategy-select').value; renderRouteFusionChart(); });
+    for (const key of ['semantic', 'dimension', 'fusion']) {
+      $('#' + key + '-topk').addEventListener('change', event => {
+        const value = Number(event.target.value);
+        if (!Number.isSafeInteger(value) || value < 1) { event.target.value = topK[key]; return; }
+        topK[key] = value; renderRouteFusionChart();
+      });
+    }
+    $('#subtitle').textContent = '按策略和 Top-K 查看命中组合；逐题固定对比语义、维度、线上融合与推荐融合。';
     renderMetrics(manifest.evaluation);
     renderEvaluation(manifest.evaluation);
-    renderRouteFusionChart();
-    renderNotes();
     const hasGold = rows.some(row => state(row).mapped);
     const unmappedCount = rows.filter(row => !state(row).mapped).length;
     const unmappedOption = $('#filter').querySelector('option[value="unmapped"]');
@@ -475,13 +508,26 @@ async function start() {
     }
     $('#search').addEventListener('input', applyFilters);
     $('#filter').addEventListener('change', applyFilters);
-    $('#show-all').addEventListener('click', () => {
-      showAll = !showAll;
-      $('#show-all').textContent = showAll ? '仅显示 Top-5' : '展开全部候选';
-      loadDetail();
+    $('#case-strategy-select').addEventListener('change', event => {
+      caseStrategy = event.target.value;
+      refreshCasePanel();
     });
+    for (const key of ['semantic', 'dimension', 'fusion']) {
+      const select = $(`#case-${key}-topk`);
+      select.replaceChildren(...[1, 3, 5, 10, 20, 50, 100].map(value => {
+        const option = el('option', '', value);
+        option.value = String(value);
+        return option;
+      }));
+      select.value = String(caseTopK[key]);
+      select.addEventListener('change', event => {
+        caseTopK[key] = Number(event.target.value);
+        refreshCasePanel();
+      });
+    }
     $('#chunk-dialog-close').addEventListener('click', () => $('#chunk-dialog').close());
-    applyFilters();
+    renderRouteFusionChart();
+    refreshCasePanel();
   } catch (error) {
     $('#app').replaceChildren(el('div', 'error', `未能加载融合快照：${error.message}`));
   }
@@ -491,10 +537,8 @@ start();
 function renderRecommended(detail, row, routes) {
   const experiment = detail.recommended;
   if (!experiment) return;
-  routes.append(renderRoute({...detail, routes: {...detail.routes, recommended: experiment.candidates}},
-    row, 'recommended', window.RECOMMENDED_INDEX.label, '局部证据 · 维度角色校准', 'recommended_rank'));
   const c = experiment.configuration, d = experiment.diagnostics;
-  const diagnostics = el('details', 'dimension-info'); diagnostics.open = true;
+  const diagnostics = el('details', 'dimension-info');
   diagnostics.append(el('summary', '', '推荐策略：原始 gap、维度角色与局部证据'));
   const gold = new Set(detail.gold?.gold_chunk_ids || []);
   for (const [key, p] of Object.entries(d.gaps)) {
@@ -503,25 +547,10 @@ function renderRecommended(detail, row, routes) {
   }
   diagnostics.append(el('p', '', `同首位大 gap 保护：${d.shared_gap_active ? '触发' : '未触发'}；要求两路首位一致，且至少一路相对 gap ≥ ${(c.shared_gap_relative * 100).toFixed(1)}%、突出程度 ≥ ${c.shared_gap_prominence} 倍。大 gap 不代表候选正确。`),
     el('p', '', `当前维度${d.topic_only ? '仅表达泛化地点' : '包含具体内容或 POI'}；角色校准${d.role_calibration_active ? '启用' : '未启用'}。仅在泛化地点约束且语义相对 gap ≥ ${(c.role_semantic_gap * 100).toFixed(1)}% 时启用。实际维度缩放 ${d.dimension_scale.toFixed(4)}、词面缩放 ${d.lexical_scale.toFixed(4)}。`));
-  for (const item of experiment.candidates.slice(0, 5)) {
+  for (const item of experiment.candidates) {
     const f = item.lexical_evidence;
     diagnostics.append(el('p', '', `#${item.rank} ${item.chunk_id}：局部窗口覆盖 ${f.window.toFixed(4)}；事实锚点 ${f.intent_anchor.toFixed(4)}（${f.matched_anchors.join('、') || '无命中'}）。`));
   }
+  diagnostics.classList.add('strategy-diagnostics');
   routes.append(diagnostics);
 }
-
-function setupRecommended() {
-  const data = window.RECOMMENDED_INDEX;
-  if (!data) return;
-  const panel = $('#recommended-summary'), r = data.report, m = r.metrics;
-  panel.hidden = false;
-  panel.append(el('h2', '', data.label),
-    el('p', '', `Top-5 ${(m.hit_at_5 / m.mapped_queries * 100).toFixed(2)}%（${m.hit_at_5}/${m.mapped_queries}）；相对维度分数基准救回 ${r.changes_vs_baseline.rescued} 条、掉出 ${r.changes_vs_baseline.harmed} 条。`),
-    el('p', '', `剩余 ${r.remaining_badcases} 条 Top-5 badcase：${r.candidate_pool_missing} 条 Golden 未进入候选池，${r.remaining_badcases - r.candidate_pool_missing} 条已进入但排名靠后。使用“当前离线 Top-5 未命中”筛选查看。`),
-    el('p', '', '推荐融合结合两路得分与名次、320 字局部证据和查询事实锚点；维度只表达泛化地点时有条件地调整贡献。Gold 仅用于评估。指标为当前历史快照上的结果。'));
-  $('#strategy-select').addEventListener('change', () => {
-    activeStrategy = $('#strategy-select').value;
-    renderRouteFusionChart(); renderNotes(); applyFilters();
-  });
-}
-

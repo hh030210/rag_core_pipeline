@@ -5,8 +5,8 @@ pytest>=7.0
 openai>=1.0
 dashscope>=1.14
 
-# BGE-M3 运行依赖。服务器当前 PyTorch 为 2.0.x，固定 Transformers
-# 兼容区间，避免最新版 Transformers 因要求 PyTorch >=2.1 而无法导入。
+# BGE-M3 dependencies. Keep Transformers compatible with the server's PyTorch 2.0.x.
+# Newer Transformers releases may require PyTorch >=2.1.
 FlagEmbedding>=1.4.2
 sentence-transformers>=3.0,<4.0
 transformers==4.44.2
