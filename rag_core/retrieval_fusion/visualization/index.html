@@ -50,7 +50,6 @@
     .evaluation-table tbody tr:last-child th, .evaluation-table tbody tr:last-child td { border-bottom: 0; }
     .evaluation-table tbody tr.is-new { background: #f0f8f6; }
     .evaluation-table tbody tr.is-new th { color: var(--teal); }
-    #recommended-summary > p { font-size: 12px; line-height: 1.65; }
     .route-fusion-panel { margin: 0 0 18px; padding: 16px 18px; }
     .route-fusion-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
     .route-fusion-head h2 { margin: 0; font-size: 16px; }
@@ -115,26 +114,26 @@
     .alert { display: none; background: var(--red-soft); border: 1px solid #f2d4ce; color: #8e3535; border-radius: 10px; padding: 10px 12px; margin: 0 0 15px; }
     .alert.visible { display: block; }
     .alert strong { font-weight: 700; }
-    .routes { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; overflow-x: auto; padding-bottom: 5px; }
-    .route { min-width: 190px; border: 1px solid var(--line); border-radius: 11px; overflow: hidden; background: #fff; }
+    .routes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding-bottom: 5px; }
+    .route { min-width: 0; border: 1px solid var(--line); border-radius: 11px; overflow: hidden; background: #fff; }
     .route-head { min-height: 66px; padding: 10px 11px; background: #f8fafb; border-bottom: 1px solid var(--line); }
-    .route-title { font-weight: 700; font-size: 13px; }
-    .route-sub { margin-top: 3px; color: var(--muted); font-size: 11px; }
-    .route-gold-rank { margin-top: 4px; font-size: 11px; font-weight: 700; color: var(--teal); }
+    .route-title { font-weight: 700; font-size: 15px; }
+    .route-sub { margin-top: 3px; color: var(--muted); font-size: 12px; }
+    .route-gold-rank { margin-top: 4px; font-size: 12px; font-weight: 700; color: var(--teal); }
     .route-gold-rank.lost { color: var(--red); }
-    .route-list { padding: 6px; }
-    .candidate { border-radius: 8px; padding: 8px; margin: 3px 0; min-height: 58px; background: #fff; border: 1px solid transparent; }
+    .route-list { padding: 6px; max-height: 520px; overflow-y: auto; scrollbar-gutter: stable; }
+    .candidate { border-radius: 8px; padding: 10px; margin: 4px 0; min-height: 58px; background: #fff; border: 1px solid transparent; }
     .candidate:hover { background: #f7f9fa; border-color: var(--line); }
     .candidate.is-gold { background: #fffaf0; border-color: #f1dcae; }
     .candidate.is-linked-hover { background: #d8efed; border-color: #55a9a8; box-shadow: inset 0 0 0 1px rgba(8,126,131,.16); }
     .candidate.is-dropped { box-shadow: inset 3px 0 var(--red); }
     .candidate-top { display: flex; justify-content: space-between; gap: 5px; align-items: center; }
-    .rank { color: var(--muted); font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .rank { color: var(--muted); font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; }
     .candidate-flags { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
-    .flag { font-size: 9px; line-height: 1.5; padding: 1px 5px; border-radius: 999px; color: var(--muted); background: #eef1f3; }
+    .flag { font-size: 10px; line-height: 1.5; padding: 1px 5px; border-radius: 999px; color: var(--muted); background: #eef1f3; }
     .flag.gold { color: var(--gold); background: var(--gold-soft); }
     .flag.dropped { color: var(--red); background: var(--red-soft); }
-    .chunk-id { margin-top: 5px; font: 10px/1.35 ui-monospace, SFMono-Regular, Menlo, monospace; color: #425663; overflow-wrap: anywhere; }
+    .chunk-id { margin-top: 5px; font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; color: #425663; overflow-wrap: anywhere; }
     .chunk-link { display: block; width: 100%; padding: 0; border: 0; background: transparent; text-align: left; cursor: pointer; }
     .chunk-link:hover { color: var(--teal); text-decoration: underline; }
     .question-dimensions { margin: 12px 0; padding: 12px; border: 1px solid #d9e5e7; border-radius: 11px; background: #f7fbfb; }
@@ -151,7 +150,7 @@
     .dimension-note { margin-top: 7px; color: var(--muted); font-size: 10px; }
     .dimension-card-info { margin-top: 7px; }
     .dimension-preview { display: flex; flex-wrap: wrap; gap: 3px; }
-    .dimension-info { margin-top: 7px; padding-top: 5px; border-top: 1px dashed #d3dce0; color: #52636b; font-size: 10px; }
+    .dimension-info { margin-top: 7px; padding-top: 5px; border-top: 1px dashed #d3dce0; color: #52636b; font-size: 12px; }
     .dimension-info summary { cursor: pointer; color: #326f70; }
     .dimension-info-body { padding: 6px 0 2px; }
     .dimension-group { margin: 5px 0 8px; }
@@ -164,7 +163,7 @@
     .chunk-dialog-meta { padding: 10px 19px 0; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
     .chunk-content { margin: 0; padding: 16px 19px 20px; max-height: 62vh; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: 13px/1.75 ui-monospace, SFMono-Regular, Menlo, monospace; }
     .chunk-hint { color: var(--teal); }
-    .score-line { margin-top: 4px; font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .score-line { margin-top: 5px; font-size: 12px; line-height: 1.6; color: var(--muted); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
     .cutline { margin: 9px 4px 7px; padding-top: 6px; border-top: 1px dashed #d3dce0; color: #8a969d; font-size: 10px; text-align: center; }
     .empty { padding: 35px 15px; text-align: center; color: var(--muted); }
     .detail-foot { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 13px; color: var(--muted); font-size: 11px; }
@@ -175,8 +174,56 @@
     @media (max-width: 1450px) { .strategy-notes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 1100px) { .strategy-notes { grid-template-columns: 1fr; } .route-fusion-row { grid-template-columns: minmax(130px, 180px) minmax(100px, 1fr); } .route-fusion-counts { grid-column: 1 / -1; } }
     @media (max-width: 620px) { .route-fusion-row { grid-template-columns: 1fr; gap: 7px; } .route-fusion-counts { grid-column: auto; } }
-    @media (max-width: 1250px) { .routes { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); } }
+    @media (max-width: 1100px) { .routes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 620px) { .routes { grid-template-columns: 1fr; } }
     @media (max-width: 760px) { .topbar-inner { align-items: flex-start; flex-direction: column; } .metrics { grid-template-columns: repeat(2, 1fr); } .layout { grid-template-columns: 1fr; } .list-panel { position: static; max-height: 300px; } .detail { padding: 13px; } .detail-top { flex-direction: column; } .navigation { width: 100%; } .question-title { font-size: 17px; } }
+    .retrieval-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 16px; padding-bottom: 16px; margin-bottom: 16px; border-bottom: 1px solid var(--line); }
+    .retrieval-controls label { display: grid; gap: 6px; font-size: 12px; font-weight: 650; }
+    .retrieval-controls input { width: 100px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 9px; color: var(--ink); }
+    .retrieval-controls p { flex-basis: 100%; margin: 0; color: var(--muted); font-size: 12px; }
+    .fusion-table { width: 100%; min-width: 720px; table-layout: fixed; border-collapse: collapse; font-variant-numeric: tabular-nums; margin-bottom: 12px; }
+    .fusion-table th, .fusion-table td { padding: 22px 10px; border-bottom: 1px solid var(--line); text-align: right; }
+    .fusion-table thead th { padding-top: 12px; padding-bottom: 12px; }
+    .fusion-table th:first-child { width: 220px; }
+    .fusion-table th:nth-child(2) { width: 80px; }
+    .fusion-table th:last-child { width: 80px; }
+    .fusion-table th:nth-child(3) { text-align: left; }
+    .fusion-table thead th { background: #f7f9fa; color: var(--muted); font-size: 12px; }
+    .fusion-table th:first-child { text-align: left; }
+    .fusion-table tbody th { font-size: 13px; font-weight: 650; }
+    .fusion-rate { font-weight: 700; }
+    .fusion-scale { position: relative; height: 30px; }
+    .fusion-rate-track { display: flex; height: 30px; }
+    .fusion-band { position: relative; display: flex; flex-basis: 0; min-width: 0; padding: 0; border: 0; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+    .fusion-band:hover { filter: brightness(.92); }
+    .fusion-band:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; z-index: 1; }
+    .case-panel { scroll-margin-top: 16px; }
+    .fusion-band:first-child { border-radius: 6px 0 0 6px; }
+    .fusion-band:last-child { border-radius: 0 6px 6px 0; }
+    .fusion-band:only-child { border-radius: 6px; }
+    .fusion-band-label { position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+    .fusion-band.compact.hit .fusion-band-label { bottom: calc(100% + 4px); color: var(--teal); }
+    .fusion-band.compact.miss .fusion-band-label { top: calc(100% + 4px); color: #702a24; }
+    .fusion-band.compact .fusion-band-label::after { content: ''; position: absolute; left: 50%; height: 4px; border-left: 1px solid currentColor; }
+    .fusion-band.compact.hit .fusion-band-label::after { top: 100%; }
+    .fusion-band.compact.miss .fusion-band-label::after { bottom: 100%; }
+    .fusion-band.hit, .fusion-band-swatch.hit { background: var(--teal); color: white; }
+    .fusion-band.miss, .fusion-band-swatch.miss { background: #efb8ac; color: #702a24; }
+    .fusion-band-empty { position: absolute; left: 0; top: 5px; color: var(--muted); font-size: 12px; }
+    .fusion-band-legend { display: flex; gap: 18px; margin: 0 0 12px; color: var(--muted); font-size: 12px; }
+    .fusion-band-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .fusion-band-swatch { width: 12px; height: 12px; border-radius: 3px; }
+    .strategy-diagnostics { grid-column: 1 / -1; font-size: 12px; max-height: 360px; overflow-y: auto; }
+    .route-list:focus-visible, .retrieval-controls input:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+    .case-panel { padding: 18px; }
+    .case-panel-title { margin: 0 0 14px; font-size: 17px; }
+    .case-controls select { min-width: 90px; }
+    .case-controls .strategy-control select { min-width: 220px; }
+    .case-panel .list-panel { border: 1px solid var(--line); border-radius: 11px; background: #f8fafb; }
+    .case-panel .detail { padding: 0; }
+    .case-panel .toolbar .search { min-width: 0; }
+    .case-panel #filter { max-width: 100%; }
+    @media (max-width: 760px) { .case-panel { padding: 13px; } .case-panel #filter { width: 100%; } }
   </style>
 </head>
 <body>
@@ -187,21 +234,16 @@
     </div>
   </header>
   <main class="page" id="app">
-    <section class="metrics" id="metrics"></section>
-    <section class="panel evaluation-panel" id="evaluation-panel" aria-labelledby="evaluation-title" hidden></section>
-    <section class="panel evaluation-panel" id="recommended-summary" hidden></section>
-    <section class="panel route-fusion-panel" id="route-fusion-panel" aria-labelledby="route-fusion-title"></section>
-    <section class="strategy-notes" id="strategy-notes" aria-label="融合策略说明" hidden>
+    <section class="strategy-notes" id="strategy-notes" aria-label="融合策略说明">
       <article class="strategy-note">
         <h2>线上融合基准</h2>
         <p>语义、维度两路各自在本路候选内做 Min–Max 归一化：<strong>N(s) = (s − min(s)) / (max(s) − min(s))</strong>；若本路分数相同，则该路候选归一化分均为 1。按 chunk 并集计算：<strong>F<sub>online</sub> = (1 − α)N<sub>sem</sub> + αN<sub>dim</sub></strong>，缺失路贡献为 0。</p>
-        <p><strong>参数：</strong>α 是维度路权重，当前默认 <strong>α = 0.20</strong>（语义 0.80、维度 0.20，可由 <code>DIM_ALPHA</code> 配置）。本页“原融合”列展示快照里已保存的实际排名；历史快照含不同分支，不在页面重算。</p>
+        <p><strong>参数：</strong>α 是维度路权重，当前默认 <strong>α = 0.20</strong>（语义 0.80、维度 0.20，可由 <code>DIM_ALPHA</code> 配置）。本页“线上融合”列展示快照里已保存的实际排名；历史快照含不同分支，不在页面重算。</p>
       </article>
       <article class="strategy-note">
         <h2>离线融合：维度分数融合</h2>
         <p>对线上融合候选重排：<strong>F<sub>offline</sub> = S* + 0.05D<sub>norm</sub> + 0.10L<sub>norm</sub></strong>。<strong>S*</strong> 为语义原始分；缺失时用 <strong>max(0, min(S) − 0.025)</strong> 估计。<strong>D<sub>norm</sub></strong> 为维度路 Min–Max 分（缺失为 0）；<strong>L<sub>norm</sub></strong> 为 IDF 加权字符 2/3/4-gram 查询覆盖率，再除以当前候选池的最高词面分。</p>
-        <p><strong>参数：</strong>维度权重 0.05、词面权重 0.10、语义缺失惩罚 0.025，均固定用于离线基准；IDF 按当前候选池文档频率计算，文本最多取前 4000 字。分项可在候选卡片中查看。</p>
-        <p id="badcase-summary">正在统计线上融合与维度分数离线融合的排名变化…</p>
+        <p><strong>参数：</strong>维度权重 0.05、词面权重 0.10、语义缺失惩罚 0.025，均固定用于离线基准；IDF 按当前候选池文档频率计算，文本最多取前 4000 字。可在上方条形图中选择该策略查看命中统计。</p>
       </article>
       <article class="strategy-note">
         <h2>推荐融合：维度角色校准</h2>
@@ -210,33 +252,65 @@
         <p><strong>角色参数：</strong>仅当约束全属于 entity_name / geo_admin / geo_position、没有具体 POI 且语义相对 gap ≥1% 时，I<sub>role</sub>=1，s<sub>D</sub>=0.85×0.25=0.2125、s<sub>L</sub>=0.5；否则 I<sub>role</sub>=0、s<sub>D</sub>=0.85、s<sub>L</sub>=1。事实锚点权重 0.015；语义名次混合 0.15；词面局部窗口替换比例 0.75。配置固定在 <code>recommended.py</code>，Gold 仅用于离线评估。</p>
       </article>
     </section>
-    <section class="toolbar">
-      <select id="strategy-select" aria-label="选择离线融合对比策略">
+    <section class="metrics" id="metrics"></section>
+    <section class="panel evaluation-panel" id="evaluation-panel" aria-labelledby="evaluation-title" hidden></section>
+    <section class="panel route-fusion-panel" id="route-fusion-panel" aria-labelledby="route-fusion-title">
+    <div class="retrieval-controls" aria-label="条形图策略与 Top-K 设置">
+      <label class="strategy-control">融合策略
+      <select id="strategy-select" aria-label="选择融合策略">
         <option value="recommended">推荐融合（维度角色校准）</option>
         <option value="new">离线融合（维度分数基准）</option>
+        <option value="old">线上融合</option>
       </select>
+      </label>
+      <label>语义 Top-K <input id="semantic-topk" type="number" min="1" step="1" value="5"></label>
+      <label>维度 Top-K <input id="dimension-topk" type="number" min="1" step="1" value="5"></label>
+      <label>融合 Top-K <input id="fusion-topk" type="number" min="1" step="1" value="5"></label>
+      <p>融合策略与 Top-K 仅影响下方条形图；按已有快照排名统计。</p>
+    </div>
+    <div id="route-fusion-chart"></div>
+    </section>
+
+    <section class="panel case-panel" id="case-panel" aria-labelledby="case-panel-title">
+    <h2 class="case-panel-title" id="case-panel-title">问题筛选与检索详情</h2>
+    <div class="retrieval-controls case-controls" aria-label="当前 panel 的融合策略与 Top-K">
+      <label class="strategy-control">融合策略
+        <select id="case-strategy-select" aria-label="问题筛选融合策略">
+          <option value="recommended">推荐融合（维度角色校准）</option>
+          <option value="new">离线融合（维度分数基准）</option>
+          <option value="old">线上融合</option>
+        </select>
+      </label>
+      <label>语义 Top-K <select id="case-semantic-topk" aria-label="问题筛选语义 Top-K"><option value="5">5</option></select></label>
+      <label>维度 Top-K <select id="case-dimension-topk" aria-label="问题筛选维度 Top-K"><option value="5">5</option></select></label>
+      <label>融合 Top-K <select id="case-fusion-topk" aria-label="问题筛选融合 Top-K"><option value="5">5</option></select></label>
+      <p id="case-settings-note"></p>
+    </div>
+    <div class="toolbar">
       <label class="search"><input id="search" type="search" placeholder="搜索问题或快照文件名…" autocomplete="off"></label>
       <select id="filter" aria-label="筛选问题">
         <option value="all">全部问题</option>
         <option value="unmapped">未映射</option>
-        <option value="baseline-miss">原融合 Top-5 未命中</option>
-        <option value="new-fusion-miss">当前离线 Top-5 未命中</option>
-        <option value="rescued">相对线上融合救回 Top-5</option>
-        <option value="harmed">相对线上融合掉出 Top-5</option>
-        <option value="offline-rescued">相对维度分数基准救回 Top-5</option>
-        <option value="offline-harmed">相对维度分数基准掉出 Top-5</option>
         <option value="semantic-miss">语义 Top-5 未命中</option>
         <option value="dimension-miss">维度 Top-5 未命中</option>
-        <option value="both">语义与维度 Top-5 都命中</option>
+        <option value="fusion-miss">融合 Top-5 未命中</option>
+        <option value="combination-111">语义命中 · 维度命中 · 融合命中</option>
+        <option value="combination-110">语义命中 · 维度命中 · 融合未命中</option>
+        <option value="combination-101">语义命中 · 维度未命中 · 融合命中</option>
+        <option value="combination-100">语义命中 · 维度未命中 · 融合未命中</option>
+        <option value="combination-011">语义未命中 · 维度命中 · 融合命中</option>
+        <option value="combination-010">语义未命中 · 维度命中 · 融合未命中</option>
+        <option value="combination-001">语义未命中 · 维度未命中 · 融合命中</option>
+        <option value="combination-000">语义未命中 · 维度未命中 · 融合未命中</option>
       </select>
-      <button class="button" id="show-all">展开全部候选</button>
-    </section>
-    <section class="layout">
-      <aside class="panel list-panel">
+    </div>
+    <div class="layout">
+      <aside class="list-panel">
         <div class="list-heading"><strong>问答列表</strong><span id="list-count"></span></div>
         <div class="question-list" id="question-list"></div>
       </aside>
-      <article class="panel detail" id="detail"><div class="empty">正在加载静态快照…</div></article>
+      <article class="detail" id="detail"><div class="empty">正在加载静态快照…</div></article>
+    </div>
     </section>
   </main>
   <dialog class="chunk-dialog" id="chunk-dialog" aria-labelledby="chunk-dialog-title">
