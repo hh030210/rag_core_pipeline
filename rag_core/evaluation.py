@@ -9,6 +9,11 @@ from __future__ import annotations
 import difflib
 import json
 import math
+import shutil
+import tempfile
+import os
+from datetime import datetime, timezone
+from uuid import uuid4
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
@@ -544,6 +549,83 @@ def _parse_ks(values: Sequence[int] | str) -> Tuple[int, ...]:
     return result or DEFAULT_KS
 
 
+def _publish_fusion_evaluation(rows, config, summary, chunks, experiments_dir=None):
+    """Publish one complete evaluation batch; never accumulate previous snapshots."""
+    experiments = Path(experiments_dir or Path(__file__).resolve().parent / 'retrieval_fusion' / 'experiments').resolve()
+    names = ('01_online_snapshots',)
+    for name in names:
+        folder = experiments / name
+        if folder.is_symlink() or (folder / 'output').is_symlink():
+            raise ValueError('Refusing to replace a symlinked experiment output')
+        folder.mkdir(parents=True, exist_ok=True)
+    stage = Path(tempfile.mkdtemp(prefix='.evaluate-', dir=experiments / names[0]))
+    batch = uuid4().hex
+    generated = datetime.now(timezone.utc).isoformat()
+    chunk_map = {_result_id(c): c for c in chunks}
+    changes = []
+    try:
+        outputs = {name: stage / name / 'output' for name in names}
+        online = outputs[names[0]]
+        details = online / 'dataset' / 'details'
+        details.mkdir(parents=True)
+        manifest = {'schema_version': 1, 'batch_id': batch, 'source': 'run.py evaluate ' + generated,
+                    'generated_at': generated, 'config': config, 'items': [], 'detail_files': {}}
+        for i, row in enumerate(rows):
+            name = 'evaluate_' + str(i).zfill(6) + '.json'
+            gold = list(row['gold']['chunk_ids'])
+            routes, bodies = {}, {}
+            for target, route in [('semantic', 'semantic'), ('dimension', 'dimension'), ('old', 'fusion')]:
+                items = row['retrieval'].get(route + '_candidates')
+                if items is None:
+                    items = row['retrieval'].get(route + '_results')
+                if not isinstance(items, list):
+                    raise ValueError('Evaluation row missing candidate list: ' + route)
+                routes[target] = []
+                for rank, item in enumerate(items, 1):
+                    candidate = dict(item)
+                    cid = _result_id(candidate)
+                    chunk = chunk_map.get(cid, {})
+                    bodies[cid] = {'title': chunk.get('chunk_gen_title') or chunk.get('doc_title') or candidate.get('doc_title') or '',
+                                   'source_file': chunk.get('source_file') or candidate.get('source_file') or '',
+                                   'text': _chunk_text(chunk) or str(candidate.get('chunk_text_full') or candidate.get('chunk_text') or '')}
+                    candidate.pop('chunk_text_full', None)
+                    candidate.pop('chunk_text', None)
+                    candidate['chunk_id'], candidate['rank'] = cid, rank
+                    routes[target].append(candidate)
+            detail = {'name': name, 'batch_id': batch, 'query': row['question'],
+                      'retrieval_query': row.get('retrieval_query') or row['question'],
+                      'query_analysis': row.get('query_analysis', {}),
+                      'gold': {**row['gold'], 'gold_chunk_ids': gold, 'gold_count': len(gold)},
+                      'routes': routes, 'chunks': bodies, 'evaluation': row}
+            (details / name).write_text(json.dumps(detail, ensure_ascii=False) + '\n', encoding='utf-8')
+            manifest['items'].append({'name': name, 'query': row['question'], 'gold_count': len(gold)})
+            manifest['detail_files'][name] = 'details/' + name
+        (online / 'dataset' / 'index.json').write_text(json.dumps(manifest, ensure_ascii=False) + '\n', encoding='utf-8')
+        for name in names:
+            index = json.loads((outputs[name] / 'dataset' / 'index.json').read_text())
+            if index.get('batch_id') != batch or set(index['detail_files']) != set(manifest['detail_files']):
+                raise ValueError('Fusion evaluation batch mismatch: ' + name)
+        # Replace only the online evaluation output; experiments run independently.
+        for name in names:
+            target = experiments / name / 'output'
+            backup = stage / (name + '.previous')
+            had_previous = target.exists()
+            if had_previous:
+                os.replace(target, backup)
+            changes.append((target, backup, had_previous))
+            os.replace(outputs[name], target)
+    except BaseException:
+        for target, backup, had_previous in reversed(changes):
+            if target.exists():
+                shutil.rmtree(target)
+            if had_previous:
+                os.replace(backup, target)
+        raise
+    finally:
+        shutil.rmtree(stage)
+    return experiments / names[0] / 'output'
+
+
 def run_evaluation(
     *,
     run_dir: str | Path,
@@ -559,7 +641,6 @@ def run_evaluation(
 ) -> Dict[str, Any]:
     run_dir = Path(run_dir)
     output_dir = Path(output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
     ks = _parse_ks(ks)
     records = load_gold_records(dataset_path)
     chunks = load_chunks(run_dir)
@@ -616,6 +697,7 @@ def run_evaluation(
             dimension_pool=max(int(eval_depth), int(settings.dimension_pool)),
             original_query=record["question"],
             subqueries=subqueries,
+            save_snapshot=False,
         )
         retrieval["query"] = retrieval_query
         row = evaluate_row(record, retrieval, ks, eval_depth, result_text_chars)
@@ -639,22 +721,23 @@ def run_evaluation(
         "query_parser_mode": query_parser_mode,
         "query_parser_model": settings.llm_model if query_parser_mode == "llm" else "",
     }
-    results_path = output_dir / "results.jsonl"
-    summary_path = output_dir / "summary.json"
-    markdown_path = output_dir / "summary.md"
-    _write_jsonl(results_path, rows)
-    summary_path.write_text(json.dumps({"config": config, **summary}, ensure_ascii=False, indent=2), encoding="utf-8")
-    markdown_path.write_text(_summary_markdown(summary), encoding="utf-8")
+    fusion_output = _publish_fusion_evaluation(rows, config, summary, chunks)
     return {
+        "fusion_output": str(fusion_output),
+        "dataset_path": str(fusion_output / "dataset"),
         "config": config,
         "summary": summary,
-        "results_path": str(results_path),
-        "summary_path": str(summary_path),
-        "markdown_path": str(markdown_path),
     }
 
 
+
 def _read_jsonl(path: str | Path) -> List[Dict[str, Any]]:
+    path = Path(path)
+    if path.is_dir() or path.name == 'index.json':
+        dataset = path if path.is_dir() else path.parent
+        manifest = json.loads((dataset / 'index.json').read_text(encoding='utf-8'))
+        return [json.loads((dataset / relative).read_text(encoding='utf-8'))['evaluation']
+                for relative in manifest['detail_files'].values()]
     result = []
     for line in Path(path).read_text(encoding="utf-8").splitlines():
         if line.strip():

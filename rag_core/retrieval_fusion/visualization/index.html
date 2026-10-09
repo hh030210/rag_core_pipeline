@@ -238,7 +238,7 @@
       <article class="strategy-note">
         <h2>线上融合基准</h2>
         <p>语义、维度两路各自在本路候选内做 Min–Max 归一化：<strong>N(s) = (s − min(s)) / (max(s) − min(s))</strong>；若本路分数相同，则该路候选归一化分均为 1。按 chunk 并集计算：<strong>F<sub>online</sub> = (1 − α)N<sub>sem</sub> + αN<sub>dim</sub></strong>，缺失路贡献为 0。</p>
-        <p><strong>参数：</strong>α 是维度路权重，当前默认 <strong>α = 0.20</strong>（语义 0.80、维度 0.20，可由 <code>DIM_ALPHA</code> 配置）。本页“线上融合”列展示快照里已保存的实际排名；历史快照含不同分支，不在页面重算。</p>
+        <p>本页“线上融合”展示最近一次评测中 <code>fusion.py</code> 输出的实际候选排序；页面只重算评估指标，不重算线上排序。离线与推荐融合由各自实验脚本独立运行，页面分别读取它们保存的结果。</p>
       </article>
       <article class="strategy-note">
         <h2>离线融合：维度分数融合</h2>
@@ -249,7 +249,7 @@
         <h2>推荐融合：维度角色校准</h2>
         <p>从原始语义分、维度分和词面证据起算：<strong>F<sub>rec</sub> = S<sub>eff</sub> + 0.15I<sub>sem</sub>(S<sub>rank</sub> − S<sub>eff</sub>) + s<sub>D</sub>·0.0375D<sub>eff</sub> + s<sub>L</sub>·0.075[(1 − 0.75)L + 0.75W] + 0.015I<sub>role</sub>A</strong>。</p>
         <p><strong>校准：</strong>满足“两路首位相同，且至少一路 Top-5 有 ≥3 个候选、相对 gap ≥2%、突出程度 ≥5”时 β=0.625，否则 β=0；其中相对 gap=(Top1−Top2)/max(|Top2|, 10<sup>−8</sup>)，突出程度=gap/(Top2 至 Top-5 尾部的平均相邻分差)。<strong>S<sub>eff</sub></strong> 是语义原分与语义线性名次分按 β 混合（未召回语义用 max(0, 本路最低分)，不加名次分）；<strong>D<sub>eff</sub></strong> 是归一化维度分与维度线性名次分按 β 混合。<strong>W</strong> 是 320 字窗口、160 字步长的局部 IDF 覆盖；<strong>A</strong> 是查询事实锚点的 IDF 覆盖。窗口、锚点分均在候选池内归一化。</p>
-        <p><strong>角色参数：</strong>仅当约束全属于 entity_name / geo_admin / geo_position、没有具体 POI 且语义相对 gap ≥1% 时，I<sub>role</sub>=1，s<sub>D</sub>=0.85×0.25=0.2125、s<sub>L</sub>=0.5；否则 I<sub>role</sub>=0、s<sub>D</sub>=0.85、s<sub>L</sub>=1。事实锚点权重 0.015；语义名次混合 0.15；词面局部窗口替换比例 0.75。配置固定在 <code>recommended.py</code>，Gold 仅用于离线评估。</p>
+        <p><strong>角色参数：</strong>仅当约束全属于 entity_name / geo_admin / geo_position、没有具体 POI 且语义相对 gap ≥1% 时，I<sub>role</sub>=1，s<sub>D</sub>=0.85×0.25=0.2125、s<sub>L</sub>=0.5；否则 I<sub>role</sub>=0、s<sub>D</sub>=0.85、s<sub>L</sub>=1。事实锚点权重 0.015；语义名次混合 0.15；词面局部窗口替换比例 0.75。配置固定在 <code>experiments/07_recommended_fusion/code/run.py</code>，Gold 仅用于离线评估。</p>
       </article>
     </section>
     <section class="metrics" id="metrics"></section>
@@ -260,7 +260,7 @@
       </select></label>
       <button class="button" id="recalculate-metrics" type="button">重新读取并计算</button>
       <label>导入评测结果 <input id="import-evaluation" type="file" accept=".jsonl,.ndjson,.json"></label>
-      <button class="button" id="restore-snapshots" type="button">返回历史快照</button>
+      <button class="button" id="restore-snapshots" type="button">返回最新评测</button>
       <span id="metric-status" role="status" aria-live="polite"></span>
     </div>
     <section class="panel evaluation-panel" id="evaluation-panel" aria-labelledby="evaluation-title" hidden></section>
@@ -331,8 +331,6 @@
     <div class="chunk-dialog-meta" id="chunk-dialog-meta"></div>
     <pre class="chunk-content" id="chunk-content"></pre>
   </dialog>
-  <script src="./snapshot_index.js" defer></script>
-  <script src="./recommended_index.js" defer></script>
   <script src="./data_metrics.js" defer></script>
   <script src="./viewer.js" defer></script>
 </body>

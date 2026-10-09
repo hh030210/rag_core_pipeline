@@ -1,0 +1,904 @@
+{
+  "query": "从郑州火车站怎么去少林寺最方便",
+  "retrieval_query": "郑州火车站 到 少林寺 交通方式 | 郑州火车站 到 少林寺 直达大巴 | 郑州火车站 到 少林寺 自驾 路线 耗时 | 郑州火车站 到 少林寺 出租车 打车 费用",
+  "original_query": "从郑州火车站怎么去少林寺最方便",
+  "strategy": "normalized_dimension_score_blend_v1",
+  "configuration": {
+    "dimension_weight": 0.05,
+    "lexical_weight": 0.1,
+    "missing_semantic_penalty": 0.025
+  },
+  "top_k": 10,
+  "fusion_candidates": [
+    {
+      "chunk_id": "少林寺-运营信息_000::chunk_0000",
+      "score": 0.7694217,
+      "semantic_rank": 1,
+      "dimension_rank": null,
+      "semantic_score": 0.6694217,
+      "dimension_score": null,
+      "normalized_semantic_score": 1.0,
+      "normalized_dimension_score": 0.0,
+      "effective_semantic_score": 0.6694217,
+      "semantic_score_imputed": false,
+      "lexical_score": 1.0,
+      "score_components": {
+        "semantic": 0.6694217,
+        "dimension": 0.0,
+        "lexical": 0.1
+      },
+      "original_fusion_rank": 1,
+      "original_fusion_score": 0.77,
+      "doc_title": "少林寺-运营信息_sub_000.txt",
+      "source_file": "少林寺-运营信息",
+      "chunk_text": "少林景区武术表演时间：每天上午半点（9：30，10：30，11：30）和下午整点（14：00，15：00，16：00）在少林景区演武厅内表演。具体演出时间以现场公告为准。嵩山服务电话：0371-62745000，地址：河南省登封市嵩山少林景区。1、飞机：从郑机场出来可以乘坐机场大巴到郑州火车站下车，郑州火车站对面就是汽车客运总站，有发往景区的班车。2、汽车：从郑州长途客车站乘车至登封，下车后原地转中巴，约半个小时左右可到。从洛阳长途汽车站乘车至登封，约90分钟左右到景区门口。3、洛阳火车站东侧的汽车站每天早上有旅游班车直达景区。4、公交：在登封市内乘坐1、2、3、6、8路公交车可直达景区。5、自驾： 南阳方向：兰南高速→永登高速→郑少洛高速→登封西/少林寺出口下（登封方向），信阳、驻马店、漯河方向：京港澳高速→永登高速/南兰高速→郑少洛高速→登封西、少林寺出口下，济源方向：二广高速→郑少洛高速→登封西、少林寺出口下区内交通包括观光车，工作时间8:00-17:00，票价15元（单程），25元（往返）；",
+      "rank": 1
+    },
+    {
+      "chunk_id": "少林寺-运营信息_000::chunk_0001",
+      "score": 0.5708733532,
+      "semantic_rank": 2,
+      "dimension_rank": null,
+      "semantic_score": 0.5694456,
+      "dimension_score": null,
+      "normalized_semantic_score": 0.54362862,
+      "normalized_dimension_score": 0.0,
+      "effective_semantic_score": 0.5694456,
+      "semantic_score_imputed": false,
+      "lexical_score": 0.014277532026301918,
+      "score_components": {
+        "semantic": 0.5694456,
+        "dimension": 0.0,
+        "lexical": 0.0014277532026301918
+      },
+      "original_fusion_rank": 2,
+      "original_fusion_score": 0.4185940401361371,
+      "doc_title": "少林寺-运营信息_sub_000.txt",
+      "source_file": "少林寺-运营信息",
+      "chunk_text": "索道，运行于塔林至二祖庵，票价60元（往返）。开放时间全年08:00-16:30门票价格成人票：80元，含少林寺常住院、塔林、三皇寨、武术表演、初祖庵、二祖庵等景点。优待政策：儿童：6周岁（含6周岁）以下或身高1.4米（含1.4米）以下，免费；6周岁（不含6周岁）-18周岁（含18周岁）未成年人，半价。学生：全日制大学本科及以下学历学生，半价。老人：60周岁（含60周岁）以上老年人凭有效证件，免费。残疾人：凭有效证件，免费。军人：革命伤残军人、现役军人凭有效证件，免费。记者：凭有效证件，免费。",
+      "rank": 2
+    },
+    {
+      "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+      "score": 0.5133978532,
+      "semantic_rank": 3,
+      "dimension_rank": 1,
+      "semantic_score": 0.4619701,
+      "dimension_score": 0.6913050325036951,
+      "normalized_semantic_score": 0.05302395,
+      "normalized_dimension_score": 1.0,
+      "effective_semantic_score": 0.4619701,
+      "semantic_score_imputed": false,
+      "lexical_score": 0.014277532026301918,
+      "score_components": {
+        "semantic": 0.4619701,
+        "dimension": 0.05,
+        "lexical": 0.0014277532026301918
+      },
+      "original_fusion_rank": 3,
+      "original_fusion_score": 0.2708284417646403,
+      "doc_title": "少林寺-景区介绍_sub_000.txt",
+      "source_file": "少林寺-景区介绍",
+      "chunk_text": "嵩山少林景区是世界著名的旅游胜地，是国家旅游局首批公布的5A级景区。景区内人文景观丰富，自然景观奇特。人文景点集中于景区核心区2.18平方公里以内，主要有“天下第一名刹”之称的禅宗祖庭和少林武术发祥地的少林寺、有中国现存规模最大、数量最多的塔林，还有中国现存最早的石阙少室阙以及武术馆、达摩洞、初祖庵、二祖庵、十方禅院、甘露台等景观。自然景观集中于少室山三皇寨，融汇了前寒武纪时期著名的“嵩阳、中岳、少林”三大造山、造陆运动，是嵩山世界地质公园最佳观景处，代表景观有猴子观天、云峰虎啸、御寨落日、少室秋色等40余处。少林少林始建于北魏孝文帝太和十九年（公元495年），是孝文帝元宏为安顿印度高僧跋陀落迹传教而兴建的一座寺院，因其建在少室山下的丛林茂密之处，故名——少林。",
+      "rank": 3
+    },
+    {
+      "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+      "score": 0.4623832532,
+      "semantic_rank": 4,
+      "dimension_rank": null,
+      "semantic_score": 0.4609555,
+      "dimension_score": null,
+      "normalized_semantic_score": 0.0483925,
+      "normalized_dimension_score": 0.0,
+      "effective_semantic_score": 0.4609555,
+      "semantic_score_imputed": false,
+      "lexical_score": 0.014277532026301918,
+      "score_components": {
+        "semantic": 0.4609555,
+        "dimension": 0.0,
+        "lexical": 0.0014277532026301918
+      },
+      "original_fusion_rank": 4,
+      "original_fusion_score": 0.0372622245699521,
+      "doc_title": "少林寺-景区介绍_sub_000.txt",
+      "source_file": "少林寺-景区介绍",
+      "chunk_text": "大殿的梁架结构、斗拱比例和细部做法等都能反映出宋代木结构建筑优美的造型和精致的工艺，可与宋代的重要建筑学著作《营造法式》的记载相印证。在木构、石雕方面的技术做法甚至可称为孤例，为今人理解《营造法式》和宋代木构建筑技术提供了独特的实物见证。达摩洞达摩洞是少林背后五乳峰中锋上部的一个天然石洞，深约七米，宽约三米。相传公元527年至公元536年禅宗初祖菩提达摩曾在此洞面壁静坐长达九年之久，后人称之为“初祖九年默玄处”。少室阙少室阙，天地之中历史建筑群国家文物之一，位于河南省登封市嵩山南麓邢家铺村西，距城六公里的少室山下，约建于东汉元初五年至延光二年（118～123年），是汉代少室山庙的神道阙。1961年中华人民共和国国务院公布为全国重点文物保护单位。联合国教科文组织第34届世界遗产大会2010年8月1日审议通过，将“天地之中”8处11项历史建筑列为世界文化遗产，包括少林寺建筑群（常住院、初祖庵、塔林）、东汉三阙（太室阙、少室阙、启母阙）和中岳庙、嵩岳寺塔、会善寺、嵩阳书院、观星台。二祖庵二祖庵，位於河南省登封市少林旅游景点常住院对面的少室山钵盂峰顶，是少林地区最高的建筑。因庵与其北的初祖庵相",
+      "rank": 4
+    },
+    {
+      "chunk_id": "少林寺-景区介绍_000::chunk_0012",
+      "score": 0.4517820332,
+      "semantic_rank": 5,
+      "dimension_rank": null,
+      "semantic_score": 0.45035428,
+      "dimension_score": null,
+      "normalized_semantic_score": 0.0,
+      "normalized_dimension_score": 0.0,
+      "effective_semantic_score": 0.45035428,
+      "semantic_score_imputed": false,
+      "lexical_score": 0.014277532026301918,
+      "score_components": {
+        "semantic": 0.45035428,
+        "dimension": 0.0,
+        "lexical": 0.0014277532026301918
+      },
+      "original_fusion_rank": 5,
+      "original_fusion_score": 0.0,
+      "doc_title": "少林寺-景区介绍_sub_000.txt",
+      "source_file": "少林寺-景区介绍",
+      "chunk_text": "千年银杏树的灵性：寺内一株1500余年的古银杏树被视为“镇寺灵木”，相传其树荫庇护下的修行者更易悟道，周边民众常来祈福求安。五、武林神话与武术奇观：出神入化的少林绝技。少林武术本身即是一座传奇宝库，衍生出诸多令人称奇的故事：十三飞铊僧惩恶霸：明代传说少林寺武僧身怀绝技，曾以“飞铊”（流星锤类兵器）为民除害，瞬间制服横行乡里的恶霸，彰显“路见不平、拔刀相助”的侠义精神。拳打猛虎与脚拨泉涌：早期僧众为抵御山林猛兽，习武自卫。传说高僧僧稠曾持锡杖喝退争斗的猛虎；另有故事称，僧人练功跺脚震地，竟使泉水喷涌而出（“脚拨泉”），成为少林功夫刚猛绝伦的象征。十八般武艺的巅峰：少林武术集百家之长，明代文献记载寺僧演练“掌搏、剑、鞭、戟”等器械，更有“百人棍阵破千军”的神话流传，奠定了“天下功夫出少林”的地位。六、近代劫难与复兴：烈火中的涅槃重生。少林寺近代经历了战火洗礼，但其坚韧不拔的精神亦成传奇：军阀纵火劫难：1928年，军阀石友三攻入少林寺，纵火焚毁天王殿、大雄宝殿等核心建筑，珍贵典籍和武术资料付之一炬，寺僧四散逃亡。重振少林武术：战后，当家武僧贞绪法师召回还俗武僧寂勤之子吴三林（武术大师），在废",
+      "rank": 5
+    }
+  ],
+  "fusion_results": [
+    {
+      "chunk_id": "少林寺-运营信息_000::chunk_0000",
+      "score": 0.7694217,
+      "semantic_rank": 1,
+      "dimension_rank": null,
+      "semantic_score": 0.6694217,
+      "dimension_score": null,
+      "normalized_semantic_score": 1.0,
+      "normalized_dimension_score": 0.0,
+      "effective_semantic_score": 0.6694217,
+      "semantic_score_imputed": false,
+      "lexical_score": 1.0,
+      "score_components": {
+        "semantic": 0.6694217,
+        "dimension": 0.0,
+        "lexical": 0.1
+      },
+      "original_fusion_rank": 1,
+      "original_fusion_score": 0.77,
+      "doc_title": "少林寺-运营信息_sub_000.txt",
+      "source_file": "少林寺-运营信息",
+      "chunk_text": "少林景区武术表演时间：每天上午半点（9：30，10：30，11：30）和下午整点（14：00，15：00，16：00）在少林景区演武厅内表演。具体演出时间以现场公告为准。嵩山服务电话：0371-62745000，地址：河南省登封市嵩山少林景区。1、飞机：从郑机场出来可以乘坐机场大巴到郑州火车站下车，郑州火车站对面就是汽车客运总站，有发往景区的班车。2、汽车：从郑州长途客车站乘车至登封，下车后原地转中巴，约半个小时左右可到。从洛阳长途汽车站乘车至登封，约90分钟左右到景区门口。3、洛阳火车站东侧的汽车站每天早上有旅游班车直达景区。4、公交：在登封市内乘坐1、2、3、6、8路公交车可直达景区。5、自驾： 南阳方向：兰南高速→永登高速→郑少洛高速→登封西/少林寺出口下（登封方向），信阳、驻马店、漯河方向：京港澳高速→永登高速/南兰高速→郑少洛高速→登封西、少林寺出口下，济源方向：二广高速→郑少洛高速→登封西、少林寺出口下区内交通包括观光车，工作时间8:00-17:00，票价15元（单程），25元（往返）；",
+      "rank": 1
+    },
+    {
+      "chunk_id": "少林寺-运营信息_000::chunk_0001",
+      "score": 0.5708733532,
+      "semantic_rank": 2,
+      "dimension_rank": null,
+      "semantic_score": 0.5694456,
+      "dimension_score": null,
+      "normalized_semantic_score": 0.54362862,
+      "normalized_dimension_score": 0.0,
+      "effective_semantic_score": 0.5694456,
+      "semantic_score_imputed": false,
+      "lexical_score": 0.014277532026301918,
+      "score_components": {
+        "semantic": 0.5694456,
+        "dimension": 0.0,
+        "lexical": 0.0014277532026301918
+      },
+      "original_fusion_rank": 2,
+      "original_fusion_score": 0.4185940401361371,
+      "doc_title": "少林寺-运营信息_sub_000.txt",
+      "source_file": "少林寺-运营信息",
+      "chunk_text": "索道，运行于塔林至二祖庵，票价60元（往返）。开放时间全年08:00-16:30门票价格成人票：80元，含少林寺常住院、塔林、三皇寨、武术表演、初祖庵、二祖庵等景点。优待政策：儿童：6周岁（含6周岁）以下或身高1.4米（含1.4米）以下，免费；6周岁（不含6周岁）-18周岁（含18周岁）未成年人，半价。学生：全日制大学本科及以下学历学生，半价。老人：60周岁（含60周岁）以上老年人凭有效证件，免费。残疾人：凭有效证件，免费。军人：革命伤残军人、现役军人凭有效证件，免费。记者：凭有效证件，免费。",
+      "rank": 2
+    },
+    {
+      "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+      "score": 0.5133978532,
+      "semantic_rank": 3,
+      "dimension_rank": 1,
+      "semantic_score": 0.4619701,
+      "dimension_score": 0.6913050325036951,
+      "normalized_semantic_score": 0.05302395,
+      "normalized_dimension_score": 1.0,
+      "effective_semantic_score": 0.4619701,
+      "semantic_score_imputed": false,
+      "lexical_score": 0.014277532026301918,
+      "score_components": {
+        "semantic": 0.4619701,
+        "dimension": 0.05,
+        "lexical": 0.0014277532026301918
+      },
+      "original_fusion_rank": 3,
+      "original_fusion_score": 0.2708284417646403,
+      "doc_title": "少林寺-景区介绍_sub_000.txt",
+      "source_file": "少林寺-景区介绍",
+      "chunk_text": "嵩山少林景区是世界著名的旅游胜地，是国家旅游局首批公布的5A级景区。景区内人文景观丰富，自然景观奇特。人文景点集中于景区核心区2.18平方公里以内，主要有“天下第一名刹”之称的禅宗祖庭和少林武术发祥地的少林寺、有中国现存规模最大、数量最多的塔林，还有中国现存最早的石阙少室阙以及武术馆、达摩洞、初祖庵、二祖庵、十方禅院、甘露台等景观。自然景观集中于少室山三皇寨，融汇了前寒武纪时期著名的“嵩阳、中岳、少林”三大造山、造陆运动，是嵩山世界地质公园最佳观景处，代表景观有猴子观天、云峰虎啸、御寨落日、少室秋色等40余处。少林少林始建于北魏孝文帝太和十九年（公元495年），是孝文帝元宏为安顿印度高僧跋陀落迹传教而兴建的一座寺院，因其建在少室山下的丛林茂密之处，故名——少林。",
+      "rank": 3
+    },
+    {
+      "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+      "score": 0.4623832532,
+      "semantic_rank": 4,
+      "dimension_rank": null,
+      "semantic_score": 0.4609555,
+      "dimension_score": null,
+      "normalized_semantic_score": 0.0483925,
+      "normalized_dimension_score": 0.0,
+      "effective_semantic_score": 0.4609555,
+      "semantic_score_imputed": false,
+      "lexical_score": 0.014277532026301918,
+      "score_components": {
+        "semantic": 0.4609555,
+        "dimension": 0.0,
+        "lexical": 0.0014277532026301918
+      },
+      "original_fusion_rank": 4,
+      "original_fusion_score": 0.0372622245699521,
+      "doc_title": "少林寺-景区介绍_sub_000.txt",
+      "source_file": "少林寺-景区介绍",
+      "chunk_text": "大殿的梁架结构、斗拱比例和细部做法等都能反映出宋代木结构建筑优美的造型和精致的工艺，可与宋代的重要建筑学著作《营造法式》的记载相印证。在木构、石雕方面的技术做法甚至可称为孤例，为今人理解《营造法式》和宋代木构建筑技术提供了独特的实物见证。达摩洞达摩洞是少林背后五乳峰中锋上部的一个天然石洞，深约七米，宽约三米。相传公元527年至公元536年禅宗初祖菩提达摩曾在此洞面壁静坐长达九年之久，后人称之为“初祖九年默玄处”。少室阙少室阙，天地之中历史建筑群国家文物之一，位于河南省登封市嵩山南麓邢家铺村西，距城六公里的少室山下，约建于东汉元初五年至延光二年（118～123年），是汉代少室山庙的神道阙。1961年中华人民共和国国务院公布为全国重点文物保护单位。联合国教科文组织第34届世界遗产大会2010年8月1日审议通过，将“天地之中”8处11项历史建筑列为世界文化遗产，包括少林寺建筑群（常住院、初祖庵、塔林）、东汉三阙（太室阙、少室阙、启母阙）和中岳庙、嵩岳寺塔、会善寺、嵩阳书院、观星台。二祖庵二祖庵，位於河南省登封市少林旅游景点常住院对面的少室山钵盂峰顶，是少林地区最高的建筑。因庵与其北的初祖庵相",
+      "rank": 4
+    },
+    {
+      "chunk_id": "少林寺-景区介绍_000::chunk_0012",
+      "score": 0.4517820332,
+      "semantic_rank": 5,
+      "dimension_rank": null,
+      "semantic_score": 0.45035428,
+      "dimension_score": null,
+      "normalized_semantic_score": 0.0,
+      "normalized_dimension_score": 0.0,
+      "effective_semantic_score": 0.45035428,
+      "semantic_score_imputed": false,
+      "lexical_score": 0.014277532026301918,
+      "score_components": {
+        "semantic": 0.45035428,
+        "dimension": 0.0,
+        "lexical": 0.0014277532026301918
+      },
+      "original_fusion_rank": 5,
+      "original_fusion_score": 0.0,
+      "doc_title": "少林寺-景区介绍_sub_000.txt",
+      "source_file": "少林寺-景区介绍",
+      "chunk_text": "千年银杏树的灵性：寺内一株1500余年的古银杏树被视为“镇寺灵木”，相传其树荫庇护下的修行者更易悟道，周边民众常来祈福求安。五、武林神话与武术奇观：出神入化的少林绝技。少林武术本身即是一座传奇宝库，衍生出诸多令人称奇的故事：十三飞铊僧惩恶霸：明代传说少林寺武僧身怀绝技，曾以“飞铊”（流星锤类兵器）为民除害，瞬间制服横行乡里的恶霸，彰显“路见不平、拔刀相助”的侠义精神。拳打猛虎与脚拨泉涌：早期僧众为抵御山林猛兽，习武自卫。传说高僧僧稠曾持锡杖喝退争斗的猛虎；另有故事称，僧人练功跺脚震地，竟使泉水喷涌而出（“脚拨泉”），成为少林功夫刚猛绝伦的象征。十八般武艺的巅峰：少林武术集百家之长，明代文献记载寺僧演练“掌搏、剑、鞭、戟”等器械，更有“百人棍阵破千军”的神话流传，奠定了“天下功夫出少林”的地位。六、近代劫难与复兴：烈火中的涅槃重生。少林寺近代经历了战火洗礼，但其坚韧不拔的精神亦成传奇：军阀纵火劫难：1928年，军阀石友三攻入少林寺，纵火焚毁天王殿、大雄宝殿等核心建筑，珍贵典籍和武术资料付之一炬，寺僧四散逃亡。重振少林武术：战后，当家武僧贞绪法师召回还俗武僧寂勤之子吴三林（武术大师），在废",
+      "rank": 5
+    }
+  ],
+  "source_snapshot": "evaluate_000257.json",
+  "batch_id": "af8e0ea830774277942fee38daac0850",
+  "query_analysis": {
+    "constraints": {
+      "scenic_spot": {
+        "labels": [
+          "少林寺"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "internal_transport": {
+        "labels": [
+          "出租车"
+        ],
+        "intent_terms": [
+          "交通方式"
+        ],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "external_transport": {
+        "labels": [
+          "自驾",
+          "火车"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "ticket_price": {
+        "labels": [],
+        "intent_terms": [
+          "费用"
+        ],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "scenic_spot",
+      "internal_transport",
+      "external_transport",
+      "ticket_price"
+    ],
+    "spot_names": [
+      "少林寺"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "少林寺",
+        "canonical_name": "少林寺",
+        "scenic_area": "少林寺",
+        "entity_type": "scenic_area"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 0.85,
+    "routing": {
+      "main_dimension": "",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 4,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "intent_cue",
+        "lexical_label"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "郑州火车站",
+      "交通方式",
+      "州火车站",
+      "郑州火车",
+      "交通方",
+      "少林寺",
+      "州火车",
+      "火车站",
+      "直达大",
+      "通方式",
+      "郑州火",
+      "交通"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "chunks": {
+    "少林寺-运营信息_000::chunk_0000": {
+      "title": "少林寺-运营信息_sub_000.txt",
+      "source_file": "少林寺-运营信息",
+      "text": "少林景区武术表演时间：每天上午半点（9：30，10：30，11：30）和下午整点（14：00，15：00，16：00）在少林景区演武厅内表演。具体演出时间以现场公告为准。嵩山服务电话：0371-62745000，地址：河南省登封市嵩山少林景区。1、飞机：从郑机场出来可以乘坐机场大巴到郑州火车站下车，郑州火车站对面就是汽车客运总站，有发往景区的班车。2、汽车：从郑州长途客车站乘车至登封，下车后原地转中巴，约半个小时左右可到。从洛阳长途汽车站乘车至登封，约90分钟左右到景区门口。3、洛阳火车站东侧的汽车站每天早上有旅游班车直达景区。4、公交：在登封市内乘坐1、2、3、6、8路公交车可直达景区。5、自驾： 南阳方向：兰南高速→永登高速→郑少洛高速→登封西/少林寺出口下（登封方向），信阳、驻马店、漯河方向：京港澳高速→永登高速/南兰高速→郑少洛高速→登封西、少林寺出口下，济源方向：二广高速→郑少洛高速→登封西、少林寺出口下区内交通包括观光车，工作时间8:00-17:00，票价15元（单程），25元（往返）；"
+    },
+    "少林寺-运营信息_000::chunk_0001": {
+      "title": "少林寺-运营信息_sub_000.txt",
+      "source_file": "少林寺-运营信息",
+      "text": "索道，运行于塔林至二祖庵，票价60元（往返）。开放时间全年08:00-16:30门票价格成人票：80元，含少林寺常住院、塔林、三皇寨、武术表演、初祖庵、二祖庵等景点。优待政策：儿童：6周岁（含6周岁）以下或身高1.4米（含1.4米）以下，免费；6周岁（不含6周岁）-18周岁（含18周岁）未成年人，半价。学生：全日制大学本科及以下学历学生，半价。老人：60周岁（含60周岁）以上老年人凭有效证件，免费。残疾人：凭有效证件，免费。军人：革命伤残军人、现役军人凭有效证件，免费。记者：凭有效证件，免费。"
+    },
+    "少林寺-景区介绍_000::chunk_0000": {
+      "title": "少林寺-景区介绍_sub_000.txt",
+      "source_file": "少林寺-景区介绍",
+      "text": "嵩山少林景区是世界著名的旅游胜地，是国家旅游局首批公布的5A级景区。景区内人文景观丰富，自然景观奇特。人文景点集中于景区核心区2.18平方公里以内，主要有“天下第一名刹”之称的禅宗祖庭和少林武术发祥地的少林寺、有中国现存规模最大、数量最多的塔林，还有中国现存最早的石阙少室阙以及武术馆、达摩洞、初祖庵、二祖庵、十方禅院、甘露台等景观。自然景观集中于少室山三皇寨，融汇了前寒武纪时期著名的“嵩阳、中岳、少林”三大造山、造陆运动，是嵩山世界地质公园最佳观景处，代表景观有猴子观天、云峰虎啸、御寨落日、少室秋色等40余处。少林少林始建于北魏孝文帝太和十九年（公元495年），是孝文帝元宏为安顿印度高僧跋陀落迹传教而兴建的一座寺院，因其建在少室山下的丛林茂密之处，故名——少林。"
+    },
+    "少林寺-景区介绍_000::chunk_0003": {
+      "title": "少林寺-景区介绍_sub_000.txt",
+      "source_file": "少林寺-景区介绍",
+      "text": "大殿的梁架结构、斗拱比例和细部做法等都能反映出宋代木结构建筑优美的造型和精致的工艺，可与宋代的重要建筑学著作《营造法式》的记载相印证。在木构、石雕方面的技术做法甚至可称为孤例，为今人理解《营造法式》和宋代木构建筑技术提供了独特的实物见证。达摩洞达摩洞是少林背后五乳峰中锋上部的一个天然石洞，深约七米，宽约三米。相传公元527年至公元536年禅宗初祖菩提达摩曾在此洞面壁静坐长达九年之久，后人称之为“初祖九年默玄处”。少室阙少室阙，天地之中历史建筑群国家文物之一，位于河南省登封市嵩山南麓邢家铺村西，距城六公里的少室山下，约建于东汉元初五年至延光二年（118～123年），是汉代少室山庙的神道阙。1961年中华人民共和国国务院公布为全国重点文物保护单位。联合国教科文组织第34届世界遗产大会2010年8月1日审议通过，将“天地之中”8处11项历史建筑列为世界文化遗产，包括少林寺建筑群（常住院、初祖庵、塔林）、东汉三阙（太室阙、少室阙、启母阙）和中岳庙、嵩岳寺塔、会善寺、嵩阳书院、观星台。二祖庵二祖庵，位於河南省登封市少林旅游景点常住院对面的少室山钵盂峰顶，是少林地区最高的建筑。因庵与其北的初祖庵相对，故当地人称之为“南庵”。据旧志载，相传禅宗二祖慧可立雪断臂后到钵盂峰顶养伤修炼，后寺僧为纪念二祖慧可而建此庵。庵创建的年代大致和初祖庵同时，为北宋后期。这里环境幽静，风景宜人，殿前庭院四角有水井眼，「水皆冷冽，相去咫尺，水味各别」，人称「苦、辣、酸、甜四眼井」，相传是达摩用锡杖所开，因名「卓锡井」，又名「卓锡泉」。在河南十三朝古都洛阳市东郊一片郁郁葱葱的长林古木之中，有一座被称为“中国第一古刹”的白马寺。"
+    },
+    "少林寺-景区介绍_000::chunk_0012": {
+      "title": "少林寺-景区介绍_sub_000.txt",
+      "source_file": "少林寺-景区介绍",
+      "text": "千年银杏树的灵性：寺内一株1500余年的古银杏树被视为“镇寺灵木”，相传其树荫庇护下的修行者更易悟道，周边民众常来祈福求安。五、武林神话与武术奇观：出神入化的少林绝技。少林武术本身即是一座传奇宝库，衍生出诸多令人称奇的故事：十三飞铊僧惩恶霸：明代传说少林寺武僧身怀绝技，曾以“飞铊”（流星锤类兵器）为民除害，瞬间制服横行乡里的恶霸，彰显“路见不平、拔刀相助”的侠义精神。拳打猛虎与脚拨泉涌：早期僧众为抵御山林猛兽，习武自卫。传说高僧僧稠曾持锡杖喝退争斗的猛虎；另有故事称，僧人练功跺脚震地，竟使泉水喷涌而出（“脚拨泉”），成为少林功夫刚猛绝伦的象征。十八般武艺的巅峰：少林武术集百家之长，明代文献记载寺僧演练“掌搏、剑、鞭、戟”等器械，更有“百人棍阵破千军”的神话流传，奠定了“天下功夫出少林”的地位。六、近代劫难与复兴：烈火中的涅槃重生。少林寺近代经历了战火洗礼，但其坚韧不拔的精神亦成传奇：军阀纵火劫难：1928年，军阀石友三攻入少林寺，纵火焚毁天王殿、大雄宝殿等核心建筑，珍贵典籍和武术资料付之一炬，寺僧四散逃亡。重振少林武术：战后，当家武僧贞绪法师召回还俗武僧寂勤之子吴三林（武术大师），在废墟上重建武僧团，创办少林中学传播武术，使少林功夫得以延续。许世友、钱钧等少林出身的将军在战场上屡立战功，更印证了少林武术的实战价值。"
+    }
+  },
+  "gold": {
+    "chunk_ids": [
+      "少林寺-运营信息_000::chunk_0000"
+    ],
+    "evidence_texts": [
+      "从郑机场出来可以乘坐机场大巴到郑州火车站下车，郑州火车站对面就是汽车客运总站，有发往景区的班车。",
+      "从郑州长途客车站乘车至登封，下车后原地转中巴，约半个小时左右可到。"
+    ],
+    "match_basis": "evidence_text",
+    "gold_resolution": {
+      "match_basis": "evidence_text",
+      "mapped_chunk_count": 1,
+      "unmatched_evidence_texts": [],
+      "evidence_matches": [
+        {
+          "evidence_text": "从郑机场出来可以乘坐机场大巴到郑州火车站下车，郑州火车站对面就是汽车客运总站，有发往景区的班车。",
+          "chunk_ids": [
+            "少林寺-运营信息_000::chunk_0000"
+          ],
+          "match_basis": "evidence_text"
+        },
+        {
+          "evidence_text": "从郑州长途客车站乘车至登封，下车后原地转中巴，约半个小时左右可到。",
+          "chunk_ids": [
+            "少林寺-运营信息_000::chunk_0000"
+          ],
+          "match_basis": "evidence_text"
+        }
+      ],
+      "gold_mapped": true
+    },
+    "gold_chunk_ids": [
+      "少林寺-运营信息_000::chunk_0000"
+    ],
+    "gold_count": 1
+  },
+  "name": "evaluate_000257.json",
+  "routes": {
+    "semantic": [
+      {
+        "chunk_id": "少林寺-运营信息_000::chunk_0000",
+        "rank": 1,
+        "score": 0.6694217,
+        "semantic_score": 0.6694217,
+        "normalized_semantic_score": 1.0,
+        "source": "semantic",
+        "doc_id": "少林寺-运营信息_000::chunk_0000",
+        "parent_doc_id": "少林寺-运营信息_000",
+        "doc_title": "少林寺-运营信息_sub_000.txt",
+        "chunk_gen_title": "少林寺-运营信息_sub_000.txt",
+        "source_file": "少林寺-运营信息",
+        "spot_name": "",
+        "dimension_paths": [
+          "交通到达 / 内部交通",
+          "交通到达 / 外部交通",
+          "地理位置 / 行政区划",
+          "景观特色 / 景点构成",
+          "票务规则 / 票价类型",
+          "票务规则 / 预约购票"
+        ],
+        "text_truncated": false,
+        "is_gold": true
+      },
+      {
+        "chunk_id": "少林寺-运营信息_000::chunk_0001",
+        "rank": 2,
+        "score": 0.5694456,
+        "semantic_score": 0.5694456,
+        "normalized_semantic_score": 0.54362862,
+        "source": "semantic",
+        "doc_id": "少林寺-运营信息_000::chunk_0001",
+        "parent_doc_id": "少林寺-运营信息_000",
+        "doc_title": "少林寺-运营信息_sub_000.txt",
+        "chunk_gen_title": "少林寺-运营信息_sub_000.txt",
+        "source_file": "少林寺-运营信息",
+        "spot_name": "",
+        "dimension_paths": [
+          "交通到达 / 内部交通",
+          "景观特色 / 景点构成",
+          "票务规则 / 优惠范围",
+          "票务规则 / 票价类型",
+          "票务规则 / 预约购票"
+        ],
+        "text_truncated": false,
+        "is_gold": false
+      },
+      {
+        "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+        "rank": 3,
+        "score": 0.4619701,
+        "semantic_score": 0.4619701,
+        "normalized_semantic_score": 0.05302395,
+        "source": "semantic",
+        "doc_id": "少林寺-景区介绍_000::chunk_0000",
+        "parent_doc_id": "少林寺-景区介绍_000",
+        "doc_title": "少林寺-景区介绍_sub_000.txt",
+        "chunk_gen_title": "少林寺-景区介绍_sub_000.txt",
+        "source_file": "少林寺-景区介绍",
+        "spot_name": "",
+        "dimension_paths": [
+          "历史文化 / 始建年代",
+          "地理位置 / 地貌选址",
+          "对象与身份 / 关联人物",
+          "对象与身份 / 场所类型",
+          "对象与身份 / 机构职能",
+          "对象与身份 / 称号荣誉",
+          "景观特色 / 景点构成",
+          "景观特色 / 自然景观",
+          "景观特色 / 艺术精华"
+        ],
+        "text_truncated": false,
+        "is_gold": false
+      },
+      {
+        "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+        "rank": 4,
+        "score": 0.4609555,
+        "semantic_score": 0.4609555,
+        "normalized_semantic_score": 0.0483925,
+        "source": "semantic",
+        "doc_id": "少林寺-景区介绍_000::chunk_0003",
+        "parent_doc_id": "少林寺-景区介绍_000",
+        "doc_title": "少林寺-景区介绍_sub_000.txt",
+        "chunk_gen_title": "少林寺-景区介绍_sub_000.txt",
+        "source_file": "少林寺-景区介绍",
+        "spot_name": "",
+        "dimension_paths": [
+          "历史文化 / 始建年代",
+          "历史文化 / 文化事件",
+          "地理位置 / 地标参照",
+          "地理位置 / 地貌选址",
+          "地理位置 / 行政区划",
+          "对象与身份 / 关联人物",
+          "对象与身份 / 场所类型",
+          "对象与身份 / 称号荣誉",
+          "景观特色 / 景点构成",
+          "景观特色 / 自然景观",
+          "景观特色 / 艺术精华",
+          "游客服务 / 导览设施"
+        ],
+        "text_truncated": false,
+        "is_gold": false
+      },
+      {
+        "chunk_id": "少林寺-景区介绍_000::chunk_0012",
+        "rank": 5,
+        "score": 0.45035428,
+        "semantic_score": 0.45035428,
+        "normalized_semantic_score": 0.0,
+        "source": "semantic",
+        "doc_id": "少林寺-景区介绍_000::chunk_0012",
+        "parent_doc_id": "少林寺-景区介绍_000",
+        "doc_title": "少林寺-景区介绍_sub_000.txt",
+        "chunk_gen_title": "少林寺-景区介绍_sub_000.txt",
+        "source_file": "少林寺-景区介绍",
+        "spot_name": "",
+        "dimension_paths": [
+          "历史文化 / 文化事件",
+          "地理位置 / 地貌选址",
+          "对象与身份 / 关联人物",
+          "对象与身份 / 场所类型",
+          "对象与身份 / 机构职能",
+          "景观特色 / 景点构成",
+          "景观特色 / 自然景观",
+          "游客服务 / 游览限制"
+        ],
+        "text_truncated": false,
+        "is_gold": false
+      }
+    ],
+    "dimension": [
+      {
+        "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+        "rank": 1,
+        "score": 0.6913050325036951,
+        "dimension_score": 0.6913050325036951,
+        "normalized_dimension_score": 1.0,
+        "source": "dimension",
+        "doc_id": "少林寺-景区介绍_000::chunk_0000",
+        "parent_doc_id": "少林寺-景区介绍_000",
+        "doc_title": "少林寺-景区介绍_sub_000.txt",
+        "chunk_gen_title": "少林寺-景区介绍_sub_000.txt",
+        "source_file": "少林寺-景区介绍",
+        "spot_name": "",
+        "dimension_paths": [
+          "历史文化 / 始建年代",
+          "地理位置 / 地貌选址",
+          "对象与身份 / 关联人物",
+          "对象与身份 / 场所类型",
+          "对象与身份 / 机构职能",
+          "对象与身份 / 称号荣誉",
+          "景观特色 / 景点构成",
+          "景观特色 / 自然景观",
+          "景观特色 / 艺术精华"
+        ],
+        "matched_dimensions": [
+          "scenic_spot"
+        ],
+        "matches": [
+          {
+            "dimension_id": "scenic_spot",
+            "dimension_path": "景观特色 / 景点构成",
+            "label": "少林寺",
+            "evidence": "主要有“天下第一名刹”之称的禅宗祖庭和少林武术发祥地的少林寺",
+            "similarity": 1.0,
+            "role": "auxiliary",
+            "idf_bonus": 1.220023,
+            "source": "canonical_label"
+          }
+        ],
+        "fact_anchor_bonus": 0.315298,
+        "fact_anchor_matches": [
+          {
+            "term": "少林寺",
+            "document_frequency": 15,
+            "in_title": true,
+            "bonus": 0.315298
+          }
+        ],
+        "text_truncated": false,
+        "is_gold": false
+      }
+    ],
+    "old": [
+      {
+        "chunk_id": "少林寺-运营信息_000::chunk_0000",
+        "rank": 1,
+        "score": 0.77,
+        "final_score": 0.77,
+        "fused_score": 0.77,
+        "semantic_score": 0.6694217,
+        "normalized_semantic_score": 1.0,
+        "normalized_dimension_score": 0.0,
+        "source": "+semantic",
+        "sem_rank": 1,
+        "doc_id": "少林寺-运营信息_000::chunk_0000",
+        "parent_doc_id": "少林寺-运营信息_000",
+        "doc_title": "少林寺-运营信息_sub_000.txt",
+        "chunk_gen_title": "少林寺-运营信息_sub_000.txt",
+        "source_file": "少林寺-运营信息",
+        "spot_name": "",
+        "dimension_paths": [
+          "交通到达 / 内部交通",
+          "交通到达 / 外部交通",
+          "地理位置 / 行政区划",
+          "景观特色 / 景点构成",
+          "票务规则 / 票价类型",
+          "票务规则 / 预约购票"
+        ],
+        "text_truncated": false,
+        "is_gold": true
+      },
+      {
+        "chunk_id": "少林寺-运营信息_000::chunk_0001",
+        "rank": 2,
+        "score": 0.4185940401361371,
+        "final_score": 0.4185940401361371,
+        "fused_score": 0.4185940401361371,
+        "semantic_score": 0.5694456,
+        "normalized_semantic_score": 0.5436286235534248,
+        "normalized_dimension_score": 0.0,
+        "source": "+semantic",
+        "sem_rank": 2,
+        "doc_id": "少林寺-运营信息_000::chunk_0001",
+        "parent_doc_id": "少林寺-运营信息_000",
+        "doc_title": "少林寺-运营信息_sub_000.txt",
+        "chunk_gen_title": "少林寺-运营信息_sub_000.txt",
+        "source_file": "少林寺-运营信息",
+        "spot_name": "",
+        "dimension_paths": [
+          "交通到达 / 内部交通",
+          "景观特色 / 景点构成",
+          "票务规则 / 优惠范围",
+          "票务规则 / 票价类型",
+          "票务规则 / 预约购票"
+        ],
+        "text_truncated": false,
+        "is_gold": false
+      },
+      {
+        "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+        "rank": 3,
+        "score": 0.2708284417646403,
+        "final_score": 0.2708284417646403,
+        "fused_score": 0.2708284417646403,
+        "semantic_score": 0.4619701,
+        "normalized_semantic_score": 0.05302395034368871,
+        "dimension_score": 0.6913050325036951,
+        "normalized_dimension_score": 1.0,
+        "source": "dimension+semantic",
+        "sem_rank": 3,
+        "dim_rank": 1,
+        "doc_id": "少林寺-景区介绍_000::chunk_0000",
+        "parent_doc_id": "少林寺-景区介绍_000",
+        "doc_title": "少林寺-景区介绍_sub_000.txt",
+        "chunk_gen_title": "少林寺-景区介绍_sub_000.txt",
+        "source_file": "少林寺-景区介绍",
+        "spot_name": "",
+        "dimension_paths": [
+          "历史文化 / 始建年代",
+          "地理位置 / 地貌选址",
+          "对象与身份 / 关联人物",
+          "对象与身份 / 场所类型",
+          "对象与身份 / 机构职能",
+          "对象与身份 / 称号荣誉",
+          "景观特色 / 景点构成",
+          "景观特色 / 自然景观",
+          "景观特色 / 艺术精华"
+        ],
+        "matched_dimensions": [
+          "scenic_spot"
+        ],
+        "matches": [
+          {
+            "dimension_id": "scenic_spot",
+            "dimension_path": "景观特色 / 景点构成",
+            "label": "少林寺",
+            "evidence": "主要有“天下第一名刹”之称的禅宗祖庭和少林武术发祥地的少林寺",
+            "similarity": 1.0,
+            "role": "auxiliary",
+            "idf_bonus": 1.220023,
+            "source": "canonical_label"
+          }
+        ],
+        "fact_anchor_bonus": 0.315298,
+        "fact_anchor_matches": [
+          {
+            "term": "少林寺",
+            "document_frequency": 15,
+            "in_title": true,
+            "bonus": 0.315298
+          }
+        ],
+        "text_truncated": false,
+        "is_gold": false
+      },
+      {
+        "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+        "rank": 4,
+        "score": 0.0372622245699521,
+        "final_score": 0.0372622245699521,
+        "fused_score": 0.0372622245699521,
+        "semantic_score": 0.4609555,
+        "normalized_semantic_score": 0.04839249944149624,
+        "normalized_dimension_score": 0.0,
+        "source": "+semantic",
+        "sem_rank": 4,
+        "doc_id": "少林寺-景区介绍_000::chunk_0003",
+        "parent_doc_id": "少林寺-景区介绍_000",
+        "doc_title": "少林寺-景区介绍_sub_000.txt",
+        "chunk_gen_title": "少林寺-景区介绍_sub_000.txt",
+        "source_file": "少林寺-景区介绍",
+        "spot_name": "",
+        "dimension_paths": [
+          "历史文化 / 始建年代",
+          "历史文化 / 文化事件",
+          "地理位置 / 地标参照",
+          "地理位置 / 地貌选址",
+          "地理位置 / 行政区划",
+          "对象与身份 / 关联人物",
+          "对象与身份 / 场所类型",
+          "对象与身份 / 称号荣誉",
+          "景观特色 / 景点构成",
+          "景观特色 / 自然景观",
+          "景观特色 / 艺术精华",
+          "游客服务 / 导览设施"
+        ],
+        "text_truncated": false,
+        "is_gold": false
+      },
+      {
+        "chunk_id": "少林寺-景区介绍_000::chunk_0012",
+        "rank": 5,
+        "score": 0.0,
+        "final_score": 0.0,
+        "fused_score": 0.0,
+        "semantic_score": 0.45035428,
+        "normalized_semantic_score": 0.0,
+        "normalized_dimension_score": 0.0,
+        "source": "+semantic",
+        "sem_rank": 5,
+        "doc_id": "少林寺-景区介绍_000::chunk_0012",
+        "parent_doc_id": "少林寺-景区介绍_000",
+        "doc_title": "少林寺-景区介绍_sub_000.txt",
+        "chunk_gen_title": "少林寺-景区介绍_sub_000.txt",
+        "source_file": "少林寺-景区介绍",
+        "spot_name": "",
+        "dimension_paths": [
+          "历史文化 / 文化事件",
+          "地理位置 / 地貌选址",
+          "对象与身份 / 关联人物",
+          "对象与身份 / 场所类型",
+          "对象与身份 / 机构职能",
+          "景观特色 / 景点构成",
+          "景观特色 / 自然景观",
+          "游客服务 / 游览限制"
+        ],
+        "text_truncated": false,
+        "is_gold": false
+      }
+    ],
+    "new": [
+      {
+        "chunk_id": "少林寺-运营信息_000::chunk_0000",
+        "score": 0.7694217,
+        "semantic_rank": 1,
+        "dimension_rank": null,
+        "semantic_score": 0.6694217,
+        "dimension_score": null,
+        "normalized_semantic_score": 1.0,
+        "normalized_dimension_score": 0.0,
+        "effective_semantic_score": 0.6694217,
+        "semantic_score_imputed": false,
+        "lexical_score": 1.0,
+        "score_components": {
+          "semantic": 0.6694217,
+          "dimension": 0.0,
+          "lexical": 0.1
+        },
+        "original_fusion_rank": 1,
+        "original_fusion_score": 0.77,
+        "doc_title": "少林寺-运营信息_sub_000.txt",
+        "source_file": "少林寺-运营信息",
+        "chunk_text": "少林景区武术表演时间：每天上午半点（9：30，10：30，11：30）和下午整点（14：00，15：00，16：00）在少林景区演武厅内表演。具体演出时间以现场公告为准。嵩山服务电话：0371-62745000，地址：河南省登封市嵩山少林景区。1、飞机：从郑机场出来可以乘坐机场大巴到郑州火车站下车，郑州火车站对面就是汽车客运总站，有发往景区的班车。2、汽车：从郑州长途客车站乘车至登封，下车后原地转中巴，约半个小时左右可到。从洛阳长途汽车站乘车至登封，约90分钟左右到景区门口。3、洛阳火车站东侧的汽车站每天早上有旅游班车直达景区。4、公交：在登封市内乘坐1、2、3、6、8路公交车可直达景区。5、自驾： 南阳方向：兰南高速→永登高速→郑少洛高速→登封西/少林寺出口下（登封方向），信阳、驻马店、漯河方向：京港澳高速→永登高速/南兰高速→郑少洛高速→登封西、少林寺出口下，济源方向：二广高速→郑少洛高速→登封西、少林寺出口下区内交通包括观光车，工作时间8:00-17:00，票价15元（单程），25元（往返）；",
+        "rank": 1
+      },
+      {
+        "chunk_id": "少林寺-运营信息_000::chunk_0001",
+        "score": 0.5708733532,
+        "semantic_rank": 2,
+        "dimension_rank": null,
+        "semantic_score": 0.5694456,
+        "dimension_score": null,
+        "normalized_semantic_score": 0.54362862,
+        "normalized_dimension_score": 0.0,
+        "effective_semantic_score": 0.5694456,
+        "semantic_score_imputed": false,
+        "lexical_score": 0.014277532026301918,
+        "score_components": {
+          "semantic": 0.5694456,
+          "dimension": 0.0,
+          "lexical": 0.0014277532026301918
+        },
+        "original_fusion_rank": 2,
+        "original_fusion_score": 0.4185940401361371,
+        "doc_title": "少林寺-运营信息_sub_000.txt",
+        "source_file": "少林寺-运营信息",
+        "chunk_text": "索道，运行于塔林至二祖庵，票价60元（往返）。开放时间全年08:00-16:30门票价格成人票：80元，含少林寺常住院、塔林、三皇寨、武术表演、初祖庵、二祖庵等景点。优待政策：儿童：6周岁（含6周岁）以下或身高1.4米（含1.4米）以下，免费；6周岁（不含6周岁）-18周岁（含18周岁）未成年人，半价。学生：全日制大学本科及以下学历学生，半价。老人：60周岁（含60周岁）以上老年人凭有效证件，免费。残疾人：凭有效证件，免费。军人：革命伤残军人、现役军人凭有效证件，免费。记者：凭有效证件，免费。",
+        "rank": 2
+      },
+      {
+        "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+        "score": 0.5133978532,
+        "semantic_rank": 3,
+        "dimension_rank": 1,
+        "semantic_score": 0.4619701,
+        "dimension_score": 0.6913050325036951,
+        "normalized_semantic_score": 0.05302395,
+        "normalized_dimension_score": 1.0,
+        "effective_semantic_score": 0.4619701,
+        "semantic_score_imputed": false,
+        "lexical_score": 0.014277532026301918,
+        "score_components": {
+          "semantic": 0.4619701,
+          "dimension": 0.05,
+          "lexical": 0.0014277532026301918
+        },
+        "original_fusion_rank": 3,
+        "original_fusion_score": 0.2708284417646403,
+        "doc_title": "少林寺-景区介绍_sub_000.txt",
+        "source_file": "少林寺-景区介绍",
+        "chunk_text": "嵩山少林景区是世界著名的旅游胜地，是国家旅游局首批公布的5A级景区。景区内人文景观丰富，自然景观奇特。人文景点集中于景区核心区2.18平方公里以内，主要有“天下第一名刹”之称的禅宗祖庭和少林武术发祥地的少林寺、有中国现存规模最大、数量最多的塔林，还有中国现存最早的石阙少室阙以及武术馆、达摩洞、初祖庵、二祖庵、十方禅院、甘露台等景观。自然景观集中于少室山三皇寨，融汇了前寒武纪时期著名的“嵩阳、中岳、少林”三大造山、造陆运动，是嵩山世界地质公园最佳观景处，代表景观有猴子观天、云峰虎啸、御寨落日、少室秋色等40余处。少林少林始建于北魏孝文帝太和十九年（公元495年），是孝文帝元宏为安顿印度高僧跋陀落迹传教而兴建的一座寺院，因其建在少室山下的丛林茂密之处，故名——少林。",
+        "rank": 3
+      },
+      {
+        "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+        "score": 0.4623832532,
+        "semantic_rank": 4,
+        "dimension_rank": null,
+        "semantic_score": 0.4609555,
+        "dimension_score": null,
+        "normalized_semantic_score": 0.0483925,
+        "normalized_dimension_score": 0.0,
+        "effective_semantic_score": 0.4609555,
+        "semantic_score_imputed": false,
+        "lexical_score": 0.014277532026301918,
+        "score_components": {
+          "semantic": 0.4609555,
+          "dimension": 0.0,
+          "lexical": 0.0014277532026301918
+        },
+        "original_fusion_rank": 4,
+        "original_fusion_score": 0.0372622245699521,
+        "doc_title": "少林寺-景区介绍_sub_000.txt",
+        "source_file": "少林寺-景区介绍",
+        "chunk_text": "大殿的梁架结构、斗拱比例和细部做法等都能反映出宋代木结构建筑优美的造型和精致的工艺，可与宋代的重要建筑学著作《营造法式》的记载相印证。在木构、石雕方面的技术做法甚至可称为孤例，为今人理解《营造法式》和宋代木构建筑技术提供了独特的实物见证。达摩洞达摩洞是少林背后五乳峰中锋上部的一个天然石洞，深约七米，宽约三米。相传公元527年至公元536年禅宗初祖菩提达摩曾在此洞面壁静坐长达九年之久，后人称之为“初祖九年默玄处”。少室阙少室阙，天地之中历史建筑群国家文物之一，位于河南省登封市嵩山南麓邢家铺村西，距城六公里的少室山下，约建于东汉元初五年至延光二年（118～123年），是汉代少室山庙的神道阙。1961年中华人民共和国国务院公布为全国重点文物保护单位。联合国教科文组织第34届世界遗产大会2010年8月1日审议通过，将“天地之中”8处11项历史建筑列为世界文化遗产，包括少林寺建筑群（常住院、初祖庵、塔林）、东汉三阙（太室阙、少室阙、启母阙）和中岳庙、嵩岳寺塔、会善寺、嵩阳书院、观星台。二祖庵二祖庵，位於河南省登封市少林旅游景点常住院对面的少室山钵盂峰顶，是少林地区最高的建筑。因庵与其北的初祖庵相",
+        "rank": 4
+      },
+      {
+        "chunk_id": "少林寺-景区介绍_000::chunk_0012",
+        "score": 0.4517820332,
+        "semantic_rank": 5,
+        "dimension_rank": null,
+        "semantic_score": 0.45035428,
+        "dimension_score": null,
+        "normalized_semantic_score": 0.0,
+        "normalized_dimension_score": 0.0,
+        "effective_semantic_score": 0.45035428,
+        "semantic_score_imputed": false,
+        "lexical_score": 0.014277532026301918,
+        "score_components": {
+          "semantic": 0.45035428,
+          "dimension": 0.0,
+          "lexical": 0.0014277532026301918
+        },
+        "original_fusion_rank": 5,
+        "original_fusion_score": 0.0,
+        "doc_title": "少林寺-景区介绍_sub_000.txt",
+        "source_file": "少林寺-景区介绍",
+        "chunk_text": "千年银杏树的灵性：寺内一株1500余年的古银杏树被视为“镇寺灵木”，相传其树荫庇护下的修行者更易悟道，周边民众常来祈福求安。五、武林神话与武术奇观：出神入化的少林绝技。少林武术本身即是一座传奇宝库，衍生出诸多令人称奇的故事：十三飞铊僧惩恶霸：明代传说少林寺武僧身怀绝技，曾以“飞铊”（流星锤类兵器）为民除害，瞬间制服横行乡里的恶霸，彰显“路见不平、拔刀相助”的侠义精神。拳打猛虎与脚拨泉涌：早期僧众为抵御山林猛兽，习武自卫。传说高僧僧稠曾持锡杖喝退争斗的猛虎；另有故事称，僧人练功跺脚震地，竟使泉水喷涌而出（“脚拨泉”），成为少林功夫刚猛绝伦的象征。十八般武艺的巅峰：少林武术集百家之长，明代文献记载寺僧演练“掌搏、剑、鞭、戟”等器械，更有“百人棍阵破千军”的神话流传，奠定了“天下功夫出少林”的地位。六、近代劫难与复兴：烈火中的涅槃重生。少林寺近代经历了战火洗礼，但其坚韧不拔的精神亦成传奇：军阀纵火劫难：1928年，军阀石友三攻入少林寺，纵火焚毁天王殿、大雄宝殿等核心建筑，珍贵典籍和武术资料付之一炬，寺僧四散逃亡。重振少林武术：战后，当家武僧贞绪法师召回还俗武僧寂勤之子吴三林（武术大师），在废",
+        "rank": 5
+      }
+    ]
+  }
+}

@@ -5,8 +5,9 @@ import argparse
 import hashlib
 import json
 import math
+from uuid import uuid4
 import time
-from datetime import datetime
+from importlib import import_module
 from pathlib import Path
 
 from rag_core.embedding import EmbeddingModel
@@ -61,7 +62,7 @@ def prepare(row):
         "subqueries_comma": "，".join(parts),
     }
     gold = row.get("gold") or {}
-    gold_ids = gold.get("chunk_ids") or row.get("gold_chunk_ids") or []
+    gold_ids = gold.get("chunk_ids") or gold.get("gold_chunk_ids") or row.get("gold_chunk_ids") or []
     if not isinstance(gold_ids, list):
         raise ValueError("Gold chunk IDs must be a list")
     return {
@@ -116,8 +117,8 @@ def summarize(records):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-dir", type=Path, required=True)
-    parser.add_argument("--input-results", type=Path, required=True,
-                        help="Saved evaluation JSONL with expansions and mapped gold")
+    parser.add_argument("--input-dataset", "--input-results", dest="input_dataset", type=Path, required=True,
+                        help="Online evaluation dataset directory with saved queries and Golden")
     parser.add_argument("--model-path", required=True)
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--pool", type=int, default=20)
@@ -126,13 +127,32 @@ def main():
     args = parser.parse_args()
     if args.pool < max(KS) or args.limit < 0:
         parser.error("--pool must be >=20 and --limit must be >=0")
-    output = (args.output_dir or HERE / "output" /
-              datetime.now().strftime("%Y%m%d_%H%M%S")).resolve()
-    if not output.is_relative_to(HERE / "output"):
+    target = (args.output_dir or HERE / "output").resolve()
+    if not target.is_relative_to(HERE / "output"):
         parser.error("--output-dir must stay inside this experiment folder")
-    output.mkdir(parents=True, exist_ok=False)
-    data = args.input_results.read_bytes()
-    raw = [json.loads(line) for line in data.decode("utf-8").splitlines() if line.strip()]
+    replace_output = import_module("rag_core.retrieval_fusion.experiments.06_dimension_score.code.run").replace_output
+    replace_output(target, lambda staged: _run(args, staged))
+
+
+def _run(args, output):
+    source = args.input_dataset
+    if source.name == 'index.json':
+        source = source.parent
+    input_manifest = json.loads((source / 'index.json').read_text(encoding='utf-8'))
+    raw = []
+    for relative in input_manifest['detail_files'].values():
+        detail = json.loads((source / relative).read_text(encoding='utf-8'))
+        raw.append(detail.get('evaluation') or {
+            'id': detail['name'], 'question': detail['query'],
+            'retrieval_query': detail['retrieval_query'], 'query_analysis': detail['query_analysis'],
+            'gold': detail['gold'], 'retrieval': {'semantic_results': detail['routes']['semantic']}})
+    data = json.dumps(input_manifest, ensure_ascii=False).encode('utf-8')
+    dataset = output / 'dataset'
+    details = dataset / 'details'
+    details.mkdir(parents=True)
+    index_manifest = {'schema_version': 1, 'batch_id': uuid4().hex,
+                      'input_batch_id': input_manifest.get('batch_id'),
+                      'items': [], 'detail_files': {}}
     prepared = [(row, prepare(row)) for row in raw]
     mapped = [(r, q) for r, q in prepared if q["gold"]]
     excluded = len(raw) - len(mapped)
@@ -150,74 +170,69 @@ def main():
                         collection=manifest["collection"],
                         vector_dim=manifest.get("vector_dim", 1024))
     retriever = VectorRetriever(embeddings=embedder, vector_store=store)
-    records, comparisons = [], []
+    records = []
     parity = {"checked": 0, "exact_order": 0}
     start = time.perf_counter()
-    with (output / "results.jsonl").open("w", encoding="utf-8") as handle:
-        for index, (row, query) in enumerate(mapped, 1):
-            all_texts = unique([*query["texts"].values(), *query["component_texts"]])
-            vectors = dict(zip(all_texts, embedder.encode(all_texts)))
-            cache = {}
-            def search(text=None, vector=None):
-                if text is not None and text in cache:
-                    return cache[text]
-                hits = retriever.search(
-                    query["parts"], args.pool, original_query=query["original"],
-                    query_vector=vector if vector is not None else
-                        VectorRetriever._unit_vector(vectors[text]),
-                    spot_names=query["spots"])
-                if text is not None:
-                    cache[text] = hits
-                return hits
-            rankings = {name: search(text) for name, text in query["texts"].items()}
-            components = query["component_texts"]
-            weights = [2.0 if t == query["original"] else 1.0 for t in components]
-            rankings["original_subqueries_centroid_w2"] = search(
-                vector=centroid([vectors[t] for t in components], weights))
-            rankings["original_subqueries_rrf"] = rrf(
-                [search(t) for t in components], args.pool)
-            baseline = rankings["subqueries_concat"]
-            saved = (row.get("retrieval") or {}).get("semantic_results")
-            parity_equal = None
-            if saved is not None:
-                # Saved lists may be truncated; compare their entire available prefix.
-                saved_ids = [str(h["chunk_id"]) for h in saved]
-                fresh_ids = [str(h["chunk_id"]) for h in baseline]
-                parity_equal = fresh_ids[:len(saved_ids)] == saved_ids
-                parity["checked"] += 1
-                parity["exact_order"] += int(parity_equal)
-            record = {
-                "id": row.get("id", str(index)), "original_query": query["original"],
-                "subqueries": query["parts"], "subquery_source": query["subquery_source"],
-                "empty_subqueries_fallback": query["empty_subqueries_fallback"],
-                "gold_chunk_ids": query["gold"], "spot_names": query["spots"],
-                "saved_baseline_prefix_equal": parity_equal, "strategies": {},
+    for index, (row, query) in enumerate(mapped, 1):
+        all_texts = unique([*query["texts"].values(), *query["component_texts"]])
+        vectors = dict(zip(all_texts, embedder.encode(all_texts)))
+        cache = {}
+        def search(text=None, vector=None):
+            if text is not None and text in cache:
+                return cache[text]
+            hits = retriever.search(
+                query["parts"], args.pool, original_query=query["original"],
+                query_vector=vector if vector is not None else
+                    VectorRetriever._unit_vector(vectors[text]),
+                spot_names=query["spots"])
+            if text is not None:
+                cache[text] = hits
+            return hits
+        rankings = {name: search(text) for name, text in query["texts"].items()}
+        components = query["component_texts"]
+        weights = [2.0 if t == query["original"] else 1.0 for t in components]
+        rankings["original_subqueries_centroid_w2"] = search(
+            vector=centroid([vectors[t] for t in components], weights))
+        rankings["original_subqueries_rrf"] = rrf(
+            [search(t) for t in components], args.pool)
+        baseline = rankings["subqueries_concat"]
+        saved = (row.get("retrieval") or {}).get("semantic_results")
+        parity_equal = None
+        if saved is not None:
+            # Saved lists may be truncated; compare their entire available prefix.
+            saved_ids = [str(h["chunk_id"]) for h in saved]
+            fresh_ids = [str(h["chunk_id"]) for h in baseline]
+            parity_equal = fresh_ids[:len(saved_ids)] == saved_ids
+            parity["checked"] += 1
+            parity["exact_order"] += int(parity_equal)
+        record = {
+            "id": row.get("id", str(index)), "original_query": query["original"],
+            "subqueries": query["parts"], "subquery_source": query["subquery_source"],
+            "empty_subqueries_fallback": query["empty_subqueries_fallback"],
+            "gold_chunk_ids": query["gold"], "spot_names": query["spots"],
+            "saved_baseline_prefix_equal": parity_equal, "strategies": {},
+        }
+        for name in STRATEGIES:
+            hits = rankings[name]
+            record["strategies"][name] = {
+                "query_text": query["texts"].get(name),
+                "component_texts": components if name not in query["texts"] else None,
+                "metrics": route_metrics(hits, query["gold"], KS, query["relevance"]),
+                "results": [{"chunk_id": str(h["chunk_id"]), "rank": i,
+                             "score": float(h["score"])} for i, h in enumerate(hits, 1)],
             }
-            for name in STRATEGIES:
-                hits = rankings[name]
-                record["strategies"][name] = {
-                    "query_text": query["texts"].get(name),
-                    "component_texts": components if name not in query["texts"] else None,
-                    "metrics": route_metrics(hits, query["gold"], KS, query["relevance"]),
-                    "results": [{"chunk_id": str(h["chunk_id"]), "rank": i,
-                                 "score": float(h["score"])} for i, h in enumerate(hits, 1)],
-                }
-            handle.write(json.dumps(record, ensure_ascii=False) + "\n")
-            handle.flush()
-            records.append(record)
-            control = record["strategies"]["subqueries_concat"]["metrics"]
-            for name in STRATEGIES:
-                m = record["strategies"][name]["metrics"]
-                comparisons.append({
-                    "id": record["id"], "strategy": name,
-                    "hit15_change": int(m["hit_at_15"]) - int(control["hit_at_15"]),
-                    "rr10_change": m["rr_at_10"] - control["rr_at_10"],
-                    "ndcg5_change": m["ndcg_at_5"] - control["ndcg_at_5"],
-                })
-            if index % 25 == 0 or index == len(mapped):
-                print(f"[query-composition] {index}/{len(mapped)} elapsed={time.perf_counter()-start:.1f}s", flush=True)
+        name = f'query_{index:06d}.json'
+        record['name'] = name
+        record['batch_id'] = index_manifest['batch_id']
+        record['gold_relevance'] = query['relevance']
+        (details / name).write_text(json.dumps(record, ensure_ascii=False) + '\n', encoding='utf-8')
+        index_manifest['items'].append({'name': name, 'query': query['original']})
+        index_manifest['detail_files'][name] = 'details/' + name
+        records.append(record)
+        if index % 25 == 0 or index == len(mapped):
+            print(f"[query-composition] {index}/{len(mapped)} elapsed={time.perf_counter()-start:.1f}s", flush=True)
     summary = {
-        "input_results": str(args.input_results), "input_sha256": hashlib.sha256(data).hexdigest(),
+        "input_results": str(args.input_dataset), "input_sha256": hashlib.sha256(data).hexdigest(),
         "run_dir": str(args.run_dir), "collection": manifest["collection"],
         "qdrant_url": manifest["qdrant_url"], "model": args.model_path, "device": args.device,
         "encoder_mode": embedder._mode, "input_count": len(raw),
@@ -228,22 +243,9 @@ def main():
         "seconds": time.perf_counter()-start,
         "note": "Exploratory comparison on saved inputs; no new LLM expansion. RRF uses one search per unique component; other methods use one search.",
     }
-    (output / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
-    (output / "comparison.jsonl").write_text(
-        "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in comparisons), encoding="utf-8")
-    lines = [
-        "# Query composition experiment",
-        f"Mapped queries: {len(records)}; excluded unmapped: {excluded}; pool: {args.pool}.",
-        f"Smoke only: {bool(args.limit)}. Saved baseline prefix parity: {parity}.",
-        "| Strategy | Hit@1 | Hit@5 | Hit@10 | Hit@15 | Hit@20 | Gold Recall@15 | MRR@10 | nDCG@5 |",
-        "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
-    ]
-    for name, m in summary["strategy_metrics"].items():
-        vals = [m[k] for k in ("hit@1", "hit@5", "hit@10", "hit@15", "hit@20", "gold_recall@15", "mrr@10", "ndcg@5")]
-        lines.append("| " + name + " | " + " | ".join(f"{v:.4f}" for v in vals) + " |")
-    lines.append("RRF makes multiple searches. Results are exploratory, not an independent holdout.")
-    (output / "summary.md").write_text("\n\n".join(lines[:3]) + "\n\n" + "\n".join(lines[3:]) + "\n", encoding="utf-8")
-    print(str(output), flush=True)
+    index_manifest['configuration'] = {k: v for k, v in summary.items() if k != 'strategy_metrics'}
+    (dataset / 'index.json').write_text(json.dumps(index_manifest, ensure_ascii=False, indent=2), encoding='utf-8')
+    print(json.dumps(summarize(records), ensure_ascii=False), flush=True)
 
 
 if __name__ == "__main__":

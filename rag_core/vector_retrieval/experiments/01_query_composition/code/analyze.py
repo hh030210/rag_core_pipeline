@@ -11,10 +11,14 @@ def main():
     output = args.output_dir.resolve()
     if not output.is_relative_to(Path(__file__).resolve().parent.parent / "output"):
         parser.error("Output must be inside this experiment folder")
-    summary = json.loads((output / "summary.json").read_text(encoding="utf-8"))
-    rows = [json.loads(line) for line in (output / "results.jsonl").read_text(encoding="utf-8").splitlines()]
-    assert len(rows) == summary["evaluated_count"]
-    strategies = list(summary["strategy_metrics"])
+    dataset = output if output.name == 'dataset' else output / 'dataset'
+    manifest = json.loads((dataset / 'index.json').read_text(encoding='utf-8'))
+    rows = [json.loads((dataset / relative).read_text(encoding='utf-8'))
+            for relative in manifest['detail_files'].values()]
+    from importlib import import_module
+    summarize = import_module("rag_core.vector_retrieval.experiments.01_query_composition.code.run").summarize
+    summary = {'strategy_metrics': summarize(rows)}
+    strategies = list(summary['strategy_metrics'])
     paired, grouped = {}, {}
     for name in strategies:
         wins = losses = ties = 0
@@ -39,23 +43,7 @@ def main():
         "paired_vs_subqueries_concat": paired, "groups": grouped,
         "subquery_source_counts": dict(Counter(r["subquery_source"] for r in rows)),
     }
-    (output / "diagnostics.json").write_text(json.dumps(diagnostic, ensure_ascii=False, indent=2), encoding="utf-8")
-    lines = [
-        "# 配对对比分析", "",
-        "所有差值都相对子查询竖线拼接对照组，使用相同的402条已映射查询（实际条数以 summary.json 为准）。", "",
-        "| 方案 | Hit@15差值（百分点） | MRR@10差值 | nDCG@5差值 | 挽回问题数 | 丢失问题数 |",
-        "|---|---:|---:|---:|---:|---:|",
-    ]
-    control = summary["strategy_metrics"]["subqueries_concat"]
-    for name, m in summary["strategy_metrics"].items():
-        p = paired[name]
-        lines.append(f"| {name} | {(m['hit@15']-control['hit@15'])*100:+.2f} | {m['mrr@10']-control['mrr@10']:+.4f} | {m['ndcg@5']-control['ndcg@5']:+.4f} | {p['rescued_at15']} | {p['lost_at15']} |")
-    lines += ["", "按景区范围、子查询数量分组的计数见 diagnostics.json。分组只用于解释结果，没有参与策略选择或调整权重。",
-              "", "RRF每个唯一查询分别检索，候选合并成本高于单向量方案；当前数据集上的优胜结果仍需独立测试集验证。"]
-    lines[2] = f"所有差值都相对子查询竖线拼接对照组，使用相同的{len(rows)}条已映射查询。"
-    (output / "analysis.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print(json.dumps(paired, ensure_ascii=False))
+    print(json.dumps(diagnostic, ensure_ascii=False, indent=2))
 
 if __name__ == "__main__":
     main()
-

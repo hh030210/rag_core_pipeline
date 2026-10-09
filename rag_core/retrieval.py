@@ -921,7 +921,8 @@ class Retriever:
                dimension_only: bool = False,
                query_facts: List[Dict[str, Any]] | None = None,
                original_query: str | None = None,
-               subqueries: List[str] | None = None) -> Dict[str, Any]:
+               subqueries: List[str] | None = None,
+               save_snapshot: bool = False) -> Dict[str, Any]:
         vector_subqueries = [
             str(item) for item in (subqueries or []) if str(item).strip()
         ]
@@ -1068,16 +1069,17 @@ class Retriever:
         fused = adaptive_fusion(semantic, dimension, top_k=top_k)
         fusion_candidates = fused["fusion_candidates"]
         fusion = fused["fusion_results"]
-        _save_fusion_snapshot(
-            semantic,
-            dimension,
-            fusion_candidates,
-            dim_alpha=self.settings.dim_alpha,
-            top_k=top_k,
-            query=query,
-            original_query=original_query or query,
-            query_analysis=analysis,
-        )
+        if save_snapshot:
+            _save_fusion_snapshot(
+                semantic,
+                dimension,
+                fusion_candidates,
+                dim_alpha=self.settings.dim_alpha,
+                top_k=top_k,
+                query=query,
+                original_query=original_query or query,
+                query_analysis=analysis,
+            )
         return {
             "query": query, "query_analysis": analysis,
             "dimension_policy": dimension_policy,

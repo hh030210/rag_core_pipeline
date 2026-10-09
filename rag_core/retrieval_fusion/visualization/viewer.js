@@ -6,6 +6,8 @@ const el = (tag, className = '', value = null) => {
   return node;
 };
 let rows = [];
+let rowsByStrategy = {};
+let liveAccumulators = {};
 let filtered = [];
 let selectedName = null;
 const topK = { semantic: 5, dimension: 5, fusion: 5 };
@@ -21,7 +23,22 @@ const chartResizeObserver = new ResizeObserver(entries => {
 });
 const detailCache = new Map();
 let manifest = null;
+let dimensionManifest = null;
+let recommendedManifest = null;
+const DATASETS = {
+  online: '../experiments/01_online_snapshots/output/dataset/',
+  dimension: '../experiments/06_dimension_score/output/dataset/',
+  recommended: '../experiments/07_recommended_fusion/output/dataset/',
+};
 let activeStrategy = 'recommended';
+function strategyIndex(strategy) { return strategy === 'old' ? manifest : strategy === 'new' ? dimensionManifest : recommendedManifest; }
+function strategyRows(strategy) { return importedDetails ? rows : rowsByStrategy[strategy] || []; }
+function batchLabel(strategy) {
+  const index = strategyIndex(strategy);
+  if (!index) return '尚未运行';
+  const date = index.generated_at ? new Date(index.generated_at).toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'}) : '运行时间未记录';
+  return date + ' · ' + Object.keys(index.detail_files).length + ' 条查询';
+}
 function offlineLabel() {
   return strategyLabel(activeStrategy);
 }
@@ -50,7 +67,7 @@ function renderMetrics(evaluation) {
   const unmapped = evaluation?.unmapped_queries ?? rows.length - mapped;
   const total = evaluation?.total_queries ?? rows.length;
   $('#metrics').replaceChildren(
-    metric('融合快照', total),
+    metric('线上评测查询', total),
     metric('Gold 已映射', `${mapped} / ${total}`),
     metric('未映射', unmapped),
   );
@@ -70,7 +87,7 @@ function renderEvaluation(evaluation) {
   head.append(el(
     'div',
     'evaluation-note',
-    `由逐题候选与 Golden 计算，所有指标分母为 ${total} 条${evaluation.denominator_mode === 'all' ? '全部' : 'Gold 已映射'}查询；Gold 未映射 ${evaluation.unmapped_queries} 条。候选列表已截断时，只能评估其保存深度。`,
+    '各组读取对应实验自己保存的候选与 Golden，使用各自分母。主流程只更新线上评测组。',
   ));
   const makeTable = (rowsFor, mappedQueries, totalQueries) => {
     const table = el('table', 'evaluation-table');
@@ -104,7 +121,14 @@ function renderEvaluation(evaluation) {
     wrap.append(table);
     return wrap;
   };
-  panel.replaceChildren(head, makeTable(evaluation.metrics, evaluation.mapped_queries, total));
+  panel.replaceChildren(head);
+  const groups = importedDetails ? [['old', liveAccumulator]] : Object.entries(liveAccumulators);
+  for (const [strategy, accumulator] of groups) {
+    const group = accumulator.result($('#metric-denominator').value);
+    panel.append(el('h3', '', strategyLabel(strategy) + ' · ' + (importedDetails ? metricSource : batchLabel(strategy))),
+      el('div', 'evaluation-note', '查询 ' + group.total_queries + '；Gold 已映射 ' + group.mapped_queries + '；本组分母 ' + group.denominator),
+      makeTable(group.metrics, group.mapped_queries, group.denominator));
+  }
   panel.hidden = false;
 }
 function renderRouteFusionChart() {
@@ -114,7 +138,7 @@ function renderRouteFusionChart() {
     { key: 'dimension', label: '语义未命中 · 维度命中', sem: false, dim: true },
     { key: 'neither', label: '语义未命中 · 维度未命中', sem: false, dim: false },
   ];
-  const mapped = rows.filter(row => state(row, activeStrategy, topK).mapped);
+  const mapped = strategyRows(activeStrategy).filter(row => state(row, activeStrategy, topK).mapped);
   const groups = categories.map(category => mapped.filter(row => {
     const s = state(row, activeStrategy, topK);
     return s.semHit === category.sem && s.dimHit === category.dim;
@@ -124,7 +148,7 @@ function renderRouteFusionChart() {
   const title = el('h2', '', '两路命中组合与当前融合结果');
   title.id = 'route-fusion-title';
   head.append(title, el('div', 'route-fusion-note',
-    offlineLabel() + ' · 语义 Top-' + topK.semantic + ' / 维度 Top-' + topK.dimension + ' / 融合 Top-' + topK.fusion + ' · Gold 已映射 ' + mapped.length + ' 条'));
+    offlineLabel() + ' · ' + batchLabel(activeStrategy) + ' · 语义 Top-' + topK.semantic + ' / 维度 Top-' + topK.dimension + ' / 融合 Top-' + topK.fusion + ' · Gold 已映射 ' + mapped.length + ' 条'));
   const table = el('table', 'fusion-table');
   const thead = el('thead'), header = el('tr');
   for (const label of ['两路检索命中情况', '查询总数', '融合结果 · 查询数量', '命中率']) header.append(el('th', '', label));
@@ -218,19 +242,23 @@ function refreshCasePanel() {
     'fusion-miss': `融合 Top-${caseTopK.fusion} 未命中`,
   };
   for (const option of $('#filter').options) if (labels[option.value]) option.textContent = labels[option.value];
-  $('#case-settings-note').textContent = `仅影响本 panel：${strategyLabel(caseStrategy)}，语义 Top-${caseTopK.semantic} / 维度 Top-${caseTopK.dimension} / 融合 Top-${caseTopK.fusion}。详情始终对比四路并展示全部候选。`;
+  $('#case-settings-note').textContent = `仅影响本 panel：${strategyLabel(caseStrategy)}，语义 Top-${caseTopK.semantic} / 维度 Top-${caseTopK.dimension} / 融合 Top-${caseTopK.fusion}。使用该实验独立保存的输入、Golden 和结果。${batchLabel(caseStrategy)}`;
+  const sourceRows = strategyRows(caseStrategy);
+  const mapped = sourceRows.some(row => state(row).mapped);
+  for (const option of $('#filter').options) if (option.value !== 'all') option.disabled = !mapped && option.value !== 'unmapped';
+  $('#filter').querySelector('option[value="unmapped"]').textContent = '未映射（' + sourceRows.filter(row => !state(row).mapped).length + '）';
   applyFilters();
 }
 function applyFilters() {
   const text = $('#search').value.trim().toLocaleLowerCase();
   const filter = $('#filter').value;
-  filtered = rows.filter(row => (!text || `${row.query} ${row.name}`.toLocaleLowerCase().includes(text)) && passes(row, filter));
+  filtered = strategyRows(caseStrategy).filter(row => (!text || `${row.query} ${row.name}`.toLocaleLowerCase().includes(text)) && passes(row, filter));
   if (!filtered.some(row => row.name === selectedName)) selectedName = filtered[0]?.name || null;
   renderList();
   loadDetail();
 }
 function renderList() {
-  $('#list-count').textContent = `${filtered.length} / ${rows.length}`;
+  $('#list-count').textContent = `${filtered.length} / ${strategyRows(caseStrategy).length}`;
   const list = $('#question-list');
   const cards = filtered.map((row, index) => {
     const button = el('button', `question-item${row.name === selectedName ? ' active' : ''}`);
@@ -376,7 +404,7 @@ function renderDetail(detail, row) {
   head.append(intro, nav);
 
   const badges = el('div', 'badges');
-  for (const [name, key] of [['语义', 'semantic_rank'], ['维度', 'dimension_rank'], ['线上融合', 'old_rank'], ...(detail.recommended ? [['推荐融合', 'recommended_rank']] : [])]) {
+  for (const [name, key] of [['语义', 'semantic_rank'], ['维度', 'dimension_rank'], ['线上融合', 'old_rank'], ...(detail.routes.new ? [['离线融合', 'new_rank']] : []), ...(detail.recommended ? [['推荐融合', 'recommended_rank']] : [])]) {
     const limit = key === 'semantic_rank' ? caseTopK.semantic : key === 'dimension_rank' ? caseTopK.dimension : caseTopK.fusion;
     const rank = row[key], hit = isRank(rank, limit);
     const status = !state(row).mapped ? '未标注' : hit ? `Top-${limit} 命中 #${rank}` : Number.isInteger(rank) ? '第 ' + rank + ' 名' : '未召回';
@@ -389,6 +417,7 @@ function renderDetail(detail, row) {
     renderRoute(detail, row, 'semantic', '语义检索', '相似度排序', 'semantic_rank'),
     renderRoute(detail, row, 'dimension', '维度检索', '维度匹配排序', 'dimension_rank'),
     renderRoute(detail, row, 'old', '线上融合', '线上快照排名', 'old_rank'),
+    ...(detail.routes.new ? [renderRoute(detail, row, 'new', '离线融合', '维度分数融合', 'new_rank')] : []),
     ...(detail.recommended ? [renderRoute(routeDetail, row, 'recommended', '推荐融合', '维度角色校准', 'recommended_rank')] : []),
   );
   renderRecommended(detail, row, routes);
@@ -402,40 +431,23 @@ async function loadDetail() {
   const row = filtered.find(item => item.name === selectedName);
   if (!row) { root.replaceChildren(el('div', 'empty', '没有符合条件的问题')); return; }
   const name = row.name;
+  const sourceStrategy = caseStrategy;
+  const cacheKey = sourceStrategy + ':' + name;
   root.replaceChildren(el('div', 'empty', '正在读取详情…'));
   try {
-    let detail = importedDetails?.get(name) || detailCache.get(name);
-    if (!detail) {
-      const path = manifest?.detail_files?.[name];
-      if (!path) throw new Error('缺少详情文件：' + name);
-      detail = await staticPayload(path, 'RETRIEVAL_FUSION_DETAILS', name);
-    }
-    if (!importedDetails && !detail.recommended) {
-      const recPath = window.RECOMMENDED_INDEX?.detail_files?.[name];
-      if (recPath) detail.recommended = await staticPayload(recPath, 'RECOMMENDED_DETAILS', name);
-    }
+    let detail = importedDetails?.get(name) || detailCache.get(cacheKey);
+    if (!detail) detail = await loadExperimentDetail(name, sourceStrategy);
     if (detailCache.size >= 8) detailCache.delete(detailCache.keys().next().value);
-    detailCache.set(name, detail);
-    if (selectedName === name) renderDetail(detail, row);
+    detailCache.set(cacheKey, detail);
+    if (selectedName === name && sourceStrategy === caseStrategy) renderDetail(detail, row);
   } catch (error) {
     if (selectedName === name) root.replaceChildren(el('div', 'error', '读取详情失败：' + error.message));
   }
 }
 async function start() {
   try {
-    manifest = window.RETRIEVAL_FUSION_INDEX;
-    if (!Array.isArray(manifest?.items) || !manifest.items.length) {
-      throw new Error('静态索引为空；请重新运行 build_static_data.py 生成页面数据包');
-    }
-    rows = manifest.items.map(row => ({...row, ...(window.RECOMMENDED_INDEX?.items?.[row.name] || {})}));
-    if (!window.RECOMMENDED_INDEX) {
-      activeStrategy = 'new';
-      caseStrategy = 'new';
-      $('#strategy-select').value = 'new';
-      $('#case-strategy-select').value = 'new';
-      $('#strategy-select').querySelector('option[value="recommended"]').disabled = true;
-      $('#case-strategy-select').querySelector('option[value="recommended"]').disabled = true;
-    }
+    if (location.protocol === 'file:') throw new Error('请通过 HTTP 服务打开页面；页面直接读取 experiments 中的 JSON，打开方式见 README.md');
+    await loadLatestExperimentIndexes();
     $('#strategy-select').addEventListener('change', () => { activeStrategy = $('#strategy-select').value; renderRouteFusionChart(); });
     for (const key of ['semantic', 'dimension', 'fusion']) {
       $('#' + key + '-topk').addEventListener('change', event => {
@@ -444,9 +456,9 @@ async function start() {
         topK[key] = value; renderRouteFusionChart();
       });
     }
-    $('#subtitle').textContent = '按策略和 Top-K 查看命中组合；逐题固定对比语义、维度、线上融合与推荐融合。';
+    $('#subtitle').textContent = '各实验独立保存输入与结果；指标、命中图和详情按所选实验的数据计算。';
     $('#metric-denominator').addEventListener('change', refreshCalculatedTable);
-    $('#recalculate-metrics').addEventListener('click', calculateLiveMetrics);
+    $('#recalculate-metrics').addEventListener('click', reloadLatestMetrics);
     $('#import-evaluation').addEventListener('change', async event => {
       const file = event.target.files[0]; if (!file) return;
       try { await importEvaluation(file); } catch (error) { $('#metric-status').textContent = '导入失败：' + error.message; }
@@ -490,72 +502,109 @@ const rawPayloadLoads = new Map();
 let importedDetails = null;
 let liveAccumulator = null;
 let metricGeneration = 0;
-let metricSource = '历史快照详情';
+let metricSource = 'experiments 实验基准';
 function refreshCalculatedTable() {
   if (!liveAccumulator) return;
   const evaluation = liveAccumulator.result($('#metric-denominator').value);
   renderMetrics(evaluation);
   renderEvaluation(evaluation);
 }
-function staticPayload(path, globalName, name) {
-  const key = globalName + ':' + name;
-  if (rawPayloadLoads.has(key)) return rawPayloadLoads.get(key);
-  const load = new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = './' + path + '?metrics=' + Date.now();
-    script.onload = () => {
-      script.remove();
-      const value = window[globalName]?.[name];
-      if (!value) { reject(new Error('详情数据缺失：' + name)); return; }
-      delete window[globalName][name];
-      resolve(value);
-    };
-    script.onerror = () => { script.remove(); reject(new Error('无法读取：' + path)); };
-    document.head.append(script);
-  }).finally(() => rawPayloadLoads.delete(key));
-  rawPayloadLoads.set(key, load);
+async function readJSON(path) {
+  const url = new URL(path, location.href).href;
+  if (rawPayloadLoads.has(url)) return rawPayloadLoads.get(url);
+  const load = fetch(url, {cache: 'no-store'}).then(response => {
+    if (!response.ok) throw new Error('无法读取实验数据：' + path + '（HTTP ' + response.status + '）');
+    return response.json();
+  }).finally(() => rawPayloadLoads.delete(url));
+  rawPayloadLoads.set(url, load);
   return load;
+}
+async function readExperimentIndex(base) {
+  const index = await readJSON(base + 'index.json');
+  if (!index.detail_files || typeof index.detail_files !== 'object') throw new Error('实验索引缺少 detail_files：' + base);
+  index.detail_files = Object.fromEntries(Object.entries(index.detail_files).map(([name, path]) => [name, base + path]));
+  return index;
+}
+async function loadLatestExperimentIndexes() {
+  const optionalIndex = async base => { try { return await readExperimentIndex(base); } catch (error) { if (error.message.includes('HTTP 404')) return null; throw error; } };
+  [manifest, dimensionManifest, recommendedManifest] = await Promise.all([
+    readExperimentIndex(DATASETS.online), optionalIndex(DATASETS.dimension), optionalIndex(DATASETS.recommended),
+  ]);
+  if (!Array.isArray(manifest.items) || !manifest.items.length) throw new Error('线上评测索引为空');
+  for (const strategy of ['old', 'new', 'recommended']) {
+    const index = strategyIndex(strategy);
+    if (index && !Array.isArray(index.items)) index.items = Object.keys(index.detail_files).map(name => ({name}));
+    for (const id of ['strategy-select', 'case-strategy-select']) $('#' + id).querySelector('option[value="' + strategy + '"]').disabled = !index;
+  }
+  if (!strategyIndex(activeStrategy)) activeStrategy = 'old';
+  if (!strategyIndex(caseStrategy)) caseStrategy = 'old';
+  $('#strategy-select').value = activeStrategy;
+  $('#case-strategy-select').value = caseStrategy;
+  metricSource = '线上、离线、推荐分别读取各自实验结果';
+  rows = manifest.items.map(row => ({...row}));
+}
+async function reloadLatestMetrics() {
+  try {
+    if (!importedDetails) {
+      await loadLatestExperimentIndexes();
+      detailCache.clear();
+      selectedName = null;
+    }
+    await calculateLiveMetrics();
+  } catch (error) {
+    liveAccumulator = null;
+    $('#evaluation-panel').replaceChildren(el('div', 'error', '读取最新评测失败：' + error.message));
+    $('#metric-status').textContent = '读取失败；未回退旧数据';
+  }
+}
+async function loadExperimentDetail(name, strategy = 'old') {
+  const index = strategyIndex(strategy), path = index?.detail_files[name];
+  if (!path) throw new Error('该实验缺少查询：' + name);
+  const detail = await readJSON(path);
+  if (detail.name !== name || detail.batch_id !== index.batch_id || !detail.routes || !detail.gold || !detail.chunks) throw new Error('该实验的输入快照或批次不完整：' + name);
+  if (strategy === 'new') detail.routes.new = detail.fusion_candidates;
+  if (strategy === 'recommended') detail.recommended = {candidates: detail.candidates, diagnostics: detail.diagnostics, configuration: detail.configuration};
+  return detail;
 }
 async function calculateLiveMetrics() {
   const generation = ++metricGeneration;
-  const acc = RetrievalMetrics.accumulator();
-  const updated = rows.map(r => ({...r}));
   $('#recalculate-metrics').disabled = true;
   $('#evaluation-panel').hidden = false;
-  $('#evaluation-panel').replaceChildren(el('div', 'evaluation-note', '正在根据候选与 Golden 计算指标…'));
+  $('#evaluation-panel').replaceChildren(el('div', 'evaluation-note', '正在分别计算各实验候选与 Golden…'));
   try {
-    for (let offset = 0; offset < updated.length; offset += 4) {
-      await Promise.all(updated.slice(offset, offset + 4).map(async row => {
-        let detail = importedDetails?.get(row.name);
-        if (!detail) {
-          const path = manifest.detail_files[row.name];
-          if (!path) throw new Error('缺少详情路径：' + row.name);
-          detail = await staticPayload(path, 'RETRIEVAL_FUSION_DETAILS', row.name);
-          const recommendedPath = window.RECOMMENDED_INDEX?.detail_files?.[row.name];
-          if (recommendedPath) detail.recommended = await staticPayload(
-              recommendedPath, 'RECOMMENDED_DETAILS', row.name);
-        }
-        Object.assign(row, acc.add(detail));
-      }));
-      if (generation !== metricGeneration) return;
-      $('#metric-status').textContent = '计算中 ' + Math.min(offset + 4, updated.length) + '/' + updated.length;
+    const nextRows = {}, accumulators = {};
+    const strategies = importedDetails ? ['old'] : ['old', 'new', 'recommended'].filter(strategy => strategyIndex(strategy));
+    const total = strategies.reduce((n, strategy) => n + (importedDetails ? rows.length : strategyIndex(strategy).items.length), 0);
+    let completed = 0;
+    for (const strategy of strategies) {
+      const acc = RetrievalMetrics.accumulator();
+      const updated = (importedDetails ? rows : strategyIndex(strategy).items).map(row => ({...row}));
+      for (let offset = 0; offset < updated.length; offset += 4) {
+        await Promise.all(updated.slice(offset, offset + 4).map(async row => {
+          const detail = importedDetails?.get(row.name) || await loadExperimentDetail(row.name, strategy);
+          Object.assign(row, acc.add(detail));
+          row.query = detail.query;
+        }));
+        if (generation !== metricGeneration) return;
+        completed += Math.min(4, updated.length - offset);
+        $('#metric-status').textContent = '独立计算中 ' + completed + '/' + total;
+      }
+      nextRows[strategy] = updated;
+      accumulators[strategy] = acc;
     }
-    rows = updated;
-    const hasGold = rows.some(row => state(row).mapped);
-    for (const option of $('#filter').options) {
-      if (option.value !== 'all') option.disabled = !hasGold && option.value !== 'unmapped';
-    }
-    $('#filter').querySelector('option[value="unmapped"]').textContent =
-      '未映射（' + rows.filter(row => !state(row).mapped).length + '）';
-    liveAccumulator = acc;
-    if (!importedDetails) detailCache.clear();
+    rowsByStrategy = nextRows;
+    rows = nextRows.old;
+    liveAccumulators = accumulators;
+    liveAccumulator = accumulators.old;
+    detailCache.clear();
     refreshCalculatedTable();
     renderRouteFusionChart();
     refreshCasePanel();
-    $('#metric-status').textContent = metricSource + ' · 已根据 ' + rows.length + ' 条详情计算';
+    $('#metric-status').textContent = metricSource + ' · 已分别计算 ' + strategies.length + ' 组实验';
   } catch (error) {
     if (generation === metricGeneration) {
       liveAccumulator = null;
+      liveAccumulators = {};
       $('#evaluation-panel').replaceChildren(el('div', 'error', '指标计算失败：' + error.message));
       $('#metric-status').textContent = '计算失败；未使用预存汇总值';
     }

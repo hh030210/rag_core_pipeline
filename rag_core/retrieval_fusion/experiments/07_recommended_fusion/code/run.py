@@ -4,6 +4,8 @@ from __future__ import annotations
 import argparse
 import json
 import math
+from uuid import uuid4
+from datetime import datetime, timezone
 from collections import Counter
 from pathlib import Path
 
@@ -12,7 +14,7 @@ if not __package__:
     sys.path.insert(0, str(Path(__file__).resolve().parents[5]))
 from importlib import import_module
 _dimension_score = import_module("rag_core.retrieval_fusion.experiments.06_dimension_score.code.run")
-ENGINE, VIEWER = _dimension_score.ENGINE, _dimension_score.VIEWER
+ENGINE, ONLINE_DATASET = _dimension_score.ENGINE, _dimension_score.ONLINE_DATASET
 fuse, grams = _dimension_score.fuse, _dimension_score.grams
 first_rank, ndcg5 = _dimension_score.first_rank, _dimension_score.ndcg5
 
@@ -24,8 +26,8 @@ CONFIG = dict(dimension_weight=0.0375, lexical_weight=0.075,
               topic_dimension_scale=0.25, topic_lexical_scale=0.5, anchor_weight=0.015)
 
 
-def read_script(path):
-    return json.loads(path.read_text(encoding='utf-8').rsplit(' = ', 1)[1].strip().rstrip(';'))
+def read_json(path):
+    return json.loads(path.read_text(encoding='utf-8'))
 
 
 def gap_profile(route):
@@ -116,25 +118,46 @@ def rank(detail):
                 dimension_scale=dimension_scale, lexical_scale=lexical_scale))
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--static-data-dir', type=Path, default=VIEWER)
+    parser.add_argument('--input-dataset', type=Path, help='Optional input cohort; defaults to the dimension-score experiment saved inputs')
+    parser.add_argument('--baseline-dataset', type=Path, default=ENGINE / 'experiments' / '06_dimension_score' / 'output' / 'dataset')
     parser.add_argument('--output-dir', type=Path, default=ENGINE / 'experiments' / '07_recommended_fusion' / 'output')
-    args = parser.parse_args()
-    manifest = read_script(args.static_data_dir / 'snapshot_index.js')
-    index = dict(label=LABEL, configuration=CONFIG, items={}, detail_files={}, metrics=[])
+    args = parser.parse_args(argv)
+    def write(staged_output):
+        args.output_dir = staged_output
+        _run(args, parser)
+    _dimension_score.replace_output(args.output_dir, write)
+
+
+def _run(args, parser):
+    args.input_dataset = args.input_dataset or args.baseline_dataset
+    manifest = read_json(args.input_dataset / 'index.json')
+    baseline = read_json(args.baseline_dataset / 'index.json')
+    if set(manifest['detail_files']) != set(baseline['detail_files']):
+        parser.error('Online and dimension-score datasets must contain the same query cohort')
+    if args.input_dataset.resolve() != args.baseline_dataset.resolve() and baseline.get('input_batch_id') != manifest.get('batch_id'):
+        parser.error('Baseline and online datasets must have the same batch_id')
+    batch_id = uuid4().hex
+    generated_at = datetime.now(timezone.utc).isoformat()
+    index = dict(batch_id=batch_id, input_batch_id=manifest.get('batch_id'), baseline_batch_id=baseline.get('batch_id'), generated_at=generated_at, source='07_recommended_fusion independent replay', label=LABEL, configuration=CONFIG, items={}, detail_files={}, metrics=[])
     rankings, golds, badcases = [], [], []
     counts = dict(rescued=0, harmed=0)
-    details = args.static_data_dir / 'recommended_details'; details.mkdir(parents=True, exist_ok=True)
+    dataset_dir = args.output_dir / 'dataset'
+    details = dataset_dir / 'details'; details.mkdir(parents=True, exist_ok=True)
     for i, row in enumerate(manifest['items']):
-        name = row['name']; detail = read_script(args.static_data_dir / manifest['detail_files'][name])
+        name = row['name']; detail = read_json(args.input_dataset / manifest['detail_files'][name])
+        detail['routes']['new'] = read_json(args.baseline_dataset / baseline['detail_files'][name])['fusion_candidates']
         payload = rank(detail); candidates = payload['candidates']; gold = set(detail.get('gold', {}).get('gold_chunk_ids', []))
         new_rank = first_rank(candidates, gold)
         index['items'][name] = dict(recommended_rank=new_rank)
         payload['configuration'] = CONFIG
-        relative = f'recommended_details/detail_{i:04d}.js'; index['detail_files'][name] = relative
-        (args.static_data_dir / relative).write_text('window.RECOMMENDED_DETAILS = window.RECOMMENDED_DETAILS || {};\n'
-            + f'window.RECOMMENDED_DETAILS[{json.dumps(name)}] = ' + json.dumps(payload, ensure_ascii=False, separators=(',', ':')) + ';\n', encoding='utf-8')
+        payload['source_snapshot'] = name
+        payload['batch_id'] = batch_id
+        payload['name'] = name
+        payload.update({k: detail[k] for k in ['query', 'retrieval_query', 'query_analysis', 'chunks', 'gold', 'routes']})
+        relative = 'details/' + name; index['detail_files'][name] = relative
+        (dataset_dir / relative).write_text(json.dumps(payload, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
         old_hit = bool(gold) and any(c['chunk_id'] in gold for c in detail['routes']['new'][:5])
         hit = new_rank is not None and new_rank <= 5
         if gold:
@@ -154,12 +177,10 @@ def main():
     index['metrics'] = [dict(key='recommended', label=LABEL,
          hits={'Hit@1': m['hit_at_1'], 'Hit@5': m['hit_at_5'], 'Hit@10': m['hit_at_10']},
          ranking_scores={'MRR@10': m['mrr_at_10'], 'nDCG@5': m['ndcg_at_5']})]
-    (args.static_data_dir / 'recommended_index.js').write_text('window.RECOMMENDED_INDEX = '
-         + json.dumps(index, ensure_ascii=False, separators=(',', ':')) + ';\n', encoding='utf-8')
-    args.output_dir.mkdir(parents=True, exist_ok=True)
-    (args.output_dir / 'summary.json').write_text(json.dumps(index['report'], ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    (args.output_dir / 'badcases.json').write_text(json.dumps(badcases, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    print(json.dumps(index['report'], ensure_ascii=False))
+    index.pop('report', None)
+    index.pop('metrics', None)
+    (dataset_dir / 'index.json').write_text(json.dumps(index, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+    print(json.dumps({'metrics': m, 'changes_vs_baseline': counts, 'remaining_badcases': len(badcases)}, ensure_ascii=False))
 
 
 if __name__ == '__main__': main()

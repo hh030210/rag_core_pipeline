@@ -5,14 +5,15 @@ import argparse
 import json
 import math
 import re
+import shutil
+import tempfile
+from uuid import uuid4
+from datetime import datetime, timezone
 from collections import Counter
 from pathlib import Path
 
 ENGINE = Path(__file__).resolve().parents[3]
-VIEWER = ENGINE / 'visualization'
-DEFAULT_LABELS = (Path(__file__).resolve().parents[5] / 'result' /
-                  'real_merged7_deepseek_v4pro_rerank_20260920_run1' /
-                  'alpha_sweep_20260921' / 'alpha_0.2' / 'evaluation' / 'results.jsonl')
+ONLINE_DATASET = ENGINE / 'experiments' / '01_online_snapshots' / 'output' / 'dataset'
 DIMENSION_WEIGHT = 0.05
 LEXICAL_WEIGHT = 0.10
 MISSING_SEMANTIC_PENALTY = 0.025
@@ -27,14 +28,12 @@ def grams(text):
     return result
 
 
-def load_static_snapshots(static_dir: Path):
-    """Load the historical labeled cohort from the visualization cache."""
-    manifest_text = (static_dir / 'snapshot_index.js').read_text(encoding='utf-8')
-    manifest = json.loads(manifest_text.split('=', 1)[1].strip().rstrip(';'))
+def load_dataset_snapshots(dataset_dir: Path):
+    """Load the labeled cohort owned by the online baseline experiment."""
+    manifest = json.loads((dataset_dir / 'index.json').read_text(encoding='utf-8'))
     snapshots = []
     for name, relative in manifest['detail_files'].items():
-        text = (static_dir / relative).read_text(encoding='utf-8')
-        detail = json.loads(text.rsplit(' = ', 1)[1].strip().rstrip(';'))
+        detail = json.loads((dataset_dir / relative).read_text(encoding='utf-8'))
         routes = detail['routes']
         snapshots.append((name, {
             'query': detail.get('retrieval_query') or detail.get('query') or '',
@@ -44,6 +43,8 @@ def load_static_snapshots(static_dir: Path):
             'dimension_candidates': routes.get('dimension') or [],
             'fusion_candidates': routes.get('old') or [],
             'chunks': detail.get('chunks') or {},
+            'gold_chunk_ids': detail['gold']['gold_chunk_ids'],
+            'view_detail': detail,
         }))
     return snapshots
 
@@ -163,36 +164,92 @@ def summarize(rows):
     return report
 
 
-def main():
+def replace_output(output_dir, writer):
+    """Publish a complete successful replay; preserve the previous run on failure."""
+    output_dir = Path(output_dir).absolute()
+    if output_dir.is_symlink():
+        raise ValueError('Output directory must not be a symlink')
+    output_dir.parent.mkdir(parents=True, exist_ok=True)
+    stage = Path(tempfile.mkdtemp(prefix='.replay-', dir=output_dir.parent))
+    staged_output = stage / 'output'
+    backup = stage / 'previous'
+    try:
+        writer(staged_output)
+        manifest = json.loads((staged_output / 'dataset' / 'index.json').read_text(encoding='utf-8'))
+        for relative in manifest['detail_files'].values():
+            detail = (staged_output / 'dataset' / relative).resolve()
+            if not detail.is_relative_to(staged_output.resolve()) or not detail.is_file():
+                raise ValueError('Incomplete replay dataset')
+        if output_dir.exists():
+            output_dir.rename(backup)
+        try:
+            staged_output.rename(output_dir)
+        except BaseException:
+            if backup.exists():
+                backup.rename(output_dir)
+            raise
+    finally:
+        shutil.rmtree(stage)
+
+
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--input-dir', type=Path,
-                        help='Use retrieval snapshot JSON files instead of the static historical cohort')
-    parser.add_argument('--static-data-dir', type=Path, default=VIEWER)
+                        help='Use retrieval snapshot JSON files instead of the online baseline dataset')
+    parser.add_argument('--input-dataset', type=Path, default=ONLINE_DATASET)
     parser.add_argument('--output-dir', type=Path, default=ENGINE / 'experiments' / '06_dimension_score' / 'output')
-    parser.add_argument('--evaluation-results', type=Path, default=DEFAULT_LABELS)
-    args = parser.parse_args()
+    parser.add_argument('--evaluation-results', type=Path, help='Optional Golden results for --input-dir; dataset mode uses its own Golden')
+    args = parser.parse_args(argv)
+    def write(staged_output):
+        args.output_dir = staged_output
+        _run(args, parser)
+    replace_output(args.output_dir, write)
+
+
+def _run(args, parser):
     if args.input_dir:
         snapshots = [(path.name, json.loads(path.read_text(encoding='utf-8')))
                      for path in sorted(args.input_dir.glob('retrieval_fusion_*.json'))]
-    elif (args.static_data_dir / 'snapshot_index.js').is_file():
-        snapshots = load_static_snapshots(args.static_data_dir)
     else:
-        snapshots = [(path.name, json.loads(path.read_text(encoding='utf-8')))
-                     for path in sorted((ENGINE / 'experiments' / '01_online_snapshots' / 'output').glob('retrieval_fusion_*.json'))]
+        if not (args.input_dataset / 'index.json').is_file():
+            parser.error('Missing online evaluation dataset; run run.py evaluate first')
+        snapshots = load_dataset_snapshots(args.input_dataset)
     if not snapshots:
         parser.error('No retrieval snapshots found')
     labels = read_labels(args.evaluation_results if args.evaluation_results and args.evaluation_results.is_file() else None)
     args.output_dir.mkdir(parents=True, exist_ok=True)
+    input_manifest = json.loads((args.input_dataset / "index.json").read_text()) if not args.input_dir and (args.input_dataset / "index.json").is_file() else {}
+    batch_id = uuid4().hex
+    generated_at = datetime.now(timezone.utc).isoformat()
     comparisons = []
+    dataset_dir = args.output_dir / "dataset"
+    detail_dir = dataset_dir / "details"
+    detail_dir.mkdir(parents=True, exist_ok=True)
+    manifest = {"schema_version": 1, "items": [], "detail_files": {}, "batch_id": batch_id, "input_batch_id": input_manifest.get("batch_id"), "generated_at": generated_at, "source": "06_dimension_score independent replay"}
     for name, snapshot in snapshots:
         result = fuse(snapshot)
         result['source_snapshot'] = name
-        (args.output_dir / name).write_text(
+        result['batch_id'] = batch_id
+        detail = snapshot.get('view_detail') or {
+            'query': snapshot.get('original_query') or snapshot['query'],
+            'retrieval_query': snapshot.get('retrieval_query') or snapshot['query'],
+            'query_analysis': snapshot.get('query_analysis', {}),
+            'chunks': snapshot.get('chunks', {}),
+            'gold': {'gold_chunk_ids': snapshot.get('gold_chunk_ids', [])},
+            'routes': {'semantic': snapshot['semantic_candidates'], 'dimension': snapshot['dimension_candidates'], 'old': snapshot['fusion_candidates']},
+        }
+        result.update({k: detail[k] for k in ['query', 'retrieval_query', 'query_analysis', 'chunks', 'gold']})
+        result['name'] = name
+        result['routes'] = {**detail['routes'], 'new': result['fusion_candidates']}
+        query = result['retrieval_query']
+        gold = set(snapshot['gold_chunk_ids']) if 'gold_chunk_ids' in snapshot else labels.get(query, set())
+        result['gold'] = {**result['gold'], 'gold_chunk_ids': sorted(gold)}
+        (detail_dir / name).write_text(
             json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
         query = result['retrieval_query']
-        if query not in labels:
-            continue
-        gold = labels[query]
+        gold = set(snapshot['gold_chunk_ids']) if 'gold_chunk_ids' in snapshot else labels.get(query, set())
+        manifest['items'].append({'name': name, 'query': snapshot.get('original_query') or query, 'gold_count': len(gold)})
+        manifest['detail_files'][name] = 'details/' + name
         online = snapshot.get('fusion_candidates') or []
         comparisons.append({
             'query': query, 'source_snapshot': name,
@@ -205,12 +262,9 @@ def main():
             'new_ndcg5': ndcg5(result['fusion_candidates'], gold),
             'online_ndcg5': ndcg5(online, gold),
         })
+    (dataset_dir / 'index.json').write_text(json.dumps(manifest, ensure_ascii=False) + '\n', encoding='utf-8')
     report = {'snapshots': len(snapshots), 'strategy': 'normalized_dimension_score_blend_v1',
               'metrics': summarize(comparisons) if comparisons else {}}
-    (args.output_dir / 'comparison.jsonl').write_text(
-        ''.join(json.dumps(row, ensure_ascii=False) + '\n' for row in comparisons), encoding='utf-8')
-    (args.output_dir / 'summary.json').write_text(
-        json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report, ensure_ascii=False, indent=2))
 
 
