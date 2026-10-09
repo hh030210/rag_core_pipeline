@@ -22,6 +22,7 @@ from .retrieval_fusion.fusion_engine.fusion import _save_fusion_snapshot
 from .poi_registry import PoiRegistry
 from .schema_v2 import load_schema, normalize_label, normalize_text, schema_maps
 from .storage import VectorStore
+from .vector_retrieval import VectorRetriever
 
 
 TAG_VECTOR_THRESHOLD_PROFILES = {
@@ -108,6 +109,11 @@ class Retriever:
         self.store = VectorStore(run_dir=self.run_dir, backend=settings.backend,
                                  qdrant_url=settings.qdrant_url,
                                  collection=settings.collection, vector_dim=settings.vector_dim)
+        self.vector_retriever = VectorRetriever(
+            embeddings=self.embeddings,
+            vector_store=self.store,
+            vector_name=getattr(settings, "vector_name", "chunk_text_vec"),
+        )
         raw_index = self.run_dir / "inverted_index_v2.json"
         self.postings = json.loads(raw_index.read_text(encoding="utf-8")) if raw_index.exists() else {}
         self.points = self.store.scroll()
@@ -914,7 +920,15 @@ class Retriever:
                dimension_pool: int | None = None,
                dimension_only: bool = False,
                query_facts: List[Dict[str, Any]] | None = None,
-               original_query: str | None = None) -> Dict[str, Any]:
+               original_query: str | None = None,
+               subqueries: List[str] | None = None) -> Dict[str, Any]:
+        vector_subqueries = [
+            str(item) for item in (subqueries or []) if str(item).strip()
+        ]
+        if vector_subqueries:
+            query = " | ".join(vector_subqueries)
+        else:
+            vector_subqueries = [query]
         top_k = top_k or self.settings.top_k
         semantic_pool = max(top_k, int(semantic_pool or getattr(self.settings, "semantic_pool", 20)))
         dimension_pool = max(top_k, int(dimension_pool or getattr(self.settings, "dimension_pool", 100)))
@@ -945,16 +959,13 @@ class Retriever:
             if bool(getattr(self.settings, "fact_anchor_rerank_enabled", True)) else []
         )
         analysis["fact_anchor_terms"] = fact_anchor_terms
-        semantic_hits = [] if dimension_only else self.store.semantic_search(query_vec, semantic_pool)
-        semantic = []
-        for hit in semantic_hits:
-            payload = hit["payload"]
-            if not self._matches_spot(payload, analysis["spot_names"]):
-                continue
-            semantic.append({"chunk_id": payload.get("chunk_id", hit["id"]),
-                             "score": hit["score"], "source": "semantic", **payload})
-        for rank, item in enumerate(semantic, 1):
-            item["rank"] = rank
+        semantic = [] if dimension_only else self.vector_retriever.search(
+            vector_subqueries,
+            semantic_pool,
+            original_query=original_query or query,
+            query_vector=query_vec,
+            spot_names=analysis["spot_names"],
+        )
 
         dimension = []
         # DuRetrieval has no dimension/facet annotations in this run.  When

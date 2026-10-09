@@ -605,15 +605,17 @@ def run_evaluation(
     for index, record in enumerate(records, 1):
         if prompt_manager:
             expansion = prompt_manager.expand(record["question"])
-            retrieval_query = " | ".join(expansion.get("sub_queries") or [record["question"]])
+            subqueries = expansion.get("sub_queries") or [record["question"]]
         else:
-            retrieval_query = record["question"]
+            subqueries = [record["question"]]
+        retrieval_query = " | ".join(subqueries)
         retrieval = retriever.search(
             retrieval_query,
             top_k=top_k,
             semantic_pool=max(int(eval_depth), int(settings.semantic_pool)),
             dimension_pool=max(int(eval_depth), int(settings.dimension_pool)),
             original_query=record["question"],
+            subqueries=subqueries,
         )
         retrieval["query"] = retrieval_query
         row = evaluate_row(record, retrieval, ks, eval_depth, result_text_chars)

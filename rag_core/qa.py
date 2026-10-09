@@ -62,11 +62,13 @@ class QAService:
 
     def answer(self, query: str, *, top_k: int | None = None, context_chars: int = 0) -> Dict[str, Any]:
         expansion = self.prompts.expand(query)
-        retrieval_query = " | ".join(expansion["sub_queries"])
+        subqueries = expansion.get("sub_queries") or [query]
+        retrieval_query = " | ".join(subqueries)
         retrieval = self.retriever.search(
             retrieval_query,
             top_k=top_k or self.settings.top_k,
             original_query=query,
+            subqueries=subqueries,
         )
         chunks = retrieval.get("top_chunks", [])
         context_parts = []

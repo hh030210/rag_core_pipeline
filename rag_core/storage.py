@@ -169,21 +169,22 @@ class VectorStore:
         nr = math.sqrt(sum(float(right[i]) ** 2 for i in range(size)))
         return dot / (nl * nr or 1.0)
 
-    def semantic_search(self, vector: List[float], top_k: int) -> List[Dict[str, Any]]:
+    def semantic_search(self, vector: List[float], top_k: int,
+                        vector_name: str = "chunk_text_vec") -> List[Dict[str, Any]]:
         if self.backend == "local":
             hits = []
             for point in self.load_local_points():
-                score = self._cosine(vector, point["vector"]["chunk_text_vec"])
+                score = self._cosine(vector, point["vector"][vector_name])
                 hits.append({"id": point["id"], "score": score, "payload": point.get("payload", {})})
             return sorted(hits, key=lambda item: item["score"], reverse=True)[:top_k]
         try:
             result = self.client.query_points(collection_name=self.collection, query=vector,
-                                              using="chunk_text_vec", limit=top_k,
+                                              using=vector_name, limit=top_k,
                                               with_payload=True, with_vectors=False)
             points = getattr(result, "points", result)
         except Exception:
             points = self.client.search(collection_name=self.collection,
-                                        query_vector=("chunk_text_vec", vector), limit=top_k,
+                                        query_vector=(vector_name, vector), limit=top_k,
                                         with_payload=True, with_vectors=False)
         return [{"id": point.id, "score": float(point.score), "payload": point.payload or {}}
                 for point in points]
