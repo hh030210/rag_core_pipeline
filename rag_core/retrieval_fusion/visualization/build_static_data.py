@@ -1,4 +1,4 @@
-"""Build static viewer data files so index.html can be opened without a server."""
+﻿"""Build static viewer data files so index.html can be opened without a server."""
 from __future__ import annotations
 
 import argparse
@@ -21,6 +21,139 @@ COMPACT_FIELDS = (
 
 def read_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def read_static_manifest(path: Path) -> dict:
+    text = path.read_text(encoding="utf-8")
+    return json.loads(text.split("=", 1)[1].strip().rstrip(";"))
+
+
+def read_static_detail(path: Path) -> dict:
+    text = path.read_text(encoding="utf-8")
+    return json.loads(text.rsplit(" = ", 1)[1].strip().rstrip(";"))
+
+
+def add_experiment_metrics(base: dict, summary: dict) -> dict:
+    """Replace the previous offline row with dimension-score fusion metrics."""
+    if not summary:
+        return base
+    total = summary.get("snapshots", base.get("total_queries", 0))
+    metrics = summary.get("metrics", {})
+    mapped = metrics.get("gold_mapped", summary.get("gold_mapped", base.get("mapped_queries", 0)))
+    sources = {
+        "semantic": ("semantic", "语义检索"),
+        "dimension": ("dimension", "维度检索"),
+        "fusion": ("online", "线上融合"),
+        "fusion_new": ("dimension_score_blend", "离线融合（维度分数）"),
+    }
+    base_rows = []
+    for key, (source, label) in sources.items():
+        values = metrics.get(source)
+        if not values:
+            old = next((row for row in base.get("metrics", []) if row.get("key") == key), {})
+            if "hits" in old and "ranking_scores" in old:
+                base_rows.append({**old, "label": label})
+                continue
+            scores = old.get("scores", {})
+            base_rows.append({
+                "key": key, "label": label,
+                "hits": {metric: round(scores.get(metric, 0) * mapped / 100)
+                         for metric in ("Hit@1", "Hit@5", "Hit@10")},
+                "ranking_scores": {metric: scores.get(metric, 0) / 100
+                                   for metric in ("MRR@10", "nDCG@5")},
+            })
+        else:
+            base_rows.append({
+                "key": key, "label": label,
+                "hits": {"Hit@1": values["hit_at_1"], "Hit@5": values["hit_at_5"],
+                         "Hit@10": values["hit_at_10"]},
+                "ranking_scores": {"MRR@10": values["mrr_at_10"],
+                                    "nDCG@5": values["ndcg_at_5"]},
+            })
+    return {"total_queries": total, "mapped_queries": mapped,
+            "unmapped_queries": total - mapped, "metrics": base_rows,
+            "strategy": summary.get("strategy")}
+
+
+def summarize_static_route(rows: list[tuple[list[dict], set[str]]]) -> dict:
+    total = len(rows)
+    mapped = [(items, gold) for items, gold in rows if gold]
+    ranks = [first_gold_rank(items, gold) for items, gold in mapped]
+    return {
+        "hit_at_1": sum(rank is not None and rank <= 1 for rank in ranks),
+        "hit_at_5": sum(rank is not None and rank <= 5 for rank in ranks),
+        "hit_at_10": sum(rank is not None and rank <= 10 for rank in ranks),
+        "mrr_at_10": sum(1 / rank for rank in ranks if rank is not None and rank <= 10) / (total or 1),
+        "ndcg_at_5": sum(ndcg_at_5(items, gold) for items, gold in rows) / (total or 1),
+    }
+
+
+def rebuild_from_experiment_cache(assets_dir: Path, experiment_dir: Path) -> bool:
+    """Merge experiment rankings into the historical static viewer cohort."""
+    index_path = assets_dir / "snapshot_index.js"
+    summary_path = experiment_dir / "summary.json"
+    if not index_path.is_file() or not summary_path.is_file():
+        return False
+    previous = read_static_manifest(index_path)
+    summary = read_json(summary_path)
+    comparisons_by_name = {}
+    comparison_path = experiment_dir / "comparison.jsonl"
+    if comparison_path.is_file():
+        for line in comparison_path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                row = json.loads(line)
+                comparisons_by_name[row["source_snapshot"]] = row
+
+    detail_files = previous.get("detail_files", {})
+    items = []
+    semantic_rows, dimension_rows = [], []
+    for item in previous.get("items", []):
+        name = item["name"]
+        experiment_path = experiment_dir / name
+        detail_path = assets_dir / detail_files[name]
+        if not experiment_path.is_file() or not detail_path.is_file():
+            items.append(item)
+            continue
+        experiment = read_json(experiment_path)
+        detail = read_static_detail(detail_path)
+        gold_ids = set(comparisons_by_name.get(name, {}).get("gold_chunk_ids", []))
+        semantic_rows.append((detail["routes"].get("semantic", []), gold_ids))
+        dimension_rows.append((detail["routes"].get("dimension", []), gold_ids))
+        detail["routes"] = {
+            "semantic": detail["routes"].get("semantic", []),
+            "dimension": detail["routes"].get("dimension", []),
+            "old": detail["routes"].get("old", []),
+            "new": compact(experiment.get("fusion_candidates", [])),
+        }
+        detail["gold"] = {**(detail.get("gold") or {}),
+                           "gold_chunk_ids": comparisons_by_name.get(name, {}).get("gold_chunk_ids", [])}
+        payload = json.dumps(detail, ensure_ascii=False, separators=(",", ":"))
+        script = (
+            "window.RETRIEVAL_FUSION_DETAILS = window.RETRIEVAL_FUSION_DETAILS || {};\n"
+            f"window.RETRIEVAL_FUSION_DETAILS[{json.dumps(name, ensure_ascii=False)}] = {payload};\n"
+        )
+        detail_path.write_text(script, encoding="utf-8")
+        comparison = comparisons_by_name.get(name, {})
+        item = {key: item.get(key) for key in (
+            "name", "query", "has_new", "gold_count", "semantic_rank",
+            "dimension_rank", "old_rank",
+        )}
+        item["has_new"] = True
+        item["new_rank"] = comparison.get("new_rank")
+        items.append(item)
+    summary = {**summary, "metrics": {
+        **summary.get("metrics", {}),
+        "semantic": summarize_static_route(semantic_rows),
+        "dimension": summarize_static_route(dimension_rows),
+    }}
+    manifest = {**previous, "items": items,
+                "evaluation": add_experiment_metrics(previous.get("evaluation", {}), summary)}
+    index_path.write_text(
+        "window.RETRIEVAL_FUSION_INDEX = " +
+        json.dumps(manifest, ensure_ascii=False, separators=(",", ":")) + ";\n",
+        encoding="utf-8",
+    )
+    return True
 
 
 def comparisons(new_dir: Path) -> dict[str, dict]:
@@ -181,10 +314,22 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=ENGINE_DIR / "output")
     parser.add_argument("--output-new", type=Path, default=ENGINE_DIR / "output_new")
     parser.add_argument("--assets-dir", type=Path, default=VIEWER_DIR)
+    parser.add_argument("--experiment-dir", type=Path,
+                        default=ENGINE_DIR / "output_new")
     args = parser.parse_args()
     old_dir = args.output.expanduser().resolve()
     new_dir = args.output_new.expanduser().resolve()
     assets_dir = args.assets_dir.expanduser().resolve()
+    experiment_dir = args.experiment_dir.expanduser().resolve()
+    if rebuild_from_experiment_cache(assets_dir, experiment_dir):
+        manifest = read_static_manifest(assets_dir / "snapshot_index.js")
+        detail_bytes = sum((assets_dir / path).stat().st_size
+                           for path in manifest.get("detail_files", {}).values()
+                           if (assets_dir / path).is_file())
+        print(f"Built dimension-score fusion comparison: {len(manifest.get('items', []))} questions")
+        print(f"Index: {assets_dir / 'snapshot_index.js'}")
+        print(f"Details: {assets_dir / 'snapshot_details'} ({detail_bytes / (1024 * 1024):.1f} MiB)")
+        return 0
     if not old_dir.is_dir():
         parser.error(f"Missing original fusion output: {old_dir}")
     if not new_dir.is_dir():
@@ -243,3 +388,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
