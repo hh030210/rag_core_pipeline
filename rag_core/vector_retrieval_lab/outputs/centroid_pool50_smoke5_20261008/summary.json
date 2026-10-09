@@ -1,0 +1,80 @@
+{
+  "experiment": "deeper_candidate_pool_for_centroid_variants",
+  "collection": "rag_core_sdu_v4pro_full_20260921_run1",
+  "mapped_queries": 5,
+  "candidate_pool": 50,
+  "stored_depth": 50,
+  "strategy_metrics": {
+    "current_question_weight_2_centroid": {
+      "query_count": 5,
+      "hit@1": 0.0,
+      "gold_recall@1": 0.0,
+      "hit@5": 1.0,
+      "gold_recall@5": 0.7,
+      "hit@10": 1.0,
+      "gold_recall@10": 1.0,
+      "hit@15": 1.0,
+      "gold_recall@15": 1.0,
+      "hit@20": 1.0,
+      "gold_recall@20": 1.0,
+      "mrr@10": 0.3733333333333333,
+      "ndcg@5": 0.41231077399160493,
+      "mean_first_gold_rank_on_hits": 3.0
+    },
+    "fixed_question_mass_33": {
+      "query_count": 5,
+      "hit@1": 0.0,
+      "gold_recall@1": 0.0,
+      "hit@5": 1.0,
+      "gold_recall@5": 0.7,
+      "hit@10": 1.0,
+      "gold_recall@10": 1.0,
+      "hit@15": 1.0,
+      "gold_recall@15": 1.0,
+      "hit@20": 1.0,
+      "gold_recall@20": 1.0,
+      "mrr@10": 0.3733333333333333,
+      "ndcg@5": 0.41231077399160493,
+      "mean_first_gold_rank_on_hits": 3.0
+    },
+    "fixed_question_mass_50": {
+      "query_count": 5,
+      "hit@1": 0.0,
+      "gold_recall@1": 0.0,
+      "hit@5": 0.8,
+      "gold_recall@5": 0.7,
+      "hit@10": 1.0,
+      "gold_recall@10": 1.0,
+      "hit@15": 1.0,
+      "gold_recall@15": 1.0,
+      "hit@20": 1.0,
+      "gold_recall@20": 1.0,
+      "mrr@10": 0.36666666666666664,
+      "ndcg@5": 0.41231077399160493,
+      "mean_first_gold_rank_on_hits": 3.2
+    },
+    "fixed_question_mass_60": {
+      "query_count": 5,
+      "hit@1": 0.0,
+      "gold_recall@1": 0.0,
+      "hit@5": 0.8,
+      "gold_recall@5": 0.7,
+      "hit@10": 1.0,
+      "gold_recall@10": 1.0,
+      "hit@15": 1.0,
+      "gold_recall@15": 1.0,
+      "hit@20": 1.0,
+      "gold_recall@20": 1.0,
+      "mrr@10": 0.3333333333333333,
+      "ndcg@5": 0.39625493182124244,
+      "mean_first_gold_rank_on_hits": 3.4
+    }
+  },
+  "strategies": [
+    "current_question_weight_2_centroid",
+    "fixed_question_mass_33",
+    "fixed_question_mass_50",
+    "fixed_question_mass_60"
+  ],
+  "note": "Each listed strategy uses exactly one Qdrant vector search per query."
+}
