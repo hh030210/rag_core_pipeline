@@ -1,28 +1,19 @@
-# 融合检索可视化
+# 检索融合可视化
 
-这是一个纯静态页面，不需要启动 Python 服务。双击 `index.html` 或 `start.bat` 即可查看仓库内生成的快照。
+打开 `index.html` 查看语义检索、维度检索、线上融合、维度分数离线基准和推荐融合。默认选中推荐策略；选择框只提供推荐融合和离线基准，控制问答列表、筛选及命中关系图。逐题详情保留五列，便于直接比较。
 
-页面顶部展示四路检索的五项评估指标：Hit@1、Hit@5、Hit@10、MRR@10 与 nDCG@5。Hit 显示命中条数及有 Gold 映射的查询数；MRR@10 和 nDCG@5 显示 0–1 分数，并按全部快照数计算。页面同时注明 Gold 映射数和未映射数。下方可以按问题查看语义检索、维度检索、原融合与新融合候选，搜索和筛选 badcase，展开完整排名，并点击 chunk 编号查看保存的正文。
+首表全部指标采用百分制。Hit 分母为 402 条 Gold 已映射查询；MRR@10 和 nDCG@5 按全部 435 条快照计算。33 条未映射问题有独立标记和筛选，不纳入命中统计。
 
-页面运行时只读取本目录下的 `snapshot_index.js` 和 `snapshot_details/` 静态数据，不调用检索、模型或外部服务。更新 `fusion_engine/output/`、`output_new/` 快照后，在仓库根目录重新生成静态数据包：
+命中关系图按仅维度命中、仅语义命中、都命中、都未命中分组，条块总长度体现查询数，颜色表示线上与当前离线融合的命中关系。推荐策略详情显示原始 gap、同首位保护、维度角色校准是否触发、局部证据与事实锚点。点击 chunk 编号可查看正文。
 
-```bash
+推荐策略 Top-5 为 362/402（90.05%），相对维度分数基准救回 8 条、掉出 0 条。使用“当前离线 Top-5 未命中”查看 40 条 badcase；筛选也支持相对线上／离线基准救回或掉出的查询。
+
+重建静态数据（仓库根目录）：
+
+```powershell
+py -3 rag_core/retrieval_fusion/fusion_engine/fusion_new/run.py
 py -3 rag_core/retrieval_fusion/visualization/build_static_data.py
+py -3 rag_core/retrieval_fusion/fusion_engine/fusion_new/recommended.py
 ```
 
-生成器会检查原融合和新融合的查询及候选集合是否一致。若 `output_new/comparison.jsonl` 不存在，页面仍可显示候选对比，但 Gold 排名与评估指标将为空。
-
-## 当前融合策略
-
-“原融合”展示 `output` 中实际保存的排名；页面不会用稳定融合函数重新计算历史排名。
-
-“新融合”展示 `fusion_new` 当前离线策略生成的结果：
-
-```text
-g = max(s[i] - s[i+1]), i = 1,...,min(9, 语义候选数-1)
-u = max(0, 1 - g / 0.1)
-λ = 0.1 + 0.025 * u
-F = S* + λ * L
-```
-
-`S*` 使用原始语义得分；语义路未召回的候选估计为 `max(0, 最低已召回语义分 - 0.025)`，语义路为空时为 0。`L` 是查询字符 2/3/4-gram 在候选前 4,000 字符中的 IDF 加权覆盖率，再按候选最大值归一化。当前维度分数权重为 0，维度路仍提供候选。
+基准数据为 `snapshot_index.js`、`snapshot_details/`；推荐数据为 `recommended_index.js`、`recommended_details/`。详情按题懒加载。方法与结果口径见 `../fusion_engine/fusion_new/README.md`。
