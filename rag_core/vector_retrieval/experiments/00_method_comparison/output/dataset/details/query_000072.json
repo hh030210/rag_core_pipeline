@@ -1,0 +1,1238 @@
+{
+  "name": "query_000072.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "南孔庙的‘过庭’是什么意思？和孔子有什么关系？",
+  "subqueries": [
+    "南孔庙 过庭 含义",
+    "孔子 过庭 典故 出处",
+    "孔鲤 趋而过庭 论语 故事"
+  ],
+  "component_texts": [
+    "南孔庙的‘过庭’是什么意思？和孔子有什么关系？",
+    "南孔庙 过庭 含义",
+    "孔子 过庭 典故 出处",
+    "孔鲤 趋而过庭 论语 故事"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "title_honor": {
+        "labels": [
+          "南孔庙"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "scenic_spot": {
+        "labels": [
+          "过庭"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "entity_category": {
+        "labels": [
+          "过庭",
+          "孔庙"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "associated_figure": {
+        "labels": [
+          "孔鲤",
+          "孔子"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "cultural_event": {
+        "labels": [],
+        "intent_terms": [
+          "典故"
+        ],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "title_honor",
+      "scenic_spot",
+      "entity_category",
+      "associated_figure",
+      "cultural_event"
+    ],
+    "spot_names": [
+      "南孔庙"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "南孔庙",
+        "canonical_name": "南孔庙",
+        "scenic_area": "南孔庙",
+        "entity_type": "scenic_area"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 1.0,
+    "routing": {
+      "main_dimension": "",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 5,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "intent_cue",
+        "lexical_label"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "趋而过庭",
+      "而过庭",
+      "趋而过",
+      "典故",
+      "含义",
+      "孔鲤",
+      "而过",
+      "论语",
+      "趋而",
+      "过庭"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "南孔庙-景区介绍_057::chunk_0000"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "南孔庙 过庭 含义 | 孔子 过庭 典故 出处 | 孔鲤 趋而过庭 论语 故事",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0000",
+          "rank": 1,
+          "score": 0.7041148
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_059::chunk_0000",
+          "rank": 2,
+          "score": 0.63381183
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0001",
+          "rank": 3,
+          "score": 0.6167849
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0003",
+          "rank": 4,
+          "score": 0.5821644
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0002",
+          "rank": 5,
+          "score": 0.5791866
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_001::chunk_0000",
+          "rank": 6,
+          "score": 0.57498264
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_063::chunk_0000",
+          "rank": 7,
+          "score": 0.5593058
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_053::chunk_0000",
+          "rank": 8,
+          "score": 0.5532528
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_065::chunk_0000",
+          "rank": 9,
+          "score": 0.5310269
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_031::chunk_0000",
+          "rank": 10,
+          "score": 0.5257242
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0001",
+          "rank": 11,
+          "score": 0.5244397
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_071::chunk_0000",
+          "rank": 12,
+          "score": 0.5176276
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0000",
+          "rank": 13,
+          "score": 0.51672447
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_056::chunk_0000",
+          "rank": 14,
+          "score": 0.5158512
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_061::chunk_0000",
+          "rank": 15,
+          "score": 0.51386106
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_082::chunk_0000",
+          "rank": 16,
+          "score": 0.512857
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_047::chunk_0000",
+          "rank": 17,
+          "score": 0.5102588
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_011::chunk_0001",
+          "rank": 18,
+          "score": 0.50888646
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0008",
+          "rank": 19,
+          "score": 0.50759387
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_067::chunk_0000",
+          "rank": 20,
+          "score": 0.5041675
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "南孔庙的‘过庭’是什么意思？和孔子有什么关系？",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0000",
+          "rank": 1,
+          "score": 0.6642868
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0001",
+          "rank": 2,
+          "score": 0.64781374
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_059::chunk_0000",
+          "rank": 3,
+          "score": 0.62154704
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_063::chunk_0000",
+          "rank": 4,
+          "score": 0.6010754
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_061::chunk_0000",
+          "rank": 5,
+          "score": 0.5883306
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0003",
+          "rank": 6,
+          "score": 0.5839728
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_001::chunk_0000",
+          "rank": 7,
+          "score": 0.58141124
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_053::chunk_0000",
+          "rank": 8,
+          "score": 0.5757735
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_083::chunk_0001",
+          "rank": 9,
+          "score": 0.5712683
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_065::chunk_0000",
+          "rank": 10,
+          "score": 0.562305
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0002",
+          "rank": 11,
+          "score": 0.55948496
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_081::chunk_0000",
+          "rank": 12,
+          "score": 0.5577673
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_013::chunk_0001",
+          "rank": 13,
+          "score": 0.5560506
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0008",
+          "rank": 14,
+          "score": 0.5557124
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0001",
+          "rank": 15,
+          "score": 0.5540761
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0000",
+          "rank": 16,
+          "score": 0.5488375
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_051::chunk_0000",
+          "rank": 17,
+          "score": 0.5477542
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0006",
+          "rank": 18,
+          "score": 0.54589546
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_047::chunk_0000",
+          "rank": 19,
+          "score": 0.54481196
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_067::chunk_0000",
+          "rank": 20,
+          "score": 0.5442842
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "南孔庙的‘过庭’是什么意思？和孔子有什么关系？ | 南孔庙 过庭 含义 | 孔子 过庭 典故 出处 | 孔鲤 趋而过庭 论语 故事",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0000",
+          "rank": 1,
+          "score": 0.7194853
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_059::chunk_0000",
+          "rank": 2,
+          "score": 0.64923716
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0001",
+          "rank": 3,
+          "score": 0.64032143
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0003",
+          "rank": 4,
+          "score": 0.62024564
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0002",
+          "rank": 5,
+          "score": 0.6176504
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_063::chunk_0000",
+          "rank": 6,
+          "score": 0.60829043
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_001::chunk_0000",
+          "rank": 7,
+          "score": 0.60032904
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_053::chunk_0000",
+          "rank": 8,
+          "score": 0.59950596
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_065::chunk_0000",
+          "rank": 9,
+          "score": 0.5702405
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0008",
+          "rank": 10,
+          "score": 0.56221104
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_061::chunk_0000",
+          "rank": 11,
+          "score": 0.55732554
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_031::chunk_0000",
+          "rank": 12,
+          "score": 0.55212
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0001",
+          "rank": 13,
+          "score": 0.55086935
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_071::chunk_0000",
+          "rank": 14,
+          "score": 0.54454017
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0000",
+          "rank": 15,
+          "score": 0.5441965
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_083::chunk_0001",
+          "rank": 16,
+          "score": 0.54230154
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_047::chunk_0000",
+          "rank": 17,
+          "score": 0.5377867
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_049::chunk_0000",
+          "rank": 18,
+          "score": 0.5372424
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_082::chunk_0000",
+          "rank": 19,
+          "score": 0.5324169
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_013::chunk_0001",
+          "rank": 20,
+          "score": 0.5310338
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "南孔庙的‘过庭’是什么意思？和孔子有什么关系？",
+        "南孔庙 过庭 含义",
+        "孔子 过庭 典故 出处",
+        "孔鲤 趋而过庭 论语 故事"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0000",
+          "rank": 1,
+          "score": 0.7576356
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0001",
+          "rank": 2,
+          "score": 0.7035873
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_059::chunk_0000",
+          "rank": 3,
+          "score": 0.69580454
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_056::chunk_0000",
+          "rank": 4,
+          "score": 0.6378063
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_063::chunk_0000",
+          "rank": 5,
+          "score": 0.6019472
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0002",
+          "rank": 6,
+          "score": 0.59581447
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0003",
+          "rank": 7,
+          "score": 0.5955297
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_001::chunk_0000",
+          "rank": 8,
+          "score": 0.5951518
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_053::chunk_0000",
+          "rank": 9,
+          "score": 0.5830449
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_061::chunk_0000",
+          "rank": 10,
+          "score": 0.5777676
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_065::chunk_0000",
+          "rank": 11,
+          "score": 0.569986
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_067::chunk_0000",
+          "rank": 12,
+          "score": 0.560182
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0000",
+          "rank": 13,
+          "score": 0.5585185
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_031::chunk_0000",
+          "rank": 14,
+          "score": 0.558176
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_073::chunk_0000",
+          "rank": 15,
+          "score": 0.55417395
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_083::chunk_0001",
+          "rank": 16,
+          "score": 0.55229867
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0006",
+          "rank": 17,
+          "score": 0.55206805
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0001",
+          "rank": 18,
+          "score": 0.5499631
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_071::chunk_0001",
+          "rank": 19,
+          "score": 0.5473814
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_013::chunk_0001",
+          "rank": 20,
+          "score": 0.5466234
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0000",
+          "score": 0.6909661293029785,
+          "rank": 1
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0001",
+          "score": 0.6834506168961525,
+          "rank": 2
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_059::chunk_0000",
+          "score": 0.645146444439888,
+          "rank": 3
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0002",
+          "score": 0.6160937398672104,
+          "rank": 4
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0003",
+          "score": 0.6152270063757896,
+          "rank": 5
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_063::chunk_0000",
+          "score": 0.6109646111726761,
+          "rank": 6
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_056::chunk_0000",
+          "score": 0.5966722220182419,
+          "rank": 7
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_083::chunk_0001",
+          "score": 0.5889990851283073,
+          "rank": 8
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_053::chunk_0000",
+          "score": 0.5812763124704361,
+          "rank": 9
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_013::chunk_0001",
+          "score": 0.5800450220704079,
+          "rank": 10
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_001::chunk_0000",
+          "score": 0.5755544081330299,
+          "rank": 11
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_061::chunk_0000",
+          "score": 0.5725581422448158,
+          "rank": 12
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_065::chunk_0000",
+          "score": 0.5718940272927284,
+          "rank": 13
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0008",
+          "score": 0.5678386241197586,
+          "rank": 14
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_031::chunk_0000",
+          "score": 0.5639893710613251,
+          "rank": 15
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_047::chunk_0000",
+          "score": 0.5589001774787903,
+          "rank": 16
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_081::chunk_0000",
+          "score": 0.5579008460044861,
+          "rank": 17
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_071::chunk_0001",
+          "score": 0.5564457848668098,
+          "rank": 18
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0006",
+          "score": 0.555230438709259,
+          "rank": 19
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_051::chunk_0000",
+          "score": 0.5550011619925499,
+          "rank": 20
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_071::chunk_0000",
+          "score": 0.5536521002650261,
+          "rank": 21
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_067::chunk_0000",
+          "score": 0.5522581189870834,
+          "rank": 22
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_081::chunk_0001",
+          "score": 0.5519693121314049,
+          "rank": 23
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_073::chunk_0000",
+          "score": 0.5518247038125992,
+          "rank": 24
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0000",
+          "score": 0.5494771376252174,
+          "rank": 25
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_033::chunk_0000",
+          "score": 0.5449035838246346,
+          "rank": 26
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0005",
+          "score": 0.5440510809421539,
+          "rank": 27
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_011::chunk_0001",
+          "score": 0.5404450446367264,
+          "rank": 28
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0001",
+          "score": 0.540155678987503,
+          "rank": 29
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_007::chunk_0000",
+          "score": 0.539179690182209,
+          "rank": 30
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_079::chunk_0000",
+          "score": 0.5372640043497086,
+          "rank": 31
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_011::chunk_0000",
+          "score": 0.5371428281068802,
+          "rank": 32
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_005::chunk_0000",
+          "score": 0.5362031310796738,
+          "rank": 33
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_007::chunk_0001",
+          "score": 0.5353567227721214,
+          "rank": 34
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0007",
+          "score": 0.5348883122205734,
+          "rank": 35
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_075::chunk_0000",
+          "score": 0.5334905982017517,
+          "rank": 36
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0004",
+          "score": 0.53316430747509,
+          "rank": 37
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_025::chunk_0000",
+          "score": 0.5313626527786255,
+          "rank": 38
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0001",
+          "score": 0.5301430374383926,
+          "rank": 39
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_019::chunk_0001",
+          "score": 0.5297054201364517,
+          "rank": 40
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_015::chunk_0000",
+          "score": 0.5290631502866745,
+          "rank": 41
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0000",
+          "score": 0.5287792533636093,
+          "rank": 42
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_029::chunk_0000",
+          "score": 0.5269052758812904,
+          "rank": 43
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_013::chunk_0000",
+          "score": 0.5268859788775444,
+          "rank": 44
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_033::chunk_0001",
+          "score": 0.5256759971380234,
+          "rank": 45
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_005::chunk_0001",
+          "score": 0.5254540145397186,
+          "rank": 46
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_003::chunk_0000",
+          "score": 0.5245646983385086,
+          "rank": 47
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_027::chunk_0000",
+          "score": 0.5221566408872604,
+          "rank": 48
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_009::chunk_0000",
+          "score": 0.5218654423952103,
+          "rank": 49
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_035::chunk_0000",
+          "score": 0.519623052328825,
+          "rank": 50
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_049::chunk_0000",
+          "score": 0.5150743871927261,
+          "rank": 51
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_082::chunk_0000",
+          "score": 0.507791668176651,
+          "rank": 52
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0003",
+          "score": 0.507242776453495,
+          "rank": 53
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0002",
+          "score": 0.506137952208519,
+          "rank": 54
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_083::chunk_0000",
+          "score": 0.5055098794400692,
+          "rank": 55
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_079::chunk_0001",
+          "score": 0.504571408033371,
+          "rank": 56
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_019::chunk_0000",
+          "score": 0.5033746063709259,
+          "rank": 57
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_041::chunk_0000",
+          "score": 0.5023549236357212,
+          "rank": 58
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_045::chunk_0000",
+          "score": 0.5004811957478523,
+          "rank": 59
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_023::chunk_0000",
+          "score": 0.4944523647427559,
+          "rank": 60
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0002",
+          "score": 0.4916702099144459,
+          "rank": 61
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0001",
+          "score": 0.48939482122659683,
+          "rank": 62
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_021::chunk_0000",
+          "score": 0.48739297688007355,
+          "rank": 63
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0003",
+          "score": 0.48583653569221497,
+          "rank": 64
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_039::chunk_0000",
+          "score": 0.48519575595855713,
+          "rank": 65
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_043::chunk_0000",
+          "score": 0.48389188945293427,
+          "rank": 66
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_049::chunk_0001",
+          "score": 0.4819958508014679,
+          "rank": 67
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0006",
+          "score": 0.47915559634566307,
+          "rank": 68
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_023::chunk_0001",
+          "score": 0.4776909314095974,
+          "rank": 69
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_052::chunk_0000",
+          "score": 0.473472960293293,
+          "rank": 70
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0000",
+          "score": 0.46962618455290794,
+          "rank": 71
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0005",
+          "score": 0.4694053791463375,
+          "rank": 72
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_017::chunk_0001",
+          "score": 0.4649673402309418,
+          "rank": 73
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_037::chunk_0000",
+          "score": 0.46321988478302956,
+          "rank": 74
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_017::chunk_0000",
+          "score": 0.45716506615281105,
+          "rank": 75
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0004",
+          "score": 0.45232076197862625,
+          "rank": 76
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_077::chunk_0000",
+          "score": 0.45009203255176544,
+          "rank": 77
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_004::chunk_0000",
+          "score": 0.4496283158659935,
+          "rank": 78
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0000",
+          "score": 0.4496261849999428,
+          "rank": 79
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0001",
+          "score": 0.44343291595578194,
+          "rank": 80
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_060::chunk_0000",
+          "score": 0.4349951148033142,
+          "rank": 81
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_000::chunk_0000",
+          "score": 0.4312748908996582,
+          "rank": 82
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_064::chunk_0000",
+          "score": 0.425323523581028,
+          "rank": 83
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_066::chunk_0000",
+          "score": 0.42478108406066895,
+          "rank": 84
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_026::chunk_0000",
+          "score": 0.42477651312947273,
+          "rank": 85
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_050::chunk_0000",
+          "score": 0.4183371663093567,
+          "rank": 86
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_020::chunk_0000",
+          "score": 0.4170164167881012,
+          "rank": 87
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_070::chunk_0000",
+          "score": 0.4161039628088474,
+          "rank": 88
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_058::chunk_0000",
+          "score": 0.4142291471362114,
+          "rank": 89
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_010::chunk_0000",
+          "score": 0.410235982388258,
+          "rank": 90
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_032::chunk_0000",
+          "score": 0.4083477258682251,
+          "rank": 91
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_046::chunk_0000",
+          "score": 0.40748145431280136,
+          "rank": 92
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_034::chunk_0000",
+          "score": 0.4067586846649647,
+          "rank": 93
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_024::chunk_0000",
+          "score": 0.40665073692798615,
+          "rank": 94
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_030::chunk_0000",
+          "score": 0.40080705285072327,
+          "rank": 95
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_028::chunk_0000",
+          "score": 0.3965909406542778,
+          "rank": 96
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_002::chunk_0000",
+          "score": 0.39592958614230156,
+          "rank": 97
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_012::chunk_0000",
+          "score": 0.3947350047528744,
+          "rank": 98
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_016::chunk_0000",
+          "score": 0.3941488116979599,
+          "rank": 99
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_018::chunk_0000",
+          "score": 0.39352304488420486,
+          "rank": 100
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 100,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 4,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

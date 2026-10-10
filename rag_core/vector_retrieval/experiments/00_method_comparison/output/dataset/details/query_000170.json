@@ -1,0 +1,870 @@
+{
+  "name": "query_000170.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "卢舍那大佛真的是按武则天的样子雕的吗？",
+  "subqueries": [
+    "卢舍那大佛 面容 历史记载",
+    "武则天 容貌 历史记载",
+    "卢舍那大佛 武则天 形象 传说",
+    "奉先寺 卢舍那大佛 建造 皇室"
+  ],
+  "component_texts": [
+    "卢舍那大佛真的是按武则天的样子雕的吗？",
+    "卢舍那大佛 面容 历史记载",
+    "武则天 容貌 历史记载",
+    "卢舍那大佛 武则天 形象 传说",
+    "奉先寺 卢舍那大佛 建造 皇室"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "scenic_spot": {
+        "labels": [
+          "卢舍那大佛",
+          "奉先寺"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "art_highlights": {
+        "labels": [
+          "卢舍那大佛"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "associated_figure": {
+        "labels": [
+          "武则天"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "scenic_spot",
+      "art_highlights",
+      "associated_figure"
+    ],
+    "spot_names": [
+      "龙门石窟"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "卢舍那大佛",
+        "canonical_name": "卢舍那大佛",
+        "scenic_area": "龙门石窟",
+        "entity_type": "poi"
+      },
+      {
+        "mention": "卢舍那",
+        "canonical_name": "卢舍那大佛",
+        "scenic_area": "龙门石窟",
+        "entity_type": "poi"
+      },
+      {
+        "mention": "奉先寺",
+        "canonical_name": "奉先寺",
+        "scenic_area": "龙门石窟",
+        "entity_type": "poi"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 0.7,
+    "routing": {
+      "main_dimension": "",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 3,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "lexical_label"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "卢舍那大佛",
+      "卢舍那大",
+      "舍那大佛",
+      "卢舍那",
+      "奉先寺",
+      "武则天",
+      "舍那大",
+      "那大佛",
+      "先寺",
+      "则天",
+      "卢舍",
+      "大佛"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "龙门石窟-景区介绍_023::chunk_0000"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "卢舍那大佛 面容 历史记载 | 武则天 容貌 历史记载 | 卢舍那大佛 武则天 形象 传说 | 奉先寺 卢舍那大佛 建造 皇室",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 15,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0000",
+          "rank": 1,
+          "score": 0.6736102
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0005",
+          "rank": 2,
+          "score": 0.65735364
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_001::chunk_0000",
+          "rank": 3,
+          "score": 0.6540828
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0010",
+          "rank": 4,
+          "score": 0.6399781
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_015::chunk_0000",
+          "rank": 5,
+          "score": 0.5648583
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_010::chunk_0000",
+          "rank": 6,
+          "score": 0.56324446
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_016::chunk_0000",
+          "rank": 7,
+          "score": 0.56026495
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0011",
+          "rank": 8,
+          "score": 0.55843484
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0006",
+          "rank": 9,
+          "score": 0.5464349
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_008::chunk_0000",
+          "rank": 10,
+          "score": 0.51375544
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_002::chunk_0000",
+          "rank": 11,
+          "score": 0.4976836
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_021::chunk_0000",
+          "rank": 12,
+          "score": 0.4956591
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_004::chunk_0000",
+          "rank": 13,
+          "score": 0.49542603
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0004",
+          "rank": 14,
+          "score": 0.4953424
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "rank": 15,
+          "score": 0.49434602
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "卢舍那大佛真的是按武则天的样子雕的吗？",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 17,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0000",
+          "rank": 1,
+          "score": 0.7072171
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_001::chunk_0000",
+          "rank": 2,
+          "score": 0.58999515
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0005",
+          "rank": 3,
+          "score": 0.559687
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_010::chunk_0000",
+          "rank": 4,
+          "score": 0.5527341
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0010",
+          "rank": 5,
+          "score": 0.5446876
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_016::chunk_0000",
+          "rank": 6,
+          "score": 0.5435798
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_015::chunk_0000",
+          "rank": 7,
+          "score": 0.5312309
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_011::chunk_0000",
+          "rank": 8,
+          "score": 0.50842774
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0011",
+          "rank": 9,
+          "score": 0.49751574
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0009",
+          "rank": 10,
+          "score": 0.48948556
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_021::chunk_0000",
+          "rank": 11,
+          "score": 0.4732008
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "rank": 12,
+          "score": 0.47286433
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_002::chunk_0000",
+          "rank": 13,
+          "score": 0.46558988
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_004::chunk_0000",
+          "rank": 14,
+          "score": 0.46496654
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_009::chunk_0000",
+          "rank": 15,
+          "score": 0.45996213
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_008::chunk_0000",
+          "rank": 16,
+          "score": 0.456729
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0003",
+          "rank": 17,
+          "score": 0.45576727
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "卢舍那大佛真的是按武则天的样子雕的吗？ | 卢舍那大佛 面容 历史记载 | 武则天 容貌 历史记载 | 卢舍那大佛 武则天 形象 传说 | 奉先寺 卢舍那大佛 建造 皇室",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 17,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0000",
+          "rank": 1,
+          "score": 0.6879435
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0005",
+          "rank": 2,
+          "score": 0.65484744
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0010",
+          "rank": 3,
+          "score": 0.65386224
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_001::chunk_0000",
+          "rank": 4,
+          "score": 0.6486193
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_010::chunk_0000",
+          "rank": 5,
+          "score": 0.57447773
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_016::chunk_0000",
+          "rank": 6,
+          "score": 0.57221925
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_015::chunk_0000",
+          "rank": 7,
+          "score": 0.56624883
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0011",
+          "rank": 8,
+          "score": 0.55863804
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0006",
+          "rank": 9,
+          "score": 0.54459
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_008::chunk_0000",
+          "rank": 10,
+          "score": 0.5378547
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_004::chunk_0000",
+          "rank": 11,
+          "score": 0.5145502
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_009::chunk_0000",
+          "rank": 12,
+          "score": 0.5062747
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0004",
+          "rank": 13,
+          "score": 0.5048413
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "rank": 14,
+          "score": 0.5032022
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_002::chunk_0000",
+          "rank": 15,
+          "score": 0.5012903
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_021::chunk_0000",
+          "rank": 16,
+          "score": 0.5005818
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0001",
+          "rank": 17,
+          "score": 0.49762887
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "卢舍那大佛真的是按武则天的样子雕的吗？",
+        "卢舍那大佛 面容 历史记载",
+        "武则天 容貌 历史记载",
+        "卢舍那大佛 武则天 形象 传说",
+        "奉先寺 卢舍那大佛 建造 皇室"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 18,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0000",
+          "rank": 1,
+          "score": 0.7522089
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_001::chunk_0000",
+          "rank": 2,
+          "score": 0.677047
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0005",
+          "rank": 3,
+          "score": 0.64625907
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0010",
+          "rank": 4,
+          "score": 0.63423765
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_016::chunk_0000",
+          "rank": 5,
+          "score": 0.6056107
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_010::chunk_0000",
+          "rank": 6,
+          "score": 0.60217106
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_015::chunk_0000",
+          "rank": 7,
+          "score": 0.59945846
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0011",
+          "rank": 8,
+          "score": 0.574249
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_002::chunk_0000",
+          "rank": 9,
+          "score": 0.538872
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_021::chunk_0000",
+          "rank": 10,
+          "score": 0.53858936
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_011::chunk_0000",
+          "rank": 11,
+          "score": 0.5361817
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_004::chunk_0000",
+          "rank": 12,
+          "score": 0.5347614
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0009",
+          "rank": 13,
+          "score": 0.5345727
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_008::chunk_0000",
+          "rank": 14,
+          "score": 0.53067946
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "rank": 15,
+          "score": 0.5255512
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "rank": 16,
+          "score": 0.52154195
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_009::chunk_0000",
+          "rank": 17,
+          "score": 0.52044463
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0006",
+          "rank": 18,
+          "score": 0.520403
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0000",
+          "score": 0.73200723528862,
+          "rank": 1
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_001::chunk_0000",
+          "score": 0.5951864197850227,
+          "rank": 2
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0005",
+          "score": 0.5776771605014801,
+          "rank": 3
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0010",
+          "score": 0.5587038174271584,
+          "rank": 4
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_010::chunk_0000",
+          "score": 0.548072412610054,
+          "rank": 5
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0008",
+          "score": 0.542594663798809,
+          "rank": 6
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_016::chunk_0000",
+          "score": 0.5412355810403824,
+          "rank": 7
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0011",
+          "score": 0.540552094578743,
+          "rank": 8
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_015::chunk_0000",
+          "score": 0.515119656920433,
+          "rank": 9
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0006",
+          "score": 0.5082447566092014,
+          "rank": 10
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_011::chunk_0000",
+          "score": 0.5043909177184105,
+          "rank": 11
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "score": 0.49808141589164734,
+          "rank": 12
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "score": 0.4959161728620529,
+          "rank": 13
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0009",
+          "score": 0.4931093566119671,
+          "rank": 14
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_003::chunk_0000",
+          "score": 0.4892457127571106,
+          "rank": 15
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0001",
+          "score": 0.4864564910531044,
+          "rank": 16
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_004::chunk_0000",
+          "score": 0.48352788016200066,
+          "rank": 17
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_009::chunk_0000",
+          "score": 0.48071203008294106,
+          "rank": 18
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_002::chunk_0000",
+          "score": 0.47878383845090866,
+          "rank": 19
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0001",
+          "score": 0.469342440366745,
+          "rank": 20
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0003",
+          "score": 0.46522776409983635,
+          "rank": 21
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0007",
+          "score": 0.46107469126582146,
+          "rank": 22
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_021::chunk_0000",
+          "score": 0.45895829424262047,
+          "rank": 23
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0004",
+          "score": 0.4533699154853821,
+          "rank": 24
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0000",
+          "score": 0.45238546282052994,
+          "rank": 25
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_008::chunk_0000",
+          "score": 0.4490480571985245,
+          "rank": 26
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_006::chunk_0000",
+          "score": 0.43546444922685623,
+          "rank": 27
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_020::chunk_0000",
+          "score": 0.4197309538722038,
+          "rank": 28
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0002",
+          "score": 0.40504320338368416,
+          "rank": 29
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_007::chunk_0000",
+          "score": 0.40059978514909744,
+          "rank": 30
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_013::chunk_0000",
+          "score": 0.39986080676317215,
+          "rank": 31
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_019::chunk_0000",
+          "score": 0.3912242166697979,
+          "rank": 32
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_012::chunk_0000",
+          "score": 0.3767472989857197,
+          "rank": 33
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0001",
+          "score": 0.36849165707826614,
+          "rank": 34
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0012",
+          "score": 0.36506444215774536,
+          "rank": 35
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_017::chunk_0000",
+          "score": 0.3547978848218918,
+          "rank": 36
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0002",
+          "score": 0.32821790501475334,
+          "rank": 37
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_014::chunk_0000",
+          "score": 0.3082733228802681,
+          "rank": 38
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_018::chunk_0000",
+          "score": 0.2876633293926716,
+          "rank": 39
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0000",
+          "score": 0.2675641179084778,
+          "rank": 40
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 40,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 5,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

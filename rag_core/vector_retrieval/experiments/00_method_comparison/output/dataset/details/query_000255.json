@@ -1,0 +1,1205 @@
+{
+  "name": "query_000255.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "普通画舫和豪华画舫有什么区别，坐哪个划算",
+  "subqueries": [
+    "普通画舫 特点 服务",
+    "豪华画舫 特点 服务",
+    "普通画舫 豪华画舫 价格对比",
+    "普通画舫 豪华画舫 性价比"
+  ],
+  "component_texts": [
+    "普通画舫和豪华画舫有什么区别，坐哪个划算",
+    "普通画舫 特点 服务",
+    "豪华画舫 特点 服务",
+    "普通画舫 豪华画舫 价格对比",
+    "普通画舫 豪华画舫 性价比"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "internal_transport": {
+        "labels": [
+          "画舫"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "ticket_price": {
+        "labels": [],
+        "intent_terms": [
+          "价格"
+        ],
+        "match": "ANY",
+        "role": "main"
+      }
+    },
+    "active_dimensions": [
+      "internal_transport",
+      "ticket_price"
+    ],
+    "spot_names": [],
+    "resolved_poi_entities": [],
+    "precise_entity_terms": [],
+    "confidence": 0.55,
+    "routing": {
+      "main_dimension": "ticket_price",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 2,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "intent_cue+strict_intent",
+        "lexical_label"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "普通画舫",
+      "豪华画舫",
+      "华画舫",
+      "性价比",
+      "普通画",
+      "豪华画",
+      "通画舫",
+      "价格",
+      "价比",
+      "华画",
+      "对比",
+      "性价"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "西湖-运营信息_000::chunk_0002"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "普通画舫 特点 服务 | 豪华画舫 特点 服务 | 普通画舫 豪华画舫 价格对比 | 普通画舫 豪华画舫 性价比",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 2,
+        "miss": false,
+        "rr": 0.5,
+        "result_count": 20,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.63092975,
+        "rr_at_5": 0.5,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.63092975,
+        "rr_at_10": 0.5,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.63092975,
+        "rr_at_15": 0.5,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.63092975,
+        "rr_at_20": 0.5
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "rank": 1,
+          "score": 0.6340678
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "rank": 2,
+          "score": 0.5816554
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_012::chunk_0000",
+          "rank": 3,
+          "score": 0.57703984
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0001",
+          "rank": 4,
+          "score": 0.5732128
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 5,
+          "score": 0.56953484
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0000",
+          "rank": 6,
+          "score": 0.5342596
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0004",
+          "rank": 7,
+          "score": 0.53305817
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "rank": 8,
+          "score": 0.49381447
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0001",
+          "rank": 9,
+          "score": 0.48603222
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_013::chunk_0000",
+          "rank": 10,
+          "score": 0.4831887
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0002",
+          "rank": 11,
+          "score": 0.47696495
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "rank": 12,
+          "score": 0.47545934
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0001",
+          "rank": 13,
+          "score": 0.4748168
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_001::chunk_0000",
+          "rank": 14,
+          "score": 0.4677636
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0003",
+          "rank": 15,
+          "score": 0.46769395
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0000",
+          "rank": 16,
+          "score": 0.46461824
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "rank": 17,
+          "score": 0.46456495
+        },
+        {
+          "chunk_id": "西湖-景区介绍_006::chunk_0000",
+          "rank": 18,
+          "score": 0.46070188
+        },
+        {
+          "chunk_id": "西湖-景区介绍_011::chunk_0000",
+          "rank": 19,
+          "score": 0.45892546
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0005",
+          "rank": 20,
+          "score": 0.4544351
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "普通画舫和豪华画舫有什么区别，坐哪个划算",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 3,
+        "miss": false,
+        "rr": 0.33333333,
+        "result_count": 20,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.5,
+        "rr_at_5": 0.33333333,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.5,
+        "rr_at_10": 0.33333333,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.5,
+        "rr_at_15": 0.33333333,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.5,
+        "rr_at_20": 0.33333333
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "rank": 1,
+          "score": 0.5900176
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_012::chunk_0000",
+          "rank": 2,
+          "score": 0.5697069
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "rank": 3,
+          "score": 0.52024806
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0001",
+          "rank": 4,
+          "score": 0.4906854
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "rank": 5,
+          "score": 0.47243357
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_013::chunk_0000",
+          "rank": 6,
+          "score": 0.4598394
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_007::chunk_0000",
+          "rank": 7,
+          "score": 0.4588285
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 8,
+          "score": 0.45487255
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_011::chunk_0000",
+          "rank": 9,
+          "score": 0.4447281
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0001",
+          "rank": 10,
+          "score": 0.44126853
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "rank": 11,
+          "score": 0.43630385
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "rank": 12,
+          "score": 0.43466067
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "rank": 13,
+          "score": 0.43283936
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0004",
+          "rank": 14,
+          "score": 0.43193537
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "rank": 15,
+          "score": 0.42431134
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 16,
+          "score": 0.42212042
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0007",
+          "rank": 17,
+          "score": 0.42052412
+        },
+        {
+          "chunk_id": "张家界-景点介绍_006::chunk_0000",
+          "rank": 18,
+          "score": 0.41960847
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0005",
+          "rank": 19,
+          "score": 0.41882533
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0000",
+          "rank": 20,
+          "score": 0.41843885
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "普通画舫和豪华画舫有什么区别，坐哪个划算 | 普通画舫 特点 服务 | 豪华画舫 特点 服务 | 普通画舫 豪华画舫 价格对比 | 普通画舫 豪华画舫 性价比",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 3,
+        "miss": false,
+        "rr": 0.33333333,
+        "result_count": 20,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.5,
+        "rr_at_5": 0.33333333,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.5,
+        "rr_at_10": 0.33333333,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.5,
+        "rr_at_15": 0.33333333,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.5,
+        "rr_at_20": 0.33333333
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "rank": 1,
+          "score": 0.6140984
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 2,
+          "score": 0.56469387
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "rank": 3,
+          "score": 0.5582291
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0001",
+          "rank": 4,
+          "score": 0.5513763
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0004",
+          "rank": 5,
+          "score": 0.532078
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0000",
+          "rank": 6,
+          "score": 0.5313751
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_012::chunk_0000",
+          "rank": 7,
+          "score": 0.525115
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "rank": 8,
+          "score": 0.4967162
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "rank": 9,
+          "score": 0.47812405
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0001",
+          "rank": 10,
+          "score": 0.47432166
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0001",
+          "rank": 11,
+          "score": 0.4676245
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_013::chunk_0000",
+          "rank": 12,
+          "score": 0.46015236
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "rank": 13,
+          "score": 0.45334682
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0002",
+          "rank": 14,
+          "score": 0.45066833
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0002",
+          "rank": 15,
+          "score": 0.45033678
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0000",
+          "rank": 16,
+          "score": 0.44866863
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0003",
+          "rank": 17,
+          "score": 0.44796732
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_011::chunk_0000",
+          "rank": 18,
+          "score": 0.44707537
+        },
+        {
+          "chunk_id": "西湖-景区介绍_011::chunk_0000",
+          "rank": 19,
+          "score": 0.4438835
+        },
+        {
+          "chunk_id": "西湖-景区介绍_007::chunk_0000",
+          "rank": 20,
+          "score": 0.44087896
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "普通画舫和豪华画舫有什么区别，坐哪个划算",
+        "普通画舫 特点 服务",
+        "豪华画舫 特点 服务",
+        "普通画舫 豪华画舫 价格对比",
+        "普通画舫 豪华画舫 性价比"
+      ],
+      "metrics": {
+        "first_gold_rank": 3,
+        "miss": false,
+        "rr": 0.33333333,
+        "result_count": 20,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.5,
+        "rr_at_5": 0.33333333,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.5,
+        "rr_at_10": 0.33333333,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.5,
+        "rr_at_15": 0.33333333,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.5,
+        "rr_at_20": 0.33333333
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "rank": 1,
+          "score": 0.6486676
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_012::chunk_0000",
+          "rank": 2,
+          "score": 0.62062746
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "rank": 3,
+          "score": 0.5720773
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0001",
+          "rank": 4,
+          "score": 0.56061614
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_013::chunk_0000",
+          "rank": 5,
+          "score": 0.51130307
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 6,
+          "score": 0.5107559
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0000",
+          "rank": 7,
+          "score": 0.48890585
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "rank": 8,
+          "score": 0.48004743
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_011::chunk_0000",
+          "rank": 9,
+          "score": 0.47985956
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "rank": 10,
+          "score": 0.4794835
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_007::chunk_0000",
+          "rank": 11,
+          "score": 0.47685373
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0001",
+          "rank": 12,
+          "score": 0.47672045
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0004",
+          "rank": 13,
+          "score": 0.47275978
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "rank": 14,
+          "score": 0.4679213
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0003",
+          "rank": 15,
+          "score": 0.46408397
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_001::chunk_0000",
+          "rank": 16,
+          "score": 0.46207
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "rank": 17,
+          "score": 0.46151772
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0002",
+          "rank": 18,
+          "score": 0.45927197
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 19,
+          "score": 0.4583365
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "rank": 20,
+          "score": 0.4550207
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "score": 0.5827255249023438,
+          "rank": 1
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_012::chunk_0000",
+          "score": 0.5717372596263885,
+          "rank": 2
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "score": 0.5436907857656479,
+          "rank": 3
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "score": 0.5137675032019615,
+          "rank": 4
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "score": 0.49010510742664337,
+          "rank": 5
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0001",
+          "score": 0.4892398938536644,
+          "rank": 6
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0001",
+          "score": 0.4813258871436119,
+          "rank": 7
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_013::chunk_0000",
+          "score": 0.4630252346396446,
+          "rank": 8
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "score": 0.46279942989349365,
+          "rank": 9
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_007::chunk_0000",
+          "score": 0.4619123712182045,
+          "rank": 10
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "score": 0.4590033181011677,
+          "rank": 11
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0001",
+          "score": 0.4506189152598381,
+          "rank": 12
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "score": 0.44922566041350365,
+          "rank": 13
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "score": 0.44795186072587967,
+          "rank": 14
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "score": 0.4476412199437618,
+          "rank": 15
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_011::chunk_0000",
+          "score": 0.4452286921441555,
+          "rank": 16
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0004",
+          "score": 0.4443598799407482,
+          "rank": 17
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "score": 0.4384314864873886,
+          "rank": 18
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0007",
+          "score": 0.4313635490834713,
+          "rank": 19
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0001",
+          "score": 0.4310927540063858,
+          "rank": 20
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "score": 0.4305417910218239,
+          "rank": 21
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "score": 0.4298374876379967,
+          "rank": 22
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "score": 0.429765697568655,
+          "rank": 23
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0000",
+          "score": 0.4249389320611954,
+          "rank": 24
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0005",
+          "score": 0.42402333766222,
+          "rank": 25
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0000",
+          "score": 0.4237959012389183,
+          "rank": 26
+        },
+        {
+          "chunk_id": "张家界-运营信息_003::chunk_0000",
+          "score": 0.4225863479077816,
+          "rank": 27
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0001",
+          "score": 0.42094191908836365,
+          "rank": 28
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0003",
+          "score": 0.4183206558227539,
+          "rank": 29
+        },
+        {
+          "chunk_id": "张家界-景点介绍_006::chunk_0000",
+          "score": 0.4183032438158989,
+          "rank": 30
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0000",
+          "score": 0.4181991331279278,
+          "rank": 31
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0004",
+          "score": 0.41696279123425484,
+          "rank": 32
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0002",
+          "score": 0.4163362830877304,
+          "rank": 33
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0003",
+          "score": 0.4162672162055969,
+          "rank": 34
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0002",
+          "score": 0.4159993343055248,
+          "rank": 35
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0011",
+          "score": 0.41330497711896896,
+          "rank": 36
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0010",
+          "score": 0.41233789548277855,
+          "rank": 37
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "score": 0.41232670471072197,
+          "rank": 38
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0003",
+          "score": 0.41034047678112984,
+          "rank": 39
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0004",
+          "score": 0.4097031131386757,
+          "rank": 40
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0000",
+          "score": 0.40905800089240074,
+          "rank": 41
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0000",
+          "score": 0.40893397107720375,
+          "rank": 42
+        },
+        {
+          "chunk_id": "张家界-运营信息_004::chunk_0001",
+          "score": 0.4086945354938507,
+          "rank": 43
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0007",
+          "score": 0.40829280763864517,
+          "rank": 44
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0001",
+          "score": 0.40698370710015297,
+          "rank": 45
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0000",
+          "score": 0.4065965823829174,
+          "rank": 46
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_005::chunk_0000",
+          "score": 0.40566377341747284,
+          "rank": 47
+        },
+        {
+          "chunk_id": "西湖-景区介绍_023::chunk_0000",
+          "score": 0.40529999881982803,
+          "rank": 48
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "score": 0.4045479893684387,
+          "rank": 49
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0000",
+          "score": 0.4044765383005142,
+          "rank": 50
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0000",
+          "score": 0.4039611220359802,
+          "rank": 51
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "score": 0.4030233882367611,
+          "rank": 52
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0000",
+          "score": 0.4021178111433983,
+          "rank": 53
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_012::chunk_0000",
+          "score": 0.4020822159945965,
+          "rank": 54
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_001::chunk_0000",
+          "score": 0.4010669179260731,
+          "rank": 55
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0004",
+          "score": 0.40091974288225174,
+          "rank": 56
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0000",
+          "score": 0.40043606981635094,
+          "rank": 57
+        },
+        {
+          "chunk_id": "西湖-景区介绍_025::chunk_0000",
+          "score": 0.39981865882873535,
+          "rank": 58
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0000",
+          "score": 0.3994099609553814,
+          "rank": 59
+        },
+        {
+          "chunk_id": "西湖-景区介绍_009::chunk_0000",
+          "score": 0.39931241050362587,
+          "rank": 60
+        },
+        {
+          "chunk_id": "张家界-运营信息_005::chunk_0000",
+          "score": 0.3992670476436615,
+          "rank": 61
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_004::chunk_0000",
+          "score": 0.3985563665628433,
+          "rank": 62
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0001",
+          "score": 0.39853600412607193,
+          "rank": 63
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0006",
+          "score": 0.39826400578022003,
+          "rank": 64
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0003",
+          "score": 0.3981839418411255,
+          "rank": 65
+        },
+        {
+          "chunk_id": "张家界-运营信息_004::chunk_0000",
+          "score": 0.3981450945138931,
+          "rank": 66
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "score": 0.39758484065532684,
+          "rank": 67
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "score": 0.39681825041770935,
+          "rank": 68
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_009::chunk_0000",
+          "score": 0.3965638540685177,
+          "rank": 69
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0003",
+          "score": 0.3958991803228855,
+          "rank": 70
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0001",
+          "score": 0.39519116282463074,
+          "rank": 71
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_065::chunk_0000",
+          "score": 0.39424917474389076,
+          "rank": 72
+        },
+        {
+          "chunk_id": "西湖-景区介绍_027::chunk_0000",
+          "score": 0.39416685327887535,
+          "rank": 73
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0012",
+          "score": 0.39354655519127846,
+          "rank": 74
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0012",
+          "score": 0.3926788866519928,
+          "rank": 75
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0006",
+          "score": 0.3925509825348854,
+          "rank": 76
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0001",
+          "score": 0.3923894762992859,
+          "rank": 77
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_015::chunk_0000",
+          "score": 0.38991036266088486,
+          "rank": 78
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0003",
+          "score": 0.3898426927626133,
+          "rank": 79
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0015",
+          "score": 0.38918615132570267,
+          "rank": 80
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0001",
+          "score": 0.3878243528306484,
+          "rank": 81
+        },
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0001",
+          "score": 0.3860712870955467,
+          "rank": 82
+        },
+        {
+          "chunk_id": "西湖-景区介绍_024::chunk_0000",
+          "score": 0.3855205737054348,
+          "rank": 83
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "score": 0.38469358906149864,
+          "rank": 84
+        },
+        {
+          "chunk_id": "西湖-景区介绍_014::chunk_0000",
+          "score": 0.38447263836860657,
+          "rank": 85
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0001",
+          "score": 0.3841729052364826,
+          "rank": 86
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0002",
+          "score": 0.3839997313916683,
+          "rank": 87
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0001",
+          "score": 0.3836258053779602,
+          "rank": 88
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0000",
+          "score": 0.38348786905407906,
+          "rank": 89
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0001",
+          "score": 0.38338756561279297,
+          "rank": 90
+        },
+        {
+          "chunk_id": "西湖-景区介绍_029::chunk_0000",
+          "score": 0.3827049471437931,
+          "rank": 91
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0001",
+          "score": 0.38253797218203545,
+          "rank": 92
+        },
+        {
+          "chunk_id": "西湖-景区介绍_007::chunk_0000",
+          "score": 0.382366381585598,
+          "rank": 93
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0005",
+          "score": 0.3821769878268242,
+          "rank": 94
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0002",
+          "score": 0.38216738775372505,
+          "rank": 95
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_053::chunk_0000",
+          "score": 0.3821595795452595,
+          "rank": 96
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_002::chunk_0000",
+          "score": 0.3820643350481987,
+          "rank": 97
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_004::chunk_0000",
+          "score": 0.3816753514111042,
+          "rank": 98
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_059::chunk_0000",
+          "score": 0.3815598487854004,
+          "rank": 99
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0002",
+          "score": 0.3804551139473915,
+          "rank": 100
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 3,
+        "miss": false,
+        "rr": 0.33333333,
+        "result_count": 100,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.5,
+        "rr_at_5": 0.33333333,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.5,
+        "rr_at_10": 0.33333333,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.5,
+        "rr_at_15": 0.33333333,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.5,
+        "rr_at_20": 0.33333333
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 5,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

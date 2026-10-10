@@ -1,0 +1,803 @@
+{
+  "name": "query_000307.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "只有半天时间该怎么逛颐和园？能看到精华吗？",
+  "subqueries": [
+    "颐和园 半日游 行程规划 精华景点",
+    "颐和园 必看景观 核心景点 推荐",
+    "半天时间 颐和园 游览路线 攻略",
+    "颐和园 最短游览时间 游玩效率 建议"
+  ],
+  "component_texts": [
+    "只有半天时间该怎么逛颐和园？能看到精华吗？",
+    "颐和园 半日游 行程规划 精华景点",
+    "颐和园 必看景观 核心景点 推荐",
+    "半天时间 颐和园 游览路线 攻略",
+    "颐和园 最短游览时间 游玩效率 建议"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "admin_division": {
+        "labels": [
+          "颐和园"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "entity_category": {
+        "labels": [
+          "景点"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "scenic_spot": {
+        "labels": [],
+        "intent_terms": [
+          "景点"
+        ],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "admin_division",
+      "entity_category",
+      "scenic_spot"
+    ],
+    "spot_names": [
+      "颐和园"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "颐和园",
+        "canonical_name": "颐和园",
+        "scenic_area": "颐和园",
+        "entity_type": "scenic_area"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 0.7,
+    "routing": {
+      "main_dimension": "",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 3,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "intent_cue",
+        "lexical_label"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "核心景点",
+      "游览时间",
+      "游览路线",
+      "精华景点",
+      "华景点",
+      "天时间",
+      "心景点",
+      "核心景",
+      "游览时",
+      "游览路",
+      "精华景",
+      "览时间"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "颐和园-运营介绍_003::chunk_0001"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "颐和园 半日游 行程规划 精华景点 | 颐和园 必看景观 核心景点 推荐 | 半天时间 颐和园 游览路线 攻略 | 颐和园 最短游览时间 游玩效率 建议",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 11,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0001",
+          "rank": 1,
+          "score": 0.6993989
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 2,
+          "score": 0.64167833
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "rank": 3,
+          "score": 0.6218312
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "rank": 4,
+          "score": 0.6059326
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0000",
+          "rank": 5,
+          "score": 0.6044947
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_001::chunk_0000",
+          "rank": 6,
+          "score": 0.5955674
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "rank": 7,
+          "score": 0.56810105
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_005::chunk_0000",
+          "rank": 8,
+          "score": 0.5655973
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0003",
+          "rank": 9,
+          "score": 0.5583435
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "rank": 10,
+          "score": 0.5452685
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0005",
+          "rank": 11,
+          "score": 0.5402911
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "只有半天时间该怎么逛颐和园？能看到精华吗？",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 16,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0001",
+          "rank": 1,
+          "score": 0.63211256
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0000",
+          "rank": 2,
+          "score": 0.5921333
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 3,
+          "score": 0.5862689
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0003",
+          "rank": 4,
+          "score": 0.5821403
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "rank": 5,
+          "score": 0.5762743
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_001::chunk_0000",
+          "rank": 6,
+          "score": 0.5732631
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "rank": 7,
+          "score": 0.5672054
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "rank": 8,
+          "score": 0.56663686
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0005",
+          "rank": 9,
+          "score": 0.55518883
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "rank": 10,
+          "score": 0.5408751
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "rank": 11,
+          "score": 0.53714937
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "rank": 12,
+          "score": 0.52996695
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0004",
+          "rank": 13,
+          "score": 0.5255236
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0007",
+          "rank": 14,
+          "score": 0.5240038
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "rank": 15,
+          "score": 0.5220265
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_006::chunk_0000",
+          "rank": 16,
+          "score": 0.51170087
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "只有半天时间该怎么逛颐和园？能看到精华吗？ | 颐和园 半日游 行程规划 精华景点 | 颐和园 必看景观 核心景点 推荐 | 半天时间 颐和园 游览路线 攻略 | 颐和园 最短游览时间 游玩效率 建议",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 10,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0001",
+          "rank": 1,
+          "score": 0.6783843
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 2,
+          "score": 0.59950596
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "rank": 3,
+          "score": 0.5844327
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_001::chunk_0000",
+          "rank": 4,
+          "score": 0.5744998
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0000",
+          "rank": 5,
+          "score": 0.5682688
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "rank": 6,
+          "score": 0.56019163
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "rank": 7,
+          "score": 0.5375377
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0003",
+          "rank": 8,
+          "score": 0.5311287
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0005",
+          "rank": 9,
+          "score": 0.52529275
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_005::chunk_0000",
+          "rank": 10,
+          "score": 0.5237198
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "只有半天时间该怎么逛颐和园？能看到精华吗？",
+        "颐和园 半日游 行程规划 精华景点",
+        "颐和园 必看景观 核心景点 推荐",
+        "半天时间 颐和园 游览路线 攻略",
+        "颐和园 最短游览时间 游玩效率 建议"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 16,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0001",
+          "rank": 1,
+          "score": 0.71697766
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 2,
+          "score": 0.6780008
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0000",
+          "rank": 3,
+          "score": 0.6665504
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "rank": 4,
+          "score": 0.6577405
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "rank": 5,
+          "score": 0.65702
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_001::chunk_0000",
+          "rank": 6,
+          "score": 0.6465874
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0003",
+          "rank": 7,
+          "score": 0.6425456
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "rank": 8,
+          "score": 0.6406714
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "rank": 9,
+          "score": 0.616276
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "rank": 10,
+          "score": 0.6056538
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0005",
+          "rank": 11,
+          "score": 0.60507584
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "rank": 12,
+          "score": 0.59721303
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0004",
+          "rank": 13,
+          "score": 0.58723605
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "rank": 14,
+          "score": 0.5814014
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0007",
+          "rank": 15,
+          "score": 0.57967865
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_002::chunk_0000",
+          "rank": 16,
+          "score": 0.57956815
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0001",
+          "score": 0.6554368361830711,
+          "rank": 1
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "score": 0.6267315521836281,
+          "rank": 2
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "score": 0.6127237230539322,
+          "rank": 3
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0000",
+          "score": 0.5959494262933731,
+          "rank": 4
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0003",
+          "score": 0.593275398015976,
+          "rank": 5
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "score": 0.5889546796679497,
+          "rank": 6
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0007",
+          "score": 0.5863522663712502,
+          "rank": 7
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "score": 0.5847011283040047,
+          "rank": 8
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_001::chunk_0000",
+          "score": 0.5822215899825096,
+          "rank": 9
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "score": 0.5717874616384506,
+          "rank": 10
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0004",
+          "score": 0.5698012188076973,
+          "rank": 11
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0005",
+          "score": 0.5672111809253693,
+          "rank": 12
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "score": 0.549145981669426,
+          "rank": 13
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "score": 0.5424625277519226,
+          "rank": 14
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "score": 0.5415220037102699,
+          "rank": 15
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0002",
+          "score": 0.5370388627052307,
+          "rank": 16
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0004",
+          "score": 0.5308457165956497,
+          "rank": 17
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_006::chunk_0000",
+          "score": 0.524070218205452,
+          "rank": 18
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0001",
+          "score": 0.516107827425003,
+          "rank": 19
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0001",
+          "score": 0.5103664100170135,
+          "rank": 20
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_002::chunk_0000",
+          "score": 0.5068364590406418,
+          "rank": 21
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0000",
+          "score": 0.5057429783046246,
+          "rank": 22
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0003",
+          "score": 0.5041531771421432,
+          "rank": 23
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0000",
+          "score": 0.4995688423514366,
+          "rank": 24
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_009::chunk_0000",
+          "score": 0.49662066251039505,
+          "rank": 25
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_012::chunk_0000",
+          "score": 0.49213624745607376,
+          "rank": 26
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0005",
+          "score": 0.4875040203332901,
+          "rank": 27
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_005::chunk_0000",
+          "score": 0.4874609261751175,
+          "rank": 28
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0001",
+          "score": 0.4868081174790859,
+          "rank": 29
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_007::chunk_0000",
+          "score": 0.47703322023153305,
+          "rank": 30
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_011::chunk_0000",
+          "score": 0.47664816305041313,
+          "rank": 31
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0000",
+          "score": 0.47534169256687164,
+          "rank": 32
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_004::chunk_0000",
+          "score": 0.4743899777531624,
+          "rank": 33
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_014::chunk_0000",
+          "score": 0.4669231027364731,
+          "rank": 34
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_013::chunk_0000",
+          "score": 0.44318944960832596,
+          "rank": 35
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_016::chunk_0000",
+          "score": 0.44140472635626793,
+          "rank": 36
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_018::chunk_0000",
+          "score": 0.43690796196460724,
+          "rank": 37
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_017::chunk_0000",
+          "score": 0.43539465218782425,
+          "rank": 38
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_008::chunk_0000",
+          "score": 0.434419147670269,
+          "rank": 39
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_003::chunk_0000",
+          "score": 0.4076777547597885,
+          "rank": 40
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_010::chunk_0000",
+          "score": 0.3889511823654175,
+          "rank": 41
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_015::chunk_0000",
+          "score": 0.37548501789569855,
+          "rank": 42
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_019::chunk_0000",
+          "score": 0.3706936538219452,
+          "rank": 43
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 43,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 5,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

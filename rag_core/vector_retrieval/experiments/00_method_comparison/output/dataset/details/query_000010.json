@@ -1,0 +1,689 @@
+{
+  "name": "query_000010.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "朱翊钧的陵墓为什么建好了却闲置了这么久才启用？",
+  "subqueries": [
+    "朱翊钧 陵墓 修建时间 建成时间",
+    "朱翊钧 陵墓 闲置原因",
+    "明定陵 启用时间 皇帝入葬",
+    "朱翊钧 在位时间 驾崩时间 陵墓启用延迟"
+  ],
+  "component_texts": [
+    "朱翊钧的陵墓为什么建好了却闲置了这么久才启用？",
+    "朱翊钧 陵墓 修建时间 建成时间",
+    "朱翊钧 陵墓 闲置原因",
+    "明定陵 启用时间 皇帝入葬",
+    "朱翊钧 在位时间 驾崩时间 陵墓启用延迟"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "scenic_spot": {
+        "labels": [
+          "明定陵",
+          "陵墓"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "entity_category": {
+        "labels": [
+          "陵墓"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "scenic_spot",
+      "entity_category"
+    ],
+    "spot_names": [
+      "明十三陵"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "定陵",
+        "canonical_name": "定陵",
+        "scenic_area": "明十三陵",
+        "entity_type": "poi"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 0.55,
+    "routing": {
+      "main_dimension": "",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 2,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "lexical_label"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "建成时间",
+      "修建时",
+      "建成时",
+      "建时间",
+      "成时间",
+      "明定陵",
+      "朱翊钧",
+      "位时",
+      "入葬",
+      "原因",
+      "启用",
+      "在位"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "明十三陵-景区介绍_000::chunk_0003"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "朱翊钧 陵墓 修建时间 建成时间 | 朱翊钧 陵墓 闲置原因 | 明定陵 启用时间 皇帝入葬 | 朱翊钧 在位时间 驾崩时间 陵墓启用延迟",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 16,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "rank": 1,
+          "score": 0.6507796
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0018",
+          "rank": 2,
+          "score": 0.63620484
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0016",
+          "rank": 3,
+          "score": 0.59427553
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0009",
+          "rank": 4,
+          "score": 0.5916287
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "rank": 5,
+          "score": 0.58136344
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0019",
+          "rank": 6,
+          "score": 0.57875174
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0014",
+          "rank": 7,
+          "score": 0.5560695
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0002",
+          "rank": 8,
+          "score": 0.55477226
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0012",
+          "rank": 9,
+          "score": 0.550766
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "rank": 10,
+          "score": 0.54881686
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0000",
+          "rank": 11,
+          "score": 0.5359527
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0011",
+          "rank": 12,
+          "score": 0.533851
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0010",
+          "rank": 13,
+          "score": 0.5143883
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0001",
+          "rank": 14,
+          "score": 0.51387
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0015",
+          "rank": 15,
+          "score": 0.5134107
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0006",
+          "rank": 16,
+          "score": 0.4924412
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "朱翊钧的陵墓为什么建好了却闲置了这么久才启用？",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 2,
+        "miss": false,
+        "rr": 0.5,
+        "result_count": 9,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.63092975,
+        "rr_at_5": 0.5,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.63092975,
+        "rr_at_10": 0.5,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.63092975,
+        "rr_at_15": 0.5,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.63092975,
+        "rr_at_20": 0.5
+      },
+      "results": [
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0018",
+          "rank": 1,
+          "score": 0.57983994
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "rank": 2,
+          "score": 0.57620454
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0016",
+          "rank": 3,
+          "score": 0.4871552
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0009",
+          "rank": 4,
+          "score": 0.47866988
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0019",
+          "rank": 5,
+          "score": 0.45776224
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "rank": 6,
+          "score": 0.44824815
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0014",
+          "rank": 7,
+          "score": 0.43548447
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0002",
+          "rank": 8,
+          "score": 0.42905444
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0011",
+          "rank": 9,
+          "score": 0.42561698
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "朱翊钧的陵墓为什么建好了却闲置了这么久才启用？ | 朱翊钧 陵墓 修建时间 建成时间 | 朱翊钧 陵墓 闲置原因 | 明定陵 启用时间 皇帝入葬 | 朱翊钧 在位时间 驾崩时间 陵墓启用延迟",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 2,
+        "miss": false,
+        "rr": 0.5,
+        "result_count": 15,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.63092975,
+        "rr_at_5": 0.5,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.63092975,
+        "rr_at_10": 0.5,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.63092975,
+        "rr_at_15": 0.5,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.63092975,
+        "rr_at_20": 0.5
+      },
+      "results": [
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0018",
+          "rank": 1,
+          "score": 0.64628005
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "rank": 2,
+          "score": 0.6358855
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0016",
+          "rank": 3,
+          "score": 0.6007623
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0009",
+          "rank": 4,
+          "score": 0.5847656
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0019",
+          "rank": 5,
+          "score": 0.573828
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "rank": 6,
+          "score": 0.5650063
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0014",
+          "rank": 7,
+          "score": 0.5585644
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "rank": 8,
+          "score": 0.5456787
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0002",
+          "rank": 9,
+          "score": 0.54239047
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0012",
+          "rank": 10,
+          "score": 0.52004707
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0000",
+          "rank": 11,
+          "score": 0.51966274
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0011",
+          "rank": 12,
+          "score": 0.5180215
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0001",
+          "rank": 13,
+          "score": 0.51583517
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0010",
+          "rank": 14,
+          "score": 0.50556576
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0015",
+          "rank": 15,
+          "score": 0.50100666
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "朱翊钧的陵墓为什么建好了却闲置了这么久才启用？",
+        "朱翊钧 陵墓 修建时间 建成时间",
+        "朱翊钧 陵墓 闲置原因",
+        "明定陵 启用时间 皇帝入葬",
+        "朱翊钧 在位时间 驾崩时间 陵墓启用延迟"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 12,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "rank": 1,
+          "score": 0.6638969
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0018",
+          "rank": 2,
+          "score": 0.65636396
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0009",
+          "rank": 3,
+          "score": 0.57230073
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0016",
+          "rank": 4,
+          "score": 0.55947334
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0019",
+          "rank": 5,
+          "score": 0.54777074
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "rank": 6,
+          "score": 0.5358623
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0011",
+          "rank": 7,
+          "score": 0.52373767
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0002",
+          "rank": 8,
+          "score": 0.51913494
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0014",
+          "rank": 9,
+          "score": 0.51066667
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0000",
+          "rank": 10,
+          "score": 0.5046979
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "rank": 11,
+          "score": 0.50255644
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0010",
+          "rank": 12,
+          "score": 0.48711964
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "score": 0.6082610636949539,
+          "rank": 1
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0018",
+          "score": 0.568912997841835,
+          "rank": 2
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0016",
+          "score": 0.5343324467539787,
+          "rank": 3
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "score": 0.5195492543280125,
+          "rank": 4
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0000",
+          "score": 0.48936542123556137,
+          "rank": 5
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0014",
+          "score": 0.4810442551970482,
+          "rank": 6
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0019",
+          "score": 0.4724137969315052,
+          "rank": 7
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0009",
+          "score": 0.4680885970592499,
+          "rank": 8
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "score": 0.462881475687027,
+          "rank": 9
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0007",
+          "score": 0.4487723149359226,
+          "rank": 10
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0002",
+          "score": 0.4373691976070404,
+          "rank": 11
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0015",
+          "score": 0.4357510507106781,
+          "rank": 12
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0010",
+          "score": 0.43242690712213516,
+          "rank": 13
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0008",
+          "score": 0.43100420385599136,
+          "rank": 14
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0011",
+          "score": 0.4237120673060417,
+          "rank": 15
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0012",
+          "score": 0.4150099568068981,
+          "rank": 16
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0001",
+          "score": 0.4145275242626667,
+          "rank": 17
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "score": 0.4009846970438957,
+          "rank": 18
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0006",
+          "score": 0.39190035313367844,
+          "rank": 19
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0017",
+          "score": 0.3885038085281849,
+          "rank": 20
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0001",
+          "score": 0.34093090146780014,
+          "rank": 21
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0000",
+          "score": 0.3083235025405884,
+          "rank": 22
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0002",
+          "score": 0.2500665746629238,
+          "rank": 23
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 23,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 5,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

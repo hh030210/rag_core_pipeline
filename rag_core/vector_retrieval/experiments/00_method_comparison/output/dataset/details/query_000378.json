@@ -1,0 +1,1189 @@
+{
+  "name": "query_000378.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "西海峰林是什么样的景色？",
+  "subqueries": [
+    "西海峰林 景观 描述",
+    "西海峰林 特点 地貌",
+    "西海峰林 旅游介绍"
+  ],
+  "component_texts": [
+    "西海峰林是什么样的景色？",
+    "西海峰林 景观 描述",
+    "西海峰林 特点 地貌",
+    "西海峰林 旅游介绍"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "scenic_spot": {
+        "labels": [
+          "西海峰林"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "main"
+      }
+    },
+    "active_dimensions": [
+      "scenic_spot"
+    ],
+    "spot_names": [],
+    "resolved_poi_entities": [],
+    "precise_entity_terms": [],
+    "confidence": 0.4,
+    "routing": {
+      "main_dimension": "scenic_spot",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 1,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "lexical_label+strict_intent"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "西海峰林",
+      "海峰林",
+      "西海峰",
+      "地貌",
+      "峰林",
+      "描述",
+      "景观",
+      "海峰",
+      "西海"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "张家界-景点介绍_003::chunk_0000"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "西海峰林 景观 描述 | 西海峰林 特点 地貌 | 西海峰林 旅游介绍",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "张家界-景点介绍_003::chunk_0000",
+          "rank": 1,
+          "score": 0.59638786
+        },
+        {
+          "chunk_id": "西湖-景区介绍_011::chunk_0000",
+          "rank": 2,
+          "score": 0.54117906
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0000",
+          "rank": 3,
+          "score": 0.54049164
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 4,
+          "score": 0.5376469
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "rank": 5,
+          "score": 0.5338017
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0001",
+          "rank": 6,
+          "score": 0.5233398
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "rank": 7,
+          "score": 0.5200542
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0004",
+          "rank": 8,
+          "score": 0.5146228
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0001",
+          "rank": 9,
+          "score": 0.51457924
+        },
+        {
+          "chunk_id": "张家界-运营信息_004::chunk_0001",
+          "rank": 10,
+          "score": 0.51173705
+        },
+        {
+          "chunk_id": "西湖-景区介绍_024::chunk_0000",
+          "rank": 11,
+          "score": 0.4956875
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0001",
+          "rank": 12,
+          "score": 0.49297926
+        },
+        {
+          "chunk_id": "张家界-景点介绍_006::chunk_0000",
+          "rank": 13,
+          "score": 0.49257568
+        },
+        {
+          "chunk_id": "西湖-景区介绍_015::chunk_0000",
+          "rank": 14,
+          "score": 0.4924775
+        },
+        {
+          "chunk_id": "张家界-景点介绍_004::chunk_0000",
+          "rank": 15,
+          "score": 0.4876141
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0000",
+          "rank": 16,
+          "score": 0.48399097
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0011",
+          "rank": 17,
+          "score": 0.48264426
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0001",
+          "rank": 18,
+          "score": 0.48165965
+        },
+        {
+          "chunk_id": "西湖-景区介绍_022::chunk_0000",
+          "rank": 19,
+          "score": 0.48017484
+        },
+        {
+          "chunk_id": "张家界-运营信息_005::chunk_0000",
+          "rank": 20,
+          "score": 0.47861063
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "西海峰林是什么样的景色？",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "张家界-景点介绍_003::chunk_0000",
+          "rank": 1,
+          "score": 0.55272937
+        },
+        {
+          "chunk_id": "西湖-景区介绍_011::chunk_0000",
+          "rank": 2,
+          "score": 0.53736484
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0000",
+          "rank": 3,
+          "score": 0.52383304
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0001",
+          "rank": 4,
+          "score": 0.5111824
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0012",
+          "rank": 5,
+          "score": 0.48001796
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0000",
+          "rank": 6,
+          "score": 0.47202563
+        },
+        {
+          "chunk_id": "西湖-景区介绍_015::chunk_0000",
+          "rank": 7,
+          "score": 0.4670637
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "rank": 8,
+          "score": 0.46647257
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 9,
+          "score": 0.4574071
+        },
+        {
+          "chunk_id": "西湖-景区介绍_024::chunk_0000",
+          "rank": 10,
+          "score": 0.4559554
+        },
+        {
+          "chunk_id": "西湖-景区介绍_027::chunk_0000",
+          "rank": 11,
+          "score": 0.45514008
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0002",
+          "rank": 12,
+          "score": 0.45325392
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0000",
+          "rank": 13,
+          "score": 0.44718295
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0001",
+          "rank": 14,
+          "score": 0.44265115
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0002",
+          "rank": 15,
+          "score": 0.43981683
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0001",
+          "rank": 16,
+          "score": 0.43819556
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0001",
+          "rank": 17,
+          "score": 0.43762383
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0003",
+          "rank": 18,
+          "score": 0.4363907
+        },
+        {
+          "chunk_id": "张家界-景点介绍_006::chunk_0000",
+          "rank": 19,
+          "score": 0.43321782
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "rank": 20,
+          "score": 0.43278563
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "西海峰林是什么样的景色？ | 西海峰林 景观 描述 | 西海峰林 特点 地貌 | 西海峰林 旅游介绍",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "张家界-景点介绍_003::chunk_0000",
+          "rank": 1,
+          "score": 0.61298895
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 2,
+          "score": 0.5750985
+        },
+        {
+          "chunk_id": "西湖-景区介绍_011::chunk_0000",
+          "rank": 3,
+          "score": 0.573293
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "rank": 4,
+          "score": 0.5628947
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0000",
+          "rank": 5,
+          "score": 0.56228304
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0001",
+          "rank": 6,
+          "score": 0.5500968
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0004",
+          "rank": 7,
+          "score": 0.5417344
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "rank": 8,
+          "score": 0.5374057
+        },
+        {
+          "chunk_id": "张家界-运营信息_004::chunk_0001",
+          "rank": 9,
+          "score": 0.5330677
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0001",
+          "rank": 10,
+          "score": 0.5330478
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0001",
+          "rank": 11,
+          "score": 0.5206721
+        },
+        {
+          "chunk_id": "西湖-景区介绍_024::chunk_0000",
+          "rank": 12,
+          "score": 0.51844937
+        },
+        {
+          "chunk_id": "西湖-景区介绍_015::chunk_0000",
+          "rank": 13,
+          "score": 0.5154121
+        },
+        {
+          "chunk_id": "张家界-景点介绍_004::chunk_0000",
+          "rank": 14,
+          "score": 0.510986
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0000",
+          "rank": 15,
+          "score": 0.5088843
+        },
+        {
+          "chunk_id": "张家界-景点介绍_006::chunk_0000",
+          "rank": 16,
+          "score": 0.5052459
+        },
+        {
+          "chunk_id": "西湖-景区介绍_007::chunk_0000",
+          "rank": 17,
+          "score": 0.5052091
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0001",
+          "rank": 18,
+          "score": 0.5007871
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0011",
+          "rank": 19,
+          "score": 0.5007366
+        },
+        {
+          "chunk_id": "张家界-运营信息_005::chunk_0000",
+          "rank": 20,
+          "score": 0.49285203
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "西海峰林是什么样的景色？",
+        "西海峰林 景观 描述",
+        "西海峰林 特点 地貌",
+        "西海峰林 旅游介绍"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "张家界-景点介绍_003::chunk_0000",
+          "rank": 1,
+          "score": 0.5802618
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0000",
+          "rank": 2,
+          "score": 0.55459785
+        },
+        {
+          "chunk_id": "西湖-景区介绍_011::chunk_0000",
+          "rank": 3,
+          "score": 0.55138606
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0001",
+          "rank": 4,
+          "score": 0.5175483
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 5,
+          "score": 0.49359202
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0012",
+          "rank": 6,
+          "score": 0.49088097
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0001",
+          "rank": 7,
+          "score": 0.49034184
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0000",
+          "rank": 8,
+          "score": 0.49023128
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "rank": 9,
+          "score": 0.48622343
+        },
+        {
+          "chunk_id": "西湖-景区介绍_024::chunk_0000",
+          "rank": 10,
+          "score": 0.4807921
+        },
+        {
+          "chunk_id": "西湖-景区介绍_015::chunk_0000",
+          "rank": 11,
+          "score": 0.47839463
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0000",
+          "rank": 12,
+          "score": 0.46839413
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "rank": 13,
+          "score": 0.46710107
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "rank": 14,
+          "score": 0.46536875
+        },
+        {
+          "chunk_id": "张家界-景点介绍_004::chunk_0000",
+          "rank": 15,
+          "score": 0.46249583
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0001",
+          "rank": 16,
+          "score": 0.46127266
+        },
+        {
+          "chunk_id": "张家界-景点介绍_006::chunk_0000",
+          "rank": 17,
+          "score": 0.46069115
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0002",
+          "rank": 18,
+          "score": 0.45870334
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0001",
+          "rank": 19,
+          "score": 0.4575555
+        },
+        {
+          "chunk_id": "张家界-运营信息_005::chunk_0000",
+          "rank": 20,
+          "score": 0.45412946
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "张家界-景点介绍_003::chunk_0000",
+          "score": 0.6482493653893471,
+          "rank": 1
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0000",
+          "score": 0.5672451034188271,
+          "rank": 2
+        },
+        {
+          "chunk_id": "西湖-景区介绍_011::chunk_0000",
+          "score": 0.5389872491359711,
+          "rank": 3
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0001",
+          "score": 0.5032714791595936,
+          "rank": 4
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0012",
+          "score": 0.492892362177372,
+          "rank": 5
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0000",
+          "score": 0.49247705936431885,
+          "rank": 6
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0000",
+          "score": 0.4828089103102684,
+          "rank": 7
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0001",
+          "score": 0.4812997169792652,
+          "rank": 8
+        },
+        {
+          "chunk_id": "西湖-景区介绍_015::chunk_0000",
+          "score": 0.4782633110880852,
+          "rank": 9
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "score": 0.4745483659207821,
+          "rank": 10
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_005::chunk_0000",
+          "score": 0.4716602563858032,
+          "rank": 11
+        },
+        {
+          "chunk_id": "西湖-景区介绍_027::chunk_0000",
+          "score": 0.46641070023179054,
+          "rank": 12
+        },
+        {
+          "chunk_id": "西湖-景区介绍_024::chunk_0000",
+          "score": 0.4655044600367546,
+          "rank": 13
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0001",
+          "score": 0.4591830372810364,
+          "rank": 14
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0002",
+          "score": 0.4570024907588959,
+          "rank": 15
+        },
+        {
+          "chunk_id": "张家界-景点介绍_004::chunk_0000",
+          "score": 0.45126383006572723,
+          "rank": 16
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "score": 0.44864407181739807,
+          "rank": 17
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "score": 0.44777313992381096,
+          "rank": 18
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0001",
+          "score": 0.44677266851067543,
+          "rank": 19
+        },
+        {
+          "chunk_id": "张家界-景点介绍_006::chunk_0000",
+          "score": 0.4441959671676159,
+          "rank": 20
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0001",
+          "score": 0.44263505935668945,
+          "rank": 21
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0002",
+          "score": 0.44207315519452095,
+          "rank": 22
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0003",
+          "score": 0.4413011148571968,
+          "rank": 23
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0001",
+          "score": 0.43755998462438583,
+          "rank": 24
+        },
+        {
+          "chunk_id": "西湖-景区介绍_007::chunk_0000",
+          "score": 0.43658944219350815,
+          "rank": 25
+        },
+        {
+          "chunk_id": "西湖-景区介绍_003::chunk_0000",
+          "score": 0.4338335581123829,
+          "rank": 26
+        },
+        {
+          "chunk_id": "张家界-运营信息_004::chunk_0001",
+          "score": 0.4322306923568249,
+          "rank": 27
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_004::chunk_0000",
+          "score": 0.43211642652750015,
+          "rank": 28
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "score": 0.42991869151592255,
+          "rank": 29
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0003",
+          "score": 0.428457148373127,
+          "rank": 30
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0004",
+          "score": 0.4280938357114792,
+          "rank": 31
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "score": 0.423464797437191,
+          "rank": 32
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0015",
+          "score": 0.42321477830410004,
+          "rank": 33
+        },
+        {
+          "chunk_id": "张家界-运营信息_005::chunk_0000",
+          "score": 0.4212797097861767,
+          "rank": 34
+        },
+        {
+          "chunk_id": "张家界-运营信息_003::chunk_0000",
+          "score": 0.4205741062760353,
+          "rank": 35
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0010",
+          "score": 0.42056138440966606,
+          "rank": 36
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0014",
+          "score": 0.4204826056957245,
+          "rank": 37
+        },
+        {
+          "chunk_id": "西湖-景区介绍_013::chunk_0000",
+          "score": 0.42042510211467743,
+          "rank": 38
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_010::chunk_0000",
+          "score": 0.41998010873794556,
+          "rank": 39
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0004",
+          "score": 0.41903283447027206,
+          "rank": 40
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0007",
+          "score": 0.4163868874311447,
+          "rank": 41
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0002",
+          "score": 0.4153847061097622,
+          "rank": 42
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0000",
+          "score": 0.4144461713731289,
+          "rank": 43
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "score": 0.4142497852444649,
+          "rank": 44
+        },
+        {
+          "chunk_id": "西湖-景区介绍_021::chunk_0000",
+          "score": 0.4126332402229309,
+          "rank": 45
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "score": 0.412496630102396,
+          "rank": 46
+        },
+        {
+          "chunk_id": "西湖-景区介绍_023::chunk_0000",
+          "score": 0.40993138775229454,
+          "rank": 47
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0005",
+          "score": 0.4096344895660877,
+          "rank": 48
+        },
+        {
+          "chunk_id": "西湖-景区介绍_009::chunk_0000",
+          "score": 0.4092597998678684,
+          "rank": 49
+        },
+        {
+          "chunk_id": "西湖-景区介绍_025::chunk_0000",
+          "score": 0.4092225059866905,
+          "rank": 50
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0000",
+          "score": 0.4087916910648346,
+          "rank": 51
+        },
+        {
+          "chunk_id": "西湖-景区介绍_005::chunk_0000",
+          "score": 0.4077606536448002,
+          "rank": 52
+        },
+        {
+          "chunk_id": "西湖-景区介绍_019::chunk_0000",
+          "score": 0.40344392135739326,
+          "rank": 53
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "score": 0.40127549692988396,
+          "rank": 54
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "score": 0.3999473787844181,
+          "rank": 55
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0000",
+          "score": 0.39955848455429077,
+          "rank": 56
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0001",
+          "score": 0.3991628475487232,
+          "rank": 57
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0000",
+          "score": 0.39788221195340157,
+          "rank": 58
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "score": 0.3963131606578827,
+          "rank": 59
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0011",
+          "score": 0.3954966478049755,
+          "rank": 60
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0002",
+          "score": 0.39511195197701454,
+          "rank": 61
+        },
+        {
+          "chunk_id": "西湖-景区介绍_006::chunk_0000",
+          "score": 0.3948277682065964,
+          "rank": 62
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0000",
+          "score": 0.3943931944668293,
+          "rank": 63
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0003",
+          "score": 0.3940284252166748,
+          "rank": 64
+        },
+        {
+          "chunk_id": "西湖-景区介绍_028::chunk_0000",
+          "score": 0.392058402299881,
+          "rank": 65
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "score": 0.3912450931966305,
+          "rank": 66
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0001",
+          "score": 0.39008409157395363,
+          "rank": 67
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0001",
+          "score": 0.38924214988946915,
+          "rank": 68
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0008",
+          "score": 0.38863355666399,
+          "rank": 69
+        },
+        {
+          "chunk_id": "西湖-景区介绍_022::chunk_0000",
+          "score": 0.3885902054607868,
+          "rank": 70
+        },
+        {
+          "chunk_id": "西湖-景区介绍_012::chunk_0000",
+          "score": 0.38658733293414116,
+          "rank": 71
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0000",
+          "score": 0.3864280432462692,
+          "rank": 72
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_012::chunk_0000",
+          "score": 0.3861337788403034,
+          "rank": 73
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0009",
+          "score": 0.3848934434354305,
+          "rank": 74
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0000",
+          "score": 0.38468118011951447,
+          "rank": 75
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0001",
+          "score": 0.38289594650268555,
+          "rank": 76
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "score": 0.3823784291744232,
+          "rank": 77
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0008",
+          "score": 0.380446620285511,
+          "rank": 78
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "score": 0.3799273930490017,
+          "rank": 79
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0001",
+          "score": 0.3789393827319145,
+          "rank": 80
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "score": 0.3780631646513939,
+          "rank": 81
+        },
+        {
+          "chunk_id": "西湖-景区介绍_014::chunk_0000",
+          "score": 0.37716102600097656,
+          "rank": 82
+        },
+        {
+          "chunk_id": "张家界-运营信息_004::chunk_0000",
+          "score": 0.37699106335639954,
+          "rank": 83
+        },
+        {
+          "chunk_id": "西湖-景区介绍_002::chunk_0000",
+          "score": 0.3766631409525871,
+          "rank": 84
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_009::chunk_0000",
+          "score": 0.37598735839128494,
+          "rank": 85
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0001",
+          "score": 0.37593062594532967,
+          "rank": 86
+        },
+        {
+          "chunk_id": "西湖-景区介绍_029::chunk_0000",
+          "score": 0.3757539577782154,
+          "rank": 87
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_011::chunk_0000",
+          "score": 0.3744783252477646,
+          "rank": 88
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0012",
+          "score": 0.3722449280321598,
+          "rank": 89
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_015::chunk_0000",
+          "score": 0.37222015112638474,
+          "rank": 90
+        },
+        {
+          "chunk_id": "西湖-景区介绍_017::chunk_0000",
+          "score": 0.3720416836440563,
+          "rank": 91
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0002",
+          "score": 0.3719063550233841,
+          "rank": 92
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0004",
+          "score": 0.3712769150733948,
+          "rank": 93
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0001",
+          "score": 0.37096405774354935,
+          "rank": 94
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_002::chunk_0000",
+          "score": 0.37003570795059204,
+          "rank": 95
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0017",
+          "score": 0.3699347674846649,
+          "rank": 96
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "score": 0.36970023810863495,
+          "rank": 97
+        },
+        {
+          "chunk_id": "西湖-景区介绍_018::chunk_0000",
+          "score": 0.36932164803147316,
+          "rank": 98
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_017::chunk_0000",
+          "score": 0.36909516900777817,
+          "rank": 99
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0003",
+          "score": 0.3669265992939472,
+          "rank": 100
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 100,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 4,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

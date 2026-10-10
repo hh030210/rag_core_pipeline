@@ -1,0 +1,878 @@
+{
+  "name": "query_000177.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "摩崖三佛龛为什么没修完？",
+  "subqueries": [
+    "摩崖三佛龛 未完成 原因",
+    "龙门石窟 摩崖三佛龛 停工 考证",
+    "摩崖三佛龛 修建 背景 历史"
+  ],
+  "component_texts": [
+    "摩崖三佛龛为什么没修完？",
+    "摩崖三佛龛 未完成 原因",
+    "龙门石窟 摩崖三佛龛 停工 考证",
+    "摩崖三佛龛 修建 背景 历史"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "scenic_spot": {
+        "labels": [
+          "摩崖三佛龛",
+          "龙门石窟"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "relative_location": {
+        "labels": [
+          "龙门石窟"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "entity_category": {
+        "labels": [
+          "石窟"
+        ],
+        "intent_terms": [
+          "石窟"
+        ],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "scenic_spot",
+      "relative_location",
+      "entity_category"
+    ],
+    "spot_names": [
+      "龙门石窟"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "龙门石窟",
+        "canonical_name": "龙门石窟",
+        "scenic_area": "龙门石窟",
+        "entity_type": "scenic_area"
+      },
+      {
+        "mention": "龙门",
+        "canonical_name": "龙门石窟",
+        "scenic_area": "龙门石窟",
+        "entity_type": "scenic_area"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 0.7,
+    "routing": {
+      "main_dimension": "",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 3,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "lexical_label"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "摩崖三佛龛",
+      "崖三佛龛",
+      "摩崖三佛",
+      "三佛龛",
+      "崖三佛",
+      "摩崖三",
+      "未完成",
+      "三佛",
+      "佛龛",
+      "停工",
+      "原因",
+      "完成"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "龙门石窟-景区介绍_016::chunk_0000"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "摩崖三佛龛 未完成 原因 | 龙门石窟 摩崖三佛龛 停工 考证 | 摩崖三佛龛 修建 背景 历史",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 2,
+        "miss": false,
+        "rr": 0.5,
+        "result_count": 20,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.63092975,
+        "rr_at_5": 0.5,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.63092975,
+        "rr_at_10": 0.5,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.63092975,
+        "rr_at_15": 0.5,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.63092975,
+        "rr_at_20": 0.5
+      },
+      "results": [
+        {
+          "chunk_id": "龙门石窟-景区介绍_008::chunk_0000",
+          "rank": 1,
+          "score": 0.6317456
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_016::chunk_0000",
+          "rank": 2,
+          "score": 0.62864137
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0002",
+          "rank": 3,
+          "score": 0.6157815
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_015::chunk_0000",
+          "rank": 4,
+          "score": 0.5831698
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0006",
+          "rank": 5,
+          "score": 0.56000245
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "rank": 6,
+          "score": 0.55887276
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0000",
+          "rank": 7,
+          "score": 0.55742484
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0004",
+          "rank": 8,
+          "score": 0.5550679
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0009",
+          "rank": 9,
+          "score": 0.54893196
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_004::chunk_0000",
+          "rank": 10,
+          "score": 0.5477256
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_019::chunk_0000",
+          "rank": 11,
+          "score": 0.5374222
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0002",
+          "rank": 12,
+          "score": 0.53565896
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0007",
+          "rank": 13,
+          "score": 0.5324882
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0000",
+          "rank": 14,
+          "score": 0.53115124
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0011",
+          "rank": 15,
+          "score": 0.5292764
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_021::chunk_0000",
+          "rank": 16,
+          "score": 0.5227693
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "rank": 17,
+          "score": 0.5211674
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_002::chunk_0000",
+          "rank": 18,
+          "score": 0.5204797
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_001::chunk_0000",
+          "rank": 19,
+          "score": 0.520029
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_006::chunk_0000",
+          "rank": 20,
+          "score": 0.519817
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "摩崖三佛龛为什么没修完？",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 13,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "龙门石窟-景区介绍_016::chunk_0000",
+          "rank": 1,
+          "score": 0.5979208
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_015::chunk_0000",
+          "rank": 2,
+          "score": 0.46490443
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0000",
+          "rank": 3,
+          "score": 0.45390373
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_008::chunk_0000",
+          "rank": 4,
+          "score": 0.44863382
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_004::chunk_0000",
+          "rank": 5,
+          "score": 0.44330022
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0009",
+          "rank": 6,
+          "score": 0.43000662
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_011::chunk_0000",
+          "rank": 7,
+          "score": 0.4167223
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_002::chunk_0000",
+          "rank": 8,
+          "score": 0.41360232
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_010::chunk_0000",
+          "rank": 9,
+          "score": 0.41219813
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_001::chunk_0000",
+          "rank": 10,
+          "score": 0.4116148
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "rank": 11,
+          "score": 0.4031623
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0002",
+          "rank": 12,
+          "score": 0.40130603
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0007",
+          "rank": 13,
+          "score": 0.40092674
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "摩崖三佛龛为什么没修完？ | 摩崖三佛龛 未完成 原因 | 龙门石窟 摩崖三佛龛 停工 考证 | 摩崖三佛龛 修建 背景 历史",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 2,
+        "miss": false,
+        "rr": 0.5,
+        "result_count": 20,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.63092975,
+        "rr_at_5": 0.5,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.63092975,
+        "rr_at_10": 0.5,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.63092975,
+        "rr_at_15": 0.5,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.63092975,
+        "rr_at_20": 0.5
+      },
+      "results": [
+        {
+          "chunk_id": "龙门石窟-景区介绍_008::chunk_0000",
+          "rank": 1,
+          "score": 0.63130337
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_016::chunk_0000",
+          "rank": 2,
+          "score": 0.6290769
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0002",
+          "rank": 3,
+          "score": 0.62442356
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_015::chunk_0000",
+          "rank": 4,
+          "score": 0.58689904
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "rank": 5,
+          "score": 0.5756711
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0006",
+          "rank": 6,
+          "score": 0.57017684
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0004",
+          "rank": 7,
+          "score": 0.5620452
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0000",
+          "rank": 8,
+          "score": 0.5592969
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0009",
+          "rank": 9,
+          "score": 0.5568198
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_004::chunk_0000",
+          "rank": 10,
+          "score": 0.5520051
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_019::chunk_0000",
+          "rank": 11,
+          "score": 0.54975116
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0007",
+          "rank": 12,
+          "score": 0.54605
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0011",
+          "rank": 13,
+          "score": 0.53534657
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0000",
+          "rank": 14,
+          "score": 0.5349141
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_006::chunk_0000",
+          "rank": 15,
+          "score": 0.53051883
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_021::chunk_0000",
+          "rank": 16,
+          "score": 0.5304887
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0002",
+          "rank": 17,
+          "score": 0.53007853
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_002::chunk_0000",
+          "rank": 18,
+          "score": 0.52829444
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "rank": 19,
+          "score": 0.5268308
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_001::chunk_0000",
+          "rank": 20,
+          "score": 0.5221783
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "摩崖三佛龛为什么没修完？",
+        "摩崖三佛龛 未完成 原因",
+        "龙门石窟 摩崖三佛龛 停工 考证",
+        "摩崖三佛龛 修建 背景 历史"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 17,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "龙门石窟-景区介绍_016::chunk_0000",
+          "rank": 1,
+          "score": 0.6642406
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_008::chunk_0000",
+          "rank": 2,
+          "score": 0.5424524
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_015::chunk_0000",
+          "rank": 3,
+          "score": 0.5394462
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0000",
+          "rank": 4,
+          "score": 0.51947916
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_004::chunk_0000",
+          "rank": 5,
+          "score": 0.50898135
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0009",
+          "rank": 6,
+          "score": 0.49773607
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_002::chunk_0000",
+          "rank": 7,
+          "score": 0.492067
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0002",
+          "rank": 8,
+          "score": 0.48189425
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_001::chunk_0000",
+          "rank": 9,
+          "score": 0.48107257
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "rank": 10,
+          "score": 0.4741202
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_006::chunk_0000",
+          "rank": 11,
+          "score": 0.47159076
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0000",
+          "rank": 12,
+          "score": 0.47140878
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_010::chunk_0000",
+          "rank": 13,
+          "score": 0.46764335
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "rank": 14,
+          "score": 0.46208143
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0007",
+          "rank": 15,
+          "score": 0.45970723
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_009::chunk_0000",
+          "rank": 16,
+          "score": 0.45593315
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0006",
+          "rank": 17,
+          "score": 0.45562464
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "龙门石窟-景区介绍_016::chunk_0000",
+          "score": 0.5995379984378815,
+          "rank": 1
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0000",
+          "score": 0.4916001558303833,
+          "rank": 2
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_015::chunk_0000",
+          "score": 0.46578094735741615,
+          "rank": 3
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_004::chunk_0000",
+          "score": 0.44881878048181534,
+          "rank": 4
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_008::chunk_0000",
+          "score": 0.4408649541437626,
+          "rank": 5
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_009::chunk_0000",
+          "score": 0.43274373933672905,
+          "rank": 6
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_010::chunk_0000",
+          "score": 0.42855440080165863,
+          "rank": 7
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0009",
+          "score": 0.4234433174133301,
+          "rank": 8
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0006",
+          "score": 0.41974250972270966,
+          "rank": 9
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_003::chunk_0000",
+          "score": 0.4189136177301407,
+          "rank": 10
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_011::chunk_0000",
+          "score": 0.4162699393928051,
+          "rank": 11
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0007",
+          "score": 0.41028814017772675,
+          "rank": 12
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_002::chunk_0000",
+          "score": 0.4069261848926544,
+          "rank": 13
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_001::chunk_0000",
+          "score": 0.40429840981960297,
+          "rank": 14
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0008",
+          "score": 0.3988334462046623,
+          "rank": 15
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0002",
+          "score": 0.39155443012714386,
+          "rank": 16
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_006::chunk_0000",
+          "score": 0.39093203097581863,
+          "rank": 17
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0000",
+          "score": 0.3905456215143204,
+          "rank": 18
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "score": 0.39005980640649796,
+          "rank": 19
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "score": 0.3894033059477806,
+          "rank": 20
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0004",
+          "score": 0.3879246227443218,
+          "rank": 21
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0001",
+          "score": 0.38666070997714996,
+          "rank": 22
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_021::chunk_0000",
+          "score": 0.37862031906843185,
+          "rank": 23
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0011",
+          "score": 0.3785601668059826,
+          "rank": 24
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_007::chunk_0000",
+          "score": 0.375360332429409,
+          "rank": 25
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_019::chunk_0000",
+          "score": 0.3710828199982643,
+          "rank": 26
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0001",
+          "score": 0.3688724711537361,
+          "rank": 27
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0005",
+          "score": 0.36297163367271423,
+          "rank": 28
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0003",
+          "score": 0.3551051653921604,
+          "rank": 29
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0010",
+          "score": 0.35359877720475197,
+          "rank": 30
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0002",
+          "score": 0.35188834369182587,
+          "rank": 31
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0001",
+          "score": 0.34975361824035645,
+          "rank": 32
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_020::chunk_0000",
+          "score": 0.349008671939373,
+          "rank": 33
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_012::chunk_0000",
+          "score": 0.33673936128616333,
+          "rank": 34
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_014::chunk_0000",
+          "score": 0.3218853697180748,
+          "rank": 35
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_013::chunk_0000",
+          "score": 0.32019155099987984,
+          "rank": 36
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0000",
+          "score": 0.30857985466718674,
+          "rank": 37
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0012",
+          "score": 0.28894342482089996,
+          "rank": 38
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_017::chunk_0000",
+          "score": 0.2815060019493103,
+          "rank": 39
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_018::chunk_0000",
+          "score": 0.26841580867767334,
+          "rank": 40
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 40,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 4,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

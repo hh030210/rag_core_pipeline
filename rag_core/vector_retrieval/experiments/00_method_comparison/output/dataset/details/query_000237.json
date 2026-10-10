@@ -1,0 +1,831 @@
+{
+  "name": "query_000237.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "想在西湖坐船游湖有什么选择，大概要花多少钱",
+  "subqueries": [
+    "西湖 坐船 游湖 船型 种类",
+    "西湖 游船 价格 费用",
+    "西湖 游船 游玩攻略 路线"
+  ],
+  "component_texts": [
+    "想在西湖坐船游湖有什么选择，大概要花多少钱",
+    "西湖 坐船 游湖 船型 种类",
+    "西湖 游船 价格 费用",
+    "西湖 游船 游玩攻略 路线"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "tour_suggestion": {
+        "labels": [
+          "游船"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "scenic_spot": {
+        "labels": [
+          "西湖"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "natural_landscape": {
+        "labels": [
+          "西湖"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "landform_siting": {
+        "labels": [
+          "西湖"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "internal_transport": {
+        "labels": [
+          "游船"
+        ],
+        "intent_terms": [
+          "游船"
+        ],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "admin_division": {
+        "labels": [
+          "西湖"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "ticket_price": {
+        "labels": [],
+        "intent_terms": [
+          "价格",
+          "费用"
+        ],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "tour_suggestion",
+      "scenic_spot",
+      "natural_landscape",
+      "landform_siting",
+      "internal_transport",
+      "admin_division",
+      "ticket_price"
+    ],
+    "spot_names": [
+      "西湖"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "西湖",
+        "canonical_name": "西湖",
+        "scenic_area": "西湖",
+        "entity_type": "scenic_area"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 1.0,
+    "routing": {
+      "main_dimension": "",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 7,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "intent_cue",
+        "lexical_label"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "价格",
+      "坐船",
+      "攻略",
+      "游玩",
+      "游船",
+      "种类",
+      "船型",
+      "费用",
+      "路线"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "西湖-运营信息_000::chunk_0002"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "西湖 坐船 游湖 船型 种类 | 西湖 游船 价格 费用 | 西湖 游船 游玩攻略 路线",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 13,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "rank": 1,
+          "score": 0.7722626
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0004",
+          "rank": 2,
+          "score": 0.7678647
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 3,
+          "score": 0.72716993
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "rank": 4,
+          "score": 0.6718275
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0001",
+          "rank": 5,
+          "score": 0.66895723
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "rank": 6,
+          "score": 0.5902491
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "rank": 7,
+          "score": 0.5515368
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0001",
+          "rank": 8,
+          "score": 0.53807974
+        },
+        {
+          "chunk_id": "西湖-景区介绍_028::chunk_0000",
+          "rank": 9,
+          "score": 0.53720313
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0000",
+          "rank": 10,
+          "score": 0.53610915
+        },
+        {
+          "chunk_id": "西湖-景区介绍_005::chunk_0000",
+          "rank": 11,
+          "score": 0.5114994
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0002",
+          "rank": 12,
+          "score": 0.5096569
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0001",
+          "rank": 13,
+          "score": 0.5088618
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "想在西湖坐船游湖有什么选择，大概要花多少钱",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 13,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "rank": 1,
+          "score": 0.8024543
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "rank": 2,
+          "score": 0.7147008
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0004",
+          "rank": 3,
+          "score": 0.70009655
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0001",
+          "rank": 4,
+          "score": 0.6954359
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 5,
+          "score": 0.6761595
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "rank": 6,
+          "score": 0.6071389
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "rank": 7,
+          "score": 0.56449723
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0000",
+          "rank": 8,
+          "score": 0.561465
+        },
+        {
+          "chunk_id": "西湖-景区介绍_028::chunk_0000",
+          "rank": 9,
+          "score": 0.5407142
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0002",
+          "rank": 10,
+          "score": 0.54015505
+        },
+        {
+          "chunk_id": "西湖-景区介绍_013::chunk_0000",
+          "rank": 11,
+          "score": 0.5376705
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0001",
+          "rank": 12,
+          "score": 0.5209046
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0001",
+          "rank": 13,
+          "score": 0.51783144
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "想在西湖坐船游湖有什么选择，大概要花多少钱 | 西湖 坐船 游湖 船型 种类 | 西湖 游船 价格 费用 | 西湖 游船 游玩攻略 路线",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 13,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "rank": 1,
+          "score": 0.7796186
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0004",
+          "rank": 2,
+          "score": 0.7737012
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 3,
+          "score": 0.74401
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "rank": 4,
+          "score": 0.7044455
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0001",
+          "rank": 5,
+          "score": 0.68340826
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "rank": 6,
+          "score": 0.57992935
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "rank": 7,
+          "score": 0.54827154
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0001",
+          "rank": 8,
+          "score": 0.5450965
+        },
+        {
+          "chunk_id": "西湖-景区介绍_028::chunk_0000",
+          "rank": 9,
+          "score": 0.5372188
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0000",
+          "rank": 10,
+          "score": 0.5271636
+        },
+        {
+          "chunk_id": "西湖-景区介绍_005::chunk_0000",
+          "rank": 11,
+          "score": 0.5209385
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0001",
+          "rank": 12,
+          "score": 0.5134392
+        },
+        {
+          "chunk_id": "西湖-景区介绍_003::chunk_0000",
+          "rank": 13,
+          "score": 0.51291126
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "想在西湖坐船游湖有什么选择，大概要花多少钱",
+        "西湖 坐船 游湖 船型 种类",
+        "西湖 游船 价格 费用",
+        "西湖 游船 游玩攻略 路线"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 12,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "rank": 1,
+          "score": 0.8255571
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0004",
+          "rank": 2,
+          "score": 0.7605318
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 3,
+          "score": 0.7362217
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "rank": 4,
+          "score": 0.7231476
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0001",
+          "rank": 5,
+          "score": 0.71965605
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "rank": 6,
+          "score": 0.64331454
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "rank": 7,
+          "score": 0.60507524
+        },
+        {
+          "chunk_id": "西湖-景区介绍_028::chunk_0000",
+          "rank": 8,
+          "score": 0.5827183
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0000",
+          "rank": 9,
+          "score": 0.58115566
+        },
+        {
+          "chunk_id": "西湖-景区介绍_013::chunk_0000",
+          "rank": 10,
+          "score": 0.5627622
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0002",
+          "rank": 11,
+          "score": 0.562577
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0001",
+          "rank": 12,
+          "score": 0.55888414
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "score": 0.7962760403752327,
+          "rank": 1
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "score": 0.7155113741755486,
+          "rank": 2
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0004",
+          "score": 0.7077521830797195,
+          "rank": 3
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0001",
+          "score": 0.6999369412660599,
+          "rank": 4
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "score": 0.6980097442865372,
+          "rank": 5
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "score": 0.6118113175034523,
+          "rank": 6
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "score": 0.5698155462741852,
+          "rank": 7
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0000",
+          "score": 0.5582233518362045,
+          "rank": 8
+        },
+        {
+          "chunk_id": "西湖-景区介绍_013::chunk_0000",
+          "score": 0.5573588833212852,
+          "rank": 9
+        },
+        {
+          "chunk_id": "西湖-景区介绍_028::chunk_0000",
+          "score": 0.5542381778359413,
+          "rank": 10
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0001",
+          "score": 0.5388830900192261,
+          "rank": 11
+        },
+        {
+          "chunk_id": "西湖-景区介绍_027::chunk_0000",
+          "score": 0.5371087715029716,
+          "rank": 12
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0002",
+          "score": 0.536869965493679,
+          "rank": 13
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0002",
+          "score": 0.5363255068659782,
+          "rank": 14
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0000",
+          "score": 0.5292810946702957,
+          "rank": 15
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0001",
+          "score": 0.5269303396344185,
+          "rank": 16
+        },
+        {
+          "chunk_id": "西湖-景区介绍_014::chunk_0000",
+          "score": 0.5230905041098595,
+          "rank": 17
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0003",
+          "score": 0.5206139981746674,
+          "rank": 18
+        },
+        {
+          "chunk_id": "西湖-景区介绍_003::chunk_0000",
+          "score": 0.5195214152336121,
+          "rank": 19
+        },
+        {
+          "chunk_id": "西湖-景区介绍_005::chunk_0000",
+          "score": 0.5186539813876152,
+          "rank": 20
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0001",
+          "score": 0.507518582046032,
+          "rank": 21
+        },
+        {
+          "chunk_id": "西湖-景区介绍_010::chunk_0000",
+          "score": 0.49228857457637787,
+          "rank": 22
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0003",
+          "score": 0.4918217882514,
+          "rank": 23
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "score": 0.4812386967241764,
+          "rank": 24
+        },
+        {
+          "chunk_id": "西湖-景区介绍_011::chunk_0000",
+          "score": 0.4808843471109867,
+          "rank": 25
+        },
+        {
+          "chunk_id": "西湖-景区介绍_007::chunk_0000",
+          "score": 0.47934581339359283,
+          "rank": 26
+        },
+        {
+          "chunk_id": "西湖-景区介绍_023::chunk_0000",
+          "score": 0.477601133286953,
+          "rank": 27
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0001",
+          "score": 0.47633931785821915,
+          "rank": 28
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0000",
+          "score": 0.475838266313076,
+          "rank": 29
+        },
+        {
+          "chunk_id": "西湖-景区介绍_009::chunk_0000",
+          "score": 0.4751853682100773,
+          "rank": 30
+        },
+        {
+          "chunk_id": "西湖-景区介绍_021::chunk_0000",
+          "score": 0.46444496884942055,
+          "rank": 31
+        },
+        {
+          "chunk_id": "西湖-景区介绍_024::chunk_0000",
+          "score": 0.45304538309574127,
+          "rank": 32
+        },
+        {
+          "chunk_id": "西湖-景区介绍_012::chunk_0000",
+          "score": 0.4427153244614601,
+          "rank": 33
+        },
+        {
+          "chunk_id": "西湖-景区介绍_006::chunk_0000",
+          "score": 0.44075606763362885,
+          "rank": 34
+        },
+        {
+          "chunk_id": "西湖-景区介绍_015::chunk_0000",
+          "score": 0.43966762349009514,
+          "rank": 35
+        },
+        {
+          "chunk_id": "西湖-景区介绍_022::chunk_0000",
+          "score": 0.4376210384070873,
+          "rank": 36
+        },
+        {
+          "chunk_id": "西湖-景区介绍_026::chunk_0000",
+          "score": 0.43336714431643486,
+          "rank": 37
+        },
+        {
+          "chunk_id": "西湖-景区介绍_018::chunk_0000",
+          "score": 0.4283917620778084,
+          "rank": 38
+        },
+        {
+          "chunk_id": "西湖-景区介绍_029::chunk_0000",
+          "score": 0.4273315258324146,
+          "rank": 39
+        },
+        {
+          "chunk_id": "西湖-景区介绍_019::chunk_0000",
+          "score": 0.4254605248570442,
+          "rank": 40
+        },
+        {
+          "chunk_id": "西湖-景区介绍_002::chunk_0000",
+          "score": 0.41527628898620605,
+          "rank": 41
+        },
+        {
+          "chunk_id": "西湖-景区介绍_017::chunk_0000",
+          "score": 0.4001372754573822,
+          "rank": 42
+        },
+        {
+          "chunk_id": "西湖-景区介绍_025::chunk_0000",
+          "score": 0.3751569949090481,
+          "rank": 43
+        },
+        {
+          "chunk_id": "西湖-景区介绍_016::chunk_0000",
+          "score": 0.3611612282693386,
+          "rank": 44
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 44,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 4,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

@@ -1,0 +1,736 @@
+{
+  "name": "query_000025.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "介绍一下十三陵神道上的华表、，1994年修葺时做了什么？",
+  "subqueries": [
+    "十三陵神道 华表 介绍",
+    "十三陵 华表 1994年 修缮",
+    "十三陵神道 华表 建筑特点",
+    "明十三陵 华表 1994年 修葺 内容"
+  ],
+  "component_texts": [
+    "介绍一下十三陵神道上的华表、，1994年修葺时做了什么？",
+    "十三陵神道 华表 介绍",
+    "十三陵 华表 1994年 修缮",
+    "十三陵神道 华表 建筑特点",
+    "明十三陵 华表 1994年 修葺 内容"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "relative_location": {
+        "labels": [
+          "明十三陵"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "main"
+      },
+      "scenic_spot": {
+        "labels": [
+          "神道",
+          "华表"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "external_transport": {
+        "labels": [
+          "神道"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "entity_category": {
+        "labels": [
+          "神道"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "relative_location",
+      "scenic_spot",
+      "external_transport",
+      "entity_category"
+    ],
+    "spot_names": [
+      "明十三陵"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "十三陵神道",
+        "canonical_name": "十三陵神道",
+        "scenic_area": "明十三陵",
+        "entity_type": "poi"
+      },
+      {
+        "mention": "明十三陵",
+        "canonical_name": "明十三陵",
+        "scenic_area": "明十三陵",
+        "entity_type": "scenic_area"
+      },
+      {
+        "mention": "十三陵",
+        "canonical_name": "明十三陵",
+        "scenic_area": "明十三陵",
+        "entity_type": "scenic_area"
+      },
+      {
+        "mention": "神道",
+        "canonical_name": "十三陵神道",
+        "scenic_area": "明十三陵",
+        "entity_type": "poi"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 0.85,
+    "routing": {
+      "main_dimension": "relative_location",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 4,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "lexical_label",
+        "lexical_label+strict_intent"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "十三陵神道",
+      "三陵神道",
+      "十三陵神",
+      "明十三陵",
+      "三陵神",
+      "十三陵",
+      "明十三",
+      "陵神道",
+      "三陵",
+      "修缮",
+      "修葺",
+      "华表"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "明十三陵-景区介绍_000::chunk_0007"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "十三陵神道 华表 介绍 | 十三陵 华表 1994年 修缮 | 十三陵神道 华表 建筑特点 | 明十三陵 华表 1994年 修葺 内容",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 7,
+        "miss": false,
+        "rr": 0.14285714,
+        "result_count": 15,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": false,
+        "gold_recall_at_5": 0.0,
+        "precision_at_5": 0.0,
+        "ndcg_at_5": 0.0,
+        "rr_at_5": 0.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.33333333,
+        "rr_at_10": 0.14285714,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.33333333,
+        "rr_at_15": 0.14285714,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.33333333,
+        "rr_at_20": 0.14285714
+      },
+      "results": [
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "rank": 1,
+          "score": 0.5881379
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0000",
+          "rank": 2,
+          "score": 0.5684524
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "rank": 3,
+          "score": 0.5683774
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0000",
+          "rank": 4,
+          "score": 0.56085026
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0015",
+          "rank": 5,
+          "score": 0.5568791
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0012",
+          "rank": 6,
+          "score": 0.55610406
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0007",
+          "rank": 7,
+          "score": 0.55289876
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0008",
+          "rank": 8,
+          "score": 0.53537095
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0002",
+          "rank": 9,
+          "score": 0.5275962
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "rank": 10,
+          "score": 0.5213917
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0011",
+          "rank": 11,
+          "score": 0.5203495
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0019",
+          "rank": 12,
+          "score": 0.51454896
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "rank": 13,
+          "score": 0.5067574
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0001",
+          "rank": 14,
+          "score": 0.48153087
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0006",
+          "rank": 15,
+          "score": 0.47929052
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "介绍一下十三陵神道上的华表、，1994年修葺时做了什么？",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 11,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0007",
+          "rank": 1,
+          "score": 0.5341761
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "rank": 2,
+          "score": 0.51317364
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0008",
+          "rank": 3,
+          "score": 0.50510824
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "rank": 4,
+          "score": 0.48079878
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0000",
+          "rank": 5,
+          "score": 0.47617036
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0015",
+          "rank": 6,
+          "score": 0.47468546
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0011",
+          "rank": 7,
+          "score": 0.46865195
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "rank": 8,
+          "score": 0.46369302
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "rank": 9,
+          "score": 0.45625785
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0019",
+          "rank": 10,
+          "score": 0.45317167
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0002",
+          "rank": 11,
+          "score": 0.4396382
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "介绍一下十三陵神道上的华表、，1994年修葺时做了什么？ | 十三陵神道 华表 介绍 | 十三陵 华表 1994年 修缮 | 十三陵神道 华表 建筑特点 | 明十三陵 华表 1994年 修葺 内容",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 2,
+        "miss": false,
+        "rr": 0.5,
+        "result_count": 14,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.63092975,
+        "rr_at_5": 0.5,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.63092975,
+        "rr_at_10": 0.5,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.63092975,
+        "rr_at_15": 0.5,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.63092975,
+        "rr_at_20": 0.5
+      },
+      "results": [
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "rank": 1,
+          "score": 0.5593622
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0007",
+          "rank": 2,
+          "score": 0.5557538
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "rank": 3,
+          "score": 0.5400778
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0000",
+          "rank": 4,
+          "score": 0.53845274
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0000",
+          "rank": 5,
+          "score": 0.5369107
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0012",
+          "rank": 6,
+          "score": 0.5261597
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0015",
+          "rank": 7,
+          "score": 0.52248293
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "rank": 8,
+          "score": 0.5210124
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0008",
+          "rank": 9,
+          "score": 0.5150238
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0019",
+          "rank": 10,
+          "score": 0.5063492
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "rank": 11,
+          "score": 0.50271285
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0002",
+          "rank": 12,
+          "score": 0.49273992
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0011",
+          "rank": 13,
+          "score": 0.4924221
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0006",
+          "rank": 14,
+          "score": 0.4750516
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "介绍一下十三陵神道上的华表、，1994年修葺时做了什么？",
+        "十三陵神道 华表 介绍",
+        "十三陵 华表 1994年 修缮",
+        "十三陵神道 华表 建筑特点",
+        "明十三陵 华表 1994年 修葺 内容"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 14,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0007",
+          "rank": 1,
+          "score": 0.592134
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "rank": 2,
+          "score": 0.57835746
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0008",
+          "rank": 3,
+          "score": 0.56000876
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0000",
+          "rank": 4,
+          "score": 0.557127
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0015",
+          "rank": 5,
+          "score": 0.5487082
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "rank": 6,
+          "score": 0.5454563
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0011",
+          "rank": 7,
+          "score": 0.53942364
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "rank": 8,
+          "score": 0.5293182
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0012",
+          "rank": 9,
+          "score": 0.5228575
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0002",
+          "rank": 10,
+          "score": 0.517333
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0019",
+          "rank": 11,
+          "score": 0.51089275
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0000",
+          "rank": 12,
+          "score": 0.4985915
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "rank": 13,
+          "score": 0.49738732
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0006",
+          "rank": 14,
+          "score": 0.47858918
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0007",
+          "score": 0.6033906489610672,
+          "rank": 1
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0008",
+          "score": 0.5179698616266251,
+          "rank": 2
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "score": 0.5124831423163414,
+          "rank": 3
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "score": 0.5087343156337738,
+          "rank": 4
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0015",
+          "score": 0.5003402568399906,
+          "rank": 5
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "score": 0.49482962489128113,
+          "rank": 6
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0000",
+          "score": 0.4897155649960041,
+          "rank": 7
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0019",
+          "score": 0.48667630553245544,
+          "rank": 8
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0006",
+          "score": 0.47825874388217926,
+          "rank": 9
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0011",
+          "score": 0.4659252315759659,
+          "rank": 10
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0012",
+          "score": 0.4619559422135353,
+          "rank": 11
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "score": 0.4590173587203026,
+          "rank": 12
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0002",
+          "score": 0.4429812841117382,
+          "rank": 13
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0000",
+          "score": 0.4395783543586731,
+          "rank": 14
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0016",
+          "score": 0.43400000408291817,
+          "rank": 15
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0014",
+          "score": 0.42475569248199463,
+          "rank": 16
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0009",
+          "score": 0.41970521211624146,
+          "rank": 17
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0001",
+          "score": 0.4087902717292309,
+          "rank": 18
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0018",
+          "score": 0.4085448533296585,
+          "rank": 19
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0001",
+          "score": 0.3970297537744045,
+          "rank": 20
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0010",
+          "score": 0.37219666689634323,
+          "rank": 21
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0017",
+          "score": 0.3298989459872246,
+          "rank": 22
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0002",
+          "score": 0.2827964462339878,
+          "rank": 23
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 23,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 5,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

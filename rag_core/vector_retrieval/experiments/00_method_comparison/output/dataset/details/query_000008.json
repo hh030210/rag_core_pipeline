@@ -1,0 +1,698 @@
+{
+  "name": "query_000008.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "十三陵陵区周围利用哪些天然山口修筑了哪些防御设施？",
+  "subqueries": [
+    "十三陵陵区周围天然山口",
+    "十三陵陵区防御设施",
+    "十三陵陵区山口关隘城墙",
+    "十三陵陵区防洪排水设施"
+  ],
+  "component_texts": [
+    "十三陵陵区周围利用哪些天然山口修筑了哪些防御设施？",
+    "十三陵陵区周围天然山口",
+    "十三陵陵区防御设施",
+    "十三陵陵区山口关隘城墙",
+    "十三陵陵区防洪排水设施"
+  ],
+  "query_analysis": {
+    "constraints": {},
+    "active_dimensions": [],
+    "spot_names": [
+      "明十三陵"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "十三陵",
+        "canonical_name": "明十三陵",
+        "scenic_area": "明十三陵",
+        "entity_type": "scenic_area"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 0.0,
+    "routing": {
+      "main_dimension": "",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 0,
+      "fallback_used": true,
+      "deterministic_enrichment_used": false,
+      "recovery_sources": [],
+      "parser_mode": "deterministic",
+      "llm_attempts": 0,
+      "empty_retry_attempted": true,
+      "cached_error_retry": false,
+      "llm_error": ""
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "十三陵陵",
+      "天然山口",
+      "防御设施",
+      "陵区周围",
+      "三陵陵",
+      "区周围",
+      "十三陵",
+      "天然山",
+      "御设施",
+      "然山口",
+      "防御设",
+      "陵区周"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "明十三陵-景区介绍_000::chunk_0000"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "十三陵陵区周围天然山口 | 十三陵陵区防御设施 | 十三陵陵区山口关隘城墙 | 十三陵陵区防洪排水设施",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 5,
+        "miss": false,
+        "rr": 0.2,
+        "result_count": 13,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.38685281,
+        "rr_at_5": 0.2,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.38685281,
+        "rr_at_10": 0.2,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.38685281,
+        "rr_at_15": 0.2,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.38685281,
+        "rr_at_20": 0.2
+      },
+      "results": [
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0015",
+          "rank": 1,
+          "score": 0.62139195
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0012",
+          "rank": 2,
+          "score": 0.616449
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0000",
+          "rank": 3,
+          "score": 0.60277027
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0008",
+          "rank": 4,
+          "score": 0.57508725
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0000",
+          "rank": 5,
+          "score": 0.57177067
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "rank": 6,
+          "score": 0.5703044
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0002",
+          "rank": 7,
+          "score": 0.5678401
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0011",
+          "rank": 8,
+          "score": 0.56191826
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "rank": 9,
+          "score": 0.54464567
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0019",
+          "rank": 10,
+          "score": 0.5296711
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0001",
+          "rank": 11,
+          "score": 0.5222616
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "rank": 12,
+          "score": 0.5085115
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0007",
+          "rank": 13,
+          "score": 0.49956548
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "十三陵陵区周围利用哪些天然山口修筑了哪些防御设施？",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 2,
+        "miss": false,
+        "rr": 0.5,
+        "result_count": 14,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.63092975,
+        "rr_at_5": 0.5,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.63092975,
+        "rr_at_10": 0.5,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.63092975,
+        "rr_at_15": 0.5,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.63092975,
+        "rr_at_20": 0.5
+      },
+      "results": [
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0015",
+          "rank": 1,
+          "score": 0.6313443
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0000",
+          "rank": 2,
+          "score": 0.60456276
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0011",
+          "rank": 3,
+          "score": 0.5947238
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0002",
+          "rank": 4,
+          "score": 0.5559491
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0019",
+          "rank": 5,
+          "score": 0.5448885
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "rank": 6,
+          "score": 0.5443308
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0008",
+          "rank": 7,
+          "score": 0.54066336
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "rank": 8,
+          "score": 0.5363946
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0012",
+          "rank": 9,
+          "score": 0.53424305
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0016",
+          "rank": 10,
+          "score": 0.48209494
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0014",
+          "rank": 11,
+          "score": 0.47563982
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "rank": 12,
+          "score": 0.47077137
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0000",
+          "rank": 13,
+          "score": 0.4638201
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0007",
+          "rank": 14,
+          "score": 0.44379658
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "十三陵陵区周围利用哪些天然山口修筑了哪些防御设施？ | 十三陵陵区周围天然山口 | 十三陵陵区防御设施 | 十三陵陵区山口关隘城墙 | 十三陵陵区防洪排水设施",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 3,
+        "miss": false,
+        "rr": 0.33333333,
+        "result_count": 15,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.5,
+        "rr_at_5": 0.33333333,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.5,
+        "rr_at_10": 0.33333333,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.5,
+        "rr_at_15": 0.33333333,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.5,
+        "rr_at_20": 0.33333333
+      },
+      "results": [
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0015",
+          "rank": 1,
+          "score": 0.61633253
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0012",
+          "rank": 2,
+          "score": 0.58043194
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0000",
+          "rank": 3,
+          "score": 0.5779873
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0011",
+          "rank": 4,
+          "score": 0.56606936
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0000",
+          "rank": 5,
+          "score": 0.5621748
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0002",
+          "rank": 6,
+          "score": 0.56107986
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0008",
+          "rank": 7,
+          "score": 0.55206645
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "rank": 8,
+          "score": 0.5501411
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0019",
+          "rank": 9,
+          "score": 0.5464356
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "rank": 10,
+          "score": 0.5355879
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0016",
+          "rank": 11,
+          "score": 0.49784338
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0001",
+          "rank": 12,
+          "score": 0.48330647
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "rank": 13,
+          "score": 0.47449884
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0007",
+          "rank": 14,
+          "score": 0.47389486
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "rank": 15,
+          "score": 0.4680271
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "十三陵陵区周围利用哪些天然山口修筑了哪些防御设施？",
+        "十三陵陵区周围天然山口",
+        "十三陵陵区防御设施",
+        "十三陵陵区山口关隘城墙",
+        "十三陵陵区防洪排水设施"
+      ],
+      "metrics": {
+        "first_gold_rank": 2,
+        "miss": false,
+        "rr": 0.5,
+        "result_count": 16,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.63092975,
+        "rr_at_5": 0.5,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.63092975,
+        "rr_at_10": 0.5,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.63092975,
+        "rr_at_15": 0.5,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.63092975,
+        "rr_at_20": 0.5
+      },
+      "results": [
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0015",
+          "rank": 1,
+          "score": 0.64541954
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0000",
+          "rank": 2,
+          "score": 0.6262809
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0011",
+          "rank": 3,
+          "score": 0.6150663
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0012",
+          "rank": 4,
+          "score": 0.58612406
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0002",
+          "rank": 5,
+          "score": 0.5815637
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0008",
+          "rank": 6,
+          "score": 0.5718313
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "rank": 7,
+          "score": 0.56492865
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "rank": 8,
+          "score": 0.5593716
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0019",
+          "rank": 9,
+          "score": 0.5546476
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0000",
+          "rank": 10,
+          "score": 0.52964276
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0016",
+          "rank": 11,
+          "score": 0.47942907
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "rank": 12,
+          "score": 0.4741959
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0014",
+          "rank": 13,
+          "score": 0.47369587
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0007",
+          "rank": 14,
+          "score": 0.4729842
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0001",
+          "rank": 15,
+          "score": 0.47003427
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "rank": 16,
+          "score": 0.4668939
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0015",
+          "score": 0.626445822417736,
+          "rank": 1
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0011",
+          "score": 0.6220669597387314,
+          "rank": 2
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0000",
+          "score": 0.5748012587428093,
+          "rank": 3
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0019",
+          "score": 0.568471871316433,
+          "rank": 4
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0012",
+          "score": 0.563104011118412,
+          "rank": 5
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "score": 0.5523542612791061,
+          "rank": 6
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0002",
+          "score": 0.5497438758611679,
+          "rank": 7
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0008",
+          "score": 0.5491663068532944,
+          "rank": 8
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "score": 0.5372658148407936,
+          "rank": 9
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0016",
+          "score": 0.5329425781965256,
+          "rank": 10
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0014",
+          "score": 0.5108231045305729,
+          "rank": 11
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "score": 0.5068923011422157,
+          "rank": 12
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0007",
+          "score": 0.48759420961141586,
+          "rank": 13
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0000",
+          "score": 0.48644548282027245,
+          "rank": 14
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "score": 0.46335162594914436,
+          "rank": 15
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0018",
+          "score": 0.45793139934539795,
+          "rank": 16
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0001",
+          "score": 0.44835908338427544,
+          "rank": 17
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0006",
+          "score": 0.4426511377096176,
+          "rank": 18
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0009",
+          "score": 0.4399889260530472,
+          "rank": 19
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0001",
+          "score": 0.43914908543229103,
+          "rank": 20
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0010",
+          "score": 0.43829822912812233,
+          "rank": 21
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0017",
+          "score": 0.36815154179930687,
+          "rank": 22
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0002",
+          "score": 0.2533813137561083,
+          "rank": 23
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 3,
+        "miss": false,
+        "rr": 0.33333333,
+        "result_count": 23,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.5,
+        "rr_at_5": 0.33333333,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.5,
+        "rr_at_10": 0.33333333,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.5,
+        "rr_at_15": 0.33333333,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.5,
+        "rr_at_20": 0.33333333
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 5,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

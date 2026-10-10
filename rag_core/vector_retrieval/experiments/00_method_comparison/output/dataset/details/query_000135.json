@@ -1,0 +1,1203 @@
+{
+  "name": "query_000135.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "五支祠是做什么用的，里面有什么看头",
+  "subqueries": [
+    "五支祠 功能 用途",
+    "五支祠 参观 看点 特色",
+    "五支祠 历史 建筑"
+  ],
+  "component_texts": [
+    "五支祠是做什么用的，里面有什么看头",
+    "五支祠 功能 用途",
+    "五支祠 参观 看点 特色",
+    "五支祠 历史 建筑"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "scenic_spot": {
+        "labels": [
+          "五支祠"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "guide_facility": {
+        "labels": [
+          "五支祠"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "associated_figure": {
+        "labels": [
+          "五支"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "scenic_spot",
+      "guide_facility",
+      "associated_figure"
+    ],
+    "spot_names": [],
+    "resolved_poi_entities": [],
+    "precise_entity_terms": [],
+    "confidence": 0.7,
+    "routing": {
+      "main_dimension": "",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 3,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "lexical_label"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "五支祠",
+      "五支",
+      "功能",
+      "支祠",
+      "特色"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "南孔庙-景区介绍_047::chunk_0000"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "五支祠 功能 用途 | 五支祠 参观 看点 特色 | 五支祠 历史 建筑",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "南孔庙-景区介绍_047::chunk_0000",
+          "rank": 1,
+          "score": 0.6810811
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_046::chunk_0000",
+          "rank": 2,
+          "score": 0.59462845
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_049::chunk_0000",
+          "rank": 3,
+          "score": 0.5921867
+        },
+        {
+          "chunk_id": "西湖-景区介绍_026::chunk_0000",
+          "rank": 4,
+          "score": 0.54616463
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_033::chunk_0000",
+          "rank": 5,
+          "score": 0.531911
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_048::chunk_0000",
+          "rank": 6,
+          "score": 0.5287385
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_061::chunk_0000",
+          "rank": 7,
+          "score": 0.51843727
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 8,
+          "score": 0.4950073
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_071::chunk_0000",
+          "rank": 9,
+          "score": 0.4872033
+        },
+        {
+          "chunk_id": "西湖-景区介绍_025::chunk_0000",
+          "rank": 10,
+          "score": 0.48675248
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 11,
+          "score": 0.4828277
+        },
+        {
+          "chunk_id": "西湖-景区介绍_015::chunk_0000",
+          "rank": 12,
+          "score": 0.47827795
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_013::chunk_0000",
+          "rank": 13,
+          "score": 0.47778797
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0002",
+          "rank": 14,
+          "score": 0.47716004
+        },
+        {
+          "chunk_id": "西湖-景区介绍_007::chunk_0000",
+          "rank": 15,
+          "score": 0.47616005
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "rank": 16,
+          "score": 0.47595885
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_004::chunk_0000",
+          "rank": 17,
+          "score": 0.4756438
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0007",
+          "rank": 18,
+          "score": 0.47242236
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0000",
+          "rank": 19,
+          "score": 0.47059786
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0002",
+          "rank": 20,
+          "score": 0.4689986
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "五支祠是做什么用的，里面有什么看头",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "南孔庙-景区介绍_047::chunk_0000",
+          "rank": 1,
+          "score": 0.68242264
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_046::chunk_0000",
+          "rank": 2,
+          "score": 0.6025525
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_049::chunk_0000",
+          "rank": 3,
+          "score": 0.60092723
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_061::chunk_0000",
+          "rank": 4,
+          "score": 0.549919
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_048::chunk_0000",
+          "rank": 5,
+          "score": 0.52534866
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_033::chunk_0000",
+          "rank": 6,
+          "score": 0.5145457
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_051::chunk_0000",
+          "rank": 7,
+          "score": 0.49897784
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 8,
+          "score": 0.48457295
+        },
+        {
+          "chunk_id": "西湖-景区介绍_026::chunk_0000",
+          "rank": 9,
+          "score": 0.4778464
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0001",
+          "rank": 10,
+          "score": 0.47727108
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0010",
+          "rank": 11,
+          "score": 0.4724428
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_063::chunk_0000",
+          "rank": 12,
+          "score": 0.45853555
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0005",
+          "rank": 13,
+          "score": 0.45852238
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_009::chunk_0000",
+          "rank": 14,
+          "score": 0.45827264
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_081::chunk_0001",
+          "rank": 15,
+          "score": 0.45349035
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_079::chunk_0000",
+          "rank": 16,
+          "score": 0.4528714
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0007",
+          "rank": 17,
+          "score": 0.45263496
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "rank": 18,
+          "score": 0.45234305
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_003::chunk_0000",
+          "rank": 19,
+          "score": 0.45016444
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0008",
+          "rank": 20,
+          "score": 0.44886458
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "五支祠是做什么用的，里面有什么看头 | 五支祠 功能 用途 | 五支祠 参观 看点 特色 | 五支祠 历史 建筑",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "南孔庙-景区介绍_047::chunk_0000",
+          "rank": 1,
+          "score": 0.66482335
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_049::chunk_0000",
+          "rank": 2,
+          "score": 0.60202384
+        },
+        {
+          "chunk_id": "西湖-景区介绍_026::chunk_0000",
+          "rank": 3,
+          "score": 0.58040714
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_046::chunk_0000",
+          "rank": 4,
+          "score": 0.56920207
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_033::chunk_0000",
+          "rank": 5,
+          "score": 0.5361914
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 6,
+          "score": 0.53341424
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_061::chunk_0000",
+          "rank": 7,
+          "score": 0.5186404
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_048::chunk_0000",
+          "rank": 8,
+          "score": 0.51738906
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 9,
+          "score": 0.5158481
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_013::chunk_0000",
+          "rank": 10,
+          "score": 0.5052804
+        },
+        {
+          "chunk_id": "西湖-景区介绍_025::chunk_0000",
+          "rank": 11,
+          "score": 0.5047207
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_071::chunk_0000",
+          "rank": 12,
+          "score": 0.5040322
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0007",
+          "rank": 13,
+          "score": 0.50078565
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0002",
+          "rank": 14,
+          "score": 0.49899983
+        },
+        {
+          "chunk_id": "西湖-景区介绍_007::chunk_0000",
+          "rank": 15,
+          "score": 0.49871832
+        },
+        {
+          "chunk_id": "西湖-景区介绍_015::chunk_0000",
+          "rank": 16,
+          "score": 0.49761486
+        },
+        {
+          "chunk_id": "西湖-景区介绍_022::chunk_0000",
+          "rank": 17,
+          "score": 0.49701485
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "rank": 18,
+          "score": 0.49570718
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_009::chunk_0000",
+          "rank": 19,
+          "score": 0.49565983
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0000",
+          "rank": 20,
+          "score": 0.49508688
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "五支祠是做什么用的，里面有什么看头",
+        "五支祠 功能 用途",
+        "五支祠 参观 看点 特色",
+        "五支祠 历史 建筑"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "南孔庙-景区介绍_047::chunk_0000",
+          "rank": 1,
+          "score": 0.7289741
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_046::chunk_0000",
+          "rank": 2,
+          "score": 0.67440206
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_049::chunk_0000",
+          "rank": 3,
+          "score": 0.6355783
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_048::chunk_0000",
+          "rank": 4,
+          "score": 0.58536303
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_061::chunk_0000",
+          "rank": 5,
+          "score": 0.5778992
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_033::chunk_0000",
+          "rank": 6,
+          "score": 0.5434226
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 7,
+          "score": 0.51267314
+        },
+        {
+          "chunk_id": "西湖-景区介绍_026::chunk_0000",
+          "rank": 8,
+          "score": 0.5094807
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_051::chunk_0000",
+          "rank": 9,
+          "score": 0.50822216
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "rank": 10,
+          "score": 0.48606965
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0001",
+          "rank": 11,
+          "score": 0.48507276
+        },
+        {
+          "chunk_id": "西湖-景区介绍_025::chunk_0000",
+          "rank": 12,
+          "score": 0.48367786
+        },
+        {
+          "chunk_id": "西湖-景区介绍_015::chunk_0000",
+          "rank": 13,
+          "score": 0.4815346
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_049::chunk_0001",
+          "rank": 14,
+          "score": 0.48054892
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0010",
+          "rank": 15,
+          "score": 0.47975573
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_071::chunk_0000",
+          "rank": 16,
+          "score": 0.47871062
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_009::chunk_0000",
+          "rank": 17,
+          "score": 0.47488812
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_004::chunk_0000",
+          "rank": 18,
+          "score": 0.47064495
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0002",
+          "rank": 19,
+          "score": 0.47043133
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 20,
+          "score": 0.4688838
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "南孔庙-景区介绍_047::chunk_0000",
+          "score": 0.666420228779316,
+          "rank": 1
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_046::chunk_0000",
+          "score": 0.6009037718176842,
+          "rank": 2
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_049::chunk_0000",
+          "score": 0.5923721194267273,
+          "rank": 3
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_061::chunk_0000",
+          "score": 0.5527716130018234,
+          "rank": 4
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_048::chunk_0000",
+          "score": 0.5245148539543152,
+          "rank": 5
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_049::chunk_0001",
+          "score": 0.5074551105499268,
+          "rank": 6
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_033::chunk_0000",
+          "score": 0.5018997527658939,
+          "rank": 7
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_051::chunk_0000",
+          "score": 0.49608927220106125,
+          "rank": 8
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_063::chunk_0000",
+          "score": 0.47909070551395416,
+          "rank": 9
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "score": 0.4784375801682472,
+          "rank": 10
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0000",
+          "score": 0.47489871829748154,
+          "rank": 11
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "score": 0.4635640010237694,
+          "rank": 12
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0010",
+          "score": 0.4623417556285858,
+          "rank": 13
+        },
+        {
+          "chunk_id": "西湖-景区介绍_026::chunk_0000",
+          "score": 0.46223000064492226,
+          "rank": 14
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "score": 0.46161698549985886,
+          "rank": 15
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_081::chunk_0001",
+          "score": 0.4611668847501278,
+          "rank": 16
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "score": 0.46079787984490395,
+          "rank": 17
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_079::chunk_0000",
+          "score": 0.45790429413318634,
+          "rank": 18
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_083::chunk_0001",
+          "score": 0.45597974583506584,
+          "rank": 19
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "score": 0.4531611390411854,
+          "rank": 20
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_009::chunk_0000",
+          "score": 0.45226410776376724,
+          "rank": 21
+        },
+        {
+          "chunk_id": "西湖-景区介绍_010::chunk_0000",
+          "score": 0.4508429057896137,
+          "rank": 22
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_033::chunk_0001",
+          "score": 0.4505164138972759,
+          "rank": 23
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0007",
+          "score": 0.44951291754841805,
+          "rank": 24
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0001",
+          "score": 0.44930003210902214,
+          "rank": 25
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_065::chunk_0000",
+          "score": 0.4462331347167492,
+          "rank": 26
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_013::chunk_0000",
+          "score": 0.4462224766612053,
+          "rank": 27
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0001",
+          "score": 0.44561877846717834,
+          "rank": 28
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_001::chunk_0000",
+          "score": 0.4452366605401039,
+          "rank": 29
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_007::chunk_0001",
+          "score": 0.4437045082449913,
+          "rank": 30
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_015::chunk_0000",
+          "score": 0.44321804866194725,
+          "rank": 31
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_003::chunk_0000",
+          "score": 0.44229256361722946,
+          "rank": 32
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_013::chunk_0001",
+          "score": 0.44224224239587784,
+          "rank": 33
+        },
+        {
+          "chunk_id": "西湖-景区介绍_015::chunk_0000",
+          "score": 0.43961770460009575,
+          "rank": 34
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_007::chunk_0000",
+          "score": 0.43925412371754646,
+          "rank": 35
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0011",
+          "score": 0.4391099810600281,
+          "rank": 36
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0005",
+          "score": 0.43888770043849945,
+          "rank": 37
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_035::chunk_0000",
+          "score": 0.4380575120449066,
+          "rank": 38
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0008",
+          "score": 0.4377432316541672,
+          "rank": 39
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "score": 0.4375137835741043,
+          "rank": 40
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0007",
+          "score": 0.4373362064361572,
+          "rank": 41
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0002",
+          "score": 0.43725665658712387,
+          "rank": 42
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_008::chunk_0000",
+          "score": 0.43697700649499893,
+          "rank": 43
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_004::chunk_0000",
+          "score": 0.436706755310297,
+          "rank": 44
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_071::chunk_0000",
+          "score": 0.43664412945508957,
+          "rank": 45
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0004",
+          "score": 0.436163567006588,
+          "rank": 46
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0002",
+          "score": 0.435314666479826,
+          "rank": 47
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_025::chunk_0000",
+          "score": 0.4351273253560066,
+          "rank": 48
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0000",
+          "score": 0.43503347784280777,
+          "rank": 49
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_079::chunk_0001",
+          "score": 0.4342320114374161,
+          "rank": 50
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_015::chunk_0000",
+          "score": 0.43421899527311325,
+          "rank": 51
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0001",
+          "score": 0.4342108815908432,
+          "rank": 52
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "score": 0.43411510810256004,
+          "rank": 53
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_041::chunk_0000",
+          "score": 0.4331197887659073,
+          "rank": 54
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "score": 0.4329482614994049,
+          "rank": 55
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0008",
+          "score": 0.43278536200523376,
+          "rank": 56
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_017::chunk_0000",
+          "score": 0.4326878525316715,
+          "rank": 57
+        },
+        {
+          "chunk_id": "西湖-景区介绍_025::chunk_0000",
+          "score": 0.43267980217933655,
+          "rank": 58
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0016",
+          "score": 0.43263455852866173,
+          "rank": 59
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "score": 0.4324711449444294,
+          "rank": 60
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0003",
+          "score": 0.43197843059897423,
+          "rank": 61
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0011",
+          "score": 0.43191950768232346,
+          "rank": 62
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_053::chunk_0000",
+          "score": 0.4317215718328953,
+          "rank": 63
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_039::chunk_0000",
+          "score": 0.4316825792193413,
+          "rank": 64
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0015",
+          "score": 0.43165718764066696,
+          "rank": 65
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_015::chunk_0000",
+          "score": 0.4309615381062031,
+          "rank": 66
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_067::chunk_0000",
+          "score": 0.43072130531072617,
+          "rank": 67
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0012",
+          "score": 0.43063073977828026,
+          "rank": 68
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "score": 0.43033091351389885,
+          "rank": 69
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0003",
+          "score": 0.4302893579006195,
+          "rank": 70
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_059::chunk_0000",
+          "score": 0.430123221129179,
+          "rank": 71
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_045::chunk_0000",
+          "score": 0.4298786260187626,
+          "rank": 72
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0015",
+          "score": 0.4297276735305786,
+          "rank": 73
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "score": 0.42953508347272873,
+          "rank": 74
+        },
+        {
+          "chunk_id": "西湖-景区介绍_014::chunk_0000",
+          "score": 0.4294229634106159,
+          "rank": 75
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0001",
+          "score": 0.42885950207710266,
+          "rank": 76
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0001",
+          "score": 0.4276205599308014,
+          "rank": 77
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "score": 0.42737072706222534,
+          "rank": 78
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0000",
+          "score": 0.4271415248513222,
+          "rank": 79
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0007",
+          "score": 0.42688046395778656,
+          "rank": 80
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "score": 0.42674289643764496,
+          "rank": 81
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_050::chunk_0000",
+          "score": 0.4265812821686268,
+          "rank": 82
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0004",
+          "score": 0.4258533976972103,
+          "rank": 83
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0000",
+          "score": 0.42584531754255295,
+          "rank": 84
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_081::chunk_0000",
+          "score": 0.4254293590784073,
+          "rank": 85
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0001",
+          "score": 0.42512329667806625,
+          "rank": 86
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "score": 0.4249667413532734,
+          "rank": 87
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_004::chunk_0000",
+          "score": 0.42483147233724594,
+          "rank": 88
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_010::chunk_0000",
+          "score": 0.42415963113307953,
+          "rank": 89
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_011::chunk_0000",
+          "score": 0.42355990782380104,
+          "rank": 90
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0005",
+          "score": 0.42303213849663734,
+          "rank": 91
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_013::chunk_0000",
+          "score": 0.422953836619854,
+          "rank": 92
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_014::chunk_0000",
+          "score": 0.4225594475865364,
+          "rank": 93
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0000",
+          "score": 0.4195484295487404,
+          "rank": 94
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0000",
+          "score": 0.41881221905350685,
+          "rank": 95
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_007::chunk_0000",
+          "score": 0.41863324865698814,
+          "rank": 96
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_075::chunk_0000",
+          "score": 0.41811423376202583,
+          "rank": 97
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0012",
+          "score": 0.4179995432496071,
+          "rank": 98
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_073::chunk_0000",
+          "score": 0.41781704500317574,
+          "rank": 99
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0007",
+          "score": 0.417007964104414,
+          "rank": 100
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 100,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 4,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

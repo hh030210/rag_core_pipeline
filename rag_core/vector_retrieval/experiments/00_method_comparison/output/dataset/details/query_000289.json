@@ -1,0 +1,1190 @@
+{
+  "name": "query_000289.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "石舫有多长？是用什么材料做的？",
+  "subqueries": [
+    "石舫 全长",
+    "石舫 建筑材料"
+  ],
+  "component_texts": [
+    "石舫有多长？是用什么材料做的？",
+    "石舫 全长",
+    "石舫 建筑材料"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "scenic_spot": {
+        "labels": [
+          "石舫"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "main"
+      },
+      "entity_category": {
+        "labels": [
+          "石舫"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "scenic_spot",
+      "entity_category"
+    ],
+    "spot_names": [],
+    "resolved_poi_entities": [],
+    "precise_entity_terms": [],
+    "confidence": 0.55,
+    "routing": {
+      "main_dimension": "scenic_spot",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 2,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "lexical_label",
+        "lexical_label+strict_intent"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "全长",
+      "材料",
+      "石舫"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "颐和园-景区介绍_012::chunk_0000"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "石舫 全长 | 石舫 建筑材料",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-景区介绍_012::chunk_0000",
+          "rank": 1,
+          "score": 0.6320609
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_011::chunk_0000",
+          "rank": 2,
+          "score": 0.50576735
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0001",
+          "rank": 3,
+          "score": 0.48013052
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_019::chunk_0000",
+          "rank": 4,
+          "score": 0.469163
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "rank": 5,
+          "score": 0.46554276
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "rank": 6,
+          "score": 0.44276804
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_013::chunk_0000",
+          "rank": 7,
+          "score": 0.44142377
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "rank": 8,
+          "score": 0.4356261
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "rank": 9,
+          "score": 0.429065
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_005::chunk_0000",
+          "rank": 10,
+          "score": 0.42459548
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 11,
+          "score": 0.42410183
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0000",
+          "rank": 12,
+          "score": 0.41450876
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0001",
+          "rank": 13,
+          "score": 0.4142894
+        },
+        {
+          "chunk_id": "西湖-景区介绍_019::chunk_0000",
+          "rank": 14,
+          "score": 0.41187388
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "rank": 15,
+          "score": 0.40989876
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "rank": 16,
+          "score": 0.40722272
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "rank": 17,
+          "score": 0.40222627
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 18,
+          "score": 0.3991872
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0010",
+          "rank": 19,
+          "score": 0.39845803
+        },
+        {
+          "chunk_id": "西湖-景区介绍_023::chunk_0000",
+          "rank": 20,
+          "score": 0.39592838
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "石舫有多长？是用什么材料做的？",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-景区介绍_012::chunk_0000",
+          "rank": 1,
+          "score": 0.71963906
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_019::chunk_0000",
+          "rank": 2,
+          "score": 0.53688216
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_011::chunk_0000",
+          "rank": 3,
+          "score": 0.5345095
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "rank": 4,
+          "score": 0.51776445
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "rank": 5,
+          "score": 0.51668406
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "rank": 6,
+          "score": 0.497335
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0000",
+          "rank": 7,
+          "score": 0.4931614
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_001::chunk_0000",
+          "rank": 8,
+          "score": 0.47939253
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "rank": 9,
+          "score": 0.47923493
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "rank": 10,
+          "score": 0.47596127
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0001",
+          "rank": 11,
+          "score": 0.4727851
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0000",
+          "rank": 12,
+          "score": 0.46890473
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_015::chunk_0000",
+          "rank": 13,
+          "score": 0.4663409
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "rank": 14,
+          "score": 0.46240932
+        },
+        {
+          "chunk_id": "西湖-景区介绍_025::chunk_0000",
+          "rank": 15,
+          "score": 0.45825386
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 16,
+          "score": 0.4568325
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "rank": 17,
+          "score": 0.4564448
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0000",
+          "rank": 18,
+          "score": 0.45610416
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "rank": 19,
+          "score": 0.4540658
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0001",
+          "rank": 20,
+          "score": 0.44785836
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "石舫有多长？是用什么材料做的？ | 石舫 全长 | 石舫 建筑材料",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-景区介绍_012::chunk_0000",
+          "rank": 1,
+          "score": 0.68682426
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_011::chunk_0000",
+          "rank": 2,
+          "score": 0.5516619
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_019::chunk_0000",
+          "rank": 3,
+          "score": 0.5238615
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "rank": 4,
+          "score": 0.51259
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0001",
+          "rank": 5,
+          "score": 0.48045284
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "rank": 6,
+          "score": 0.47845298
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0000",
+          "rank": 7,
+          "score": 0.47778234
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "rank": 8,
+          "score": 0.4729459
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "rank": 9,
+          "score": 0.4703475
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_005::chunk_0000",
+          "rank": 10,
+          "score": 0.46547458
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "rank": 11,
+          "score": 0.4647938
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0001",
+          "rank": 12,
+          "score": 0.45887437
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_013::chunk_0000",
+          "rank": 13,
+          "score": 0.4580665
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "rank": 14,
+          "score": 0.4571216
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "rank": 15,
+          "score": 0.4557108
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 16,
+          "score": 0.45339918
+        },
+        {
+          "chunk_id": "西湖-景区介绍_014::chunk_0000",
+          "rank": 17,
+          "score": 0.452295
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 18,
+          "score": 0.44758984
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_015::chunk_0000",
+          "rank": 19,
+          "score": 0.44619417
+        },
+        {
+          "chunk_id": "西湖-景区介绍_010::chunk_0000",
+          "rank": 20,
+          "score": 0.44415957
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "石舫有多长？是用什么材料做的？",
+        "石舫 全长",
+        "石舫 建筑材料"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-景区介绍_012::chunk_0000",
+          "rank": 1,
+          "score": 0.7343286
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_011::chunk_0000",
+          "rank": 2,
+          "score": 0.54344124
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_019::chunk_0000",
+          "rank": 3,
+          "score": 0.5362865
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "rank": 4,
+          "score": 0.5263251
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0001",
+          "rank": 5,
+          "score": 0.51716834
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "rank": 6,
+          "score": 0.50671685
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "rank": 7,
+          "score": 0.4998024
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "rank": 8,
+          "score": 0.49157128
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_013::chunk_0000",
+          "rank": 9,
+          "score": 0.4830835
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "rank": 10,
+          "score": 0.473634
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_001::chunk_0000",
+          "rank": 11,
+          "score": 0.4707049
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0000",
+          "rank": 12,
+          "score": 0.46837908
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_015::chunk_0000",
+          "rank": 13,
+          "score": 0.46234414
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_005::chunk_0000",
+          "rank": 14,
+          "score": 0.4594535
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0000",
+          "rank": 15,
+          "score": 0.45508027
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "rank": 16,
+          "score": 0.4547729
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 17,
+          "score": 0.4544667
+        },
+        {
+          "chunk_id": "西湖-景区介绍_013::chunk_0000",
+          "rank": 18,
+          "score": 0.4542806
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0010",
+          "rank": 19,
+          "score": 0.45288014
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0000",
+          "rank": 20,
+          "score": 0.4513015
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "颐和园-景区介绍_012::chunk_0000",
+          "score": 0.7159578055143356,
+          "rank": 1
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "score": 0.5635201632976532,
+          "rank": 2
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_019::chunk_0000",
+          "score": 0.536325491964817,
+          "rank": 3
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "score": 0.5337163880467415,
+          "rank": 4
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_011::chunk_0000",
+          "score": 0.5310379564762115,
+          "rank": 5
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "score": 0.5298122093081474,
+          "rank": 6
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0000",
+          "score": 0.48801855742931366,
+          "rank": 7
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0000",
+          "score": 0.48739349842071533,
+          "rank": 8
+        },
+        {
+          "chunk_id": "西湖-景区介绍_025::chunk_0000",
+          "score": 0.48673951253294945,
+          "rank": 9
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "score": 0.4862009063363075,
+          "rank": 10
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "score": 0.48361044749617577,
+          "rank": 11
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0001",
+          "score": 0.4825360178947449,
+          "rank": 12
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "score": 0.4821126163005829,
+          "rank": 13
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "score": 0.4818807318806648,
+          "rank": 14
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0000",
+          "score": 0.47991280257701874,
+          "rank": 15
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "score": 0.4795488342642784,
+          "rank": 16
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0001",
+          "score": 0.4794509522616863,
+          "rank": 17
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0001",
+          "score": 0.4731627404689789,
+          "rank": 18
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "score": 0.47282329946756363,
+          "rank": 19
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_015::chunk_0000",
+          "score": 0.46974368393421173,
+          "rank": 20
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "score": 0.46831900998950005,
+          "rank": 21
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "score": 0.4660671055316925,
+          "rank": 22
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "score": 0.4646424129605293,
+          "rank": 23
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_071::chunk_0001",
+          "score": 0.46311531215906143,
+          "rank": 24
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0000",
+          "score": 0.46109142526984215,
+          "rank": 25
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0008",
+          "score": 0.46017514169216156,
+          "rank": 26
+        },
+        {
+          "chunk_id": "西湖-景区介绍_013::chunk_0000",
+          "score": 0.4595348872244358,
+          "rank": 27
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0001",
+          "score": 0.45873483642935753,
+          "rank": 28
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_001::chunk_0000",
+          "score": 0.45761146396398544,
+          "rank": 29
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0001",
+          "score": 0.4540319852530956,
+          "rank": 30
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0007",
+          "score": 0.45338885486125946,
+          "rank": 31
+        },
+        {
+          "chunk_id": "西湖-景区介绍_014::chunk_0000",
+          "score": 0.45166246965527534,
+          "rank": 32
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_015::chunk_0000",
+          "score": 0.4510687068104744,
+          "rank": 33
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_002::chunk_0000",
+          "score": 0.450452271848917,
+          "rank": 34
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0000",
+          "score": 0.44901077076792717,
+          "rank": 35
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0001",
+          "score": 0.4488079696893692,
+          "rank": 36
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0007",
+          "score": 0.4479934573173523,
+          "rank": 37
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0010",
+          "score": 0.44741378352046013,
+          "rank": 38
+        },
+        {
+          "chunk_id": "西湖-景区介绍_010::chunk_0000",
+          "score": 0.4469321295619011,
+          "rank": 39
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0008",
+          "score": 0.4465052857995033,
+          "rank": 40
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "score": 0.44572384655475616,
+          "rank": 41
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0005",
+          "score": 0.44508030638098717,
+          "rank": 42
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_007::chunk_0000",
+          "score": 0.4450213238596916,
+          "rank": 43
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "score": 0.4442794471979141,
+          "rank": 44
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0002",
+          "score": 0.4442637674510479,
+          "rank": 45
+        },
+        {
+          "chunk_id": "张家界-景点介绍_006::chunk_0000",
+          "score": 0.44390927255153656,
+          "rank": 46
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0009",
+          "score": 0.4427032619714737,
+          "rank": 47
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "score": 0.44021476060152054,
+          "rank": 48
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0000",
+          "score": 0.43993402644991875,
+          "rank": 49
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_004::chunk_0000",
+          "score": 0.4397664964199066,
+          "rank": 50
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_012::chunk_0000",
+          "score": 0.43911460414528847,
+          "rank": 51
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_005::chunk_0000",
+          "score": 0.43861450627446175,
+          "rank": 52
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0011",
+          "score": 0.43844541907310486,
+          "rank": 53
+        },
+        {
+          "chunk_id": "西湖-景区介绍_027::chunk_0000",
+          "score": 0.4383307248353958,
+          "rank": 54
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0010",
+          "score": 0.43763988092541695,
+          "rank": 55
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_004::chunk_0000",
+          "score": 0.43690863251686096,
+          "rank": 56
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0002",
+          "score": 0.4352346584200859,
+          "rank": 57
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0003",
+          "score": 0.4343171678483486,
+          "rank": 58
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_008::chunk_0000",
+          "score": 0.43431683629751205,
+          "rank": 59
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0001",
+          "score": 0.43412279337644577,
+          "rank": 60
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_016::chunk_0000",
+          "score": 0.4334678240120411,
+          "rank": 61
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_010::chunk_0000",
+          "score": 0.4322417192161083,
+          "rank": 62
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_013::chunk_0000",
+          "score": 0.43195202574133873,
+          "rank": 63
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0005",
+          "score": 0.4314922168850899,
+          "rank": 64
+        },
+        {
+          "chunk_id": "张家界-景点介绍_004::chunk_0000",
+          "score": 0.43125511705875397,
+          "rank": 65
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0000",
+          "score": 0.4305726997554302,
+          "rank": 66
+        },
+        {
+          "chunk_id": "西湖-景区介绍_023::chunk_0000",
+          "score": 0.43002671375870705,
+          "rank": 67
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0002",
+          "score": 0.42951522395014763,
+          "rank": 68
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0007",
+          "score": 0.42947064340114594,
+          "rank": 69
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_059::chunk_0000",
+          "score": 0.42860060557723045,
+          "rank": 70
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0006",
+          "score": 0.42857033759355545,
+          "rank": 71
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0007",
+          "score": 0.42829545214772224,
+          "rank": 72
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_065::chunk_0000",
+          "score": 0.4271119572222233,
+          "rank": 73
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_010::chunk_0000",
+          "score": 0.4239968881011009,
+          "rank": 74
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_016::chunk_0000",
+          "score": 0.4230595827102661,
+          "rank": 75
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0003",
+          "score": 0.42187919467687607,
+          "rank": 76
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "score": 0.4202742204070091,
+          "rank": 77
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "score": 0.41887714713811874,
+          "rank": 78
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0003",
+          "score": 0.41864023730158806,
+          "rank": 79
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0001",
+          "score": 0.4181534871459007,
+          "rank": 80
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0001",
+          "score": 0.4179236739873886,
+          "rank": 81
+        },
+        {
+          "chunk_id": "西湖-景区介绍_009::chunk_0000",
+          "score": 0.4177253991365433,
+          "rank": 82
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "score": 0.4173019751906395,
+          "rank": 83
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0002",
+          "score": 0.41545864194631577,
+          "rank": 84
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0000",
+          "score": 0.41496019065380096,
+          "rank": 85
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0001",
+          "score": 0.41256188973784447,
+          "rank": 86
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_013::chunk_0000",
+          "score": 0.41144775599241257,
+          "rank": 87
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0006",
+          "score": 0.4099482372403145,
+          "rank": 88
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "score": 0.4097684323787689,
+          "rank": 89
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_009::chunk_0000",
+          "score": 0.4091224744915962,
+          "rank": 90
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0012",
+          "score": 0.4089930094778538,
+          "rank": 91
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0000",
+          "score": 0.40785854682326317,
+          "rank": 92
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0003",
+          "score": 0.40781843289732933,
+          "rank": 93
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_007::chunk_0000",
+          "score": 0.4073130302131176,
+          "rank": 94
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0012",
+          "score": 0.406512089073658,
+          "rank": 95
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0007",
+          "score": 0.4052196331322193,
+          "rank": 96
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_008::chunk_0000",
+          "score": 0.4049407094717026,
+          "rank": 97
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_063::chunk_0000",
+          "score": 0.40436529740691185,
+          "rank": 98
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_017::chunk_0000",
+          "score": 0.40314464643597603,
+          "rank": 99
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0004",
+          "score": 0.40302617102861404,
+          "rank": 100
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 100,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 3,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

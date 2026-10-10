@@ -1,0 +1,872 @@
+{
+  "name": "query_000260.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "白居易为西湖做了什么？",
+  "subqueries": [
+    "白居易 西湖 贡献",
+    "白居易 西湖 水利工程",
+    "白居易 杭州 政绩",
+    "白居易 西湖 诗词 影响"
+  ],
+  "component_texts": [
+    "白居易为西湖做了什么？",
+    "白居易 西湖 贡献",
+    "白居易 西湖 水利工程",
+    "白居易 杭州 政绩",
+    "白居易 西湖 诗词 影响"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "associated_figure": {
+        "labels": [
+          "白居易"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "main"
+      },
+      "scenic_spot": {
+        "labels": [
+          "西湖"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "relative_location": {
+        "labels": [
+          "杭州"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "natural_landscape": {
+        "labels": [
+          "西湖"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "landform_siting": {
+        "labels": [
+          "西湖"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "admin_division": {
+        "labels": [
+          "西湖",
+          "杭州"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "associated_figure",
+      "scenic_spot",
+      "relative_location",
+      "natural_landscape",
+      "landform_siting",
+      "admin_division"
+    ],
+    "spot_names": [
+      "西湖"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "西湖",
+        "canonical_name": "西湖",
+        "scenic_area": "西湖",
+        "entity_type": "scenic_area"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 1.0,
+    "routing": {
+      "main_dimension": "associated_figure",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 6,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "lexical_label",
+        "lexical_label+strict_intent"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "白居易",
+      "居易",
+      "工程",
+      "影响",
+      "水利",
+      "白居",
+      "诗词",
+      "贡献"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "西湖-景区介绍_000::chunk_0000"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "白居易 西湖 贡献 | 白居易 西湖 水利工程 | 白居易 杭州 政绩 | 白居易 西湖 诗词 影响",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 2,
+        "miss": false,
+        "rr": 0.5,
+        "result_count": 17,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.63092975,
+        "rr_at_5": 0.5,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.63092975,
+        "rr_at_10": 0.5,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.63092975,
+        "rr_at_15": 0.5,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.63092975,
+        "rr_at_20": 0.5
+      },
+      "results": [
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0001",
+          "rank": 1,
+          "score": 0.6419874
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "rank": 2,
+          "score": 0.6126622
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "rank": 3,
+          "score": 0.5781086
+        },
+        {
+          "chunk_id": "西湖-景区介绍_014::chunk_0000",
+          "rank": 4,
+          "score": 0.54962146
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 5,
+          "score": 0.5489279
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0003",
+          "rank": 6,
+          "score": 0.53161323
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0000",
+          "rank": 7,
+          "score": 0.5298643
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0004",
+          "rank": 8,
+          "score": 0.52480257
+        },
+        {
+          "chunk_id": "西湖-景区介绍_003::chunk_0000",
+          "rank": 9,
+          "score": 0.52393234
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0002",
+          "rank": 10,
+          "score": 0.52335703
+        },
+        {
+          "chunk_id": "西湖-景区介绍_028::chunk_0000",
+          "rank": 11,
+          "score": 0.52055156
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0001",
+          "rank": 12,
+          "score": 0.51582354
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "rank": 13,
+          "score": 0.5018796
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0001",
+          "rank": 14,
+          "score": 0.50164086
+        },
+        {
+          "chunk_id": "西湖-景区介绍_011::chunk_0000",
+          "rank": 15,
+          "score": 0.50036263
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "rank": 16,
+          "score": 0.4996537
+        },
+        {
+          "chunk_id": "西湖-景区介绍_024::chunk_0000",
+          "rank": 17,
+          "score": 0.49516988
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "白居易为西湖做了什么？",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 2,
+        "miss": false,
+        "rr": 0.5,
+        "result_count": 12,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.63092975,
+        "rr_at_5": 0.5,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.63092975,
+        "rr_at_10": 0.5,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.63092975,
+        "rr_at_15": 0.5,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.63092975,
+        "rr_at_20": 0.5
+      },
+      "results": [
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0001",
+          "rank": 1,
+          "score": 0.6237787
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "rank": 2,
+          "score": 0.61854035
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "rank": 3,
+          "score": 0.5549112
+        },
+        {
+          "chunk_id": "西湖-景区介绍_014::chunk_0000",
+          "rank": 4,
+          "score": 0.5537478
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0002",
+          "rank": 5,
+          "score": 0.5405823
+        },
+        {
+          "chunk_id": "西湖-景区介绍_027::chunk_0000",
+          "rank": 6,
+          "score": 0.5349151
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0003",
+          "rank": 7,
+          "score": 0.5306072
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0002",
+          "rank": 8,
+          "score": 0.51807415
+        },
+        {
+          "chunk_id": "西湖-景区介绍_013::chunk_0000",
+          "rank": 9,
+          "score": 0.51143026
+        },
+        {
+          "chunk_id": "西湖-景区介绍_003::chunk_0000",
+          "rank": 10,
+          "score": 0.5029162
+        },
+        {
+          "chunk_id": "西湖-景区介绍_009::chunk_0000",
+          "rank": 11,
+          "score": 0.49741885
+        },
+        {
+          "chunk_id": "西湖-景区介绍_028::chunk_0000",
+          "rank": 12,
+          "score": 0.49115002
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "白居易为西湖做了什么？ | 白居易 西湖 贡献 | 白居易 西湖 水利工程 | 白居易 杭州 政绩 | 白居易 西湖 诗词 影响",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 2,
+        "miss": false,
+        "rr": 0.5,
+        "result_count": 17,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.63092975,
+        "rr_at_5": 0.5,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.63092975,
+        "rr_at_10": 0.5,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.63092975,
+        "rr_at_15": 0.5,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.63092975,
+        "rr_at_20": 0.5
+      },
+      "results": [
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0001",
+          "rank": 1,
+          "score": 0.65608215
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "rank": 2,
+          "score": 0.6236768
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "rank": 3,
+          "score": 0.5867149
+        },
+        {
+          "chunk_id": "西湖-景区介绍_014::chunk_0000",
+          "rank": 4,
+          "score": 0.5625788
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 5,
+          "score": 0.5545533
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0002",
+          "rank": 6,
+          "score": 0.5383362
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0004",
+          "rank": 7,
+          "score": 0.5358
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0003",
+          "rank": 8,
+          "score": 0.53518474
+        },
+        {
+          "chunk_id": "西湖-景区介绍_003::chunk_0000",
+          "rank": 9,
+          "score": 0.5301599
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0000",
+          "rank": 10,
+          "score": 0.5298823
+        },
+        {
+          "chunk_id": "西湖-景区介绍_028::chunk_0000",
+          "rank": 11,
+          "score": 0.5261195
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0001",
+          "rank": 12,
+          "score": 0.5164615
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "rank": 13,
+          "score": 0.5159036
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0001",
+          "rank": 14,
+          "score": 0.50922275
+        },
+        {
+          "chunk_id": "西湖-景区介绍_011::chunk_0000",
+          "rank": 15,
+          "score": 0.508602
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0001",
+          "rank": 16,
+          "score": 0.49860382
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0002",
+          "rank": 17,
+          "score": 0.4967623
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "白居易为西湖做了什么？",
+        "白居易 西湖 贡献",
+        "白居易 西湖 水利工程",
+        "白居易 杭州 政绩",
+        "白居易 西湖 诗词 影响"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 15,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "rank": 1,
+          "score": 0.6557962
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0001",
+          "rank": 2,
+          "score": 0.6539626
+        },
+        {
+          "chunk_id": "西湖-景区介绍_014::chunk_0000",
+          "rank": 3,
+          "score": 0.5856143
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "rank": 4,
+          "score": 0.5853621
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0003",
+          "rank": 5,
+          "score": 0.5605011
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0002",
+          "rank": 6,
+          "score": 0.5579126
+        },
+        {
+          "chunk_id": "西湖-景区介绍_003::chunk_0000",
+          "rank": 7,
+          "score": 0.5392621
+        },
+        {
+          "chunk_id": "西湖-景区介绍_027::chunk_0000",
+          "rank": 8,
+          "score": 0.53085697
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0000",
+          "rank": 9,
+          "score": 0.529591
+        },
+        {
+          "chunk_id": "西湖-景区介绍_028::chunk_0000",
+          "rank": 10,
+          "score": 0.5285839
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 11,
+          "score": 0.52720726
+        },
+        {
+          "chunk_id": "西湖-景区介绍_013::chunk_0000",
+          "rank": 12,
+          "score": 0.5237158
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0002",
+          "rank": 13,
+          "score": 0.5192126
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0001",
+          "rank": 14,
+          "score": 0.51885027
+        },
+        {
+          "chunk_id": "西湖-景区介绍_009::chunk_0000",
+          "rank": 15,
+          "score": 0.516599
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0001",
+          "score": 0.6352460980415344,
+          "rank": 1
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "score": 0.631785087287426,
+          "rank": 2
+        },
+        {
+          "chunk_id": "西湖-景区介绍_014::chunk_0000",
+          "score": 0.5710476040840149,
+          "rank": 3
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "score": 0.560236930847168,
+          "rank": 4
+        },
+        {
+          "chunk_id": "西湖-景区介绍_013::chunk_0000",
+          "score": 0.5594596713781357,
+          "rank": 5
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0002",
+          "score": 0.5381718575954437,
+          "rank": 6
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0002",
+          "score": 0.5275014936923981,
+          "rank": 7
+        },
+        {
+          "chunk_id": "西湖-景区介绍_027::chunk_0000",
+          "score": 0.5271396115422249,
+          "rank": 8
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0003",
+          "score": 0.5215446501970291,
+          "rank": 9
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0000",
+          "score": 0.514496847987175,
+          "rank": 10
+        },
+        {
+          "chunk_id": "西湖-景区介绍_003::chunk_0000",
+          "score": 0.513991542160511,
+          "rank": 11
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0001",
+          "score": 0.5121501833200455,
+          "rank": 12
+        },
+        {
+          "chunk_id": "西湖-景区介绍_028::chunk_0000",
+          "score": 0.505927748978138,
+          "rank": 13
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0001",
+          "score": 0.4994366392493248,
+          "rank": 14
+        },
+        {
+          "chunk_id": "西湖-景区介绍_010::chunk_0000",
+          "score": 0.496305201202631,
+          "rank": 15
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0004",
+          "score": 0.4948161169886589,
+          "rank": 16
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0000",
+          "score": 0.4931979849934578,
+          "rank": 17
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0000",
+          "score": 0.490115188062191,
+          "rank": 18
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "score": 0.48531002178788185,
+          "rank": 19
+        },
+        {
+          "chunk_id": "西湖-景区介绍_009::chunk_0000",
+          "score": 0.4849122501909733,
+          "rank": 20
+        },
+        {
+          "chunk_id": "西湖-景区介绍_011::chunk_0000",
+          "score": 0.4806053042411804,
+          "rank": 21
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0003",
+          "score": 0.47551272064447403,
+          "rank": 22
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "score": 0.4750046990811825,
+          "rank": 23
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0001",
+          "score": 0.46210549026727676,
+          "rank": 24
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "score": 0.4545058310031891,
+          "rank": 25
+        },
+        {
+          "chunk_id": "西湖-景区介绍_021::chunk_0000",
+          "score": 0.4514037147164345,
+          "rank": 26
+        },
+        {
+          "chunk_id": "西湖-景区介绍_029::chunk_0000",
+          "score": 0.4357755780220032,
+          "rank": 27
+        },
+        {
+          "chunk_id": "西湖-景区介绍_007::chunk_0000",
+          "score": 0.4351779595017433,
+          "rank": 28
+        },
+        {
+          "chunk_id": "西湖-景区介绍_024::chunk_0000",
+          "score": 0.4265781566500664,
+          "rank": 29
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0001",
+          "score": 0.42060116678476334,
+          "rank": 30
+        },
+        {
+          "chunk_id": "西湖-景区介绍_005::chunk_0000",
+          "score": 0.41971883550286293,
+          "rank": 31
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "score": 0.418005358427763,
+          "rank": 32
+        },
+        {
+          "chunk_id": "西湖-景区介绍_015::chunk_0000",
+          "score": 0.4162192530930042,
+          "rank": 33
+        },
+        {
+          "chunk_id": "西湖-景区介绍_022::chunk_0000",
+          "score": 0.4059593379497528,
+          "rank": 34
+        },
+        {
+          "chunk_id": "西湖-景区介绍_023::chunk_0000",
+          "score": 0.4032835066318512,
+          "rank": 35
+        },
+        {
+          "chunk_id": "西湖-景区介绍_012::chunk_0000",
+          "score": 0.39998068287968636,
+          "rank": 36
+        },
+        {
+          "chunk_id": "西湖-景区介绍_026::chunk_0000",
+          "score": 0.397670466452837,
+          "rank": 37
+        },
+        {
+          "chunk_id": "西湖-景区介绍_002::chunk_0000",
+          "score": 0.3966554254293442,
+          "rank": 38
+        },
+        {
+          "chunk_id": "西湖-景区介绍_018::chunk_0000",
+          "score": 0.38630254939198494,
+          "rank": 39
+        },
+        {
+          "chunk_id": "西湖-景区介绍_017::chunk_0000",
+          "score": 0.38624219596385956,
+          "rank": 40
+        },
+        {
+          "chunk_id": "西湖-景区介绍_006::chunk_0000",
+          "score": 0.37457334995269775,
+          "rank": 41
+        },
+        {
+          "chunk_id": "西湖-景区介绍_019::chunk_0000",
+          "score": 0.3625291772186756,
+          "rank": 42
+        },
+        {
+          "chunk_id": "西湖-景区介绍_025::chunk_0000",
+          "score": 0.3504681810736656,
+          "rank": 43
+        },
+        {
+          "chunk_id": "西湖-景区介绍_016::chunk_0000",
+          "score": 0.2979228049516678,
+          "rank": 44
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 2,
+        "miss": false,
+        "rr": 0.5,
+        "result_count": 44,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.63092975,
+        "rr_at_5": 0.5,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.63092975,
+        "rr_at_10": 0.5,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.63092975,
+        "rr_at_15": 0.5,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.63092975,
+        "rr_at_20": 0.5
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 5,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

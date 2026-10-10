@@ -1,0 +1,949 @@
+{
+  "name": "query_000303.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "慈禧太后住在颐和园哪里，平时都做些什么",
+  "subqueries": [
+    "慈禧太后 颐和园 居住 寝宫",
+    "慈禧太后 颐和园 日常生活",
+    "慈禧太后 颐和园 娱乐活动",
+    "慈禧太后 颐和园 居住场所"
+  ],
+  "component_texts": [
+    "慈禧太后住在颐和园哪里，平时都做些什么",
+    "慈禧太后 颐和园 居住 寝宫",
+    "慈禧太后 颐和园 日常生活",
+    "慈禧太后 颐和园 娱乐活动",
+    "慈禧太后 颐和园 居住场所"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "associated_figure": {
+        "labels": [
+          "慈禧太后"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "main"
+      },
+      "admin_division": {
+        "labels": [
+          "颐和园"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "institutional_role": {
+        "labels": [
+          "寝宫"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "entity_category": {
+        "labels": [
+          "寝宫"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "associated_figure",
+      "admin_division",
+      "institutional_role",
+      "entity_category"
+    ],
+    "spot_names": [
+      "颐和园"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "颐和园",
+        "canonical_name": "颐和园",
+        "scenic_area": "颐和园",
+        "entity_type": "scenic_area"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 0.85,
+    "routing": {
+      "main_dimension": "associated_figure",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 4,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "lexical_label",
+        "lexical_label+strict_intent"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "慈禧太后",
+      "慈禧太",
+      "禧太后",
+      "场所",
+      "太后",
+      "娱乐",
+      "寝宫",
+      "居住",
+      "慈禧",
+      "日常",
+      "禧太"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "颐和园-景区介绍_002::chunk_0000",
+    "颐和园-景区介绍_006::chunk_0000",
+    "颐和园-景区介绍_009::chunk_0000",
+    "颐和园-运营介绍_003::chunk_0003"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "慈禧太后 颐和园 居住 寝宫 | 慈禧太后 颐和园 日常生活 | 慈禧太后 颐和园 娱乐活动 | 慈禧太后 颐和园 居住场所",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.25,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.75,
+        "precision_at_5": 0.6,
+        "ndcg_at_5": 0.83187246,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.4,
+        "ndcg_at_10": 0.95502366,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.26666667,
+        "ndcg_at_15": 0.95502366,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.2,
+        "ndcg_at_20": 0.95502366,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "rank": 1,
+          "score": 0.6377367
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_006::chunk_0000",
+          "rank": 2,
+          "score": 0.5942282
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_009::chunk_0000",
+          "rank": 3,
+          "score": 0.5797851
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0004",
+          "rank": 4,
+          "score": 0.5556529
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "rank": 5,
+          "score": 0.5492735
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0000",
+          "rank": 6,
+          "score": 0.5476575
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_007::chunk_0000",
+          "rank": 7,
+          "score": 0.54669416
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_002::chunk_0000",
+          "rank": 8,
+          "score": 0.5410379
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "rank": 9,
+          "score": 0.5383301
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "rank": 10,
+          "score": 0.5340384
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_003::chunk_0000",
+          "rank": 11,
+          "score": 0.5317873
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 12,
+          "score": 0.5279901
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0003",
+          "rank": 13,
+          "score": 0.52752984
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0001",
+          "rank": 14,
+          "score": 0.5225506
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_014::chunk_0000",
+          "rank": 15,
+          "score": 0.51734066
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0000",
+          "rank": 16,
+          "score": 0.5150224
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0001",
+          "rank": 17,
+          "score": 0.5070134
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0004",
+          "rank": 18,
+          "score": 0.5047964
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0007",
+          "rank": 19,
+          "score": 0.4996513
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "rank": 20,
+          "score": 0.4974907
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "慈禧太后住在颐和园哪里，平时都做些什么",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.25,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.5,
+        "precision_at_5": 0.4,
+        "ndcg_at_5": 0.55850759,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 0.75,
+        "precision_at_10": 0.3,
+        "ndcg_at_10": 0.69756377,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.26666667,
+        "ndcg_at_15": 0.79515878,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.2,
+        "ndcg_at_20": 0.79515878,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "rank": 1,
+          "score": 0.71883607
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0000",
+          "rank": 2,
+          "score": 0.63275105
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "rank": 3,
+          "score": 0.62780523
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_006::chunk_0000",
+          "rank": 4,
+          "score": 0.62460804
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0004",
+          "rank": 5,
+          "score": 0.6237422
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_009::chunk_0000",
+          "rank": 6,
+          "score": 0.6230017
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "rank": 7,
+          "score": 0.6168823
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0003",
+          "rank": 8,
+          "score": 0.6148852
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "rank": 9,
+          "score": 0.6018039
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0004",
+          "rank": 10,
+          "score": 0.60021615
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_007::chunk_0000",
+          "rank": 11,
+          "score": 0.58759594
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "rank": 12,
+          "score": 0.58503413
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0007",
+          "rank": 13,
+          "score": 0.5845133
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0001",
+          "rank": 14,
+          "score": 0.57446
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_002::chunk_0000",
+          "rank": 15,
+          "score": 0.5550648
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_014::chunk_0000",
+          "rank": 16,
+          "score": 0.5499638
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 17,
+          "score": 0.542851
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_003::chunk_0000",
+          "rank": 18,
+          "score": 0.54276586
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0000",
+          "rank": 19,
+          "score": 0.5393112
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "rank": 20,
+          "score": 0.5324859
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "慈禧太后住在颐和园哪里，平时都做些什么 | 慈禧太后 颐和园 居住 寝宫 | 慈禧太后 颐和园 日常生活 | 慈禧太后 颐和园 娱乐活动 | 慈禧太后 颐和园 居住场所",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.25,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.75,
+        "precision_at_5": 0.6,
+        "ndcg_at_5": 0.83187246,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 0.75,
+        "precision_at_10": 0.3,
+        "ndcg_at_10": 0.83187246,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.26666667,
+        "ndcg_at_15": 0.9344056,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.2,
+        "ndcg_at_20": 0.9344056,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "rank": 1,
+          "score": 0.6419942
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_006::chunk_0000",
+          "rank": 2,
+          "score": 0.6041068
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_009::chunk_0000",
+          "rank": 3,
+          "score": 0.58062947
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0004",
+          "rank": 4,
+          "score": 0.5655274
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0000",
+          "rank": 5,
+          "score": 0.5597558
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "rank": 6,
+          "score": 0.55746377
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "rank": 7,
+          "score": 0.5535106
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0001",
+          "rank": 8,
+          "score": 0.5484155
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_007::chunk_0000",
+          "rank": 9,
+          "score": 0.54614913
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 10,
+          "score": 0.53991723
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0003",
+          "rank": 11,
+          "score": 0.53710985
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "rank": 12,
+          "score": 0.5338597
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_002::chunk_0000",
+          "rank": 13,
+          "score": 0.5322278
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_003::chunk_0000",
+          "rank": 14,
+          "score": 0.53075033
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0004",
+          "rank": 15,
+          "score": 0.5231544
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0001",
+          "rank": 16,
+          "score": 0.51990014
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0000",
+          "rank": 17,
+          "score": 0.51834786
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "rank": 18,
+          "score": 0.5175812
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_014::chunk_0000",
+          "rank": 19,
+          "score": 0.51002645
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0007",
+          "rank": 20,
+          "score": 0.5014733
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "慈禧太后住在颐和园哪里，平时都做些什么",
+        "慈禧太后 颐和园 居住 寝宫",
+        "慈禧太后 颐和园 日常生活",
+        "慈禧太后 颐和园 娱乐活动",
+        "慈禧太后 颐和园 居住场所"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.25,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.5,
+        "precision_at_5": 0.4,
+        "ndcg_at_5": 0.58557007,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 0.75,
+        "precision_at_10": 0.3,
+        "ndcg_at_10": 0.72462625,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.26666667,
+        "ndcg_at_15": 0.82715939,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.2,
+        "ndcg_at_20": 0.82715939,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "rank": 1,
+          "score": 0.7262008
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0004",
+          "rank": 2,
+          "score": 0.6530207
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_006::chunk_0000",
+          "rank": 3,
+          "score": 0.64021397
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0000",
+          "rank": 4,
+          "score": 0.6377721
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "rank": 5,
+          "score": 0.6333986
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_009::chunk_0000",
+          "rank": 6,
+          "score": 0.6330073
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0003",
+          "rank": 7,
+          "score": 0.62332666
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "rank": 8,
+          "score": 0.62196153
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "rank": 9,
+          "score": 0.6128
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_007::chunk_0000",
+          "rank": 10,
+          "score": 0.6088967
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0007",
+          "rank": 11,
+          "score": 0.5965566
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "rank": 12,
+          "score": 0.595095
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_002::chunk_0000",
+          "rank": 13,
+          "score": 0.5935501
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0004",
+          "rank": 14,
+          "score": 0.58535063
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0001",
+          "rank": 15,
+          "score": 0.5813514
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_014::chunk_0000",
+          "rank": 16,
+          "score": 0.5802332
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_003::chunk_0000",
+          "rank": 17,
+          "score": 0.56618154
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0000",
+          "rank": 18,
+          "score": 0.5572822
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 19,
+          "score": 0.5571426
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "rank": 20,
+          "score": 0.54249525
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "score": 0.6844933405518532,
+          "rank": 1
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_009::chunk_0000",
+          "score": 0.6364828944206238,
+          "rank": 2
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "score": 0.6327260732650757,
+          "rank": 3
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "score": 0.6321772485971451,
+          "rank": 4
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0000",
+          "score": 0.6286231130361557,
+          "rank": 5
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0004",
+          "score": 0.6235023215413094,
+          "rank": 6
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_006::chunk_0000",
+          "score": 0.6223069876432419,
+          "rank": 7
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "score": 0.621920257806778,
+          "rank": 8
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0007",
+          "score": 0.6178621053695679,
+          "rank": 9
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0003",
+          "score": 0.6043883785605431,
+          "rank": 10
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_007::chunk_0000",
+          "score": 0.5988814607262611,
+          "rank": 11
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "score": 0.5872594714164734,
+          "rank": 12
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0004",
+          "score": 0.5822496265172958,
+          "rank": 13
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_014::chunk_0000",
+          "score": 0.5731455981731415,
+          "rank": 14
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "score": 0.5720540508627892,
+          "rank": 15
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_002::chunk_0000",
+          "score": 0.5624691247940063,
+          "rank": 16
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_003::chunk_0000",
+          "score": 0.5601496547460556,
+          "rank": 17
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0000",
+          "score": 0.5501849725842476,
+          "rank": 18
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0001",
+          "score": 0.5400510653853416,
+          "rank": 19
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "score": 0.5372191369533539,
+          "rank": 20
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0003",
+          "score": 0.5235738679766655,
+          "rank": 21
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0002",
+          "score": 0.505944162607193,
+          "rank": 22
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0005",
+          "score": 0.5052263177931309,
+          "rank": 23
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0000",
+          "score": 0.5037973970174789,
+          "rank": 24
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0001",
+          "score": 0.5017480626702309,
+          "rank": 25
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0005",
+          "score": 0.49953509122133255,
+          "rank": 26
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "score": 0.49170422181487083,
+          "rank": 27
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_005::chunk_0000",
+          "score": 0.4806591831147671,
+          "rank": 28
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_012::chunk_0000",
+          "score": 0.47587229311466217,
+          "rank": 29
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_001::chunk_0000",
+          "score": 0.4682716839015484,
+          "rank": 30
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0001",
+          "score": 0.4630732983350754,
+          "rank": 31
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_008::chunk_0000",
+          "score": 0.4613143466413021,
+          "rank": 32
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_011::chunk_0000",
+          "score": 0.45020339637994766,
+          "rank": 33
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_016::chunk_0000",
+          "score": 0.43634604662656784,
+          "rank": 34
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_004::chunk_0000",
+          "score": 0.4245719760656357,
+          "rank": 35
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_013::chunk_0000",
+          "score": 0.4145425409078598,
+          "rank": 36
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_017::chunk_0000",
+          "score": 0.41305988281965256,
+          "rank": 37
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_018::chunk_0000",
+          "score": 0.3816004507243633,
+          "rank": 38
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_010::chunk_0000",
+          "score": 0.3766326941549778,
+          "rank": 39
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_015::chunk_0000",
+          "score": 0.36615215241909027,
+          "rank": 40
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0001",
+          "score": 0.3445972092449665,
+          "rank": 41
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_019::chunk_0000",
+          "score": 0.33895082026720047,
+          "rank": 42
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0000",
+          "score": 0.30520104244351387,
+          "rank": 43
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 43,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.25,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.5,
+        "precision_at_5": 0.4,
+        "ndcg_at_5": 0.63668244,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 0.75,
+        "precision_at_10": 0.3,
+        "ndcg_at_10": 0.76680912,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 0.75,
+        "precision_at_15": 0.2,
+        "ndcg_at_15": 0.76680912,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.2,
+        "ndcg_at_20": 0.86231581,
+        "rr_at_20": 1.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 5,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

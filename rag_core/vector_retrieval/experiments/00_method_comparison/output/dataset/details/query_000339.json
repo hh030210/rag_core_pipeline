@@ -1,0 +1,915 @@
+{
+  "name": "query_000339.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "张家界国家森林公园的门票能用几天？",
+  "subqueries": [
+    "张家界国家森林公园 门票 有效期",
+    "张家界国家森林公园 门票 使用天数",
+    "张家界国家森林公园 门票 几日有效"
+  ],
+  "component_texts": [
+    "张家界国家森林公园的门票能用几天？",
+    "张家界国家森林公园 门票 有效期",
+    "张家界国家森林公园 门票 使用天数",
+    "张家界国家森林公园 门票 几日有效"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "entity_category": {
+        "labels": [
+          "国家森林公园"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "relative_location": {
+        "labels": [
+          "张家界"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "admin_division": {
+        "labels": [
+          "张家界"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "ticket_price": {
+        "labels": [
+          "门票"
+        ],
+        "intent_terms": [
+          "门票"
+        ],
+        "match": "ANY",
+        "role": "main"
+      },
+      "natural_landscape": {
+        "labels": [
+          "森林"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "booking_policy": {
+        "labels": [
+          "门票"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "entity_category",
+      "relative_location",
+      "admin_division",
+      "ticket_price",
+      "natural_landscape",
+      "booking_policy"
+    ],
+    "spot_names": [
+      "张家界"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "张家界国家森林公园",
+        "canonical_name": "张家界",
+        "scenic_area": "张家界",
+        "entity_type": "scenic_area"
+      },
+      {
+        "mention": "张家界",
+        "canonical_name": "张家界",
+        "scenic_area": "张家界",
+        "entity_type": "scenic_area"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 1.0,
+    "routing": {
+      "main_dimension": "ticket_price",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 6,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "lexical_label",
+        "lexical_label+strict_intent"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "张家界国家森林公园",
+      "国家森林公园",
+      "家界国家森林",
+      "张家界国家森",
+      "界国家森林公",
+      "国家森林公",
+      "家森林公园",
+      "家界国家森",
+      "张家界国家",
+      "界国家森林",
+      "国家森林",
+      "家森林公"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "张家界-运营信息_001::chunk_0001"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "张家界国家森林公园 门票 有效期 | 张家界国家森林公园 门票 使用天数 | 张家界国家森林公园 门票 几日有效",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 18,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0001",
+          "rank": 1,
+          "score": 0.77225196
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0001",
+          "rank": 2,
+          "score": 0.6730799
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0001",
+          "rank": 3,
+          "score": 0.63595223
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0000",
+          "rank": 4,
+          "score": 0.63534355
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0000",
+          "rank": 5,
+          "score": 0.62800634
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0001",
+          "rank": 6,
+          "score": 0.6231295
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0000",
+          "rank": 7,
+          "score": 0.60588634
+        },
+        {
+          "chunk_id": "张家界-运营信息_003::chunk_0000",
+          "rank": 8,
+          "score": 0.59276366
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0000",
+          "rank": 9,
+          "score": 0.57016826
+        },
+        {
+          "chunk_id": "张家界-运营信息_005::chunk_0000",
+          "rank": 10,
+          "score": 0.567286
+        },
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0000",
+          "rank": 11,
+          "score": 0.56019914
+        },
+        {
+          "chunk_id": "张家界-运营信息_004::chunk_0000",
+          "rank": 12,
+          "score": 0.5593393
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0002",
+          "rank": 13,
+          "score": 0.5471633
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0001",
+          "rank": 14,
+          "score": 0.5377898
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0001",
+          "rank": 15,
+          "score": 0.52406925
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0005",
+          "rank": 16,
+          "score": 0.51948035
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0004",
+          "rank": 17,
+          "score": 0.51700157
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0000",
+          "rank": 18,
+          "score": 0.5118886
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "张家界国家森林公园的门票能用几天？",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 18,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0001",
+          "rank": 1,
+          "score": 0.74508834
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0001",
+          "rank": 2,
+          "score": 0.6827302
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0000",
+          "rank": 3,
+          "score": 0.6442355
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0000",
+          "rank": 4,
+          "score": 0.62728536
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0001",
+          "rank": 5,
+          "score": 0.62692297
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0000",
+          "rank": 6,
+          "score": 0.61867857
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0001",
+          "rank": 7,
+          "score": 0.6082028
+        },
+        {
+          "chunk_id": "张家界-运营信息_005::chunk_0000",
+          "rank": 8,
+          "score": 0.58764505
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0000",
+          "rank": 9,
+          "score": 0.58688784
+        },
+        {
+          "chunk_id": "张家界-运营信息_003::chunk_0000",
+          "rank": 10,
+          "score": 0.57913566
+        },
+        {
+          "chunk_id": "张家界-运营信息_004::chunk_0000",
+          "rank": 11,
+          "score": 0.5683503
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0001",
+          "rank": 12,
+          "score": 0.5603603
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0004",
+          "rank": 13,
+          "score": 0.55765027
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0002",
+          "rank": 14,
+          "score": 0.55123305
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0000",
+          "rank": 15,
+          "score": 0.5345938
+        },
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0000",
+          "rank": 16,
+          "score": 0.5343344
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0000",
+          "rank": 17,
+          "score": 0.53241235
+        },
+        {
+          "chunk_id": "张家界-景点介绍_006::chunk_0000",
+          "rank": 18,
+          "score": 0.5128902
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "张家界国家森林公园的门票能用几天？ | 张家界国家森林公园 门票 有效期 | 张家界国家森林公园 门票 使用天数 | 张家界国家森林公园 门票 几日有效",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 19,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0001",
+          "rank": 1,
+          "score": 0.76783526
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0001",
+          "rank": 2,
+          "score": 0.66672444
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0001",
+          "rank": 3,
+          "score": 0.64903957
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0000",
+          "rank": 4,
+          "score": 0.64079356
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0001",
+          "rank": 5,
+          "score": 0.63525057
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0000",
+          "rank": 6,
+          "score": 0.6217823
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0000",
+          "rank": 7,
+          "score": 0.61493254
+        },
+        {
+          "chunk_id": "张家界-运营信息_003::chunk_0000",
+          "rank": 8,
+          "score": 0.6031219
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0000",
+          "rank": 9,
+          "score": 0.5817517
+        },
+        {
+          "chunk_id": "张家界-运营信息_005::chunk_0000",
+          "rank": 10,
+          "score": 0.576663
+        },
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0000",
+          "rank": 11,
+          "score": 0.5656898
+        },
+        {
+          "chunk_id": "张家界-运营信息_004::chunk_0000",
+          "rank": 12,
+          "score": 0.5638268
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0002",
+          "rank": 13,
+          "score": 0.5561006
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0001",
+          "rank": 14,
+          "score": 0.5492242
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0001",
+          "rank": 15,
+          "score": 0.531404
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0001",
+          "rank": 16,
+          "score": 0.5276695
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0004",
+          "rank": 17,
+          "score": 0.52677846
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0005",
+          "rank": 18,
+          "score": 0.52450836
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0000",
+          "rank": 19,
+          "score": 0.51758885
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "张家界国家森林公园的门票能用几天？",
+        "张家界国家森林公园 门票 有效期",
+        "张家界国家森林公园 门票 使用天数",
+        "张家界国家森林公园 门票 几日有效"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 17,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0001",
+          "rank": 1,
+          "score": 0.7721977
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0001",
+          "rank": 2,
+          "score": 0.6921464
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0000",
+          "rank": 3,
+          "score": 0.6526835
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0000",
+          "rank": 4,
+          "score": 0.6380702
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0001",
+          "rank": 5,
+          "score": 0.62685406
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0001",
+          "rank": 6,
+          "score": 0.61747134
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0000",
+          "rank": 7,
+          "score": 0.61723274
+        },
+        {
+          "chunk_id": "张家界-运营信息_005::chunk_0000",
+          "rank": 8,
+          "score": 0.5911177
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0000",
+          "rank": 9,
+          "score": 0.5856439
+        },
+        {
+          "chunk_id": "张家界-运营信息_003::chunk_0000",
+          "rank": 10,
+          "score": 0.584863
+        },
+        {
+          "chunk_id": "张家界-运营信息_004::chunk_0000",
+          "rank": 11,
+          "score": 0.572253
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0004",
+          "rank": 12,
+          "score": 0.56574756
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0001",
+          "rank": 13,
+          "score": 0.5576339
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0002",
+          "rank": 14,
+          "score": 0.5483618
+        },
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0000",
+          "rank": 15,
+          "score": 0.5434792
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0000",
+          "rank": 16,
+          "score": 0.5328796
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0000",
+          "rank": 17,
+          "score": 0.5223449
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0001",
+          "score": 0.732364296913147,
+          "rank": 1
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0001",
+          "score": 0.6792409867048264,
+          "rank": 2
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0001",
+          "score": 0.6757031232118607,
+          "rank": 3
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0000",
+          "score": 0.6459394469857216,
+          "rank": 4
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0000",
+          "score": 0.6259752288460732,
+          "rank": 5
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0000",
+          "score": 0.6195657402276993,
+          "rank": 6
+        },
+        {
+          "chunk_id": "张家界-运营信息_005::chunk_0000",
+          "score": 0.617821492254734,
+          "rank": 7
+        },
+        {
+          "chunk_id": "张家界-运营信息_004::chunk_0000",
+          "score": 0.6135651245713234,
+          "rank": 8
+        },
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0000",
+          "score": 0.609961248934269,
+          "rank": 9
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0000",
+          "score": 0.6089257746934891,
+          "rank": 10
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0001",
+          "score": 0.6083802431821823,
+          "rank": 11
+        },
+        {
+          "chunk_id": "张家界-运营信息_003::chunk_0000",
+          "score": 0.5785571038722992,
+          "rank": 12
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0000",
+          "score": 0.5600444227457047,
+          "rank": 13
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0002",
+          "score": 0.5419861152768135,
+          "rank": 14
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0000",
+          "score": 0.5373792201280594,
+          "rank": 15
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0001",
+          "score": 0.5241986662149429,
+          "rank": 16
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0001",
+          "score": 0.5213319882750511,
+          "rank": 17
+        },
+        {
+          "chunk_id": "张家界-景点介绍_006::chunk_0000",
+          "score": 0.5206639096140862,
+          "rank": 18
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0004",
+          "score": 0.517347663640976,
+          "rank": 19
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0003",
+          "score": 0.5170960277318954,
+          "rank": 20
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0001",
+          "score": 0.5156375505030155,
+          "rank": 21
+        },
+        {
+          "chunk_id": "张家界-运营信息_004::chunk_0001",
+          "score": 0.5047297812998295,
+          "rank": 22
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0000",
+          "score": 0.503825269639492,
+          "rank": 23
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0005",
+          "score": 0.4978487603366375,
+          "rank": 24
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0006",
+          "score": 0.4947184734046459,
+          "rank": 25
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0001",
+          "score": 0.4885435253381729,
+          "rank": 26
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0014",
+          "score": 0.4770479053258896,
+          "rank": 27
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0007",
+          "score": 0.45389145240187645,
+          "rank": 28
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0009",
+          "score": 0.4475385695695877,
+          "rank": 29
+        },
+        {
+          "chunk_id": "张家界-景点介绍_004::chunk_0000",
+          "score": 0.4438295401632786,
+          "rank": 30
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0008",
+          "score": 0.44234276935458183,
+          "rank": 31
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0010",
+          "score": 0.4319411367177963,
+          "rank": 32
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0015",
+          "score": 0.42300931736826897,
+          "rank": 33
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0013",
+          "score": 0.41934356838464737,
+          "rank": 34
+        },
+        {
+          "chunk_id": "张家界-景点介绍_003::chunk_0000",
+          "score": 0.41867072880268097,
+          "rank": 35
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0016",
+          "score": 0.3978968486189842,
+          "rank": 36
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0012",
+          "score": 0.3953731097280979,
+          "rank": 37
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0017",
+          "score": 0.39096441492438316,
+          "rank": 38
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0011",
+          "score": 0.37994904443621635,
+          "rank": 39
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0018",
+          "score": 0.37274137139320374,
+          "rank": 40
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 40,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 4,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

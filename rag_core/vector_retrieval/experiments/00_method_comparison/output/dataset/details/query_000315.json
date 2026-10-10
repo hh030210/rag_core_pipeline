@@ -1,0 +1,845 @@
+{
+  "name": "query_000315.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "石舫背后有什么特别的故事和寓意吗",
+  "subqueries": [
+    "石舫建造背景历史故事",
+    "颐和园石舫象征寓意文化含义",
+    "石舫清晏舫名称由来乾隆慈禧"
+  ],
+  "component_texts": [
+    "石舫背后有什么特别的故事和寓意吗",
+    "石舫建造背景历史故事",
+    "颐和园石舫象征寓意文化含义",
+    "石舫清晏舫名称由来乾隆慈禧"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "admin_division": {
+        "labels": [
+          "颐和园"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "scenic_spot": {
+        "labels": [
+          "石舫"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "entity_category": {
+        "labels": [
+          "石舫"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "associated_figure": {
+        "labels": [
+          "慈禧",
+          "乾隆"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "admin_division",
+      "scenic_spot",
+      "entity_category",
+      "associated_figure"
+    ],
+    "spot_names": [
+      "颐和园"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "颐和园",
+        "canonical_name": "颐和园",
+        "scenic_area": "颐和园",
+        "entity_type": "scenic_area"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 0.85,
+    "routing": {
+      "main_dimension": "",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 4,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "lexical_label"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "历史故事",
+      "舫清晏舫",
+      "历史故",
+      "史故事",
+      "来乾隆",
+      "清晏舫",
+      "舫清晏",
+      "史故",
+      "名称",
+      "含义",
+      "寓意",
+      "建造"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "颐和园-景区介绍_012::chunk_0000",
+    "颐和园-景区介绍_020::chunk_0002"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "石舫建造背景历史故事 | 颐和园石舫象征寓意文化含义 | 石舫清晏舫名称由来乾隆慈禧",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 17,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.5,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.4,
+        "ndcg_at_5": 0.91972079,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.2,
+        "ndcg_at_10": 0.91972079,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.13333333,
+        "ndcg_at_15": 0.91972079,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.1,
+        "ndcg_at_20": 0.91972079,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-景区介绍_012::chunk_0000",
+          "rank": 1,
+          "score": 0.7447513
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "rank": 2,
+          "score": 0.6305169
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "rank": 3,
+          "score": 0.62233204
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "rank": 4,
+          "score": 0.6117538
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0004",
+          "rank": 5,
+          "score": 0.6005081
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0007",
+          "rank": 6,
+          "score": 0.58998305
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "rank": 7,
+          "score": 0.57744414
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0001",
+          "rank": 8,
+          "score": 0.5686649
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0000",
+          "rank": 9,
+          "score": 0.56625044
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "rank": 10,
+          "score": 0.56079715
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0003",
+          "rank": 11,
+          "score": 0.55295503
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 12,
+          "score": 0.5466594
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "rank": 13,
+          "score": 0.54303753
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_009::chunk_0000",
+          "rank": 14,
+          "score": 0.5401723
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_007::chunk_0000",
+          "rank": 15,
+          "score": 0.53786886
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "rank": 16,
+          "score": 0.5347738
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0005",
+          "rank": 17,
+          "score": 0.5227922
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "石舫背后有什么特别的故事和寓意吗",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 10,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.5,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.4,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.2,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.13333333,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.1,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-景区介绍_012::chunk_0000",
+          "rank": 1,
+          "score": 0.66349137
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "rank": 2,
+          "score": 0.5266023
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0005",
+          "rank": 3,
+          "score": 0.5224256
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "rank": 4,
+          "score": 0.5069448
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "rank": 5,
+          "score": 0.5058378
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0001",
+          "rank": 6,
+          "score": 0.48559794
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_013::chunk_0000",
+          "rank": 7,
+          "score": 0.48303777
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "rank": 8,
+          "score": 0.48054993
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_019::chunk_0000",
+          "rank": 9,
+          "score": 0.47353292
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "rank": 10,
+          "score": 0.46834242
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "石舫背后有什么特别的故事和寓意吗 | 石舫建造背景历史故事 | 颐和园石舫象征寓意文化含义 | 石舫清晏舫名称由来乾隆慈禧",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 18,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.5,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.4,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.2,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.13333333,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.1,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-景区介绍_012::chunk_0000",
+          "rank": 1,
+          "score": 0.74857736
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "rank": 2,
+          "score": 0.6387082
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "rank": 3,
+          "score": 0.631365
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "rank": 4,
+          "score": 0.62358713
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0001",
+          "rank": 5,
+          "score": 0.59814626
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0004",
+          "rank": 6,
+          "score": 0.58973956
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0007",
+          "rank": 7,
+          "score": 0.58923817
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "rank": 8,
+          "score": 0.5798541
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "rank": 9,
+          "score": 0.57833135
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 10,
+          "score": 0.57396
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0000",
+          "rank": 11,
+          "score": 0.5671388
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_009::chunk_0000",
+          "rank": 12,
+          "score": 0.5580772
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0005",
+          "rank": 13,
+          "score": 0.5568136
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_007::chunk_0000",
+          "rank": 14,
+          "score": 0.5558164
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "rank": 15,
+          "score": 0.55439216
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "rank": 16,
+          "score": 0.55203354
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0003",
+          "rank": 17,
+          "score": 0.54769206
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0004",
+          "rank": 18,
+          "score": 0.5160401
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "石舫背后有什么特别的故事和寓意吗",
+        "石舫建造背景历史故事",
+        "颐和园石舫象征寓意文化含义",
+        "石舫清晏舫名称由来乾隆慈禧"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 15,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.5,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.4,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.2,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.13333333,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.1,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "颐和园-景区介绍_012::chunk_0000",
+          "rank": 1,
+          "score": 0.74564916
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "rank": 2,
+          "score": 0.59028655
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "rank": 3,
+          "score": 0.58222574
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "rank": 4,
+          "score": 0.5695513
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "rank": 5,
+          "score": 0.54948735
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0005",
+          "rank": 6,
+          "score": 0.5417844
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0001",
+          "rank": 7,
+          "score": 0.52638376
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0007",
+          "rank": 8,
+          "score": 0.5242298
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "rank": 9,
+          "score": 0.5185833
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "rank": 10,
+          "score": 0.51789236
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_013::chunk_0000",
+          "rank": 11,
+          "score": 0.5144983
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "rank": 12,
+          "score": 0.514457
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "rank": 13,
+          "score": 0.50698525
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0003",
+          "rank": 14,
+          "score": 0.5055266
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0004",
+          "rank": 15,
+          "score": 0.5042304
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "颐和园-景区介绍_012::chunk_0000",
+          "score": 0.6633009910583496,
+          "rank": 1
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "score": 0.5998090505599976,
+          "rank": 2
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "score": 0.5613841190934181,
+          "rank": 3
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0005",
+          "score": 0.514641523361206,
+          "rank": 4
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0000",
+          "score": 0.5112801417708397,
+          "rank": 5
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "score": 0.5082566738128662,
+          "rank": 6
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "score": 0.5027200430631638,
+          "rank": 7
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0001",
+          "score": 0.5011632032692432,
+          "rank": 8
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "score": 0.490603543817997,
+          "rank": 9
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_013::chunk_0000",
+          "score": 0.4801037833094597,
+          "rank": 10
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_019::chunk_0000",
+          "score": 0.4762229919433594,
+          "rank": 11
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "score": 0.46399421617388725,
+          "rank": 12
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0000",
+          "score": 0.46398868784308434,
+          "rank": 13
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_011::chunk_0000",
+          "score": 0.4561759904026985,
+          "rank": 14
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "score": 0.45129814743995667,
+          "rank": 15
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0007",
+          "score": 0.44171402230858803,
+          "rank": 16
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_017::chunk_0000",
+          "score": 0.44006969779729843,
+          "rank": 17
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0004",
+          "score": 0.43747353181242943,
+          "rank": 18
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0002",
+          "score": 0.43027282878756523,
+          "rank": 19
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_005::chunk_0000",
+          "score": 0.4293086677789688,
+          "rank": 20
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_007::chunk_0000",
+          "score": 0.4246955178678036,
+          "rank": 21
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0003",
+          "score": 0.4246862158179283,
+          "rank": 22
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_010::chunk_0000",
+          "score": 0.4236912652850151,
+          "rank": 23
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_004::chunk_0000",
+          "score": 0.4182198494672775,
+          "rank": 24
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_016::chunk_0000",
+          "score": 0.4166466221213341,
+          "rank": 25
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0001",
+          "score": 0.4161363020539284,
+          "rank": 26
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0001",
+          "score": 0.4157946929335594,
+          "rank": 27
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_009::chunk_0000",
+          "score": 0.4117364399135113,
+          "rank": 28
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0001",
+          "score": 0.41149313375353813,
+          "rank": 29
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0003",
+          "score": 0.4085061736404896,
+          "rank": 30
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_015::chunk_0000",
+          "score": 0.4083020053803921,
+          "rank": 31
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0004",
+          "score": 0.40827537700533867,
+          "rank": 32
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_003::chunk_0000",
+          "score": 0.3993079289793968,
+          "rank": 33
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_008::chunk_0000",
+          "score": 0.3964562341570854,
+          "rank": 34
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_006::chunk_0000",
+          "score": 0.38863345980644226,
+          "rank": 35
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_018::chunk_0000",
+          "score": 0.3872000575065613,
+          "rank": 36
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_002::chunk_0000",
+          "score": 0.38290080800652504,
+          "rank": 37
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0000",
+          "score": 0.3788989186286926,
+          "rank": 38
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_014::chunk_0000",
+          "score": 0.3756628781557083,
+          "rank": 39
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0000",
+          "score": 0.3707176558673382,
+          "rank": 40
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0005",
+          "score": 0.34635479003190994,
+          "rank": 41
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_002::chunk_0000",
+          "score": 0.31500663980841637,
+          "rank": 42
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_001::chunk_0000",
+          "score": 0.31177103891968727,
+          "rank": 43
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 43,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.5,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.4,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.2,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.13333333,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.1,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 4,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

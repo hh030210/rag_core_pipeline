@@ -1,0 +1,594 @@
+{
+  "name": "query_000219.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "如果我从济源开车去少林寺，该怎么走？",
+  "subqueries": [
+    "济源到少林寺自驾路线",
+    "济源开车去少林寺导航",
+    "济源出发少林寺自驾路况",
+    "少林寺停车场位置"
+  ],
+  "component_texts": [
+    "如果我从济源开车去少林寺，该怎么走？",
+    "济源到少林寺自驾路线",
+    "济源开车去少林寺导航",
+    "济源出发少林寺自驾路况",
+    "少林寺停车场位置"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "parking_info": {
+        "labels": [
+          "停车场位置"
+        ],
+        "intent_terms": [
+          "停车场位置"
+        ],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "scenic_spot": {
+        "labels": [
+          "少林寺"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "external_transport": {
+        "labels": [
+          "自驾"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "parking_info",
+      "scenic_spot",
+      "external_transport"
+    ],
+    "spot_names": [
+      "少林寺"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "少林寺",
+        "canonical_name": "少林寺",
+        "scenic_area": "少林寺",
+        "entity_type": "scenic_area"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 0.7,
+    "routing": {
+      "main_dimension": "",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 3,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "lexical_label"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "到少林寺",
+      "少林寺自",
+      "停车场",
+      "到少林",
+      "少林寺",
+      "林寺自",
+      "位置",
+      "停车",
+      "出发",
+      "到少",
+      "寺自",
+      "导航"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "少林寺-运营信息_000::chunk_0000"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "济源到少林寺自驾路线 | 济源开车去少林寺导航 | 济源出发少林寺自驾路况 | 少林寺停车场位置",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 9,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0000",
+          "rank": 1,
+          "score": 0.59713423
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "rank": 2,
+          "score": 0.5079701
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "rank": 3,
+          "score": 0.5024053
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0011",
+          "rank": 4,
+          "score": 0.46934143
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0009",
+          "rank": 5,
+          "score": 0.4657228
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 6,
+          "score": 0.46486765
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0001",
+          "rank": 7,
+          "score": 0.4603501
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0007",
+          "rank": 8,
+          "score": 0.45058754
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0005",
+          "rank": 9,
+          "score": 0.44798464
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "如果我从济源开车去少林寺，该怎么走？",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 12,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0000",
+          "rank": 1,
+          "score": 0.6143531
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "rank": 2,
+          "score": 0.557504
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "rank": 3,
+          "score": 0.5481337
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0001",
+          "rank": 4,
+          "score": 0.5344541
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 5,
+          "score": 0.5133924
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0009",
+          "rank": 6,
+          "score": 0.5131875
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0011",
+          "rank": 7,
+          "score": 0.5122863
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0005",
+          "rank": 8,
+          "score": 0.5114087
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0007",
+          "rank": 9,
+          "score": 0.48508844
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0006",
+          "rank": 10,
+          "score": 0.47083518
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0008",
+          "rank": 11,
+          "score": 0.46365705
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0004",
+          "rank": 12,
+          "score": 0.45829868
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "如果我从济源开车去少林寺，该怎么走？ | 济源到少林寺自驾路线 | 济源开车去少林寺导航 | 济源出发少林寺自驾路况 | 少林寺停车场位置",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 6,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0000",
+          "rank": 1,
+          "score": 0.6032199
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "rank": 2,
+          "score": 0.5109662
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "rank": 3,
+          "score": 0.50854385
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0011",
+          "rank": 4,
+          "score": 0.4789737
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 5,
+          "score": 0.47069162
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0009",
+          "rank": 6,
+          "score": 0.46762392
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "如果我从济源开车去少林寺，该怎么走？",
+        "济源到少林寺自驾路线",
+        "济源开车去少林寺导航",
+        "济源出发少林寺自驾路况",
+        "少林寺停车场位置"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 12,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0000",
+          "rank": 1,
+          "score": 0.6396653
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "rank": 2,
+          "score": 0.5871215
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "rank": 3,
+          "score": 0.58663476
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0001",
+          "rank": 4,
+          "score": 0.55868155
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 5,
+          "score": 0.54020584
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0009",
+          "rank": 6,
+          "score": 0.53264093
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0011",
+          "rank": 7,
+          "score": 0.52412254
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0005",
+          "rank": 8,
+          "score": 0.5222763
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0007",
+          "rank": 9,
+          "score": 0.50621426
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0008",
+          "rank": 10,
+          "score": 0.4816702
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0006",
+          "rank": 11,
+          "score": 0.48053527
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0004",
+          "rank": 12,
+          "score": 0.46706837
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0000",
+          "score": 0.6570423394441605,
+          "rank": 1
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "score": 0.6039471104741096,
+          "rank": 2
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "score": 0.546808585524559,
+          "rank": 3
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0001",
+          "score": 0.5418970435857773,
+          "rank": 4
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0009",
+          "score": 0.5271453633904457,
+          "rank": 5
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0005",
+          "score": 0.5267844349145889,
+          "rank": 6
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0011",
+          "score": 0.5170222707092762,
+          "rank": 7
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "score": 0.5144235119223595,
+          "rank": 8
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0006",
+          "score": 0.5053850039839745,
+          "rank": 9
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0007",
+          "score": 0.4909474737942219,
+          "rank": 10
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "score": 0.48233912885189056,
+          "rank": 11
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0004",
+          "score": 0.48084718734025955,
+          "rank": 12
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0012",
+          "score": 0.47902708873152733,
+          "rank": 13
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0008",
+          "score": 0.47488775849342346,
+          "rank": 14
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0010",
+          "score": 0.46285754442214966,
+          "rank": 15
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 15,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 5,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

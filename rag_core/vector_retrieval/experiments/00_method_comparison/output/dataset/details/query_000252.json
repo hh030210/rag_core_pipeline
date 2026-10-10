@@ -1,0 +1,856 @@
+{
+  "name": "query_000252.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "想找个安静的地方散步，苏堤和杨堤选哪个比较好",
+  "subqueries": [
+    "苏堤 安静 氛围 评价",
+    "杨堤 宁静 散步 体验",
+    "苏堤 杨堤 对比 优缺点"
+  ],
+  "component_texts": [
+    "想找个安静的地方散步，苏堤和杨堤选哪个比较好",
+    "苏堤 安静 氛围 评价",
+    "杨堤 宁静 散步 体验",
+    "苏堤 杨堤 对比 优缺点"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "tour_suggestion": {
+        "labels": [
+          "散步"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "main"
+      },
+      "scenic_spot": {
+        "labels": [
+          "苏堤",
+          "杨堤"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "internal_transport": {
+        "labels": [
+          "散步"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "tour_suggestion",
+      "scenic_spot",
+      "internal_transport"
+    ],
+    "spot_names": [
+      "西湖"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "苏堤",
+        "canonical_name": "苏堤",
+        "scenic_area": "西湖",
+        "entity_type": "poi"
+      },
+      {
+        "mention": "杨堤",
+        "canonical_name": "杨公堤",
+        "scenic_area": "西湖",
+        "entity_type": "poi"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 0.7,
+    "routing": {
+      "main_dimension": "tour_suggestion",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 3,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "lexical_label",
+        "lexical_label+strict_intent"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "体验",
+      "宁静",
+      "安静",
+      "对比",
+      "散步",
+      "杨堤",
+      "氛围",
+      "缺点",
+      "苏堤",
+      "评价"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "西湖-景区介绍_001::chunk_0000",
+    "西湖-景区介绍_028::chunk_0000"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "苏堤 安静 氛围 评价 | 杨堤 宁静 散步 体验 | 苏堤 杨堤 对比 优缺点",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 17,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.5,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.4,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.2,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.13333333,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.1,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "西湖-景区介绍_028::chunk_0000",
+          "rank": 1,
+          "score": 0.6921813
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "rank": 2,
+          "score": 0.609796
+        },
+        {
+          "chunk_id": "西湖-景区介绍_005::chunk_0000",
+          "rank": 3,
+          "score": 0.55950665
+        },
+        {
+          "chunk_id": "西湖-景区介绍_006::chunk_0000",
+          "rank": 4,
+          "score": 0.5431583
+        },
+        {
+          "chunk_id": "西湖-景区介绍_002::chunk_0000",
+          "rank": 5,
+          "score": 0.5364502
+        },
+        {
+          "chunk_id": "西湖-景区介绍_015::chunk_0000",
+          "rank": 6,
+          "score": 0.5205493
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 7,
+          "score": 0.5192894
+        },
+        {
+          "chunk_id": "西湖-景区介绍_019::chunk_0000",
+          "rank": 8,
+          "score": 0.5159374
+        },
+        {
+          "chunk_id": "西湖-景区介绍_003::chunk_0000",
+          "rank": 9,
+          "score": 0.5098721
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "rank": 10,
+          "score": 0.5043221
+        },
+        {
+          "chunk_id": "西湖-景区介绍_012::chunk_0000",
+          "rank": 11,
+          "score": 0.49471
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0000",
+          "rank": 12,
+          "score": 0.49435353
+        },
+        {
+          "chunk_id": "西湖-景区介绍_018::chunk_0000",
+          "rank": 13,
+          "score": 0.48637936
+        },
+        {
+          "chunk_id": "西湖-景区介绍_021::chunk_0000",
+          "rank": 14,
+          "score": 0.48489654
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0001",
+          "rank": 15,
+          "score": 0.47785968
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "rank": 16,
+          "score": 0.4765061
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "rank": 17,
+          "score": 0.4712309
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "想找个安静的地方散步，苏堤和杨堤选哪个比较好",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 13,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.5,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.4,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.2,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.13333333,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.1,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "西湖-景区介绍_028::chunk_0000",
+          "rank": 1,
+          "score": 0.7011808
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "rank": 2,
+          "score": 0.61090624
+        },
+        {
+          "chunk_id": "西湖-景区介绍_005::chunk_0000",
+          "rank": 3,
+          "score": 0.49355572
+        },
+        {
+          "chunk_id": "西湖-景区介绍_002::chunk_0000",
+          "rank": 4,
+          "score": 0.48735166
+        },
+        {
+          "chunk_id": "西湖-景区介绍_015::chunk_0000",
+          "rank": 5,
+          "score": 0.4816941
+        },
+        {
+          "chunk_id": "西湖-景区介绍_006::chunk_0000",
+          "rank": 6,
+          "score": 0.46495628
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "rank": 7,
+          "score": 0.45237744
+        },
+        {
+          "chunk_id": "西湖-景区介绍_019::chunk_0000",
+          "rank": 8,
+          "score": 0.43663344
+        },
+        {
+          "chunk_id": "西湖-景区介绍_003::chunk_0000",
+          "rank": 9,
+          "score": 0.42727265
+        },
+        {
+          "chunk_id": "西湖-景区介绍_021::chunk_0000",
+          "rank": 10,
+          "score": 0.42538646
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0001",
+          "rank": 11,
+          "score": 0.42265224
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0000",
+          "rank": 12,
+          "score": 0.41943073
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0002",
+          "rank": 13,
+          "score": 0.41806915
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "想找个安静的地方散步，苏堤和杨堤选哪个比较好 | 苏堤 安静 氛围 评价 | 杨堤 宁静 散步 体验 | 苏堤 杨堤 对比 优缺点",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 16,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.5,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.4,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.2,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.13333333,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.1,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "西湖-景区介绍_028::chunk_0000",
+          "rank": 1,
+          "score": 0.688417
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "rank": 2,
+          "score": 0.59811264
+        },
+        {
+          "chunk_id": "西湖-景区介绍_005::chunk_0000",
+          "rank": 3,
+          "score": 0.5702123
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 4,
+          "score": 0.53288233
+        },
+        {
+          "chunk_id": "西湖-景区介绍_015::chunk_0000",
+          "rank": 5,
+          "score": 0.5293853
+        },
+        {
+          "chunk_id": "西湖-景区介绍_006::chunk_0000",
+          "rank": 6,
+          "score": 0.52836585
+        },
+        {
+          "chunk_id": "西湖-景区介绍_019::chunk_0000",
+          "rank": 7,
+          "score": 0.519022
+        },
+        {
+          "chunk_id": "西湖-景区介绍_002::chunk_0000",
+          "rank": 8,
+          "score": 0.5162229
+        },
+        {
+          "chunk_id": "西湖-景区介绍_003::chunk_0000",
+          "rank": 9,
+          "score": 0.50226045
+        },
+        {
+          "chunk_id": "西湖-景区介绍_012::chunk_0000",
+          "rank": 10,
+          "score": 0.49758407
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "rank": 11,
+          "score": 0.4951199
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0004",
+          "rank": 12,
+          "score": 0.49147654
+        },
+        {
+          "chunk_id": "西湖-景区介绍_018::chunk_0000",
+          "rank": 13,
+          "score": 0.486975
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0000",
+          "rank": 14,
+          "score": 0.48614267
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "rank": 15,
+          "score": 0.47639054
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "rank": 16,
+          "score": 0.47133586
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "想找个安静的地方散步，苏堤和杨堤选哪个比较好",
+        "苏堤 安静 氛围 评价",
+        "杨堤 宁静 散步 体验",
+        "苏堤 杨堤 对比 优缺点"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 16,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.5,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.4,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.2,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.13333333,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.1,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "西湖-景区介绍_028::chunk_0000",
+          "rank": 1,
+          "score": 0.73819476
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "rank": 2,
+          "score": 0.6400158
+        },
+        {
+          "chunk_id": "西湖-景区介绍_002::chunk_0000",
+          "rank": 3,
+          "score": 0.53919494
+        },
+        {
+          "chunk_id": "西湖-景区介绍_005::chunk_0000",
+          "rank": 4,
+          "score": 0.53642476
+        },
+        {
+          "chunk_id": "西湖-景区介绍_015::chunk_0000",
+          "rank": 5,
+          "score": 0.5212752
+        },
+        {
+          "chunk_id": "西湖-景区介绍_006::chunk_0000",
+          "rank": 6,
+          "score": 0.5120832
+        },
+        {
+          "chunk_id": "西湖-景区介绍_019::chunk_0000",
+          "rank": 7,
+          "score": 0.48780268
+        },
+        {
+          "chunk_id": "西湖-景区介绍_003::chunk_0000",
+          "rank": 8,
+          "score": 0.486393
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "rank": 9,
+          "score": 0.48545086
+        },
+        {
+          "chunk_id": "西湖-景区介绍_021::chunk_0000",
+          "rank": 10,
+          "score": 0.4842434
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "rank": 11,
+          "score": 0.48087218
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0000",
+          "rank": 12,
+          "score": 0.47911415
+        },
+        {
+          "chunk_id": "西湖-景区介绍_012::chunk_0000",
+          "rank": 13,
+          "score": 0.46039188
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0002",
+          "rank": 14,
+          "score": 0.45692602
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "rank": 15,
+          "score": 0.45600262
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "rank": 16,
+          "score": 0.45552066
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "西湖-景区介绍_028::chunk_0000",
+          "score": 0.6873611807823181,
+          "rank": 1
+        },
+        {
+          "chunk_id": "西湖-景区介绍_001::chunk_0000",
+          "score": 0.6036807596683502,
+          "rank": 2
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0002",
+          "score": 0.5029110759496689,
+          "rank": 3
+        },
+        {
+          "chunk_id": "西湖-景区介绍_005::chunk_0000",
+          "score": 0.4912726394832134,
+          "rank": 4
+        },
+        {
+          "chunk_id": "西湖-景区介绍_002::chunk_0000",
+          "score": 0.4854755587875843,
+          "rank": 5
+        },
+        {
+          "chunk_id": "西湖-景区介绍_015::chunk_0000",
+          "score": 0.4853610582649708,
+          "rank": 6
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0002",
+          "score": 0.47924214974045753,
+          "rank": 7
+        },
+        {
+          "chunk_id": "西湖-景区介绍_006::chunk_0000",
+          "score": 0.46980423480272293,
+          "rank": 8
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0003",
+          "score": 0.4465685337781906,
+          "rank": 9
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0000",
+          "score": 0.4461921788752079,
+          "rank": 10
+        },
+        {
+          "chunk_id": "西湖-景区介绍_019::chunk_0000",
+          "score": 0.44124428927898407,
+          "rank": 11
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0001",
+          "score": 0.4322700649499893,
+          "rank": 12
+        },
+        {
+          "chunk_id": "西湖-景区介绍_003::chunk_0000",
+          "score": 0.42586057260632515,
+          "rank": 13
+        },
+        {
+          "chunk_id": "西湖-景区介绍_021::chunk_0000",
+          "score": 0.42584843188524246,
+          "rank": 14
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0002",
+          "score": 0.4225328266620636,
+          "rank": 15
+        },
+        {
+          "chunk_id": "西湖-景区介绍_012::chunk_0000",
+          "score": 0.41791947931051254,
+          "rank": 16
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "score": 0.4172095023095608,
+          "rank": 17
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0000",
+          "score": 0.41486163809895515,
+          "rank": 18
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0000",
+          "score": 0.4145592153072357,
+          "rank": 19
+        },
+        {
+          "chunk_id": "西湖-景区介绍_014::chunk_0000",
+          "score": 0.41447602584958076,
+          "rank": 20
+        },
+        {
+          "chunk_id": "西湖-景区介绍_023::chunk_0000",
+          "score": 0.4121297523379326,
+          "rank": 21
+        },
+        {
+          "chunk_id": "西湖-景区介绍_027::chunk_0000",
+          "score": 0.40843628346920013,
+          "rank": 22
+        },
+        {
+          "chunk_id": "西湖-景区介绍_013::chunk_0000",
+          "score": 0.40712181478738785,
+          "rank": 23
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0003",
+          "score": 0.4068111702799797,
+          "rank": 24
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "score": 0.4064330421388149,
+          "rank": 25
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0004",
+          "score": 0.4034171625971794,
+          "rank": 26
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0001",
+          "score": 0.3968086391687393,
+          "rank": 27
+        },
+        {
+          "chunk_id": "西湖-景区介绍_029::chunk_0000",
+          "score": 0.39549654349684715,
+          "rank": 28
+        },
+        {
+          "chunk_id": "西湖-景区介绍_024::chunk_0000",
+          "score": 0.39489785581827164,
+          "rank": 29
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0001",
+          "score": 0.39157842099666595,
+          "rank": 30
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0003",
+          "score": 0.3915756344795227,
+          "rank": 31
+        },
+        {
+          "chunk_id": "西湖-景区介绍_004::chunk_0001",
+          "score": 0.3904775269329548,
+          "rank": 32
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0001",
+          "score": 0.3836197815835476,
+          "rank": 33
+        },
+        {
+          "chunk_id": "西湖-景区介绍_025::chunk_0000",
+          "score": 0.38284866884350777,
+          "rank": 34
+        },
+        {
+          "chunk_id": "西湖-景区介绍_022::chunk_0000",
+          "score": 0.3788752742111683,
+          "rank": 35
+        },
+        {
+          "chunk_id": "西湖-景区介绍_009::chunk_0000",
+          "score": 0.3743593320250511,
+          "rank": 36
+        },
+        {
+          "chunk_id": "西湖-景区介绍_018::chunk_0000",
+          "score": 0.3699837736785412,
+          "rank": 37
+        },
+        {
+          "chunk_id": "西湖-景区介绍_007::chunk_0000",
+          "score": 0.3682289384305477,
+          "rank": 38
+        },
+        {
+          "chunk_id": "西湖-景区介绍_011::chunk_0000",
+          "score": 0.3682079315185547,
+          "rank": 39
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0000",
+          "score": 0.3610100522637367,
+          "rank": 40
+        },
+        {
+          "chunk_id": "西湖-景区介绍_010::chunk_0000",
+          "score": 0.3504154905676842,
+          "rank": 41
+        },
+        {
+          "chunk_id": "西湖-景区介绍_017::chunk_0000",
+          "score": 0.3343777246773243,
+          "rank": 42
+        },
+        {
+          "chunk_id": "西湖-景区介绍_016::chunk_0000",
+          "score": 0.3258374221622944,
+          "rank": 43
+        },
+        {
+          "chunk_id": "西湖-景区介绍_026::chunk_0000",
+          "score": 0.3039924018085003,
+          "rank": 44
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 44,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.5,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.4,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.2,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.13333333,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.1,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 4,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

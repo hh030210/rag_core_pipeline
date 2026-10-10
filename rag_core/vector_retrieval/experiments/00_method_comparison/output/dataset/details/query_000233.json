@@ -1,0 +1,1233 @@
+{
+  "name": "query_000233.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "灵隐寺历史有多久了，里面有什么值得看的",
+  "subqueries": [
+    "灵隐寺 创建年代 历史沿革",
+    "灵隐寺 主要建筑 景点介绍",
+    "灵隐寺 著名文物 历史文化价值"
+  ],
+  "component_texts": [
+    "灵隐寺历史有多久了，里面有什么值得看的",
+    "灵隐寺 创建年代 历史沿革",
+    "灵隐寺 主要建筑 景点介绍",
+    "灵隐寺 著名文物 历史文化价值"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "guide_facility": {
+        "labels": [
+          "景点介绍"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "entity_category": {
+        "labels": [
+          "景点"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "scenic_spot": {
+        "labels": [],
+        "intent_terms": [
+          "景点"
+        ],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "founding_period": {
+        "labels": [],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "construction_history": {
+        "labels": [],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "cultural_event": {
+        "labels": [],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "guide_facility",
+      "entity_category",
+      "scenic_spot",
+      "founding_period",
+      "construction_history",
+      "cultural_event"
+    ],
+    "spot_names": [],
+    "resolved_poi_entities": [],
+    "precise_entity_terms": [],
+    "confidence": 1.0,
+    "routing": {
+      "main_dimension": "",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 3,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "intent_cue",
+        "lexical_label"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "主要建筑",
+      "历史文化",
+      "主要建",
+      "历史文",
+      "史文化",
+      "灵隐寺",
+      "要建筑",
+      "价值",
+      "创建",
+      "史文",
+      "年代",
+      "灵隐"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "西湖-景区介绍_025::chunk_0000",
+    "西湖-运营信息_000::chunk_0000"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "灵隐寺 创建年代 历史沿革 | 灵隐寺 主要建筑 景点介绍 | 灵隐寺 著名文物 历史文化价值",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.5,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.5,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.61314719,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.2,
+        "ndcg_at_10": 0.79038648,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.13333333,
+        "ndcg_at_15": 0.79038648,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.1,
+        "ndcg_at_20": 0.79038648,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "西湖-景区介绍_025::chunk_0000",
+          "rank": 1,
+          "score": 0.695115
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0000",
+          "rank": 2,
+          "score": 0.5908357
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0001",
+          "rank": 3,
+          "score": 0.55530155
+        },
+        {
+          "chunk_id": "西湖-景区介绍_026::chunk_0000",
+          "rank": 4,
+          "score": 0.54476833
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "rank": 5,
+          "score": 0.53758794
+        },
+        {
+          "chunk_id": "西湖-景区介绍_012::chunk_0000",
+          "rank": 6,
+          "score": 0.5351304
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 7,
+          "score": 0.5285791
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "rank": 8,
+          "score": 0.5253254
+        },
+        {
+          "chunk_id": "西湖-景区介绍_017::chunk_0000",
+          "rank": 9,
+          "score": 0.52348113
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "rank": 10,
+          "score": 0.523464
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0004",
+          "rank": 11,
+          "score": 0.52280676
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "rank": 12,
+          "score": 0.52160394
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "rank": 13,
+          "score": 0.5195143
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_002::chunk_0000",
+          "rank": 14,
+          "score": 0.51667094
+        },
+        {
+          "chunk_id": "西湖-景区介绍_022::chunk_0000",
+          "rank": 15,
+          "score": 0.5158898
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0001",
+          "rank": 16,
+          "score": 0.512137
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0012",
+          "rank": 17,
+          "score": 0.5080879
+        },
+        {
+          "chunk_id": "西湖-景区介绍_018::chunk_0000",
+          "rank": 18,
+          "score": 0.49829653
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0006",
+          "rank": 19,
+          "score": 0.4982703
+        },
+        {
+          "chunk_id": "明十三陵-运营信息_000::chunk_0000",
+          "rank": 20,
+          "score": 0.49790668
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "灵隐寺历史有多久了，里面有什么值得看的",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.5,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.5,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.61314719,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 0.5,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.61314719,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 0.5,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.61314719,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 0.5,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.61314719,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "西湖-景区介绍_025::chunk_0000",
+          "rank": 1,
+          "score": 0.71261644
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0000",
+          "rank": 2,
+          "score": 0.664761
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0001",
+          "rank": 3,
+          "score": 0.5479845
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_011::chunk_0000",
+          "rank": 4,
+          "score": 0.5402417
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_002::chunk_0000",
+          "rank": 5,
+          "score": 0.5303893
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "rank": 6,
+          "score": 0.5081513
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0004",
+          "rank": 7,
+          "score": 0.5024569
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0009",
+          "rank": 8,
+          "score": 0.50235224
+        },
+        {
+          "chunk_id": "西湖-景区介绍_012::chunk_0000",
+          "rank": 9,
+          "score": 0.498375
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0006",
+          "rank": 10,
+          "score": 0.49123383
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "rank": 11,
+          "score": 0.48879337
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "rank": 12,
+          "score": 0.48861134
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0012",
+          "rank": 13,
+          "score": 0.48779258
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "rank": 14,
+          "score": 0.48640388
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 15,
+          "score": 0.48119727
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0005",
+          "rank": 16,
+          "score": 0.48090574
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "rank": 17,
+          "score": 0.4771983
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0007",
+          "rank": 18,
+          "score": 0.47344944
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0001",
+          "rank": 19,
+          "score": 0.47280177
+        },
+        {
+          "chunk_id": "西湖-景区介绍_017::chunk_0000",
+          "rank": 20,
+          "score": 0.4714948
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "灵隐寺历史有多久了，里面有什么值得看的 | 灵隐寺 创建年代 历史沿革 | 灵隐寺 主要建筑 景点介绍 | 灵隐寺 著名文物 历史文化价值",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.5,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.5,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.61314719,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 0.5,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.61314719,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.13333333,
+        "ndcg_at_15": 0.77008714,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.1,
+        "ndcg_at_20": 0.77008714,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "西湖-景区介绍_025::chunk_0000",
+          "rank": 1,
+          "score": 0.7015417
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0000",
+          "rank": 2,
+          "score": 0.5812471
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0001",
+          "rank": 3,
+          "score": 0.55899763
+        },
+        {
+          "chunk_id": "西湖-景区介绍_026::chunk_0000",
+          "rank": 4,
+          "score": 0.5573383
+        },
+        {
+          "chunk_id": "西湖-景区介绍_012::chunk_0000",
+          "rank": 5,
+          "score": 0.54681015
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "rank": 6,
+          "score": 0.54131943
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 7,
+          "score": 0.5382805
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "rank": 8,
+          "score": 0.5331124
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "rank": 9,
+          "score": 0.52737355
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "rank": 10,
+          "score": 0.52651596
+        },
+        {
+          "chunk_id": "西湖-景区介绍_017::chunk_0000",
+          "rank": 11,
+          "score": 0.52568066
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0012",
+          "rank": 12,
+          "score": 0.52547175
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_002::chunk_0000",
+          "rank": 13,
+          "score": 0.5225514
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "rank": 14,
+          "score": 0.52177095
+        },
+        {
+          "chunk_id": "西湖-景区介绍_022::chunk_0000",
+          "rank": 15,
+          "score": 0.516546
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_008::chunk_0000",
+          "rank": 16,
+          "score": 0.51507163
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0004",
+          "rank": 17,
+          "score": 0.5145937
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0001",
+          "rank": 18,
+          "score": 0.509419
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0002",
+          "rank": 19,
+          "score": 0.50845736
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0001",
+          "rank": 20,
+          "score": 0.5083801
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "灵隐寺历史有多久了，里面有什么值得看的",
+        "灵隐寺 创建年代 历史沿革",
+        "灵隐寺 主要建筑 景点介绍",
+        "灵隐寺 著名文物 历史文化价值"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.5,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.5,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.61314719,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 0.5,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.61314719,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 0.5,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.61314719,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 0.5,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.61314719,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "西湖-景区介绍_025::chunk_0000",
+          "rank": 1,
+          "score": 0.7552889
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0000",
+          "rank": 2,
+          "score": 0.69378626
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0001",
+          "rank": 3,
+          "score": 0.6005672
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_002::chunk_0000",
+          "rank": 4,
+          "score": 0.56466275
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_011::chunk_0000",
+          "rank": 5,
+          "score": 0.5528005
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "rank": 6,
+          "score": 0.544376
+        },
+        {
+          "chunk_id": "西湖-景区介绍_012::chunk_0000",
+          "rank": 7,
+          "score": 0.5439894
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "rank": 8,
+          "score": 0.54095006
+        },
+        {
+          "chunk_id": "西湖-景区介绍_017::chunk_0000",
+          "rank": 9,
+          "score": 0.53465927
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 10,
+          "score": 0.53100866
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "rank": 11,
+          "score": 0.53070277
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0004",
+          "rank": 12,
+          "score": 0.5279052
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0012",
+          "rank": 13,
+          "score": 0.5191163
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "rank": 14,
+          "score": 0.5133317
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "rank": 15,
+          "score": 0.5116292
+        },
+        {
+          "chunk_id": "西湖-景区介绍_026::chunk_0000",
+          "rank": 16,
+          "score": 0.51154816
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0009",
+          "rank": 17,
+          "score": 0.5113875
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0005",
+          "rank": 18,
+          "score": 0.5022524
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0005",
+          "rank": 19,
+          "score": 0.5021272
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0011",
+          "rank": 20,
+          "score": 0.5007144
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "西湖-景区介绍_025::chunk_0000",
+          "score": 0.710463248193264,
+          "rank": 1
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0000",
+          "score": 0.6752035021781921,
+          "rank": 2
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0001",
+          "score": 0.563028521835804,
+          "rank": 3
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0009",
+          "score": 0.5471179410815239,
+          "rank": 4
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_011::chunk_0000",
+          "score": 0.5444694608449936,
+          "rank": 5
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "score": 0.5287720784544945,
+          "rank": 6
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_002::chunk_0000",
+          "score": 0.5239413380622864,
+          "rank": 7
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0012",
+          "score": 0.5196749046444893,
+          "rank": 8
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0004",
+          "score": 0.5146236345171928,
+          "rank": 9
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "score": 0.5086134597659111,
+          "rank": 10
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "score": 0.4983949549496174,
+          "rank": 11
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "score": 0.4949905052781105,
+          "rank": 12
+        },
+        {
+          "chunk_id": "西湖-景区介绍_012::chunk_0000",
+          "score": 0.49269190430641174,
+          "rank": 13
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0007",
+          "score": 0.49265845865011215,
+          "rank": 14
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0002",
+          "score": 0.4926261268556118,
+          "rank": 15
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0001",
+          "score": 0.4924944043159485,
+          "rank": 16
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0007",
+          "score": 0.48838958889245987,
+          "rank": 17
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0006",
+          "score": 0.48436562716960907,
+          "rank": 18
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "score": 0.48355361446738243,
+          "rank": 19
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0011",
+          "score": 0.48212452232837677,
+          "rank": 20
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "score": 0.4819715768098831,
+          "rank": 21
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0005",
+          "score": 0.48104067891836166,
+          "rank": 22
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0009",
+          "score": 0.4777066186070442,
+          "rank": 23
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0003",
+          "score": 0.4739846773445606,
+          "rank": 24
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_003::chunk_0000",
+          "score": 0.47392789274454117,
+          "rank": 25
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0007",
+          "score": 0.4722024165093899,
+          "rank": 26
+        },
+        {
+          "chunk_id": "西湖-景区介绍_017::chunk_0000",
+          "score": 0.465033695101738,
+          "rank": 27
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_004::chunk_0000",
+          "score": 0.4632161296904087,
+          "rank": 28
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "score": 0.46194037795066833,
+          "rank": 29
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0003",
+          "score": 0.46169034019112587,
+          "rank": 30
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0010",
+          "score": 0.459887083619833,
+          "rank": 31
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0004",
+          "score": 0.45968712866306305,
+          "rank": 32
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0005",
+          "score": 0.45851507782936096,
+          "rank": 33
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0012",
+          "score": 0.4571211077272892,
+          "rank": 34
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "score": 0.45686115324497223,
+          "rank": 35
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0008",
+          "score": 0.4565851762890816,
+          "rank": 36
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0001",
+          "score": 0.45622820034623146,
+          "rank": 37
+        },
+        {
+          "chunk_id": "西湖-景区介绍_026::chunk_0000",
+          "score": 0.4554690793156624,
+          "rank": 38
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0011",
+          "score": 0.45544716343283653,
+          "rank": 39
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0005",
+          "score": 0.4529806077480316,
+          "rank": 40
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0000",
+          "score": 0.45269625633955,
+          "rank": 41
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_010::chunk_0000",
+          "score": 0.4512365683913231,
+          "rank": 42
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_001::chunk_0000",
+          "score": 0.45110712572932243,
+          "rank": 43
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0000",
+          "score": 0.44729723036289215,
+          "rank": 44
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_071::chunk_0000",
+          "score": 0.44683273881673813,
+          "rank": 45
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0000",
+          "score": 0.44649602845311165,
+          "rank": 46
+        },
+        {
+          "chunk_id": "西湖-景区介绍_020::chunk_0000",
+          "score": 0.4442710652947426,
+          "rank": 47
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0008",
+          "score": 0.4424109347164631,
+          "rank": 48
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0001",
+          "score": 0.4421960487961769,
+          "rank": 49
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0017",
+          "score": 0.44172515720129013,
+          "rank": 50
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0003",
+          "score": 0.4409615732729435,
+          "rank": 51
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_000::chunk_0000",
+          "score": 0.4405321590602398,
+          "rank": 52
+        },
+        {
+          "chunk_id": "西湖-景区介绍_010::chunk_0000",
+          "score": 0.44032371789216995,
+          "rank": 53
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0002",
+          "score": 0.44000526517629623,
+          "rank": 54
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_006::chunk_0000",
+          "score": 0.43839556723833084,
+          "rank": 55
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_061::chunk_0000",
+          "score": 0.4363463297486305,
+          "rank": 56
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_033::chunk_0000",
+          "score": 0.4358462914824486,
+          "rank": 57
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0002",
+          "score": 0.4354573041200638,
+          "rank": 58
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0001",
+          "score": 0.43543392419815063,
+          "rank": 59
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0009",
+          "score": 0.43476276099681854,
+          "rank": 60
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0001",
+          "score": 0.4341927021741867,
+          "rank": 61
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0006",
+          "score": 0.43399712070822716,
+          "rank": 62
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0010",
+          "score": 0.43312813341617584,
+          "rank": 63
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0004",
+          "score": 0.4321342781186104,
+          "rank": 64
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_004::chunk_0000",
+          "score": 0.4308186434209347,
+          "rank": 65
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0014",
+          "score": 0.42964908853173256,
+          "rank": 66
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0000",
+          "score": 0.4296318367123604,
+          "rank": 67
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0002",
+          "score": 0.4287039078772068,
+          "rank": 68
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0008",
+          "score": 0.4283396825194359,
+          "rank": 69
+        },
+        {
+          "chunk_id": "西湖-景区介绍_008::chunk_0000",
+          "score": 0.4282490611076355,
+          "rank": 70
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_009::chunk_0000",
+          "score": 0.4281594306230545,
+          "rank": 71
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0018",
+          "score": 0.42794622480869293,
+          "rank": 72
+        },
+        {
+          "chunk_id": "西湖-景区介绍_030::chunk_0003",
+          "score": 0.4273335747420788,
+          "rank": 73
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0003",
+          "score": 0.42729124054312706,
+          "rank": 74
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_021::chunk_0000",
+          "score": 0.42680269107222557,
+          "rank": 75
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0001",
+          "score": 0.42485469579696655,
+          "rank": 76
+        },
+        {
+          "chunk_id": "西湖-景区介绍_015::chunk_0000",
+          "score": 0.4243123382329941,
+          "rank": 77
+        },
+        {
+          "chunk_id": "西湖-景区介绍_014::chunk_0000",
+          "score": 0.4243033081293106,
+          "rank": 78
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_065::chunk_0000",
+          "score": 0.4236106798052788,
+          "rank": 79
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_011::chunk_0000",
+          "score": 0.42164767533540726,
+          "rank": 80
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_009::chunk_0000",
+          "score": 0.42078426480293274,
+          "rank": 81
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0013",
+          "score": 0.42055225744843483,
+          "rank": 82
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_001::chunk_0000",
+          "score": 0.4204416461288929,
+          "rank": 83
+        },
+        {
+          "chunk_id": "西湖-运营信息_000::chunk_0000",
+          "score": 0.419681616127491,
+          "rank": 84
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_003::chunk_0000",
+          "score": 0.4195939116179943,
+          "rank": 85
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0001",
+          "score": 0.4194800406694412,
+          "rank": 86
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_081::chunk_0000",
+          "score": 0.4192463420331478,
+          "rank": 87
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_013::chunk_0001",
+          "score": 0.41910355910658836,
+          "rank": 88
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0015",
+          "score": 0.41888510435819626,
+          "rank": 89
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_007::chunk_0000",
+          "score": 0.41865745559334755,
+          "rank": 90
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "score": 0.41840529069304466,
+          "rank": 91
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0009",
+          "score": 0.41774502769112587,
+          "rank": 92
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0010",
+          "score": 0.4173320159316063,
+          "rank": 93
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "score": 0.4166966453194618,
+          "rank": 94
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0003",
+          "score": 0.41669436544179916,
+          "rank": 95
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_008::chunk_0000",
+          "score": 0.415899109095335,
+          "rank": 96
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0015",
+          "score": 0.41578463837504387,
+          "rank": 97
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0007",
+          "score": 0.4157583937048912,
+          "rank": 98
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_010::chunk_0000",
+          "score": 0.4148472547531128,
+          "rank": 99
+        },
+        {
+          "chunk_id": "西湖-景区介绍_000::chunk_0003",
+          "score": 0.41385243088006973,
+          "rank": 100
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 100,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.5,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.5,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.61314719,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 0.5,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.61314719,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 0.5,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.61314719,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 0.5,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.61314719,
+        "rr_at_20": 1.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 4,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

@@ -1,0 +1,1219 @@
+{
+  "name": "query_000070.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "我在孔府大门口看到一副对联，‘富’字少一点，‘章’字竖通到上面，有什么讲究吗？",
+  "subqueries": [
+    "孔府大门对联 富字少一点 章字竖通 讲究",
+    "孔府楹联 错别字 寓意",
+    "富贵无头 文章通天 对联 孔府"
+  ],
+  "component_texts": [
+    "我在孔府大门口看到一副对联，‘富’字少一点，‘章’字竖通到上面，有什么讲究吗？",
+    "孔府大门对联 富字少一点 章字竖通 讲究",
+    "孔府楹联 错别字 寓意",
+    "富贵无头 文章通天 对联 孔府"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "scenic_spot": {
+        "labels": [
+          "孔府大门"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "guide_facility": {
+        "labels": [
+          "孔府大门"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "relative_location": {
+        "labels": [
+          "孔府"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "art_highlights": {
+        "labels": [
+          "楹联"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "scenic_spot",
+      "guide_facility",
+      "relative_location",
+      "art_highlights"
+    ],
+    "spot_names": [],
+    "resolved_poi_entities": [],
+    "precise_entity_terms": [],
+    "confidence": 0.85,
+    "routing": {
+      "main_dimension": "",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 4,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "lexical_label"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "孔府大门",
+      "字少一点",
+      "文章通天",
+      "孔府大",
+      "字少一",
+      "字竖通",
+      "富贵无",
+      "少一点",
+      "府大门",
+      "文章通",
+      "章通天",
+      "一点"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "南孔庙-景区介绍_053::chunk_0000"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "孔府大门对联 富字少一点 章字竖通 讲究 | 孔府楹联 错别字 寓意 | 富贵无头 文章通天 对联 孔府",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "南孔庙-景区介绍_053::chunk_0000",
+          "rank": 1,
+          "score": 0.73388815
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0003",
+          "rank": 2,
+          "score": 0.71241826
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_063::chunk_0000",
+          "rank": 3,
+          "score": 0.61270845
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0002",
+          "rank": 4,
+          "score": 0.5897542
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_031::chunk_0000",
+          "rank": 5,
+          "score": 0.5817311
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0001",
+          "rank": 6,
+          "score": 0.5747513
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_052::chunk_0000",
+          "rank": 7,
+          "score": 0.57246864
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0000",
+          "rank": 8,
+          "score": 0.5563798
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0000",
+          "rank": 9,
+          "score": 0.542887
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0001",
+          "rank": 10,
+          "score": 0.54199857
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_059::chunk_0000",
+          "rank": 11,
+          "score": 0.53820074
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "rank": 12,
+          "score": 0.53288907
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "rank": 13,
+          "score": 0.52999234
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_017::chunk_0000",
+          "rank": 14,
+          "score": 0.5238548
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_065::chunk_0000",
+          "rank": 15,
+          "score": 0.5230589
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_001::chunk_0000",
+          "rank": 16,
+          "score": 0.5204769
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0012",
+          "rank": 17,
+          "score": 0.5143917
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_047::chunk_0000",
+          "rank": 18,
+          "score": 0.5102674
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_083::chunk_0000",
+          "rank": 19,
+          "score": 0.50832325
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0011",
+          "rank": 20,
+          "score": 0.50413144
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "我在孔府大门口看到一副对联，‘富’字少一点，‘章’字竖通到上面，有什么讲究吗？",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "南孔庙-景区介绍_053::chunk_0000",
+          "rank": 1,
+          "score": 0.7311298
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0003",
+          "rank": 2,
+          "score": 0.67435205
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_063::chunk_0000",
+          "rank": 3,
+          "score": 0.6190299
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_031::chunk_0000",
+          "rank": 4,
+          "score": 0.6115048
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0002",
+          "rank": 5,
+          "score": 0.6108108
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0001",
+          "rank": 6,
+          "score": 0.5880462
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0000",
+          "rank": 7,
+          "score": 0.5868064
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0001",
+          "rank": 8,
+          "score": 0.57763445
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_065::chunk_0000",
+          "rank": 9,
+          "score": 0.5758512
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_059::chunk_0000",
+          "rank": 10,
+          "score": 0.57519066
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0000",
+          "rank": 11,
+          "score": 0.5719722
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_033::chunk_0000",
+          "rank": 12,
+          "score": 0.56896436
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "rank": 13,
+          "score": 0.5673799
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_035::chunk_0000",
+          "rank": 14,
+          "score": 0.55535907
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_047::chunk_0000",
+          "rank": 15,
+          "score": 0.55281526
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_061::chunk_0000",
+          "rank": 16,
+          "score": 0.549727
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0001",
+          "rank": 17,
+          "score": 0.5461934
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0000",
+          "rank": 18,
+          "score": 0.5458162
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_007::chunk_0001",
+          "rank": 19,
+          "score": 0.54472697
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_052::chunk_0000",
+          "rank": 20,
+          "score": 0.5441912
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "我在孔府大门口看到一副对联，‘富’字少一点，‘章’字竖通到上面，有什么讲究吗？ | 孔府大门对联 富字少一点 章字竖通 讲究 | 孔府楹联 错别字 寓意 | 富贵无头 文章通天 对联 孔府",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "南孔庙-景区介绍_053::chunk_0000",
+          "rank": 1,
+          "score": 0.7185899
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0003",
+          "rank": 2,
+          "score": 0.68667287
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_063::chunk_0000",
+          "rank": 3,
+          "score": 0.59401953
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_031::chunk_0000",
+          "rank": 4,
+          "score": 0.5887294
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0002",
+          "rank": 5,
+          "score": 0.57914865
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0001",
+          "rank": 6,
+          "score": 0.5775453
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0000",
+          "rank": 7,
+          "score": 0.56266755
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0000",
+          "rank": 8,
+          "score": 0.5598615
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0001",
+          "rank": 9,
+          "score": 0.549725
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "rank": 10,
+          "score": 0.5473007
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_059::chunk_0000",
+          "rank": 11,
+          "score": 0.5382062
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_052::chunk_0000",
+          "rank": 12,
+          "score": 0.5349527
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_065::chunk_0000",
+          "rank": 13,
+          "score": 0.5233133
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "rank": 14,
+          "score": 0.52152956
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0006",
+          "rank": 15,
+          "score": 0.5195854
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_001::chunk_0000",
+          "rank": 16,
+          "score": 0.5189251
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0008",
+          "rank": 17,
+          "score": 0.5107169
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_047::chunk_0000",
+          "rank": 18,
+          "score": 0.5096025
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_017::chunk_0000",
+          "rank": 19,
+          "score": 0.5083507
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_033::chunk_0000",
+          "rank": 20,
+          "score": 0.49993283
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "我在孔府大门口看到一副对联，‘富’字少一点，‘章’字竖通到上面，有什么讲究吗？",
+        "孔府大门对联 富字少一点 章字竖通 讲究",
+        "孔府楹联 错别字 寓意",
+        "富贵无头 文章通天 对联 孔府"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 20,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "南孔庙-景区介绍_053::chunk_0000",
+          "rank": 1,
+          "score": 0.77455056
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0003",
+          "rank": 2,
+          "score": 0.7301022
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_063::chunk_0000",
+          "rank": 3,
+          "score": 0.67294
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0002",
+          "rank": 4,
+          "score": 0.6513978
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_031::chunk_0000",
+          "rank": 5,
+          "score": 0.6367815
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0001",
+          "rank": 6,
+          "score": 0.6204568
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0000",
+          "rank": 7,
+          "score": 0.6155399
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_052::chunk_0000",
+          "rank": 8,
+          "score": 0.61352324
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_059::chunk_0000",
+          "rank": 9,
+          "score": 0.6007416
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_065::chunk_0000",
+          "rank": 10,
+          "score": 0.5998323
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0001",
+          "rank": 11,
+          "score": 0.5937069
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "rank": 12,
+          "score": 0.5928037
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0000",
+          "rank": 13,
+          "score": 0.5899942
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_033::chunk_0000",
+          "rank": 14,
+          "score": 0.5780963
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_001::chunk_0000",
+          "rank": 15,
+          "score": 0.57746184
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_071::chunk_0001",
+          "rank": 16,
+          "score": 0.57353264
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0001",
+          "rank": 17,
+          "score": 0.5717584
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0000",
+          "rank": 18,
+          "score": 0.57097924
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_075::chunk_0000",
+          "rank": 19,
+          "score": 0.5691917
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_047::chunk_0000",
+          "rank": 20,
+          "score": 0.56728613
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "南孔庙-景区介绍_053::chunk_0000",
+          "score": 0.7290448471903801,
+          "rank": 1
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0003",
+          "score": 0.6747655346989632,
+          "rank": 2
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_031::chunk_0000",
+          "score": 0.641165055334568,
+          "rank": 3
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0002",
+          "score": 0.6311491876840591,
+          "rank": 4
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_063::chunk_0000",
+          "score": 0.6168708354234695,
+          "rank": 5
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0001",
+          "score": 0.5880463570356369,
+          "rank": 6
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0000",
+          "score": 0.5863195583224297,
+          "rank": 7
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_065::chunk_0000",
+          "score": 0.583755612373352,
+          "rank": 8
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_059::chunk_0000",
+          "score": 0.5761475339531898,
+          "rank": 9
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_069::chunk_0001",
+          "score": 0.5730302482843399,
+          "rank": 10
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_057::chunk_0000",
+          "score": 0.5722984001040459,
+          "rank": 11
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_035::chunk_0000",
+          "score": 0.5714961886405945,
+          "rank": 12
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_073::chunk_0000",
+          "score": 0.5689630955457687,
+          "rank": 13
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_001::chunk_0000",
+          "score": 0.5631697326898575,
+          "rank": 14
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_033::chunk_0000",
+          "score": 0.5622840747237206,
+          "rank": 15
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0005",
+          "score": 0.561812587082386,
+          "rank": 16
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_061::chunk_0000",
+          "score": 0.5613359361886978,
+          "rank": 17
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_071::chunk_0001",
+          "score": 0.558711975812912,
+          "rank": 18
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_083::chunk_0001",
+          "score": 0.5571506321430206,
+          "rank": 19
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_007::chunk_0001",
+          "score": 0.5547794327139854,
+          "rank": 20
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_047::chunk_0000",
+          "score": 0.5546257197856903,
+          "rank": 21
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0000",
+          "score": 0.5519861876964569,
+          "rank": 22
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0000",
+          "score": 0.5514529645442963,
+          "rank": 23
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0004",
+          "score": 0.5507920533418655,
+          "rank": 24
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0005",
+          "score": 0.5507660359144211,
+          "rank": 25
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_055::chunk_0001",
+          "score": 0.5507614389061928,
+          "rank": 26
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_081::chunk_0001",
+          "score": 0.5498544350266457,
+          "rank": 27
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_023::chunk_0001",
+          "score": 0.5490061938762665,
+          "rank": 28
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_013::chunk_0000",
+          "score": 0.5481563359498978,
+          "rank": 29
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_052::chunk_0000",
+          "score": 0.5481416434049606,
+          "rank": 30
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_067::chunk_0000",
+          "score": 0.5446771383285522,
+          "rank": 31
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_011::chunk_0000",
+          "score": 0.5442295223474503,
+          "rank": 32
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_081::chunk_0000",
+          "score": 0.5440101772546768,
+          "rank": 33
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_033::chunk_0001",
+          "score": 0.5432633087038994,
+          "rank": 34
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_013::chunk_0001",
+          "score": 0.543220229446888,
+          "rank": 35
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_003::chunk_0000",
+          "score": 0.5425503253936768,
+          "rank": 36
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0002",
+          "score": 0.5423418805003166,
+          "rank": 37
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0008",
+          "score": 0.5422349721193314,
+          "rank": 38
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0005",
+          "score": 0.5421282351016998,
+          "rank": 39
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0006",
+          "score": 0.540527381002903,
+          "rank": 40
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_079::chunk_0000",
+          "score": 0.5404687598347664,
+          "rank": 41
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0006",
+          "score": 0.5402262583374977,
+          "rank": 42
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_001::chunk_0001",
+          "score": 0.5389368981122971,
+          "rank": 43
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_084::chunk_0003",
+          "score": 0.5376401245594025,
+          "rank": 44
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_025::chunk_0000",
+          "score": 0.535527303814888,
+          "rank": 45
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_043::chunk_0000",
+          "score": 0.5351072996854782,
+          "rank": 46
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_051::chunk_0000",
+          "score": 0.533995732665062,
+          "rank": 47
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_083::chunk_0000",
+          "score": 0.5339339673519135,
+          "rank": 48
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0007",
+          "score": 0.5325895622372627,
+          "rank": 49
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_010::chunk_0000",
+          "score": 0.5317896157503128,
+          "rank": 50
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_075::chunk_0000",
+          "score": 0.5316777676343918,
+          "rank": 51
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_007::chunk_0000",
+          "score": 0.5313539728522301,
+          "rank": 52
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_039::chunk_0000",
+          "score": 0.5275348648428917,
+          "rank": 53
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_019::chunk_0001",
+          "score": 0.5273998230695724,
+          "rank": 54
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_079::chunk_0001",
+          "score": 0.5272190421819687,
+          "rank": 55
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_041::chunk_0000",
+          "score": 0.526894822716713,
+          "rank": 56
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_015::chunk_0000",
+          "score": 0.5261451080441475,
+          "rank": 57
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_005::chunk_0001",
+          "score": 0.5227842554450035,
+          "rank": 58
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_030::chunk_0000",
+          "score": 0.5210097879171371,
+          "rank": 59
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_026::chunk_0000",
+          "score": 0.5209990590810776,
+          "rank": 60
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "score": 0.5180905386805534,
+          "rank": 61
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_009::chunk_0000",
+          "score": 0.5175885856151581,
+          "rank": 62
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_005::chunk_0000",
+          "score": 0.5171981677412987,
+          "rank": 63
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_021::chunk_0000",
+          "score": 0.5169593766331673,
+          "rank": 64
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_011::chunk_0001",
+          "score": 0.5164766162633896,
+          "rank": 65
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0001",
+          "score": 0.5149644613265991,
+          "rank": 66
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_013::chunk_0000",
+          "score": 0.5134219527244568,
+          "rank": 67
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_027::chunk_0000",
+          "score": 0.5115726217627525,
+          "rank": 68
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0006",
+          "score": 0.5098662227392197,
+          "rank": 69
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0004",
+          "score": 0.508905366063118,
+          "rank": 70
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_019::chunk_0000",
+          "score": 0.5074084103107452,
+          "rank": 71
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0002",
+          "score": 0.5069778561592102,
+          "rank": 72
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_049::chunk_0001",
+          "score": 0.5052533522248268,
+          "rank": 73
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_017::chunk_0000",
+          "score": 0.504296138882637,
+          "rank": 74
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0000",
+          "score": 0.5039628222584724,
+          "rank": 75
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_037::chunk_0000",
+          "score": 0.5038392320275307,
+          "rank": 76
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_017::chunk_0000",
+          "score": 0.5038159750401974,
+          "rank": 77
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_017::chunk_0001",
+          "score": 0.5028821602463722,
+          "rank": 78
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0003",
+          "score": 0.5015132129192352,
+          "rank": 79
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_045::chunk_0000",
+          "score": 0.5007035583257675,
+          "rank": 80
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0015",
+          "score": 0.5001984611153603,
+          "rank": 81
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_006::chunk_0000",
+          "score": 0.5000499933958054,
+          "rank": 82
+        },
+        {
+          "chunk_id": "颐和园-运营介绍_003::chunk_0002",
+          "score": 0.5000158473849297,
+          "rank": 83
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0006",
+          "score": 0.4996418431401253,
+          "rank": 84
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_071::chunk_0000",
+          "score": 0.49876078590750694,
+          "rank": 85
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_023::chunk_0000",
+          "score": 0.49652134999632835,
+          "rank": 86
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_068::chunk_0000",
+          "score": 0.4956996664404869,
+          "rank": 87
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0008",
+          "score": 0.4954514466226101,
+          "rank": 88
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_029::chunk_0000",
+          "score": 0.4954221397638321,
+          "rank": 89
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0012",
+          "score": 0.494025319814682,
+          "rank": 90
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_049::chunk_0000",
+          "score": 0.4939272180199623,
+          "rank": 91
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0001",
+          "score": 0.49247127026319504,
+          "rank": 92
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_021::chunk_0000",
+          "score": 0.49213895946741104,
+          "rank": 93
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0016",
+          "score": 0.4911624491214752,
+          "rank": 94
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_020::chunk_0000",
+          "score": 0.48996106162667274,
+          "rank": 95
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_020::chunk_0000",
+          "score": 0.48937591165304184,
+          "rank": 96
+        },
+        {
+          "chunk_id": "南孔庙-景区介绍_008::chunk_0000",
+          "score": 0.4891117215156555,
+          "rank": 97
+        },
+        {
+          "chunk_id": "明十三陵-景区介绍_000::chunk_0008",
+          "score": 0.48794252425432205,
+          "rank": 98
+        },
+        {
+          "chunk_id": "颐和园-景区介绍_016::chunk_0000",
+          "score": 0.4875476360321045,
+          "rank": 99
+        },
+        {
+          "chunk_id": "南孔庙-运营信息_000::chunk_0002",
+          "score": 0.4874139204621315,
+          "rank": 100
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 100,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 4,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

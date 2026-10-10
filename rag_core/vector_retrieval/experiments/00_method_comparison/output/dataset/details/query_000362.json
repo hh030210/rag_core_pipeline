@@ -1,0 +1,912 @@
+{
+  "name": "query_000362.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "张家界的冬天值得去吗，冬天有什么特别的景色",
+  "subqueries": [
+    "张家界 冬季 旅游 评价",
+    "张家界 冬天 独特 景色",
+    "张家界 冬季 雾凇 雪景 云海",
+    "张家界 淡季 旅游 体验"
+  ],
+  "component_texts": [
+    "张家界的冬天值得去吗，冬天有什么特别的景色",
+    "张家界 冬季 旅游 评价",
+    "张家界 冬天 独特 景色",
+    "张家界 冬季 雾凇 雪景 云海",
+    "张家界 淡季 旅游 体验"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "relative_location": {
+        "labels": [
+          "张家界"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "main"
+      },
+      "admin_division": {
+        "labels": [
+          "张家界"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "natural_landscape": {
+        "labels": [
+          "云海"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "relative_location",
+      "admin_division",
+      "natural_landscape"
+    ],
+    "spot_names": [
+      "张家界"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "张家界",
+        "canonical_name": "张家界",
+        "scenic_area": "张家界",
+        "entity_type": "scenic_area"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 0.7,
+    "routing": {
+      "main_dimension": "relative_location",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 3,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "lexical_label",
+        "lexical_label+strict_intent"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "云海",
+      "体验",
+      "冬天",
+      "冬季",
+      "景色",
+      "淡季",
+      "独特",
+      "评价",
+      "雪景"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "张家界-景点介绍_003::chunk_0000",
+    "张家界-运营信息_002::chunk_0001",
+    "张家界-运营信息_003::chunk_0000"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "张家界 冬季 旅游 评价 | 张家界 冬天 独特 景色 | 张家界 冬季 雾凇 雪景 云海 | 张家界 淡季 旅游 体验",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 5,
+        "miss": false,
+        "rr": 0.2,
+        "result_count": 19,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.33333333,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.18154179,
+        "rr_at_5": 0.2,
+        "hit_at_10": true,
+        "gold_recall_at_10": 0.33333333,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.18154179,
+        "rr_at_10": 0.2,
+        "hit_at_15": true,
+        "gold_recall_at_15": 0.66666667,
+        "precision_at_15": 0.13333333,
+        "ndcg_at_15": 0.29886147,
+        "rr_at_15": 0.2,
+        "hit_at_20": true,
+        "gold_recall_at_20": 0.66666667,
+        "precision_at_20": 0.1,
+        "ndcg_at_20": 0.29886147,
+        "rr_at_20": 0.2
+      },
+      "results": [
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0001",
+          "rank": 1,
+          "score": 0.7014699
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0006",
+          "rank": 2,
+          "score": 0.59349287
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0005",
+          "rank": 3,
+          "score": 0.5833878
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0000",
+          "rank": 4,
+          "score": 0.57576007
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0001",
+          "rank": 5,
+          "score": 0.56933784
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0000",
+          "rank": 6,
+          "score": 0.5678853
+        },
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0000",
+          "rank": 7,
+          "score": 0.5653965
+        },
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0001",
+          "rank": 8,
+          "score": 0.55314994
+        },
+        {
+          "chunk_id": "张家界-景点介绍_004::chunk_0000",
+          "rank": 9,
+          "score": 0.55262184
+        },
+        {
+          "chunk_id": "张家界-运营信息_005::chunk_0000",
+          "rank": 10,
+          "score": 0.5520929
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0000",
+          "rank": 11,
+          "score": 0.55053973
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0004",
+          "rank": 12,
+          "score": 0.5476728
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0001",
+          "rank": 13,
+          "score": 0.5406321
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0001",
+          "rank": 14,
+          "score": 0.5398085
+        },
+        {
+          "chunk_id": "张家界-运营信息_003::chunk_0000",
+          "rank": 15,
+          "score": 0.5375993
+        },
+        {
+          "chunk_id": "张家界-景点介绍_006::chunk_0000",
+          "rank": 16,
+          "score": 0.53591084
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0000",
+          "rank": 17,
+          "score": 0.5322909
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0000",
+          "rank": 18,
+          "score": 0.5319454
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0001",
+          "rank": 19,
+          "score": 0.5311445
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "张家界的冬天值得去吗，冬天有什么特别的景色",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 4,
+        "miss": false,
+        "rr": 0.25,
+        "result_count": 20,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.33333333,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.20210735,
+        "rr_at_5": 0.25,
+        "hit_at_10": true,
+        "gold_recall_at_10": 0.33333333,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.20210735,
+        "rr_at_10": 0.25,
+        "hit_at_15": true,
+        "gold_recall_at_15": 0.33333333,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.20210735,
+        "rr_at_15": 0.25,
+        "hit_at_20": true,
+        "gold_recall_at_20": 0.33333333,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.20210735,
+        "rr_at_20": 0.25
+      },
+      "results": [
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0001",
+          "rank": 1,
+          "score": 0.68933976
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0000",
+          "rank": 2,
+          "score": 0.5781814
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0000",
+          "rank": 3,
+          "score": 0.57552683
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0001",
+          "rank": 4,
+          "score": 0.5728612
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0001",
+          "rank": 5,
+          "score": 0.5504053
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0004",
+          "rank": 6,
+          "score": 0.5461391
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0001",
+          "rank": 7,
+          "score": 0.5392294
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0001",
+          "rank": 8,
+          "score": 0.5365799
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0005",
+          "rank": 9,
+          "score": 0.5358925
+        },
+        {
+          "chunk_id": "张家界-运营信息_005::chunk_0000",
+          "rank": 10,
+          "score": 0.5322788
+        },
+        {
+          "chunk_id": "张家界-景点介绍_006::chunk_0000",
+          "rank": 11,
+          "score": 0.5272031
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0000",
+          "rank": 12,
+          "score": 0.52559435
+        },
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0001",
+          "rank": 13,
+          "score": 0.5253638
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0000",
+          "rank": 14,
+          "score": 0.5239872
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0000",
+          "rank": 15,
+          "score": 0.5235133
+        },
+        {
+          "chunk_id": "张家界-景点介绍_004::chunk_0000",
+          "rank": 16,
+          "score": 0.52273536
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0003",
+          "rank": 17,
+          "score": 0.5197826
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0006",
+          "rank": 18,
+          "score": 0.519108
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0000",
+          "rank": 19,
+          "score": 0.5183285
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0014",
+          "rank": 20,
+          "score": 0.50573516
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "张家界的冬天值得去吗，冬天有什么特别的景色 | 张家界 冬季 旅游 评价 | 张家界 冬天 独特 景色 | 张家界 冬季 雾凇 雪景 云海 | 张家界 淡季 旅游 体验",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 6,
+        "miss": false,
+        "rr": 0.16666667,
+        "result_count": 19,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": false,
+        "gold_recall_at_5": 0.0,
+        "precision_at_5": 0.0,
+        "ndcg_at_5": 0.0,
+        "rr_at_5": 0.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 0.33333333,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.16716045,
+        "rr_at_10": 0.16666667,
+        "hit_at_15": true,
+        "gold_recall_at_15": 0.66666667,
+        "precision_at_15": 0.13333333,
+        "ndcg_at_15": 0.29806245,
+        "rr_at_15": 0.16666667,
+        "hit_at_20": true,
+        "gold_recall_at_20": 0.66666667,
+        "precision_at_20": 0.1,
+        "ndcg_at_20": 0.29806245,
+        "rr_at_20": 0.16666667
+      },
+      "results": [
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0001",
+          "rank": 1,
+          "score": 0.70807606
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0006",
+          "rank": 2,
+          "score": 0.58003175
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0000",
+          "rank": 3,
+          "score": 0.566746
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0005",
+          "rank": 4,
+          "score": 0.56551546
+        },
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0001",
+          "rank": 5,
+          "score": 0.56302536
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0001",
+          "rank": 6,
+          "score": 0.5601965
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0000",
+          "rank": 7,
+          "score": 0.55737543
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0000",
+          "rank": 8,
+          "score": 0.5513147
+        },
+        {
+          "chunk_id": "张家界-运营信息_005::chunk_0000",
+          "rank": 9,
+          "score": 0.54868746
+        },
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0000",
+          "rank": 10,
+          "score": 0.5444923
+        },
+        {
+          "chunk_id": "张家界-运营信息_003::chunk_0000",
+          "rank": 11,
+          "score": 0.54423356
+        },
+        {
+          "chunk_id": "张家界-景点介绍_004::chunk_0000",
+          "rank": 12,
+          "score": 0.5438216
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0001",
+          "rank": 13,
+          "score": 0.54266596
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0001",
+          "rank": 14,
+          "score": 0.54110247
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0000",
+          "rank": 15,
+          "score": 0.54031444
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0001",
+          "rank": 16,
+          "score": 0.54030555
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0004",
+          "rank": 17,
+          "score": 0.53992033
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0001",
+          "rank": 18,
+          "score": 0.53353184
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0000",
+          "rank": 19,
+          "score": 0.5327966
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "张家界的冬天值得去吗，冬天有什么特别的景色",
+        "张家界 冬季 旅游 评价",
+        "张家界 冬天 独特 景色",
+        "张家界 冬季 雾凇 雪景 云海",
+        "张家界 淡季 旅游 体验"
+      ],
+      "metrics": {
+        "first_gold_rank": 3,
+        "miss": false,
+        "rr": 0.33333333,
+        "result_count": 20,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.33333333,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 0.23463936,
+        "rr_at_5": 0.33333333,
+        "hit_at_10": true,
+        "gold_recall_at_10": 0.33333333,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 0.23463936,
+        "rr_at_10": 0.33333333,
+        "hit_at_15": true,
+        "gold_recall_at_15": 0.33333333,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 0.23463936,
+        "rr_at_15": 0.33333333,
+        "hit_at_20": true,
+        "gold_recall_at_20": 0.33333333,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 0.23463936,
+        "rr_at_20": 0.33333333
+      },
+      "results": [
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0001",
+          "rank": 1,
+          "score": 0.73881805
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0000",
+          "rank": 2,
+          "score": 0.64074534
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0001",
+          "rank": 3,
+          "score": 0.630882
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0000",
+          "rank": 4,
+          "score": 0.6295228
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0005",
+          "rank": 5,
+          "score": 0.6176721
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0004",
+          "rank": 6,
+          "score": 0.6079503
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0001",
+          "rank": 7,
+          "score": 0.5973109
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0001",
+          "rank": 8,
+          "score": 0.5940597
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0006",
+          "rank": 9,
+          "score": 0.5928482
+        },
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0001",
+          "rank": 10,
+          "score": 0.5897658
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0001",
+          "rank": 11,
+          "score": 0.58871573
+        },
+        {
+          "chunk_id": "张家界-运营信息_005::chunk_0000",
+          "rank": 12,
+          "score": 0.5873843
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0000",
+          "rank": 13,
+          "score": 0.5824643
+        },
+        {
+          "chunk_id": "张家界-景点介绍_004::chunk_0000",
+          "rank": 14,
+          "score": 0.5795207
+        },
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0000",
+          "rank": 15,
+          "score": 0.5794306
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0003",
+          "rank": 16,
+          "score": 0.5790764
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0000",
+          "rank": 17,
+          "score": 0.5777739
+        },
+        {
+          "chunk_id": "张家界-景点介绍_006::chunk_0000",
+          "rank": 18,
+          "score": 0.57596505
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0000",
+          "rank": 19,
+          "score": 0.5691811
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0000",
+          "rank": 20,
+          "score": 0.5670625
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0001",
+          "score": 0.6873800158500671,
+          "rank": 1
+        },
+        {
+          "chunk_id": "张家界-景点介绍_001::chunk_0000",
+          "score": 0.6652023270726204,
+          "rank": 2
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0001",
+          "score": 0.6003646999597549,
+          "rank": 3
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0000",
+          "score": 0.5996484234929085,
+          "rank": 4
+        },
+        {
+          "chunk_id": "张家界-运营信息_003::chunk_0000",
+          "score": 0.573554627597332,
+          "rank": 5
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0001",
+          "score": 0.5719300135970116,
+          "rank": 6
+        },
+        {
+          "chunk_id": "张家界-运营信息_005::chunk_0000",
+          "score": 0.5685287639498711,
+          "rank": 7
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0004",
+          "score": 0.5672699809074402,
+          "rank": 8
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0000",
+          "score": 0.5585990250110626,
+          "rank": 9
+        },
+        {
+          "chunk_id": "张家界-景点介绍_004::chunk_0000",
+          "score": 0.5550006479024887,
+          "rank": 10
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0010",
+          "score": 0.5508226454257965,
+          "rank": 11
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0001",
+          "score": 0.5496764704585075,
+          "rank": 12
+        },
+        {
+          "chunk_id": "张家界-景点介绍_005::chunk_0001",
+          "score": 0.5413761734962463,
+          "rank": 13
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0014",
+          "score": 0.5411990955471992,
+          "rank": 14
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0005",
+          "score": 0.5362754389643669,
+          "rank": 15
+        },
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0001",
+          "score": 0.5313900038599968,
+          "rank": 16
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0002",
+          "score": 0.5313189551234245,
+          "rank": 17
+        },
+        {
+          "chunk_id": "张家界-景点介绍_006::chunk_0000",
+          "score": 0.5297579988837242,
+          "rank": 18
+        },
+        {
+          "chunk_id": "张家界-景点介绍_002::chunk_0001",
+          "score": 0.5285248160362244,
+          "rank": 19
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0000",
+          "score": 0.527087464928627,
+          "rank": 20
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0006",
+          "score": 0.5261371433734894,
+          "rank": 21
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0000",
+          "score": 0.5249608308076859,
+          "rank": 22
+        },
+        {
+          "chunk_id": "张家界-运营信息_001::chunk_0000",
+          "score": 0.5234895572066307,
+          "rank": 23
+        },
+        {
+          "chunk_id": "张家界-运营信息_006::chunk_0000",
+          "score": 0.5191248655319214,
+          "rank": 24
+        },
+        {
+          "chunk_id": "张家界-运营信息_002::chunk_0000",
+          "score": 0.5189669579267502,
+          "rank": 25
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0003",
+          "score": 0.5166624188423157,
+          "rank": 26
+        },
+        {
+          "chunk_id": "张家界-运营信息_007::chunk_0001",
+          "score": 0.5142839625477791,
+          "rank": 27
+        },
+        {
+          "chunk_id": "张家界-运营信息_004::chunk_0000",
+          "score": 0.507517971098423,
+          "rank": 28
+        },
+        {
+          "chunk_id": "张家界-运营信息_004::chunk_0001",
+          "score": 0.5043980404734612,
+          "rank": 29
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0007",
+          "score": 0.49732376635074615,
+          "rank": 30
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0009",
+          "score": 0.49619363993406296,
+          "rank": 31
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0008",
+          "score": 0.48465462028980255,
+          "rank": 32
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0013",
+          "score": 0.47897374629974365,
+          "rank": 33
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0015",
+          "score": 0.4736863635480404,
+          "rank": 34
+        },
+        {
+          "chunk_id": "张家界-景点介绍_003::chunk_0000",
+          "score": 0.46938133984804153,
+          "rank": 35
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0012",
+          "score": 0.45351890474557877,
+          "rank": 36
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0016",
+          "score": 0.4286994896829128,
+          "rank": 37
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0017",
+          "score": 0.42370104044675827,
+          "rank": 38
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0018",
+          "score": 0.4145302250981331,
+          "rank": 39
+        },
+        {
+          "chunk_id": "张家界-景点介绍_007::chunk_0011",
+          "score": 0.4102965295314789,
+          "rank": 40
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 3,
+        "miss": false,
+        "rr": 0.33333333,
+        "result_count": 40,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.66666667,
+        "precision_at_5": 0.4,
+        "ndcg_at_5": 0.41618116,
+        "rr_at_5": 0.33333333,
+        "hit_at_10": true,
+        "gold_recall_at_10": 0.66666667,
+        "precision_at_10": 0.2,
+        "ndcg_at_10": 0.41618116,
+        "rr_at_10": 0.33333333,
+        "hit_at_15": true,
+        "gold_recall_at_15": 0.66666667,
+        "precision_at_15": 0.13333333,
+        "ndcg_at_15": 0.41618116,
+        "rr_at_15": 0.33333333,
+        "hit_at_20": true,
+        "gold_recall_at_20": 0.66666667,
+        "precision_at_20": 0.1,
+        "ndcg_at_20": 0.41618116,
+        "rr_at_20": 0.33333333
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 5,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

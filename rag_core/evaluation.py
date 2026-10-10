@@ -551,14 +551,14 @@ def _parse_ks(values: Sequence[int] | str) -> Tuple[int, ...]:
 
 def _publish_fusion_evaluation(rows, config, summary, chunks, experiments_dir=None):
     """Publish one complete evaluation batch; never accumulate previous snapshots."""
-    experiments = Path(experiments_dir or Path(__file__).resolve().parent / 'retrieval_fusion' / 'experiments').resolve()
-    names = ('01_online_snapshots',)
+    experiments = Path(experiments_dir or Path(__file__).resolve().parent / 'retrieval_fusion' / 'experiments').resolve() / '00_method_comparison' / 'output'
+    names = ('online',)
     for name in names:
         folder = experiments / name
-        if folder.is_symlink() or (folder / 'output').is_symlink():
+        if folder.is_symlink() or (folder / 'dataset').is_symlink():
             raise ValueError('Refusing to replace a symlinked experiment output')
         folder.mkdir(parents=True, exist_ok=True)
-    stage = Path(tempfile.mkdtemp(prefix='.evaluate-', dir=experiments / names[0]))
+    stage = Path(tempfile.mkdtemp(prefix='.evaluate-', dir=experiments))
     batch = uuid4().hex
     generated = datetime.now(timezone.utc).isoformat()
     chunk_map = {_result_id(c): c for c in chunks}
@@ -607,7 +607,7 @@ def _publish_fusion_evaluation(rows, config, summary, chunks, experiments_dir=No
                 raise ValueError('Fusion evaluation batch mismatch: ' + name)
         # Replace only the online evaluation output; experiments run independently.
         for name in names:
-            target = experiments / name / 'output'
+            target = experiments / name
             backup = stage / (name + '.previous')
             had_previous = target.exists()
             if had_previous:
@@ -623,7 +623,7 @@ def _publish_fusion_evaluation(rows, config, summary, chunks, experiments_dir=No
         raise
     finally:
         shutil.rmtree(stage)
-    return experiments / names[0] / 'output'
+    return experiments / names[0]
 
 
 def run_evaluation(

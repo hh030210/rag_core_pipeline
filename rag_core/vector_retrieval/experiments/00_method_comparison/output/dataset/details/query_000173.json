@@ -1,0 +1,925 @@
+{
+  "name": "query_000173.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "龙门石窟有哪些世界级或者全国之最？",
+  "subqueries": [
+    "龙门石窟 世界文化遗产 之最",
+    "龙门石窟 全国之最 文物价值",
+    "龙门石窟 “世界之最” 纪录",
+    "龙门石窟 中国之最 石雕艺术"
+  ],
+  "component_texts": [
+    "龙门石窟有哪些世界级或者全国之最？",
+    "龙门石窟 世界文化遗产 之最",
+    "龙门石窟 全国之最 文物价值",
+    "龙门石窟 “世界之最” 纪录",
+    "龙门石窟 中国之最 石雕艺术"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "title_honor": {
+        "labels": [
+          "世界文化遗产"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "entity_category": {
+        "labels": [
+          "世界文化遗产",
+          "石窟"
+        ],
+        "intent_terms": [
+          "石窟"
+        ],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "scenic_spot": {
+        "labels": [
+          "龙门石窟"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "relative_location": {
+        "labels": [
+          "龙门石窟"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "art_highlights": {
+        "labels": [
+          "石雕"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "title_honor",
+      "entity_category",
+      "scenic_spot",
+      "relative_location",
+      "art_highlights"
+    ],
+    "spot_names": [
+      "龙门石窟"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "龙门石窟",
+        "canonical_name": "龙门石窟",
+        "scenic_area": "龙门石窟",
+        "entity_type": "scenic_area"
+      },
+      {
+        "mention": "龙门",
+        "canonical_name": "龙门石窟",
+        "scenic_area": "龙门石窟",
+        "entity_type": "scenic_area"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 1.0,
+    "routing": {
+      "main_dimension": "",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 5,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "lexical_label"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "世界文化遗产",
+      "世界文化遗",
+      "界文化遗产",
+      "世界之最",
+      "世界文化",
+      "文化遗产",
+      "界文化遗",
+      "石雕艺术",
+      "世界之",
+      "世界文",
+      "化遗产",
+      "文化遗"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "龙门石窟-景区介绍_006::chunk_0000",
+    "龙门石窟-景区介绍_007::chunk_0000"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "龙门石窟 世界文化遗产 之最 | 龙门石窟 全国之最 文物价值 | 龙门石窟 “世界之最” 纪录 | 龙门石窟 中国之最 石雕艺术",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": null,
+        "miss": true,
+        "rr": 0.0,
+        "result_count": 18,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": false,
+        "gold_recall_at_5": 0.0,
+        "precision_at_5": 0.0,
+        "ndcg_at_5": 0.0,
+        "rr_at_5": 0.0,
+        "hit_at_10": false,
+        "gold_recall_at_10": 0.0,
+        "precision_at_10": 0.0,
+        "ndcg_at_10": 0.0,
+        "rr_at_10": 0.0,
+        "hit_at_15": false,
+        "gold_recall_at_15": 0.0,
+        "precision_at_15": 0.0,
+        "ndcg_at_15": 0.0,
+        "rr_at_15": 0.0,
+        "hit_at_20": false,
+        "gold_recall_at_20": 0.0,
+        "precision_at_20": 0.0,
+        "ndcg_at_20": 0.0,
+        "rr_at_20": 0.0
+      },
+      "results": [
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0002",
+          "rank": 1,
+          "score": 0.7122309
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0000",
+          "rank": 2,
+          "score": 0.68124557
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0001",
+          "rank": 3,
+          "score": 0.6332042
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0004",
+          "rank": 4,
+          "score": 0.62543327
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0007",
+          "rank": 5,
+          "score": 0.6228981
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0008",
+          "rank": 6,
+          "score": 0.6142999
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0012",
+          "rank": 7,
+          "score": 0.6090727
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0009",
+          "rank": 8,
+          "score": 0.600411
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "rank": 9,
+          "score": 0.5997119
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0011",
+          "rank": 10,
+          "score": 0.5989258
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0001",
+          "rank": 11,
+          "score": 0.59846425
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0001",
+          "rank": 12,
+          "score": 0.59218705
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0006",
+          "rank": 13,
+          "score": 0.5864734
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0002",
+          "rank": 14,
+          "score": 0.5864205
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_008::chunk_0000",
+          "rank": 15,
+          "score": 0.5656458
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_017::chunk_0000",
+          "rank": 16,
+          "score": 0.54903567
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_020::chunk_0000",
+          "rank": 17,
+          "score": 0.5437217
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "rank": 18,
+          "score": 0.54290175
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "龙门石窟有哪些世界级或者全国之最？",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": null,
+        "miss": true,
+        "rr": 0.0,
+        "result_count": 20,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": false,
+        "gold_recall_at_5": 0.0,
+        "precision_at_5": 0.0,
+        "ndcg_at_5": 0.0,
+        "rr_at_5": 0.0,
+        "hit_at_10": false,
+        "gold_recall_at_10": 0.0,
+        "precision_at_10": 0.0,
+        "ndcg_at_10": 0.0,
+        "rr_at_10": 0.0,
+        "hit_at_15": false,
+        "gold_recall_at_15": 0.0,
+        "precision_at_15": 0.0,
+        "ndcg_at_15": 0.0,
+        "rr_at_15": 0.0,
+        "hit_at_20": false,
+        "gold_recall_at_20": 0.0,
+        "precision_at_20": 0.0,
+        "ndcg_at_20": 0.0,
+        "rr_at_20": 0.0
+      },
+      "results": [
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0000",
+          "rank": 1,
+          "score": 0.70781827
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0001",
+          "rank": 2,
+          "score": 0.66607356
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0008",
+          "rank": 3,
+          "score": 0.65981567
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0002",
+          "rank": 4,
+          "score": 0.6551105
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0009",
+          "rank": 5,
+          "score": 0.6411061
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0007",
+          "rank": 6,
+          "score": 0.6338957
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0004",
+          "rank": 7,
+          "score": 0.6244917
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "rank": 8,
+          "score": 0.6059116
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0011",
+          "rank": 9,
+          "score": 0.6001136
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_020::chunk_0000",
+          "rank": 10,
+          "score": 0.5880205
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_021::chunk_0000",
+          "rank": 11,
+          "score": 0.57839465
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0006",
+          "rank": 12,
+          "score": 0.5664451
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0012",
+          "rank": 13,
+          "score": 0.5618078
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_001::chunk_0000",
+          "rank": 14,
+          "score": 0.55816996
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0010",
+          "rank": 15,
+          "score": 0.55736285
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0005",
+          "rank": 16,
+          "score": 0.5567357
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "rank": 17,
+          "score": 0.5513274
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_015::chunk_0000",
+          "rank": 18,
+          "score": 0.5474692
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0002",
+          "rank": 19,
+          "score": 0.54585123
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0001",
+          "rank": 20,
+          "score": 0.54332316
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "龙门石窟有哪些世界级或者全国之最？ | 龙门石窟 世界文化遗产 之最 | 龙门石窟 全国之最 文物价值 | 龙门石窟 “世界之最” 纪录 | 龙门石窟 中国之最 石雕艺术",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": null,
+        "miss": true,
+        "rr": 0.0,
+        "result_count": 18,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": false,
+        "gold_recall_at_5": 0.0,
+        "precision_at_5": 0.0,
+        "ndcg_at_5": 0.0,
+        "rr_at_5": 0.0,
+        "hit_at_10": false,
+        "gold_recall_at_10": 0.0,
+        "precision_at_10": 0.0,
+        "ndcg_at_10": 0.0,
+        "rr_at_10": 0.0,
+        "hit_at_15": false,
+        "gold_recall_at_15": 0.0,
+        "precision_at_15": 0.0,
+        "ndcg_at_15": 0.0,
+        "rr_at_15": 0.0,
+        "hit_at_20": false,
+        "gold_recall_at_20": 0.0,
+        "precision_at_20": 0.0,
+        "ndcg_at_20": 0.0,
+        "rr_at_20": 0.0
+      },
+      "results": [
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0002",
+          "rank": 1,
+          "score": 0.6899313
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0000",
+          "rank": 2,
+          "score": 0.6553466
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0004",
+          "rank": 3,
+          "score": 0.61714995
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0001",
+          "rank": 4,
+          "score": 0.61087275
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0008",
+          "rank": 5,
+          "score": 0.6095487
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0007",
+          "rank": 6,
+          "score": 0.60671294
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0012",
+          "rank": 7,
+          "score": 0.60162807
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0001",
+          "rank": 8,
+          "score": 0.59166634
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "rank": 9,
+          "score": 0.5896441
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0002",
+          "rank": 10,
+          "score": 0.58873206
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0011",
+          "rank": 11,
+          "score": 0.5835578
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0009",
+          "rank": 12,
+          "score": 0.5821984
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0001",
+          "rank": 13,
+          "score": 0.5749608
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_008::chunk_0000",
+          "rank": 14,
+          "score": 0.569532
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0006",
+          "rank": 15,
+          "score": 0.56873584
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_017::chunk_0000",
+          "rank": 16,
+          "score": 0.548234
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_020::chunk_0000",
+          "rank": 17,
+          "score": 0.5397787
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0010",
+          "rank": 18,
+          "score": 0.539322
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "龙门石窟有哪些世界级或者全国之最？",
+        "龙门石窟 世界文化遗产 之最",
+        "龙门石窟 全国之最 文物价值",
+        "龙门石窟 “世界之最” 纪录",
+        "龙门石窟 中国之最 石雕艺术"
+      ],
+      "metrics": {
+        "first_gold_rank": null,
+        "miss": true,
+        "rr": 0.0,
+        "result_count": 19,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": false,
+        "gold_recall_at_5": 0.0,
+        "precision_at_5": 0.0,
+        "ndcg_at_5": 0.0,
+        "rr_at_5": 0.0,
+        "hit_at_10": false,
+        "gold_recall_at_10": 0.0,
+        "precision_at_10": 0.0,
+        "ndcg_at_10": 0.0,
+        "rr_at_10": 0.0,
+        "hit_at_15": false,
+        "gold_recall_at_15": 0.0,
+        "precision_at_15": 0.0,
+        "ndcg_at_15": 0.0,
+        "rr_at_15": 0.0,
+        "hit_at_20": false,
+        "gold_recall_at_20": 0.0,
+        "precision_at_20": 0.0,
+        "ndcg_at_20": 0.0,
+        "rr_at_20": 0.0
+      },
+      "results": [
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0000",
+          "rank": 1,
+          "score": 0.73589766
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0002",
+          "rank": 2,
+          "score": 0.7060134
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0001",
+          "rank": 3,
+          "score": 0.68725944
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0008",
+          "rank": 4,
+          "score": 0.6765462
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0009",
+          "rank": 5,
+          "score": 0.6616294
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0007",
+          "rank": 6,
+          "score": 0.652491
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0004",
+          "rank": 7,
+          "score": 0.64776057
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0011",
+          "rank": 8,
+          "score": 0.6386503
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "rank": 9,
+          "score": 0.63023835
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0012",
+          "rank": 10,
+          "score": 0.61049336
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_020::chunk_0000",
+          "rank": 11,
+          "score": 0.60563666
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0006",
+          "rank": 12,
+          "score": 0.5935799
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "rank": 13,
+          "score": 0.5895573
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0010",
+          "rank": 14,
+          "score": 0.5879291
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0002",
+          "rank": 15,
+          "score": 0.58697116
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0001",
+          "rank": 16,
+          "score": 0.5868541
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_001::chunk_0000",
+          "rank": 17,
+          "score": 0.58488965
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_021::chunk_0000",
+          "rank": 18,
+          "score": 0.58408076
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0005",
+          "rank": 19,
+          "score": 0.5787713
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0000",
+          "score": 0.697544202208519,
+          "rank": 1
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0002",
+          "score": 0.6703142300248146,
+          "rank": 2
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0007",
+          "score": 0.6610164567828178,
+          "rank": 3
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0001",
+          "score": 0.6531777456402779,
+          "rank": 4
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0008",
+          "score": 0.6510611847043037,
+          "rank": 5
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0009",
+          "score": 0.6473273783922195,
+          "rank": 6
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0011",
+          "score": 0.6288248524069786,
+          "rank": 7
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0004",
+          "score": 0.6194310188293457,
+          "rank": 8
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_022::chunk_0000",
+          "score": 0.6175721362233162,
+          "rank": 9
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0000",
+          "score": 0.6069308817386627,
+          "rank": 10
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_020::chunk_0000",
+          "score": 0.603943757712841,
+          "rank": 11
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0012",
+          "score": 0.5997337847948074,
+          "rank": 12
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_021::chunk_0000",
+          "score": 0.5883906856179237,
+          "rank": 13
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_000::chunk_0001",
+          "score": 0.5862508565187454,
+          "rank": 14
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_010::chunk_0000",
+          "score": 0.5837512388825417,
+          "rank": 15
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_001::chunk_0000",
+          "score": 0.5831700265407562,
+          "rank": 16
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0006",
+          "score": 0.5806329399347305,
+          "rank": 17
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_015::chunk_0000",
+          "score": 0.5737405940890312,
+          "rank": 18
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0005",
+          "score": 0.571493610739708,
+          "rank": 19
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0010",
+          "score": 0.5705125853419304,
+          "rank": 20
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_002::chunk_0000",
+          "score": 0.5516533479094505,
+          "rank": 21
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_004::chunk_0000",
+          "score": 0.5462266206741333,
+          "rank": 22
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0001",
+          "score": 0.5458425953984261,
+          "rank": 23
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_005::chunk_0000",
+          "score": 0.5438717901706696,
+          "rank": 24
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_006::chunk_0000",
+          "score": 0.5434009283781052,
+          "rank": 25
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_008::chunk_0000",
+          "score": 0.5392571091651917,
+          "rank": 26
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_017::chunk_0000",
+          "score": 0.538875088095665,
+          "rank": 27
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_013::chunk_0000",
+          "score": 0.5350653156638145,
+          "rank": 28
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0002",
+          "score": 0.5343732610344887,
+          "rank": 29
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_023::chunk_0003",
+          "score": 0.5336280688643456,
+          "rank": 30
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_011::chunk_0000",
+          "score": 0.5169300213456154,
+          "rank": 31
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_007::chunk_0000",
+          "score": 0.5144332498311996,
+          "rank": 32
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_012::chunk_0000",
+          "score": 0.5069721341133118,
+          "rank": 33
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_019::chunk_0000",
+          "score": 0.4840293526649475,
+          "rank": 34
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_016::chunk_0000",
+          "score": 0.4755556881427765,
+          "rank": 35
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_009::chunk_0000",
+          "score": 0.4460736848413944,
+          "rank": 36
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_003::chunk_0000",
+          "score": 0.4234929084777832,
+          "rank": 37
+        },
+        {
+          "chunk_id": "龙门石窟-运营信息_000::chunk_0000",
+          "score": 0.4226389452815056,
+          "rank": 38
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_018::chunk_0000",
+          "score": 0.39383073151111603,
+          "rank": 39
+        },
+        {
+          "chunk_id": "龙门石窟-景区介绍_014::chunk_0000",
+          "score": 0.37759799137711525,
+          "rank": 40
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 25,
+        "miss": false,
+        "rr": 0.04,
+        "result_count": 40,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": false,
+        "gold_recall_at_5": 0.0,
+        "precision_at_5": 0.0,
+        "ndcg_at_5": 0.0,
+        "rr_at_5": 0.0,
+        "hit_at_10": false,
+        "gold_recall_at_10": 0.0,
+        "precision_at_10": 0.0,
+        "ndcg_at_10": 0.0,
+        "rr_at_10": 0.0,
+        "hit_at_15": false,
+        "gold_recall_at_15": 0.0,
+        "precision_at_15": 0.0,
+        "ndcg_at_15": 0.0,
+        "rr_at_15": 0.0,
+        "hit_at_20": false,
+        "gold_recall_at_20": 0.0,
+        "precision_at_20": 0.0,
+        "ndcg_at_20": 0.0,
+        "rr_at_20": 0.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 5,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

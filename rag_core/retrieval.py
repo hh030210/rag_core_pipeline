@@ -18,7 +18,7 @@ except ImportError:  # pragma: no cover - lightweight local environments
 from .dimension_labels import CanonicalLabelResolver
 from .entity_registry import CorpusEntityRegistry
 from .fact_index import FactIndex
-from .retrieval_fusion.fusion import _save_fusion_snapshot, adaptive_fusion
+from .retrieval_fusion.fusion import _save_fusion_snapshot, apply_fusion
 from .poi_registry import PoiRegistry
 from .schema_v2 import load_schema, normalize_label, normalize_text, schema_maps
 from .storage import VectorStore
@@ -934,6 +934,7 @@ class Retriever:
         semantic_pool = max(top_k, int(semantic_pool or getattr(self.settings, "semantic_pool", 20)))
         dimension_pool = max(top_k, int(dimension_pool or getattr(self.settings, "dimension_pool", 100)))
         analysis = self._parse_query(query)
+        analysis["vector_retrieval_strategy"] = self.vector_retriever.strategy_file
         verified_fact_matches = self._fact_index_matches(query_facts or [])
         analysis["query_fact_count"] = len(query_facts or [])
         analysis["verified_fact_match_count"] = sum(
@@ -946,6 +947,11 @@ class Retriever:
             and (constraint.get("labels") or constraint.get("intent_terms"))
         }
         vector_inputs = [query] + list(dimension_query_texts.values())
+        if not dimension_only:
+            strategy_texts = self.vector_retriever.query_texts(
+                vector_subqueries, original_query=original_query or query
+            )
+            vector_inputs.extend(text for text in strategy_texts if text not in vector_inputs)
         encoded_vectors = self.embeddings.encode(vector_inputs)
         query_vec = _unit_vector(encoded_vectors[0])
         dimension_query_vecs = {
@@ -965,6 +971,8 @@ class Retriever:
             semantic_pool,
             original_query=original_query or query,
             query_vector=query_vec,
+            query_vector_text=query,
+            query_vectors=dict(zip(vector_inputs, encoded_vectors)),
             spot_names=analysis["spot_names"],
         )
 
@@ -1066,7 +1074,9 @@ class Retriever:
         for rank, item in enumerate(dimension, 1):
             item["rank"] = rank
 
-        fused = adaptive_fusion(semantic, dimension, top_k=top_k)
+        fused = apply_fusion(semantic, dimension, top_k=top_k, query=query,
+                             original_query=original_query or query, query_analysis=analysis)
+        analysis["fusion_strategy"] = fused["fusion_strategy"]["file"]
         fusion_candidates = fused["fusion_candidates"]
         fusion = fused["fusion_results"]
         if save_snapshot:

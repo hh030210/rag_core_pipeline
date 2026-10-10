@@ -1,0 +1,564 @@
+{
+  "name": "query_000191.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "我们自驾从南阳过来，去少林寺应该在哪个高速出口下？",
+  "subqueries": [
+    "少林寺最近高速出口",
+    "少林寺周边高速出口及停车场信息",
+    "南阳到少林寺自驾路线高速出口"
+  ],
+  "component_texts": [
+    "我们自驾从南阳过来，去少林寺应该在哪个高速出口下？",
+    "少林寺最近高速出口",
+    "少林寺周边高速出口及停车场信息",
+    "南阳到少林寺自驾路线高速出口"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "scenic_spot": {
+        "labels": [
+          "少林寺"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "parking_info": {
+        "labels": [
+          "停车场"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "external_transport": {
+        "labels": [
+          "自驾"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "scenic_spot",
+      "parking_info",
+      "external_transport"
+    ],
+    "spot_names": [
+      "少林寺"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "少林寺",
+        "canonical_name": "少林寺",
+        "scenic_area": "少林寺",
+        "entity_type": "scenic_area"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 0.7,
+    "routing": {
+      "main_dimension": "",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 3,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "lexical_label"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "到少林寺",
+      "少林寺最",
+      "少林寺自",
+      "停车场",
+      "到少林",
+      "少林寺",
+      "林寺最",
+      "林寺自",
+      "停车",
+      "出口",
+      "到少",
+      "南阳"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "少林寺-运营信息_000::chunk_0000"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "少林寺最近高速出口 | 少林寺周边高速出口及停车场信息 | 南阳到少林寺自驾路线高速出口",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 8,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0000",
+          "rank": 1,
+          "score": 0.5986724
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "rank": 2,
+          "score": 0.54625446
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "rank": 3,
+          "score": 0.49669552
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 4,
+          "score": 0.47853237
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0011",
+          "rank": 5,
+          "score": 0.4770379
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0001",
+          "rank": 6,
+          "score": 0.47497827
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0007",
+          "rank": 7,
+          "score": 0.46116754
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0009",
+          "rank": 8,
+          "score": 0.4582492
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "我们自驾从南阳过来，去少林寺应该在哪个高速出口下？",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 10,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0000",
+          "rank": 1,
+          "score": 0.57990396
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "rank": 2,
+          "score": 0.53963286
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0001",
+          "rank": 3,
+          "score": 0.51629347
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "rank": 4,
+          "score": 0.510842
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 5,
+          "score": 0.49370626
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0009",
+          "rank": 6,
+          "score": 0.46798536
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0011",
+          "rank": 7,
+          "score": 0.46763086
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0005",
+          "rank": 8,
+          "score": 0.46293074
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0007",
+          "rank": 9,
+          "score": 0.44335717
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0008",
+          "rank": 10,
+          "score": 0.44256073
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "我们自驾从南阳过来，去少林寺应该在哪个高速出口下？ | 少林寺最近高速出口 | 少林寺周边高速出口及停车场信息 | 南阳到少林寺自驾路线高速出口",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 6,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0000",
+          "rank": 1,
+          "score": 0.5953289
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "rank": 2,
+          "score": 0.53968406
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "rank": 3,
+          "score": 0.4800805
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 4,
+          "score": 0.4737352
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0011",
+          "rank": 5,
+          "score": 0.46547562
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0001",
+          "rank": 6,
+          "score": 0.45743972
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "我们自驾从南阳过来，去少林寺应该在哪个高速出口下？",
+        "少林寺最近高速出口",
+        "少林寺周边高速出口及停车场信息",
+        "南阳到少林寺自驾路线高速出口"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 10,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0000",
+          "rank": 1,
+          "score": 0.605615
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "rank": 2,
+          "score": 0.56911373
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "rank": 3,
+          "score": 0.53291273
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0001",
+          "rank": 4,
+          "score": 0.52675176
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 5,
+          "score": 0.5071212
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0011",
+          "rank": 6,
+          "score": 0.49147865
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0009",
+          "rank": 7,
+          "score": 0.4912197
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0007",
+          "rank": 8,
+          "score": 0.46756744
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0008",
+          "rank": 9,
+          "score": 0.45984167
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0005",
+          "rank": 10,
+          "score": 0.4562062
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0000",
+          "score": 0.6441515535116196,
+          "rank": 1
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "score": 0.5952649265527725,
+          "rank": 2
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "score": 0.5205946490168571,
+          "rank": 3
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0001",
+          "score": 0.5167541652917862,
+          "rank": 4
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "score": 0.4995420314371586,
+          "rank": 5
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0005",
+          "score": 0.48666704446077347,
+          "rank": 6
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "score": 0.47624581679701805,
+          "rank": 7
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0009",
+          "score": 0.47552110254764557,
+          "rank": 8
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0011",
+          "score": 0.46884307637810707,
+          "rank": 9
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0006",
+          "score": 0.4571237899363041,
+          "rank": 10
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0007",
+          "score": 0.4558791071176529,
+          "rank": 11
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0008",
+          "score": 0.45488230884075165,
+          "rank": 12
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0004",
+          "score": 0.44482916593551636,
+          "rank": 13
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0012",
+          "score": 0.43798233941197395,
+          "rank": 14
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0010",
+          "score": 0.4035438522696495,
+          "rank": 15
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 15,
+        "hit_at_1": true,
+        "gold_recall_at_1": 1.0,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 1.0,
+        "precision_at_5": 0.2,
+        "ndcg_at_5": 1.0,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.1,
+        "ndcg_at_10": 1.0,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.06666667,
+        "ndcg_at_15": 1.0,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.05,
+        "ndcg_at_20": 1.0,
+        "rr_at_20": 1.0
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 4,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

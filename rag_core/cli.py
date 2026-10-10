@@ -67,7 +67,7 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate = sub.add_parser("evaluate", help="使用 Golden 测试集批量评估三路检索")
     _common(evaluate)
     evaluate.add_argument("--dataset", required=True, help="Golden JSON/JSONL 测试集")
-    evaluate.add_argument("--output", default="", help="兼容旧命令；评测固定覆盖 retrieval_fusion/experiments/01_online_snapshots/output/dataset")
+    evaluate.add_argument("--output", default="", help="兼容旧命令；评测固定覆盖 retrieval_fusion/experiments/00_method_comparison/output/online/dataset")
     evaluate.add_argument("--top-k", type=int, default=10, help="最终融合结果的 Top-K")
     evaluate.add_argument("--eval-depth", type=int, default=20, help="每一路用于评测的候选深度")
     evaluate.add_argument("--ks", default="1,3,5,10,20", help="评测 K，逗号分隔")

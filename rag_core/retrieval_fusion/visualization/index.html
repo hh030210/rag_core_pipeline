@@ -224,6 +224,27 @@
     .case-panel .toolbar .search { min-width: 0; }
     .case-panel #filter { max-width: 100%; }
     @media (max-width: 760px) { .case-panel { padding: 13px; } .case-panel #filter { width: 100%; } }
+
+    .content-section, .route-fusion-panel, .case-panel { border: 2px solid #bdcfd6; border-left: 5px solid var(--teal); border-radius: 14px; background: white; padding: 18px; margin-bottom: 24px; box-shadow: var(--shadow); }
+    .section-title { margin: 0 0 16px; padding: 0 0 12px; border-bottom: 1px solid #bdcfd6; font-size: 19px; color: #18515b; }
+    .content-section .strategy-notes { margin-bottom: 0; }
+    .fusion-comparison-section .evaluation-panel { border: 0; box-shadow: none; padding: 0; margin: 0; }
+    .semantic-table code { display: block; color: var(--muted); font-size: 10px; font-weight: 400; white-space: normal; overflow-wrap: anywhere; }
+    .route-fusion-head, .case-panel-title { padding-bottom: 12px; border-bottom: 1px solid #bdcfd6; }
+
+    .semantic-methods { display: grid; gap: 0; }
+    .semantic-method { padding: 14px 0; border-top: 1px solid var(--line); }
+    .semantic-method:last-child { padding-bottom: 0; }
+    .semantic-method h3 { margin: 0 0 6px; font-size: 14px; }
+    .semantic-method h3 code { margin-left: 10px; color: var(--muted); font-size: 11px; font-weight: 400; overflow-wrap: anywhere; }
+    .semantic-method p { margin: 5px 0; color: #425663; font-size: 12px; line-height: 1.75; }
+    .semantic-method strong { color: var(--ink); }
+
+    .mainline-badge { display: inline-block; margin-left: 8px; padding: 2px 7px; border-radius: 5px; background: #087e83; color: white; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .strategy-filename { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; font-weight: 400; }
+    .evaluation-table tbody tr.is-mainline { background: #e2f4f2; }
+    .semantic-method.is-mainline { padding-left: 12px; border-left: 3px solid var(--teal); background: #f1faf8; }
+    .strategy-note.is-mainline { border: 2px solid var(--teal); background: #f1faf8; }
   </style>
 </head>
 <body>
@@ -234,24 +255,63 @@
     </div>
   </header>
   <main class="page" id="app">
-    <section class="strategy-notes" id="strategy-notes" aria-label="融合策略说明">
-      <article class="strategy-note">
-        <h2>线上融合基准</h2>
-        <p>语义、维度两路各自在本路候选内做 Min–Max 归一化：<strong>N(s) = (s − min(s)) / (max(s) − min(s))</strong>；若本路分数相同，则该路候选归一化分均为 1。按 chunk 并集计算：<strong>F<sub>online</sub> = (1 − α)N<sub>sem</sub> + αN<sub>dim</sub></strong>，缺失路贡献为 0。</p>
-        <p>本页“线上融合”展示最近一次评测中 <code>fusion.py</code> 输出的实际候选排序；页面只重算评估指标，不重算线上排序。离线与推荐融合由各自实验脚本独立运行，页面分别读取它们保存的结果。</p>
+    <section class="content-section semantic-intro" aria-labelledby="semantic-intro-title">
+      <h2 class="section-title" id="semantic-intro-title">语义检索策略介绍</h2>
+      <p class="evaluation-note">记原始查询为 q₀，子查询为 qᵢ，编码器为 E，单位化为 U(v) = v / ‖v‖，文档块为 c。以下为方法对比中的全部五种策略。</p>
+      <div class="semantic-methods">
+        <article class="semantic-method" data-strategy-file="subqueries_concat.py">
+          <h3>子查询拼接 <code>subqueries_concat.py</code></h3>
+          <p>将子查询用 <code> | </code> 连接，整体编码一次。<strong>v = U(E(q₁ | … | qₘ))；S(c) = cos(v, E(c))。</strong></p>
+          <p>一次查询编码、一次向量子检索，调用 Qdrant 一次。</p>
+        </article>
+        <article class="semantic-method" data-strategy-file="original_only.py">
+          <h3>仅原始查询 <code>original_only.py</code></h3>
+          <p>直接编码用户原始查询。<strong>v = U(E(q₀))；S(c) = cos(v, E(c))。</strong></p>
+          <p>一次查询编码、一次向量子检索，调用 Qdrant 一次。</p>
+        </article>
+        <article class="semantic-method" data-strategy-file="original_plus_subqueries_concat.py">
+          <h3>原始查询加子查询拼接 <code>original_plus_subqueries_concat.py</code></h3>
+          <p>将原始查询与全部子查询连接后整体编码。<strong>v = U(E(q₀ | q₁ | … | qₘ))；S(c) = cos(v, E(c))。</strong></p>
+          <p>一次查询编码、一次向量子检索，调用 Qdrant 一次。</p>
+        </article>
+        <article class="semantic-method" data-strategy-file="original_subqueries_centroid_w2.py">
+          <h3>查询向量加权平均 <code>original_subqueries_centroid_w2.py</code></h3>
+          <p>原始查询与子查询按文本去重，分别编码并单位化；原始查询权重为 2，其余查询权重为 1，再将加权和单位化。<strong>v = U(2U(E(q₀)) + Σ U(E(qᵢ)))；S(c) = cos(v, E(c))。</strong>求和仅包含去重后不同于原始查询的子查询。</p>
+          <p>编码去重后的多个查询文本，最终只做一次向量子检索，调用 Qdrant 一次。</p>
+        </article>
+        <article class="semantic-method" data-strategy-file="dense_ensemble.py">
+          <h3>纯向量集成 <code>dense_ensemble.py</code></h3>
+          <p>只编码原始查询，分别计算整块、独立短段、带上下文短段三组向量的相似度；短段分数取当前块内的最大余弦值。<strong>S(c) = 0.25S整块 + 0.375max(S独立短段) + 0.375max(S上下文短段)。</strong></p>
+          <p>短段窗口 240 字符、步长 160 字符；上下文补充文档标题和前块末尾 160 字符。一次查询编码、三次逻辑向量子检索；当前实现在内存中计算归一化向量点积（等于余弦相似度），Qdrant 调用为 0 次。</p>
+        </article>
+      </div>
+    </section>
+    <section class="content-section" id="semantic-comparison-panel" aria-labelledby="semantic-comparison-title">
+      <h2 class="section-title" id="semantic-comparison-title">语义检索效果对比</h2>
+      <div id="semantic-comparison-content" aria-live="polite">正在读取方法对比实验…</div>
+    </section>
+    <section class="content-section" aria-labelledby="fusion-intro-title">
+      <h2 class="section-title" id="fusion-intro-title">融合策略介绍</h2>
+      <div class="strategy-notes" id="strategy-notes" aria-label="融合策略说明">
+      <article class="strategy-note" data-strategy-file="online_adaptive.py">
+        <h2>自适应融合基准 <code>online_adaptive.py</code></h2>
+        <p>主流程通过 <code>fusion.py</code> 中的 <code>FUSION_STRATEGY</code> 选择策略文件，默认 <code>dimension_score.py</code>（维度分数基准）。也可选择 <code>online_adaptive.py</code> 或 <code>recommended_fusion.py</code>。</p>
+        <p>“主线评测批次（已保存）”展示最近一次 evaluate 实际采用的策略和排序；修改配置后须重新评测才会更新数据。保留的自适应基准在常规分支使用 <strong>0.77N语义 + 0.23N维度</strong>，在维度名次分支使用 <strong>0.4N语义 + 0.6/(维度名次+1)</strong>；缺失路贡献为 0。</p>
       </article>
-      <article class="strategy-note">
-        <h2>离线融合：维度分数融合</h2>
+      <article class="strategy-note" data-strategy-file="dimension_score.py">
+        <h2>维度分数基准 <code>dimension_score.py</code></h2>
         <p>对线上融合候选重排：<strong>F<sub>offline</sub> = S* + 0.05D<sub>norm</sub> + 0.10L<sub>norm</sub></strong>。<strong>S*</strong> 为语义原始分；缺失时用 <strong>max(0, min(S) − 0.025)</strong> 估计。<strong>D<sub>norm</sub></strong> 为维度路 Min–Max 分（缺失为 0）；<strong>L<sub>norm</sub></strong> 为 IDF 加权字符 2/3/4-gram 查询覆盖率，再除以当前候选池的最高词面分。</p>
-        <p><strong>参数：</strong>维度权重 0.05、词面权重 0.10、语义缺失惩罚 0.025，均固定用于离线基准；IDF 按当前候选池文档频率计算，文本最多取前 4000 字。可在上方条形图中选择该策略查看命中统计。</p>
+        <p><strong>参数：</strong>维度权重 0.05、词面权重 0.10、语义缺失惩罚 0.025，均固定用于离线基准；IDF 按当前候选池文档频率计算，文本最多取前 4000 字。可在下方“融合策略分析”中选择该策略查看命中统计。</p>
       </article>
-      <article class="strategy-note">
-        <h2>推荐融合：维度角色校准</h2>
+      <article class="strategy-note" data-strategy-file="recommended_fusion.py">
+        <h2>维度角色校准 <code>recommended_fusion.py</code></h2>
         <p>从原始语义分、维度分和词面证据起算：<strong>F<sub>rec</sub> = S<sub>eff</sub> + 0.15I<sub>sem</sub>(S<sub>rank</sub> − S<sub>eff</sub>) + s<sub>D</sub>·0.0375D<sub>eff</sub> + s<sub>L</sub>·0.075[(1 − 0.75)L + 0.75W] + 0.015I<sub>role</sub>A</strong>。</p>
         <p><strong>校准：</strong>满足“两路首位相同，且至少一路 Top-5 有 ≥3 个候选、相对 gap ≥2%、突出程度 ≥5”时 β=0.625，否则 β=0；其中相对 gap=(Top1−Top2)/max(|Top2|, 10<sup>−8</sup>)，突出程度=gap/(Top2 至 Top-5 尾部的平均相邻分差)。<strong>S<sub>eff</sub></strong> 是语义原分与语义线性名次分按 β 混合（未召回语义用 max(0, 本路最低分)，不加名次分）；<strong>D<sub>eff</sub></strong> 是归一化维度分与维度线性名次分按 β 混合。<strong>W</strong> 是 320 字窗口、160 字步长的局部 IDF 覆盖；<strong>A</strong> 是查询事实锚点的 IDF 覆盖。窗口、锚点分均在候选池内归一化。</p>
-        <p><strong>角色参数：</strong>仅当约束全属于 entity_name / geo_admin / geo_position、没有具体 POI 且语义相对 gap ≥1% 时，I<sub>role</sub>=1，s<sub>D</sub>=0.85×0.25=0.2125、s<sub>L</sub>=0.5；否则 I<sub>role</sub>=0、s<sub>D</sub>=0.85、s<sub>L</sub>=1。事实锚点权重 0.015；语义名次混合 0.15；词面局部窗口替换比例 0.75。配置固定在 <code>experiments/07_recommended_fusion/code/run.py</code>，Gold 仅用于离线评估。</p>
+        <p><strong>角色参数：</strong>仅当约束全属于 entity_name / geo_admin / geo_position、没有具体 POI 且语义相对 gap ≥1% 时，I<sub>role</sub>=1，s<sub>D</sub>=0.85×0.25=0.2125、s<sub>L</sub>=0.5；否则 I<sub>role</sub>=0、s<sub>D</sub>=0.85、s<sub>L</sub>=1。事实锚点权重 0.015；语义名次混合 0.15；词面局部窗口替换比例 0.75。配置固定在 <code>experiments/00_method_comparison/code/recommended_fusion.py</code>，Gold 仅用于离线评估。</p>
       </article>
+      </div>
     </section>
+    <section class="content-section fusion-comparison-section" aria-label="融合策略对比">
     <section class="metrics" id="metrics"></section>
     <div class="toolbar" aria-label="指标数据与统计口径">
       <label>指标分母 <select id="metric-denominator">
@@ -264,13 +324,15 @@
       <span id="metric-status" role="status" aria-live="polite"></span>
     </div>
     <section class="panel evaluation-panel" id="evaluation-panel" aria-labelledby="evaluation-title" hidden></section>
+    </section>
     <section class="panel route-fusion-panel" id="route-fusion-panel" aria-labelledby="route-fusion-title">
     <div class="retrieval-controls" aria-label="条形图策略与 Top-K 设置">
       <label class="strategy-control">融合策略
       <select id="strategy-select" aria-label="选择融合策略">
         <option value="recommended">推荐融合（维度角色校准）</option>
         <option value="new">离线融合（维度分数基准）</option>
-        <option value="old">线上融合</option>
+        <option value="adaptive">自适应融合基准</option>
+        <option value="old">主线评测批次（已保存）</option>
       </select>
       </label>
       <label>语义 Top-K <input id="semantic-topk" type="number" min="1" step="1" value="5"></label>
@@ -282,13 +344,14 @@
     </section>
 
     <section class="panel case-panel" id="case-panel" aria-labelledby="case-panel-title">
-    <h2 class="case-panel-title" id="case-panel-title">问题筛选与检索详情</h2>
+    <h2 class="case-panel-title" id="case-panel-title">详情 · 问题筛选与检索结果</h2>
     <div class="retrieval-controls case-controls" aria-label="当前 panel 的融合策略与 Top-K">
       <label class="strategy-control">融合策略
         <select id="case-strategy-select" aria-label="问题筛选融合策略">
           <option value="recommended">推荐融合（维度角色校准）</option>
           <option value="new">离线融合（维度分数基准）</option>
-          <option value="old">线上融合</option>
+          <option value="adaptive">自适应融合基准</option>
+        <option value="old">主线评测批次（已保存）</option>
         </select>
       </label>
       <label>语义 Top-K <select id="case-semantic-topk" aria-label="问题筛选语义 Top-K"><option value="5">5</option></select></label>
@@ -331,7 +394,9 @@
     <div class="chunk-dialog-meta" id="chunk-dialog-meta"></div>
     <pre class="chunk-content" id="chunk-content"></pre>
   </dialog>
-  <script src="./data_metrics.js" defer></script>
-  <script src="./viewer.js" defer></script>
+  <script src="./data_metrics.js?v=20261010-all-strategies" defer></script>
+  <script src="./viewer.js?v=20261010-all-strategies" defer></script>
+  <script src="./pipeline_strategies.js?v=20261010-all-strategies" defer></script>
+  <script src="./semantic_comparison.js?v=20261010-all-strategies" defer></script>
 </body>
 </html>

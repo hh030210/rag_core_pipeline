@@ -1,0 +1,2044 @@
+{
+  "schema_version": 1,
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "input_batch_id": "bfb30a79bd184161a465653b1b6563e3",
+  "methods": [
+    "subqueries_concat",
+    "original_only",
+    "original_plus_subqueries_concat",
+    "original_subqueries_centroid_w2",
+    "dense_ensemble"
+  ],
+  "configuration": {
+    "input_count": 435,
+    "evaluated_count": 402,
+    "excluded_unmapped_count": 33,
+    "baseline_pool": 20,
+    "ensemble_pool": 100,
+    "model": "/home/humq/rag_db_silm/model/bge-m3",
+    "collection": "rag_core_sdu_v4pro_full_20260921_run1",
+    "ks": [
+      1,
+      5,
+      10,
+      15,
+      20
+    ],
+    "preserved_results": true,
+    "note": "Four original query-composition rankings and verified dense-ensemble rankings; identical queries and gold"
+  },
+  "items": [
+    {
+      "name": "query_000000.json",
+      "query": "长陵和定陵分别是哪位皇帝的陵寝，分别建于哪个朝代？"
+    },
+    {
+      "name": "query_000001.json",
+      "query": "昭陵和康陵哪个更值得去看"
+    },
+    {
+      "name": "query_000002.json",
+      "query": "明朝有哪些皇帝是生前就给自己修好陵墓的"
+    },
+    {
+      "name": "query_000003.json",
+      "query": "十三陵中哪些陵墓是由继任皇帝为先皇营建的？请列举两个例子。"
+    },
+    {
+      "name": "query_000004.json",
+      "query": "十三陵的神道上都有哪些时期的建筑？"
+    },
+    {
+      "name": "query_000005.json",
+      "query": "我只有一天时间，想参观十三陵中最有代表性的两个陵墓，您推荐哪两个？"
+    },
+    {
+      "name": "query_000006.json",
+      "query": "想看十三陵中地面建筑保存最完整的陵园应该去哪个"
+    },
+    {
+      "name": "query_000007.json",
+      "query": "除了十三座皇帝陵，十三陵陵区内还葬有哪些人？请至少说出三类。"
+    },
+    {
+      "name": "query_000008.json",
+      "query": "十三陵陵区周围利用哪些天然山口修筑了哪些防御设施？"
+    },
+    {
+      "name": "query_000009.json",
+      "query": "我想去参观明成祖的陵墓，现在里面还有什么展览？"
+    },
+    {
+      "name": "query_000010.json",
+      "query": "朱翊钧的陵墓为什么建好了却闲置了这么久才启用？"
+    },
+    {
+      "name": "query_000011.json",
+      "query": "神道上的石像生共有多少对，排列顺序是怎样的？"
+    },
+    {
+      "name": "query_000012.json",
+      "query": "明十三陵的陵寝是按什么规则来布局的"
+    },
+    {
+      "name": "query_000013.json",
+      "query": "我想去参观明武宗的陵寝，怎么预约？"
+    },
+    {
+      "name": "query_000014.json",
+      "query": "十三陵中哪三座陵墓规模最大？"
+    },
+    {
+      "name": "query_000015.json",
+      "query": "碑亭里那块石碑是什么样式的，传说有什么讲究"
+    },
+    {
+      "name": "query_000016.json",
+      "query": "我计划带父母参观十三陵，父母年纪较大，不想走太多路，希望参观相对轻松、地面建筑完整的陵园，您推荐哪个陵？"
+    },
+    {
+      "name": "query_000017.json",
+      "query": "长陵的祾思殿有什么特别值得看的"
+    },
+    {
+      "name": "query_000018.json",
+      "query": "十三陵中哪个陵墓是唯一被考古发掘的，出土了哪些重要文物？"
+    },
+    {
+      "name": "query_000019.json",
+      "query": "神道上的石像生都有哪些动物，这些动物都有什么寓意呢？"
+    },
+    {
+      "name": "query_000020.json",
+      "query": "明十三陵的营建过程包括哪些步骤，成祖朱棣如何卜选陵址的？"
+    },
+    {
+      "name": "query_000021.json",
+      "query": "定陵和康陵的地面建筑共占地多少平方米？"
+    },
+    {
+      "name": "query_000022.json",
+      "query": "我想去参观明朝第十三位皇帝和他皇后的合葬墓，现在陵开放吗？"
+    },
+    {
+      "name": "query_000023.json",
+      "query": "明十三陵景区目前对外开放的景区有需要预约，哪些是修复完整的？"
+    },
+    {
+      "name": "query_000024.json",
+      "query": "我想了解明代帝陵的建筑规制，比较长陵和定陵在地面建筑方面的异同。"
+    },
+    {
+      "name": "query_000025.json",
+      "query": "介绍一下十三陵神道上的华表、，1994年修葺时做了什么？"
+    },
+    {
+      "name": "query_000026.json",
+      "query": "明十三陵是哪一年被列为全国重点文物保护单位和全国重点风景名胜保护区之一？"
+    },
+    {
+      "name": "query_000027.json",
+      "query": "请问明穆宗的陵墓中有几位皇后合葬的？"
+    },
+    {
+      "name": "query_000028.json",
+      "query": "神道上的下马碑上面刻的？"
+    },
+    {
+      "name": "query_000029.json",
+      "query": "棂星门为什么又叫龙凤门和火焰牌坊"
+    },
+    {
+      "name": "query_000030.json",
+      "query": "明十三陵顺便去居庸关长城方便吗，有什么看点"
+    },
+    {
+      "name": "query_000031.json",
+      "query": "神道上碑亭里立的是什么碑，有什么特殊的形制"
+    },
+    {
+      "name": "query_000032.json",
+      "query": "长陵那个金丝楠木大殿里现在有什么展览"
+    },
+    {
+      "name": "query_000033.json",
+      "query": "神路有多长，是什么朝代修建的"
+    },
+    {
+      "name": "query_000034.json",
+      "query": "我想去参观崇祯皇帝的陵墓，它叫什么，规模怎么样？"
+    },
+    {
+      "name": "query_000035.json",
+      "query": "时间有限只能挑一个陵加一个神道来逛，怎么选最值"
+    },
+    {
+      "name": "query_000036.json",
+      "query": "朱棣当年是怎么选中这块风水宝地建陵的"
+    },
+    {
+      "name": "query_000037.json",
+      "query": "定陵修建花了多长时间和多少银子"
+    },
+    {
+      "name": "query_000038.json",
+      "query": "十三陵神道是通往哪个陵的，从哪里开始走"
+    },
+    {
+      "name": "query_000039.json",
+      "query": "大红门两侧原来有什么建筑，现在还看得到吗"
+    },
+    {
+      "name": "query_000040.json",
+      "query": "明十三陵景区是世界文化遗产，它的突出价值体现在哪些方面？"
+    },
+    {
+      "name": "query_000041.json",
+      "query": "除了长陵还有哪个陵也是皇帝生前建的，有什么看点"
+    },
+    {
+      "name": "query_000042.json",
+      "query": "明十三陵中哪些陵墓是嗣皇帝所建，并且比较简朴？请根据历史顺序举两个例子。"
+    },
+    {
+      "name": "query_000043.json",
+      "query": "石像生里的文臣和功臣都长什么样"
+    },
+    {
+      "name": "query_000044.json",
+      "query": "明十三陵前后修了多少年，一共经历了几代皇帝"
+    },
+    {
+      "name": "query_000045.json",
+      "query": "大学生旺季去定陵和长陵有学生票优惠吗"
+    },
+    {
+      "name": "query_000046.json",
+      "query": "明十三陵有什么游览注意事项吗，比如能不能带宠物"
+    },
+    {
+      "name": "query_000047.json",
+      "query": "自驾走京藏高速去十三陵，路上那个石牌坊是什么时候修的"
+    },
+    {
+      "name": "query_000048.json",
+      "query": "65岁的老人去昭陵和居庸关要不要买票，怎么从居庸关到十三陵"
+    },
+    {
+      "name": "query_000049.json",
+      "query": "下雨天去明十三陵有什么需要注意的，景区能借到伞吗"
+    },
+    {
+      "name": "query_000050.json",
+      "query": "带老人小孩去定陵和长陵需要买票吗，地宫有什么好看的"
+    },
+    {
+      "name": "query_000051.json",
+      "query": "大学生去总神道有优惠吗，石像生里面都有些什么"
+    },
+    {
+      "name": "query_000052.json",
+      "query": "我想乘坐前门集散中心的旅游专线去居庸关和鸟巢，票价是多少？费用包含什么？"
+    },
+    {
+      "name": "query_000053.json",
+      "query": "大成殿除了孔子还供奉了哪些人"
+    },
+    {
+      "name": "query_000054.json",
+      "query": "孔端友南渡的时候带了哪些宝物过来，现在还能在衢州看到吗"
+    },
+    {
+      "name": "query_000055.json",
+      "query": "能详细讲讲孔洙让爵的故事吗，为什么后人那么推崇他"
+    },
+    {
+      "name": "query_000056.json",
+      "query": "想带孩子去南孔庙体验传统文化，有什么适合小朋友参与的活动吗"
+    },
+    {
+      "name": "query_000057.json",
+      "query": "听说南孔庙有康熙乾隆的御笔题字，能在哪里看到"
+    },
+    {
+      "name": "query_000058.json",
+      "query": "思鲁阁为什么叫思鲁，里面有什么看头"
+    },
+    {
+      "name": "query_000059.json",
+      "query": "为什么南孔庙里的孔子像穿的是帝王服饰，旁边的像又是什么身份"
+    },
+    {
+      "name": "query_000060.json",
+      "query": "南孔庙是什么时候恢复祭祀的，现在的祭孔典礼有什么特色"
+    },
+    {
+      "name": "query_000061.json",
+      "query": "孔氏南宗失去爵位之后是靠什么延续文化传承的"
+    },
+    {
+      "name": "query_000062.json",
+      "query": "南孔庙的门票多少钱？老人和军人有优惠吗？"
+    },
+    {
+      "name": "query_000063.json",
+      "query": "我爷爷坐轮椅，南孔庙有无障碍通道吗？可以租轮椅吗？"
+    },
+    {
+      "name": "query_000064.json",
+      "query": "南孔庙里能看到真实的古代文物吗？还是都是仿制品？"
+    },
+    {
+      "name": "query_000065.json",
+      "query": "南孔庙景区里有吃饭的地方吗，价格怎么样"
+    },
+    {
+      "name": "query_000066.json",
+      "query": "南孔庙跟曲阜的孔庙比起来有什么不一样的地方"
+    },
+    {
+      "name": "query_000067.json",
+      "query": "东庑里供奉的那些南宗先祖都有什么故事"
+    },
+    {
+      "name": "query_000068.json",
+      "query": "景区有什么有特色的纪念品值得买来送人"
+    },
+    {
+      "name": "query_000069.json",
+      "query": "学校组织学生来南孔庙研学怎么报名，有什么要求"
+    },
+    {
+      "name": "query_000070.json",
+      "query": "我在孔府大门口看到一副对联，‘富’字少一点，‘章’字竖通到上面，有什么讲究吗？"
+    },
+    {
+      "name": "query_000071.json",
+      "query": "我是从火车站过来的，怎么坐公交去南孔庙？打车大概多少钱？"
+    },
+    {
+      "name": "query_000072.json",
+      "query": "南孔庙的‘过庭’是什么意思？和孔子有什么关系？"
+    },
+    {
+      "name": "query_000073.json",
+      "query": "南孔庙的大成殿为什么叫大成殿？这个名字有什么典故？"
+    },
+    {
+      "name": "query_000074.json",
+      "query": "孔府内宅那幅戒贪图画的是什么意思，为什么挂在那"
+    },
+    {
+      "name": "query_000075.json",
+      "query": "我想了解一下孔氏南宗的历史，应该参观哪些展厅或建筑？"
+    },
+    {
+      "name": "query_000076.json",
+      "query": "我看到资料说孔端友南渡时带了‘楷木像’，这像真的是子贡刻的吗？"
+    },
+    {
+      "name": "query_000077.json",
+      "query": "南孔庙几点关门，晚上能进去看夜景吗"
+    },
+    {
+      "name": "query_000078.json",
+      "query": "我腿脚不便，想坐观光车游览，观光车能覆盖所有景点吗？"
+    },
+    {
+      "name": "query_000079.json",
+      "query": "孔府大堂那块'泗淛同源'匾额有什么讲究"
+    },
+    {
+      "name": "query_000080.json",
+      "query": "我想在景区寄存行李，可以吗？怎么办理？"
+    },
+    {
+      "name": "query_000081.json",
+      "query": "南孔庙里有AED吗？在哪些位置？"
+    },
+    {
+      "name": "query_000082.json",
+      "query": "五王祠祭祀的是哪几位先祖，为什么叫五王"
+    },
+    {
+      "name": "query_000083.json",
+      "query": "我看到景区有联票，包含哪些内容？比单独买便宜多少？"
+    },
+    {
+      "name": "query_000084.json",
+      "query": "带小孩去南孔庙方便吗，有母婴室之类的配套设施吗"
+    },
+    {
+      "name": "query_000085.json",
+      "query": "我想了解一下孔仁玉‘中兴祖’的故事，他小时候是怎么躲过灾难的？"
+    },
+    {
+      "name": "query_000086.json",
+      "query": "我想买《东家杂记》这本书，景区有卖吗？"
+    },
+    {
+      "name": "query_000087.json",
+      "query": "带老人去南孔庙大概要逛多久，有精华路线推荐吗"
+    },
+    {
+      "name": "query_000088.json",
+      "query": "南宗为什么要专门建一个思鲁阁来纪念曲阜"
+    },
+    {
+      "name": "query_000089.json",
+      "query": "我看到孔府大门是黑色的，有什么说法吗？"
+    },
+    {
+      "name": "query_000090.json",
+      "query": "碑廊里有什么好看的，可以参与什么互动体验"
+    },
+    {
+      "name": "query_000091.json",
+      "query": "南孔庙有Wi-Fi吗？怎么连接？"
+    },
+    {
+      "name": "query_000092.json",
+      "query": "我想了解孔氏南宗从南渡到复爵的大致历程，关键节点有哪些？"
+    },
+    {
+      "name": "query_000093.json",
+      "query": "南孔庙的祭孔典礼为什么说是当代人祭孔，跟传统有什么不同"
+    },
+    {
+      "name": "query_000094.json",
+      "query": "我想了解一下孔传这个人，他对南宗有什么贡献？"
+    },
+    {
+      "name": "query_000095.json",
+      "query": "景区失物招领电话是多少？如果丢了东西怎么查找？"
+    },
+    {
+      "name": "query_000096.json",
+      "query": "南孔庙有没有电子导览地图？在哪里下载？"
+    },
+    {
+      "name": "query_000097.json",
+      "query": "我想了解一下南宗现在的掌门人是谁？"
+    },
+    {
+      "name": "query_000098.json",
+      "query": "南孔庙的体验活动收费吗？儿童免费吗？"
+    },
+    {
+      "name": "query_000099.json",
+      "query": "我听说南孔庙有‘泗淛同源’的说法，泗和淛分别指什么？"
+    },
+    {
+      "name": "query_000100.json",
+      "query": "南孔庙里有几个休息室？可以充电吗？"
+    },
+    {
+      "name": "query_000101.json",
+      "query": "南孔庙和曲阜孔庙平时有没有什么交流合作"
+    },
+    {
+      "name": "query_000102.json",
+      "query": "我看到资料说南孔庙供奉孔鲤、孔伋，这和曲阜孔庙不一样，为什么？"
+    },
+    {
+      "name": "query_000103.json",
+      "query": "我想带笔记本去盖章，如果没有领到集章册，还能盖章吗？"
+    },
+    {
+      "name": "query_000104.json",
+      "query": "南孔庙的‘扬州陪祀’是怎么回事？和南渡有什么关系？"
+    },
+    {
+      "name": "query_000105.json",
+      "query": "南孔庙可以二次入园吗？"
+    },
+    {
+      "name": "query_000106.json",
+      "query": "请问南孔庙里有明代正德年间的东西吗？"
+    },
+    {
+      "name": "query_000107.json",
+      "query": "南孔庙的‘六代公爵’分别是哪六位？"
+    },
+    {
+      "name": "query_000108.json",
+      "query": "只有一个半小时能把南孔庙逛完吗，怎么走比较好"
+    },
+    {
+      "name": "query_000109.json",
+      "query": "南孔庙周边有共享单车吗？我从附近酒店骑过来方便吗？"
+    },
+    {
+      "name": "query_000110.json",
+      "query": "我想买孔氏南宗家庙的文创产品，线上能买吗？"
+    },
+    {
+      "name": "query_000111.json",
+      "query": "南孔庙里有直饮水吗？需要自带水杯接水吗？"
+    },
+    {
+      "name": "query_000112.json",
+      "query": "我想了解一下孔庆仪这个人，他对南孔庙有什么贡献？"
+    },
+    {
+      "name": "query_000113.json",
+      "query": "我计划带外国朋友参观，有英文或日文的导览图吗？"
+    },
+    {
+      "name": "query_000114.json",
+      "query": "南孔庙的绿化占地面积有多大？"
+    },
+    {
+      "name": "query_000115.json",
+      "query": "大成殿里的匾额和对联都有什么来历"
+    },
+    {
+      "name": "query_000116.json",
+      "query": "南孔庙的研学活动什么人都能参加吗，最少要几个人"
+    },
+    {
+      "name": "query_000117.json",
+      "query": "南孔庙的建筑有多少是原来保存下来的，哪些是后来重建的"
+    },
+    {
+      "name": "query_000118.json",
+      "query": "南孔庙里有免费行李寄存吗？寄存处几点下班？"
+    },
+    {
+      "name": "query_000119.json",
+      "query": "楷木像现在放在哪里可以参观吗"
+    },
+    {
+      "name": "query_000120.json",
+      "query": "孔洙让爵之后南宗的处境有什么变化"
+    },
+    {
+      "name": "query_000121.json",
+      "query": "孩子买学生票要带什么证件，网上买有优惠吗"
+    },
+    {
+      "name": "query_000122.json",
+      "query": "南孔庙大成殿里的孔子像是什么样子的？为什么是帝王打扮？"
+    },
+    {
+      "name": "query_000123.json",
+      "query": "我想了解沈杰对南孔庙的贡献，除了复爵还做了什么？"
+    },
+    {
+      "name": "query_000124.json",
+      "query": "南孔庙的未开发区域以后会开放吗？要改成什么？"
+    },
+    {
+      "name": "query_000125.json",
+      "query": "南孔庙西庑主要展示什么内容？"
+    },
+    {
+      "name": "query_000126.json",
+      "query": "我是60岁老人，门票有优惠吗？需要带什么证件？"
+    },
+    {
+      "name": "query_000127.json",
+      "query": "我想了解南孔庙历史上最重要的三次家庙建设分别是什么时候？"
+    },
+    {
+      "name": "query_000128.json",
+      "query": "我看到孔府大堂的对联是孔祥楷先生写的，他是谁呀？"
+    },
+    {
+      "name": "query_000129.json",
+      "query": "南孔庙里有关于孔子生平故事的石刻展示吗"
+    },
+    {
+      "name": "query_000130.json",
+      "query": "我带着1.3米的孩子，门票多少钱？能线上买吗？"
+    },
+    {
+      "name": "query_000131.json",
+      "query": "景区有急救设备和紧急联系电话吗"
+    },
+    {
+      "name": "query_000132.json",
+      "query": "先圣遗像碑有什么来历，是谁留下来的"
+    },
+    {
+      "name": "query_000133.json",
+      "query": "我想在景区里买点吃的，除了便利店还有餐厅吗？"
+    },
+    {
+      "name": "query_000134.json",
+      "query": "南孔庙跟曲阜孔庙都算家庙吗，本质上有什么区别"
+    },
+    {
+      "name": "query_000135.json",
+      "query": "五支祠是做什么用的，里面有什么看头"
+    },
+    {
+      "name": "query_000136.json",
+      "query": "我想了解一下南孔庙‘世恩堂’名字的由来，现在里面有什么陈设？"
+    },
+    {
+      "name": "query_000137.json",
+      "query": "南孔庙的研学活动都有些什么内容，怎么报名参加呢？"
+    },
+    {
+      "name": "query_000138.json",
+      "query": "退省堂有什么特别的历史故事"
+    },
+    {
+      "name": "query_000139.json",
+      "query": "我在网上看到南孔庙曾经祭田被没收，后来是谁帮忙恢复的？具体过程是怎样的？"
+    },
+    {
+      "name": "query_000140.json",
+      "query": "南孔庙的停车场是免费的吗？如果开车去，从哪个门进？"
+    },
+    {
+      "name": "query_000141.json",
+      "query": "我看到孔府大堂里有一对青花大瓷瓶，谁定制的，在上面写的什么字？"
+    },
+    {
+      "name": "query_000142.json",
+      "query": "我想了解一下孔氏南宗从复爵到民国时期世职的变化过程。"
+    },
+    {
+      "name": "query_000143.json",
+      "query": "南孔庙里有没有供奉孔子祖先的地方"
+    },
+    {
+      "name": "query_000144.json",
+      "query": "卢舍那大佛有多高？"
+    },
+    {
+      "name": "query_000145.json",
+      "query": "龙门石窟一共有多少个洞窟和佛像？"
+    },
+    {
+      "name": "query_000146.json",
+      "query": "龙门石窟几点开门几点关门？"
+    },
+    {
+      "name": "query_000147.json",
+      "query": "万佛洞有什么来历，里面那些小佛是谁造的"
+    },
+    {
+      "name": "query_000148.json",
+      "query": "龙门石窟怎么买票，需要预约吗？"
+    },
+    {
+      "name": "query_000149.json",
+      "query": "药方洞里面刻了什么？"
+    },
+    {
+      "name": "query_000150.json",
+      "query": "龙门石窟从什么时候开始修建的，总共经历了哪些朝代"
+    },
+    {
+      "name": "query_000151.json",
+      "query": "古阳洞为什么又叫老君洞？"
+    },
+    {
+      "name": "query_000152.json",
+      "query": "龙门二十品是什么，在哪个洞窟能看到"
+    },
+    {
+      "name": "query_000153.json",
+      "query": "龙门石窟能带狗进去吗？"
+    },
+    {
+      "name": "query_000154.json",
+      "query": "看经寺有什么特别的？"
+    },
+    {
+      "name": "query_000155.json",
+      "query": "白居易跟龙门石窟有什么关系？"
+    },
+    {
+      "name": "query_000156.json",
+      "query": "自驾去龙门石窟停车方便吗，下了高速怎么走"
+    },
+    {
+      "name": "query_000157.json",
+      "query": "宾阳洞修了多久，花了多少人力？"
+    },
+    {
+      "name": "query_000158.json",
+      "query": "人民大会堂跟龙门石窟有什么关系？"
+    },
+    {
+      "name": "query_000159.json",
+      "query": "龙门石窟有没有被偷走的文物？"
+    },
+    {
+      "name": "query_000160.json",
+      "query": "龙门石窟里最小的佛像有多大？"
+    },
+    {
+      "name": "query_000161.json",
+      "query": "想看书法去龙门石窟哪里比较好？"
+    },
+    {
+      "name": "query_000162.json",
+      "query": "武则天跟龙门石窟有什么关系？"
+    },
+    {
+      "name": "query_000163.json",
+      "query": "龙门石窟有什么跟中医有关的东西吗？"
+    },
+    {
+      "name": "query_000164.json",
+      "query": "龙门石窟为什么跟大禹有什么关系？"
+    },
+    {
+      "name": "query_000165.json",
+      "query": "蒋介石跟龙门石窟有什么关系？"
+    },
+    {
+      "name": "query_000166.json",
+      "query": "龙门石窟推荐的参观路线是什么？"
+    },
+    {
+      "name": "query_000167.json",
+      "query": "买了票临时去不了能退吗？"
+    },
+    {
+      "name": "query_000168.json",
+      "query": "学生去龙门石窟有优惠吗？"
+    },
+    {
+      "name": "query_000169.json",
+      "query": "潜溪寺里面供的是什么佛？"
+    },
+    {
+      "name": "query_000170.json",
+      "query": "卢舍那大佛真的是按武则天的样子雕的吗？"
+    },
+    {
+      "name": "query_000171.json",
+      "query": "北魏和唐代的佛像长得有什么不一样？"
+    },
+    {
+      "name": "query_000172.json",
+      "query": "西山石窟和东山石窟哪个更值得看？"
+    },
+    {
+      "name": "query_000173.json",
+      "query": "龙门石窟有哪些世界级或者全国之最？"
+    },
+    {
+      "name": "query_000174.json",
+      "query": "龙门石窟晚上能逛吗，夜游都开放哪些区域"
+    },
+    {
+      "name": "query_000175.json",
+      "query": "龙门石窟景区里有没有代步工具？"
+    },
+    {
+      "name": "query_000176.json",
+      "query": "龙门石窟跟云冈石窟佛像有什么区别？"
+    },
+    {
+      "name": "query_000177.json",
+      "query": "摩崖三佛龛为什么没修完？"
+    },
+    {
+      "name": "query_000178.json",
+      "query": "白园里面有什么好看的？"
+    },
+    {
+      "name": "query_000179.json",
+      "query": "乾隆皇帝去过龙门石窟吗？"
+    },
+    {
+      "name": "query_000180.json",
+      "query": "龙门石窟的卢舍那大佛影响了哪些国家的造像？"
+    },
+    {
+      "name": "query_000181.json",
+      "query": "万佛洞那个主佛的手势是什么意思？"
+    },
+    {
+      "name": "query_000182.json",
+      "query": "听说这个佛像是照着谁的样子刻的？"
+    },
+    {
+      "name": "query_000183.json",
+      "query": "洞窟里的佛像风格跟盛唐时期的一样吗"
+    },
+    {
+      "name": "query_000184.json",
+      "query": "到了景区门口走到石窟远，需要坐车吗？"
+    },
+    {
+      "name": "query_000185.json",
+      "query": "大佛两边还有其他佛像吗，都是什么身份"
+    },
+    {
+      "name": "query_000186.json",
+      "query": "白居易为什么那么喜欢这个地方？"
+    },
+    {
+      "name": "query_000187.json",
+      "query": "在哪买票？有几个码头？"
+    },
+    {
+      "name": "query_000188.json",
+      "query": "你好，我想去少林寺玩，门票多少钱，都包含哪些景点啊？"
+    },
+    {
+      "name": "query_000189.json",
+      "query": "塔林离少林寺远不远，听说那边还有索道可以坐"
+    },
+    {
+      "name": "query_000190.json",
+      "query": "请问从登封市区怎么去少林景区？"
+    },
+    {
+      "name": "query_000191.json",
+      "query": "我们自驾从南阳过来，去少林寺应该在哪个高速出口下？"
+    },
+    {
+      "name": "query_000192.json",
+      "query": "少林景区的武术表演每天有几场，门票包含吗"
+    },
+    {
+      "name": "query_000193.json",
+      "query": "少林寺常住院有多大？这里是纯寺庙还是有练武的地方？"
+    },
+    {
+      "name": "query_000194.json",
+      "query": "初祖庵和达摩洞都是纪念谁的，它们之间有什么关系？"
+    },
+    {
+      "name": "query_000195.json",
+      "query": "二祖庵的四口井水味道真的不一样吗，怎么上去"
+    },
+    {
+      "name": "query_000196.json",
+      "query": "少室阙大概是什么年代的建筑，算世界遗产吗"
+    },
+    {
+      "name": "query_000197.json",
+      "query": "三皇寨景区里的嵩山禅院是什么时候建的？和少林寺有关系吗？"
+    },
+    {
+      "name": "query_000198.json",
+      "query": "塔林里有多少座塔，都是什么朝代的？"
+    },
+    {
+      "name": "query_000199.json",
+      "query": "初祖庵大殿建于哪个朝代，它为什么在建筑史上这么有名？"
+    },
+    {
+      "name": "query_000200.json",
+      "query": "从郑州新郑机场下飞机后，怎么去少林寺最方便？"
+    },
+    {
+      "name": "query_000201.json",
+      "query": "少林寺和达摩有什么关系？为什么被称为禅宗祖庭？"
+    },
+    {
+      "name": "query_000202.json",
+      "query": "我想看下午四点那场武术表演，几点到景区比较合适"
+    },
+    {
+      "name": "query_000203.json",
+      "query": "我在洛阳玩，想去少林寺，从洛阳怎么坐车？"
+    },
+    {
+      "name": "query_000204.json",
+      "query": "嵩阳书院的门票贵不贵，大三塔在里面吗"
+    },
+    {
+      "name": "query_000205.json",
+      "query": "我想看达摩面壁的那个山洞，它在少林寺里面吗？"
+    },
+    {
+      "name": "query_000206.json",
+      "query": "景区电话是多少？"
+    },
+    {
+      "name": "query_000207.json",
+      "query": "我有残疾证，可以免费进景区吗？"
+    },
+    {
+      "name": "query_000208.json",
+      "query": "一天之内把少林寺塔林三皇寨和初祖庵都逛完来得及吗，怎么安排顺序"
+    },
+    {
+      "name": "query_000209.json",
+      "query": "三皇寨的自然景观和人文景观分别有什么代表？"
+    },
+    {
+      "name": "query_000210.json",
+      "query": "少林景区的索道是从塔林到二祖庵的，那从二祖庵下来还能去别的地方吗？"
+    },
+    {
+      "name": "query_000211.json",
+      "query": "如果我是信阳的游客，自驾去少林寺该怎么走？"
+    },
+    {
+      "name": "query_000212.json",
+      "query": "那个有苦辣酸甜四口井的在哪里，怎么到？"
+    },
+    {
+      "name": "query_000213.json",
+      "query": "少林寺里的演武厅武术表演要另外买票吗？"
+    },
+    {
+      "name": "query_000214.json",
+      "query": "嵩山世界地质公园的最佳观景处是哪里？能看到什么？"
+    },
+    {
+      "name": "query_000215.json",
+      "query": "我想买学生票，需要什么证件？大学生可以吗？"
+    },
+    {
+      "name": "query_000216.json",
+      "query": "景区里有没有寄存行李的地方？"
+    },
+    {
+      "name": "query_000217.json",
+      "query": "少林寺的“十三棍僧救秦王”故事发生在哪个朝代？"
+    },
+    {
+      "name": "query_000218.json",
+      "query": "三皇寨的名字是怎么来的？"
+    },
+    {
+      "name": "query_000219.json",
+      "query": "如果我从济源开车去少林寺，该怎么走？"
+    },
+    {
+      "name": "query_000220.json",
+      "query": "少林寺除了是禅宗祖庭，还是什么文化的发祥地？"
+    },
+    {
+      "name": "query_000221.json",
+      "query": "我想上午看武术表演，下午爬山，武术表演最早几点？"
+    },
+    {
+      "name": "query_000222.json",
+      "query": "景区观光车能直接坐到景区门口吗，下午四点的表演来得及吗"
+    },
+    {
+      "name": "query_000223.json",
+      "query": "初祖庵大殿在建筑学上有什么特别之处？和《营造法式》有什么关系？"
+    },
+    {
+      "name": "query_000224.json",
+      "query": "我想带记者证去少林寺，可以免费吗？"
+    },
+    {
+      "name": "query_000225.json",
+      "query": "请问“天地之中”世界文化遗产包括少林景区的哪些地方？"
+    },
+    {
+      "name": "query_000226.json",
+      "query": "塔林旁边的索道通往哪里？除了索道还有其他方式去二祖庵吗？"
+    },
+    {
+      "name": "query_000227.json",
+      "query": "三皇寨的嵩山禅院是谁修复的？修复了多久？"
+    },
+    {
+      "name": "query_000228.json",
+      "query": "从郑州火车站怎么去少林寺最方便"
+    },
+    {
+      "name": "query_000229.json",
+      "query": "我想买往返观光车票，但只坐单程可以吗？票价是分开的。"
+    },
+    {
+      "name": "query_000230.json",
+      "query": "去西湖要不要买门票？"
+    },
+    {
+      "name": "query_000231.json",
+      "query": "苏堤有多长？上面有几座桥？"
+    },
+    {
+      "name": "query_000232.json",
+      "query": "听说三潭印月中秋去看特别美，能讲讲它的来历和看点吗"
+    },
+    {
+      "name": "query_000233.json",
+      "query": "灵隐寺历史有多久了，里面有什么值得看的"
+    },
+    {
+      "name": "query_000234.json",
+      "query": "断桥为什么叫断桥，它真的是断的吗"
+    },
+    {
+      "name": "query_000235.json",
+      "query": "坐地铁怎么去西湖？到了站走多远？"
+    },
+    {
+      "name": "query_000236.json",
+      "query": "西湖那个环湖电瓶车是怎么坐的，随便在哪里都能上车吗"
+    },
+    {
+      "name": "query_000237.json",
+      "query": "想在西湖坐船游湖有什么选择，大概要花多少钱"
+    },
+    {
+      "name": "query_000238.json",
+      "query": "西湖这个名字怎么来的，以前叫什么"
+    },
+    {
+      "name": "query_000239.json",
+      "query": "岳飞庙值得专门花时间去看看吗"
+    },
+    {
+      "name": "query_000240.json",
+      "query": "人民币上画的那个湖中间的塔在哪里，能去看吗"
+    },
+    {
+      "name": "query_000241.json",
+      "query": "西湖哪里能看到日落最美的景色？"
+    },
+    {
+      "name": "query_000242.json",
+      "query": "想喝正宗的龙井茶去哪里比较好？"
+    },
+    {
+      "name": "query_000243.json",
+      "query": "西湖到底有多大？那个湖深不深？"
+    },
+    {
+      "name": "query_000244.json",
+      "query": "带女朋友去西湖有什么浪漫的地方推荐？"
+    },
+    {
+      "name": "query_000245.json",
+      "query": "西湖有哪些跟爱情有关的传说故事？"
+    },
+    {
+      "name": "query_000246.json",
+      "query": "苏东坡对西湖做了哪些贡献？"
+    },
+    {
+      "name": "query_000247.json",
+      "query": "在西湖玩一天大概要花多少钱，哪些地方是要另外买票的"
+    },
+    {
+      "name": "query_000248.json",
+      "query": "西湖附近有什么适合徒步的路线推荐"
+    },
+    {
+      "name": "query_000249.json",
+      "query": "想去西湖赏花的话，不同季节分别能看到什么花呀"
+    },
+    {
+      "name": "query_000250.json",
+      "query": "孤山为什么叫孤山？"
+    },
+    {
+      "name": "query_000251.json",
+      "query": "夏天去西湖会不会很热，哪里比较凉快"
+    },
+    {
+      "name": "query_000252.json",
+      "query": "想找个安静的地方散步，苏堤和杨堤选哪个比较好"
+    },
+    {
+      "name": "query_000253.json",
+      "query": "有没有什么地方能俯瞰西湖全景的"
+    },
+    {
+      "name": "query_000254.json",
+      "query": "秋天去西湖有什么特别的景色？"
+    },
+    {
+      "name": "query_000255.json",
+      "query": "普通画舫和豪华画舫有什么区别，坐哪个划算"
+    },
+    {
+      "name": "query_000256.json",
+      "query": "西湖那个观光车一圈要多久？路过哪些景点？"
+    },
+    {
+      "name": "query_000257.json",
+      "query": "西湖'一山二塔三岛三堤五湖'具体是指什么？"
+    },
+    {
+      "name": "query_000258.json",
+      "query": "虎跑泉为什么这么有名，泉水真有传说中那么神奇吗"
+    },
+    {
+      "name": "query_000259.json",
+      "query": "想去西湖拜佛求平安去哪里？"
+    },
+    {
+      "name": "query_000260.json",
+      "query": "白居易为西湖做了什么？"
+    },
+    {
+      "name": "query_000261.json",
+      "query": "长桥为什么叫长桥，明明看起来很短啊"
+    },
+    {
+      "name": "query_000262.json",
+      "query": "西湖有没有能看到钱塘江的地方？"
+    },
+    {
+      "name": "query_000263.json",
+      "query": "西湖三绝说的是什么，都在哪些地方能看到"
+    },
+    {
+      "name": "query_000264.json",
+      "query": "雷峰塔和白蛇传的故事是怎么联系起来的"
+    },
+    {
+      "name": "query_000265.json",
+      "query": "我想坐船去三潭印月岛上逛逛，应该怎么坐船过去"
+    },
+    {
+      "name": "query_000266.json",
+      "query": "手划船和摇橹船哪个好？坐多少人？超时怎么算？"
+    },
+    {
+      "name": "query_000267.json",
+      "query": "哪个朝代对西湖的影响最大？"
+    },
+    {
+      "name": "query_000268.json",
+      "query": "黄龙洞那边有什么好玩的？"
+    },
+    {
+      "name": "query_000269.json",
+      "query": "下雨天去西湖还有意思吗？"
+    },
+    {
+      "name": "query_000270.json",
+      "query": "西湖有哪些免费又好看的景点值得推荐"
+    },
+    {
+      "name": "query_000271.json",
+      "query": "梁山伯祝英台的故事跟西湖有什么关系？"
+    },
+    {
+      "name": "query_000272.json",
+      "query": "除了看雪景，夏天去那边有什么好玩的？"
+    },
+    {
+      "name": "query_000273.json",
+      "query": "我们一家五口想包个小船可以吗？大概多少钱？"
+    },
+    {
+      "name": "query_000274.json",
+      "query": "是谁建的？为什么要修这条堤？"
+    },
+    {
+      "name": "query_000275.json",
+      "query": "什么时候去看最合适，门票要多少钱"
+    },
+    {
+      "name": "query_000276.json",
+      "query": "还有别的吗？最好不用买门票的"
+    },
+    {
+      "name": "query_000277.json",
+      "query": "附近还有什么可以一起逛的？"
+    },
+    {
+      "name": "query_000278.json",
+      "query": "山上有什么好看的？天气不好去会怎样？"
+    },
+    {
+      "name": "query_000279.json",
+      "query": "颐和园门票多少钱？"
+    },
+    {
+      "name": "query_000280.json",
+      "query": "佛香阁有多高？里面供的是什么佛？"
+    },
+    {
+      "name": "query_000281.json",
+      "query": "长廊到底有多长？上面都画了什么内容？"
+    },
+    {
+      "name": "query_000282.json",
+      "query": "十七孔桥上有多少只狮子？"
+    },
+    {
+      "name": "query_000283.json",
+      "query": "颐和园什么时候被列为世界遗产的？"
+    },
+    {
+      "name": "query_000284.json",
+      "query": "颐和园里能租船吗？怎么收费？"
+    },
+    {
+      "name": "query_000285.json",
+      "query": "颐和园有几个门？坐地铁从哪个门进比较方便？"
+    },
+    {
+      "name": "query_000286.json",
+      "query": "昆明湖边那头铜牛是什么来历"
+    },
+    {
+      "name": "query_000287.json",
+      "query": "智慧海为什么叫无梁殿？"
+    },
+    {
+      "name": "query_000288.json",
+      "query": "德和园大戏楼和故宫畅音阁什么关系？"
+    },
+    {
+      "name": "query_000289.json",
+      "query": "石舫有多长？是用什么材料做的？"
+    },
+    {
+      "name": "query_000290.json",
+      "query": "颐和园最早什么时候建的，以前叫什么名字"
+    },
+    {
+      "name": "query_000291.json",
+      "query": "宝云阁是什么？有什么特别的？"
+    },
+    {
+      "name": "query_000292.json",
+      "query": "包船怎么预定？多少钱一小时？"
+    },
+    {
+      "name": "query_000293.json",
+      "query": "听鹂馆为什么叫这个名字？现在是干什么的？"
+    },
+    {
+      "name": "query_000294.json",
+      "query": "冬天去颐和园的话，大概几点就关门了呀"
+    },
+    {
+      "name": "query_000295.json",
+      "query": "想去颐和园拍照的话，有什么推荐的机位和时间段吗"
+    },
+    {
+      "name": "query_000296.json",
+      "query": "颐和园有没有比较小众安静的地方推荐？人太多受不了"
+    },
+    {
+      "name": "query_000297.json",
+      "query": "要是碰上下雨天，颐和园还值得逛吗"
+    },
+    {
+      "name": "query_000298.json",
+      "query": "颐和园以前是不是还关过犯人？"
+    },
+    {
+      "name": "query_000299.json",
+      "query": "慈禧为什么要拿海军的钱来修园子？"
+    },
+    {
+      "name": "query_000300.json",
+      "query": "颐和园在景观设计上有什么特别巧妙的地方"
+    },
+    {
+      "name": "query_000301.json",
+      "query": "颐和园什么季节去最合适，不同季节各有什么看头"
+    },
+    {
+      "name": "query_000302.json",
+      "query": "颐和园有什么地方是模仿江南风格修建的？"
+    },
+    {
+      "name": "query_000303.json",
+      "query": "慈禧太后住在颐和园哪里，平时都做些什么"
+    },
+    {
+      "name": "query_000304.json",
+      "query": "颐和园经历过哪些战争和破坏？"
+    },
+    {
+      "name": "query_000305.json",
+      "query": "颐和园和圆明园离得近吗，它们之间有什么渊源"
+    },
+    {
+      "name": "query_000306.json",
+      "query": "买联票还是单独买门票更划算？"
+    },
+    {
+      "name": "query_000307.json",
+      "query": "只有半天时间该怎么逛颐和园？能看到精华吗？"
+    },
+    {
+      "name": "query_000308.json",
+      "query": "第一次去颐和园推荐从哪个门进？走哪条路线最好？"
+    },
+    {
+      "name": "query_000309.json",
+      "query": "十七孔桥和卢沟桥的石狮子哪个多？"
+    },
+    {
+      "name": "query_000310.json",
+      "query": "昆明湖的西堤为什么要模仿西湖的苏堤？"
+    },
+    {
+      "name": "query_000311.json",
+      "query": "游昆明湖的船值得坐吗，沿途能看到什么"
+    },
+    {
+      "name": "query_000312.json",
+      "query": "光绪皇帝当年被关在颐和园哪里，为什么被软禁"
+    },
+    {
+      "name": "query_000313.json",
+      "query": "仁寿殿铜凤上面刻的\"天地一家春\"是什么来历"
+    },
+    {
+      "name": "query_000314.json",
+      "query": "那块被叫做败家石的大石头有什么来历"
+    },
+    {
+      "name": "query_000315.json",
+      "query": "石舫背后有什么特别的故事和寓意吗"
+    },
+    {
+      "name": "query_000316.json",
+      "query": "每年冬至十七孔桥的\"金光穿洞\"是怎么回事？"
+    },
+    {
+      "name": "query_000317.json",
+      "query": "\"排云殿\"这个名字有什么讲究？"
+    },
+    {
+      "name": "query_000318.json",
+      "query": "颐和园跟北京和平解放有什么关系？"
+    },
+    {
+      "name": "query_000319.json",
+      "query": "光绪皇帝在颐和园接见康有为是怎么回事？"
+    },
+    {
+      "name": "query_000320.json",
+      "query": "佛香阁下面是不是有个鬼故事？"
+    },
+    {
+      "name": "query_000321.json",
+      "query": "昆明湖以前怎么还养过鱼卖过鱼？"
+    },
+    {
+      "name": "query_000322.json",
+      "query": "十七孔桥为什么偏偏是十七个孔？"
+    },
+    {
+      "name": "query_000323.json",
+      "query": "\"紫气东来\"城关在哪里？说的是什么故事？"
+    },
+    {
+      "name": "query_000324.json",
+      "query": "重建花了多少银子啊？"
+    },
+    {
+      "name": "query_000325.json",
+      "query": "在颐和园坐船从哪里上船，沿途能看到什么景色"
+    },
+    {
+      "name": "query_000326.json",
+      "query": "为什么叫这个名字？里面那个石桥上写的什么？"
+    },
+    {
+      "name": "query_000327.json",
+      "query": "门口那对铜龙凤上刻的字是什么意思"
+    },
+    {
+      "name": "query_000328.json",
+      "query": "万寿山以前叫什么名字，为什么后来改成了万寿山"
+    },
+    {
+      "name": "query_000329.json",
+      "query": "颐和园里怎么坐船，在哪里买票"
+    },
+    {
+      "name": "query_000330.json",
+      "query": "什么季节去颐和园拍照最好看"
+    },
+    {
+      "name": "query_000331.json",
+      "query": "颐和园到圆明园远不远，怎么过去方便"
+    },
+    {
+      "name": "query_000332.json",
+      "query": "圆明园和颐和园哪个建得更早，差了多少年"
+    },
+    {
+      "name": "query_000333.json",
+      "query": "仁寿殿这个名字有什么来历和讲究"
+    },
+    {
+      "name": "query_000334.json",
+      "query": "颐和园的\"六合太平\"和\"玉堂富贵\"是什么意思？在哪里？"
+    },
+    {
+      "name": "query_000335.json",
+      "query": "颐和园和承德避暑山庄、拙政园相比有什么特别之处？"
+    },
+    {
+      "name": "query_000336.json",
+      "query": "颐和园铜牛和西岸耕织图之间有什么浪漫的故事？"
+    },
+    {
+      "name": "query_000337.json",
+      "query": "张家界门票多少钱一张？"
+    },
+    {
+      "name": "query_000338.json",
+      "query": "百龙天梯坐一次要多少钱？"
+    },
+    {
+      "name": "query_000339.json",
+      "query": "张家界国家森林公园的门票能用几天？"
+    },
+    {
+      "name": "query_000340.json",
+      "query": "天下第一桥有多壮观，在张家界哪个景区"
+    },
+    {
+      "name": "query_000341.json",
+      "query": "阿凡达取景地是张家界哪个景点？"
+    },
+    {
+      "name": "query_000342.json",
+      "query": "学生去张家界门票打折吗？"
+    },
+    {
+      "name": "query_000343.json",
+      "query": "杨家界为什么叫杨家界？"
+    },
+    {
+      "name": "query_000344.json",
+      "query": "鬼谷子和张家界有什么关系？"
+    },
+    {
+      "name": "query_000345.json",
+      "query": "张家界名字的由来是什么？"
+    },
+    {
+      "name": "query_000346.json",
+      "query": "袁家界风景区的开放时间是几点到几点？"
+    },
+    {
+      "name": "query_000347.json",
+      "query": "天子山索道全长多少米？高差多少？"
+    },
+    {
+      "name": "query_000348.json",
+      "query": "金鞭溪大峡谷全长多少公里？"
+    },
+    {
+      "name": "query_000349.json",
+      "query": "贺龙公园在哪？有什么看点？"
+    },
+    {
+      "name": "query_000350.json",
+      "query": "黄石寨海拔多高？寨顶面积多大？"
+    },
+    {
+      "name": "query_000351.json",
+      "query": "杨家界景区几点开门几点关门？"
+    },
+    {
+      "name": "query_000352.json",
+      "query": "张家界春天适合去哪些景点？"
+    },
+    {
+      "name": "query_000353.json",
+      "query": "张家界门票都包含哪些景点？"
+    },
+    {
+      "name": "query_000354.json",
+      "query": "张家界哪里拍照最出片？"
+    },
+    {
+      "name": "query_000355.json",
+      "query": "张家界有没有适合玩水的地方？"
+    },
+    {
+      "name": "query_000356.json",
+      "query": "第一次去张家界从哪个入口进比较方便"
+    },
+    {
+      "name": "query_000357.json",
+      "query": "夏天去张家界会不会很热很晒"
+    },
+    {
+      "name": "query_000358.json",
+      "query": "听说张家界猴子很多，会不会有危险啊？"
+    },
+    {
+      "name": "query_000359.json",
+      "query": "张家界真的有很多猴子吗，会不会抢东西"
+    },
+    {
+      "name": "query_000360.json",
+      "query": "张家界适合带小朋友去玩吗，有什么需要注意的"
+    },
+    {
+      "name": "query_000361.json",
+      "query": "去张家界徒步需要请导游吗"
+    },
+    {
+      "name": "query_000362.json",
+      "query": "张家界的冬天值得去吗，冬天有什么特别的景色"
+    },
+    {
+      "name": "query_000363.json",
+      "query": "张家界是怎么从一个林场变成旅游景区的？"
+    },
+    {
+      "name": "query_000364.json",
+      "query": "听说张家界空气特别好适合洗肺，哪里最清新"
+    },
+    {
+      "name": "query_000365.json",
+      "query": "带女朋友去张家界有什么浪漫的地方推荐吗？"
+    },
+    {
+      "name": "query_000366.json",
+      "query": "去张家界之前门票需要提前网上买吗，当天能买到吗"
+    },
+    {
+      "name": "query_000367.json",
+      "query": "哪里可以听到土家族姑娘唱山歌？"
+    },
+    {
+      "name": "query_000368.json",
+      "query": "张家界能看到娃娃鱼吗？"
+    },
+    {
+      "name": "query_000369.json",
+      "query": "膝盖不好还能去张家界玩吗？"
+    },
+    {
+      "name": "query_000370.json",
+      "query": "杨家界有存包的地方吗？"
+    },
+    {
+      "name": "query_000371.json",
+      "query": "景区里面允不允许抽烟？"
+    },
+    {
+      "name": "query_000372.json",
+      "query": "景区里面有泉水可以喝吗？"
+    },
+    {
+      "name": "query_000373.json",
+      "query": "去张家界要穿什么鞋？需要带什么装备？"
+    },
+    {
+      "name": "query_000374.json",
+      "query": "网上买的门票怎么取？在哪个窗口？"
+    },
+    {
+      "name": "query_000375.json",
+      "query": "坐火车能到张家界吗？方便吗？"
+    },
+    {
+      "name": "query_000376.json",
+      "query": "天子阁值得去吗？能看到什么？"
+    },
+    {
+      "name": "query_000377.json",
+      "query": "空中走廊在哪？好去吗？"
+    },
+    {
+      "name": "query_000378.json",
+      "query": "西海峰林是什么样的景色？"
+    },
+    {
+      "name": "query_000379.json",
+      "query": "张家界里面的索道缆车都有哪些，分别要多少钱"
+    },
+    {
+      "name": "query_000380.json",
+      "query": "带老人小孩去张家界应该怎么安排路线比较轻松"
+    },
+    {
+      "name": "query_000381.json",
+      "query": "每个景点大概要玩多久？帮我总结一下"
+    },
+    {
+      "name": "query_000382.json",
+      "query": "张家界国家森林公园有几个入口，分别通往哪些景区"
+    },
+    {
+      "name": "query_000383.json",
+      "query": "张家界有什么非物质文化遗产值得了解？"
+    },
+    {
+      "name": "query_000384.json",
+      "query": "张家界有哪些世界之最或者世界纪录？"
+    },
+    {
+      "name": "query_000385.json",
+      "query": "袁家界和黄石寨选一个去的话哪个更值得"
+    },
+    {
+      "name": "query_000386.json",
+      "query": "想看日出去天子山好还是黄石寨好？"
+    },
+    {
+      "name": "query_000387.json",
+      "query": "我只有两天时间，帮我规划个张家界行程？"
+    },
+    {
+      "name": "query_000388.json",
+      "query": "喜欢徒步探险去张家界哪里比较刺激？"
+    },
+    {
+      "name": "query_000389.json",
+      "query": "五一去张家界人会不会特别多，怎么避开拥挤"
+    },
+    {
+      "name": "query_000390.json",
+      "query": "秋天去张家界能看到什么特别的景色"
+    },
+    {
+      "name": "query_000391.json",
+      "query": "不想爬山也不想走太多路，张家界还能怎么玩？"
+    },
+    {
+      "name": "query_000392.json",
+      "query": "那个电梯排队久吗？"
+    },
+    {
+      "name": "query_000393.json",
+      "query": "山上住宿条件怎么样，吃的方便吗"
+    },
+    {
+      "name": "query_000394.json",
+      "query": "从袁家界过去远吗？怎么过去？"
+    },
+    {
+      "name": "query_000395.json",
+      "query": "走完之后还能接着玩什么？"
+    },
+    {
+      "name": "query_000396.json",
+      "query": "带小孩坐百龙天梯安全吗，有没有更平缓的上山方式"
+    },
+    {
+      "name": "query_000397.json",
+      "query": "到了之后先玩什么比较好？"
+    },
+    {
+      "name": "query_000398.json",
+      "query": "那个索道有什么特别的吗？"
+    },
+    {
+      "name": "query_000399.json",
+      "query": "另外两个也想去的话，它们之间怎么串联？"
+    },
+    {
+      "name": "query_000400.json",
+      "query": "金鞭溪那个神鹰护鞭是什么传说？"
+    },
+    {
+      "name": "query_000401.json",
+      "query": "鬼谷子和张家界到底有什么渊源"
+    }
+  ],
+  "detail_files": {
+    "query_000000.json": "details/query_000000.json",
+    "query_000001.json": "details/query_000001.json",
+    "query_000002.json": "details/query_000002.json",
+    "query_000003.json": "details/query_000003.json",
+    "query_000004.json": "details/query_000004.json",
+    "query_000005.json": "details/query_000005.json",
+    "query_000006.json": "details/query_000006.json",
+    "query_000007.json": "details/query_000007.json",
+    "query_000008.json": "details/query_000008.json",
+    "query_000009.json": "details/query_000009.json",
+    "query_000010.json": "details/query_000010.json",
+    "query_000011.json": "details/query_000011.json",
+    "query_000012.json": "details/query_000012.json",
+    "query_000013.json": "details/query_000013.json",
+    "query_000014.json": "details/query_000014.json",
+    "query_000015.json": "details/query_000015.json",
+    "query_000016.json": "details/query_000016.json",
+    "query_000017.json": "details/query_000017.json",
+    "query_000018.json": "details/query_000018.json",
+    "query_000019.json": "details/query_000019.json",
+    "query_000020.json": "details/query_000020.json",
+    "query_000021.json": "details/query_000021.json",
+    "query_000022.json": "details/query_000022.json",
+    "query_000023.json": "details/query_000023.json",
+    "query_000024.json": "details/query_000024.json",
+    "query_000025.json": "details/query_000025.json",
+    "query_000026.json": "details/query_000026.json",
+    "query_000027.json": "details/query_000027.json",
+    "query_000028.json": "details/query_000028.json",
+    "query_000029.json": "details/query_000029.json",
+    "query_000030.json": "details/query_000030.json",
+    "query_000031.json": "details/query_000031.json",
+    "query_000032.json": "details/query_000032.json",
+    "query_000033.json": "details/query_000033.json",
+    "query_000034.json": "details/query_000034.json",
+    "query_000035.json": "details/query_000035.json",
+    "query_000036.json": "details/query_000036.json",
+    "query_000037.json": "details/query_000037.json",
+    "query_000038.json": "details/query_000038.json",
+    "query_000039.json": "details/query_000039.json",
+    "query_000040.json": "details/query_000040.json",
+    "query_000041.json": "details/query_000041.json",
+    "query_000042.json": "details/query_000042.json",
+    "query_000043.json": "details/query_000043.json",
+    "query_000044.json": "details/query_000044.json",
+    "query_000045.json": "details/query_000045.json",
+    "query_000046.json": "details/query_000046.json",
+    "query_000047.json": "details/query_000047.json",
+    "query_000048.json": "details/query_000048.json",
+    "query_000049.json": "details/query_000049.json",
+    "query_000050.json": "details/query_000050.json",
+    "query_000051.json": "details/query_000051.json",
+    "query_000052.json": "details/query_000052.json",
+    "query_000053.json": "details/query_000053.json",
+    "query_000054.json": "details/query_000054.json",
+    "query_000055.json": "details/query_000055.json",
+    "query_000056.json": "details/query_000056.json",
+    "query_000057.json": "details/query_000057.json",
+    "query_000058.json": "details/query_000058.json",
+    "query_000059.json": "details/query_000059.json",
+    "query_000060.json": "details/query_000060.json",
+    "query_000061.json": "details/query_000061.json",
+    "query_000062.json": "details/query_000062.json",
+    "query_000063.json": "details/query_000063.json",
+    "query_000064.json": "details/query_000064.json",
+    "query_000065.json": "details/query_000065.json",
+    "query_000066.json": "details/query_000066.json",
+    "query_000067.json": "details/query_000067.json",
+    "query_000068.json": "details/query_000068.json",
+    "query_000069.json": "details/query_000069.json",
+    "query_000070.json": "details/query_000070.json",
+    "query_000071.json": "details/query_000071.json",
+    "query_000072.json": "details/query_000072.json",
+    "query_000073.json": "details/query_000073.json",
+    "query_000074.json": "details/query_000074.json",
+    "query_000075.json": "details/query_000075.json",
+    "query_000076.json": "details/query_000076.json",
+    "query_000077.json": "details/query_000077.json",
+    "query_000078.json": "details/query_000078.json",
+    "query_000079.json": "details/query_000079.json",
+    "query_000080.json": "details/query_000080.json",
+    "query_000081.json": "details/query_000081.json",
+    "query_000082.json": "details/query_000082.json",
+    "query_000083.json": "details/query_000083.json",
+    "query_000084.json": "details/query_000084.json",
+    "query_000085.json": "details/query_000085.json",
+    "query_000086.json": "details/query_000086.json",
+    "query_000087.json": "details/query_000087.json",
+    "query_000088.json": "details/query_000088.json",
+    "query_000089.json": "details/query_000089.json",
+    "query_000090.json": "details/query_000090.json",
+    "query_000091.json": "details/query_000091.json",
+    "query_000092.json": "details/query_000092.json",
+    "query_000093.json": "details/query_000093.json",
+    "query_000094.json": "details/query_000094.json",
+    "query_000095.json": "details/query_000095.json",
+    "query_000096.json": "details/query_000096.json",
+    "query_000097.json": "details/query_000097.json",
+    "query_000098.json": "details/query_000098.json",
+    "query_000099.json": "details/query_000099.json",
+    "query_000100.json": "details/query_000100.json",
+    "query_000101.json": "details/query_000101.json",
+    "query_000102.json": "details/query_000102.json",
+    "query_000103.json": "details/query_000103.json",
+    "query_000104.json": "details/query_000104.json",
+    "query_000105.json": "details/query_000105.json",
+    "query_000106.json": "details/query_000106.json",
+    "query_000107.json": "details/query_000107.json",
+    "query_000108.json": "details/query_000108.json",
+    "query_000109.json": "details/query_000109.json",
+    "query_000110.json": "details/query_000110.json",
+    "query_000111.json": "details/query_000111.json",
+    "query_000112.json": "details/query_000112.json",
+    "query_000113.json": "details/query_000113.json",
+    "query_000114.json": "details/query_000114.json",
+    "query_000115.json": "details/query_000115.json",
+    "query_000116.json": "details/query_000116.json",
+    "query_000117.json": "details/query_000117.json",
+    "query_000118.json": "details/query_000118.json",
+    "query_000119.json": "details/query_000119.json",
+    "query_000120.json": "details/query_000120.json",
+    "query_000121.json": "details/query_000121.json",
+    "query_000122.json": "details/query_000122.json",
+    "query_000123.json": "details/query_000123.json",
+    "query_000124.json": "details/query_000124.json",
+    "query_000125.json": "details/query_000125.json",
+    "query_000126.json": "details/query_000126.json",
+    "query_000127.json": "details/query_000127.json",
+    "query_000128.json": "details/query_000128.json",
+    "query_000129.json": "details/query_000129.json",
+    "query_000130.json": "details/query_000130.json",
+    "query_000131.json": "details/query_000131.json",
+    "query_000132.json": "details/query_000132.json",
+    "query_000133.json": "details/query_000133.json",
+    "query_000134.json": "details/query_000134.json",
+    "query_000135.json": "details/query_000135.json",
+    "query_000136.json": "details/query_000136.json",
+    "query_000137.json": "details/query_000137.json",
+    "query_000138.json": "details/query_000138.json",
+    "query_000139.json": "details/query_000139.json",
+    "query_000140.json": "details/query_000140.json",
+    "query_000141.json": "details/query_000141.json",
+    "query_000142.json": "details/query_000142.json",
+    "query_000143.json": "details/query_000143.json",
+    "query_000144.json": "details/query_000144.json",
+    "query_000145.json": "details/query_000145.json",
+    "query_000146.json": "details/query_000146.json",
+    "query_000147.json": "details/query_000147.json",
+    "query_000148.json": "details/query_000148.json",
+    "query_000149.json": "details/query_000149.json",
+    "query_000150.json": "details/query_000150.json",
+    "query_000151.json": "details/query_000151.json",
+    "query_000152.json": "details/query_000152.json",
+    "query_000153.json": "details/query_000153.json",
+    "query_000154.json": "details/query_000154.json",
+    "query_000155.json": "details/query_000155.json",
+    "query_000156.json": "details/query_000156.json",
+    "query_000157.json": "details/query_000157.json",
+    "query_000158.json": "details/query_000158.json",
+    "query_000159.json": "details/query_000159.json",
+    "query_000160.json": "details/query_000160.json",
+    "query_000161.json": "details/query_000161.json",
+    "query_000162.json": "details/query_000162.json",
+    "query_000163.json": "details/query_000163.json",
+    "query_000164.json": "details/query_000164.json",
+    "query_000165.json": "details/query_000165.json",
+    "query_000166.json": "details/query_000166.json",
+    "query_000167.json": "details/query_000167.json",
+    "query_000168.json": "details/query_000168.json",
+    "query_000169.json": "details/query_000169.json",
+    "query_000170.json": "details/query_000170.json",
+    "query_000171.json": "details/query_000171.json",
+    "query_000172.json": "details/query_000172.json",
+    "query_000173.json": "details/query_000173.json",
+    "query_000174.json": "details/query_000174.json",
+    "query_000175.json": "details/query_000175.json",
+    "query_000176.json": "details/query_000176.json",
+    "query_000177.json": "details/query_000177.json",
+    "query_000178.json": "details/query_000178.json",
+    "query_000179.json": "details/query_000179.json",
+    "query_000180.json": "details/query_000180.json",
+    "query_000181.json": "details/query_000181.json",
+    "query_000182.json": "details/query_000182.json",
+    "query_000183.json": "details/query_000183.json",
+    "query_000184.json": "details/query_000184.json",
+    "query_000185.json": "details/query_000185.json",
+    "query_000186.json": "details/query_000186.json",
+    "query_000187.json": "details/query_000187.json",
+    "query_000188.json": "details/query_000188.json",
+    "query_000189.json": "details/query_000189.json",
+    "query_000190.json": "details/query_000190.json",
+    "query_000191.json": "details/query_000191.json",
+    "query_000192.json": "details/query_000192.json",
+    "query_000193.json": "details/query_000193.json",
+    "query_000194.json": "details/query_000194.json",
+    "query_000195.json": "details/query_000195.json",
+    "query_000196.json": "details/query_000196.json",
+    "query_000197.json": "details/query_000197.json",
+    "query_000198.json": "details/query_000198.json",
+    "query_000199.json": "details/query_000199.json",
+    "query_000200.json": "details/query_000200.json",
+    "query_000201.json": "details/query_000201.json",
+    "query_000202.json": "details/query_000202.json",
+    "query_000203.json": "details/query_000203.json",
+    "query_000204.json": "details/query_000204.json",
+    "query_000205.json": "details/query_000205.json",
+    "query_000206.json": "details/query_000206.json",
+    "query_000207.json": "details/query_000207.json",
+    "query_000208.json": "details/query_000208.json",
+    "query_000209.json": "details/query_000209.json",
+    "query_000210.json": "details/query_000210.json",
+    "query_000211.json": "details/query_000211.json",
+    "query_000212.json": "details/query_000212.json",
+    "query_000213.json": "details/query_000213.json",
+    "query_000214.json": "details/query_000214.json",
+    "query_000215.json": "details/query_000215.json",
+    "query_000216.json": "details/query_000216.json",
+    "query_000217.json": "details/query_000217.json",
+    "query_000218.json": "details/query_000218.json",
+    "query_000219.json": "details/query_000219.json",
+    "query_000220.json": "details/query_000220.json",
+    "query_000221.json": "details/query_000221.json",
+    "query_000222.json": "details/query_000222.json",
+    "query_000223.json": "details/query_000223.json",
+    "query_000224.json": "details/query_000224.json",
+    "query_000225.json": "details/query_000225.json",
+    "query_000226.json": "details/query_000226.json",
+    "query_000227.json": "details/query_000227.json",
+    "query_000228.json": "details/query_000228.json",
+    "query_000229.json": "details/query_000229.json",
+    "query_000230.json": "details/query_000230.json",
+    "query_000231.json": "details/query_000231.json",
+    "query_000232.json": "details/query_000232.json",
+    "query_000233.json": "details/query_000233.json",
+    "query_000234.json": "details/query_000234.json",
+    "query_000235.json": "details/query_000235.json",
+    "query_000236.json": "details/query_000236.json",
+    "query_000237.json": "details/query_000237.json",
+    "query_000238.json": "details/query_000238.json",
+    "query_000239.json": "details/query_000239.json",
+    "query_000240.json": "details/query_000240.json",
+    "query_000241.json": "details/query_000241.json",
+    "query_000242.json": "details/query_000242.json",
+    "query_000243.json": "details/query_000243.json",
+    "query_000244.json": "details/query_000244.json",
+    "query_000245.json": "details/query_000245.json",
+    "query_000246.json": "details/query_000246.json",
+    "query_000247.json": "details/query_000247.json",
+    "query_000248.json": "details/query_000248.json",
+    "query_000249.json": "details/query_000249.json",
+    "query_000250.json": "details/query_000250.json",
+    "query_000251.json": "details/query_000251.json",
+    "query_000252.json": "details/query_000252.json",
+    "query_000253.json": "details/query_000253.json",
+    "query_000254.json": "details/query_000254.json",
+    "query_000255.json": "details/query_000255.json",
+    "query_000256.json": "details/query_000256.json",
+    "query_000257.json": "details/query_000257.json",
+    "query_000258.json": "details/query_000258.json",
+    "query_000259.json": "details/query_000259.json",
+    "query_000260.json": "details/query_000260.json",
+    "query_000261.json": "details/query_000261.json",
+    "query_000262.json": "details/query_000262.json",
+    "query_000263.json": "details/query_000263.json",
+    "query_000264.json": "details/query_000264.json",
+    "query_000265.json": "details/query_000265.json",
+    "query_000266.json": "details/query_000266.json",
+    "query_000267.json": "details/query_000267.json",
+    "query_000268.json": "details/query_000268.json",
+    "query_000269.json": "details/query_000269.json",
+    "query_000270.json": "details/query_000270.json",
+    "query_000271.json": "details/query_000271.json",
+    "query_000272.json": "details/query_000272.json",
+    "query_000273.json": "details/query_000273.json",
+    "query_000274.json": "details/query_000274.json",
+    "query_000275.json": "details/query_000275.json",
+    "query_000276.json": "details/query_000276.json",
+    "query_000277.json": "details/query_000277.json",
+    "query_000278.json": "details/query_000278.json",
+    "query_000279.json": "details/query_000279.json",
+    "query_000280.json": "details/query_000280.json",
+    "query_000281.json": "details/query_000281.json",
+    "query_000282.json": "details/query_000282.json",
+    "query_000283.json": "details/query_000283.json",
+    "query_000284.json": "details/query_000284.json",
+    "query_000285.json": "details/query_000285.json",
+    "query_000286.json": "details/query_000286.json",
+    "query_000287.json": "details/query_000287.json",
+    "query_000288.json": "details/query_000288.json",
+    "query_000289.json": "details/query_000289.json",
+    "query_000290.json": "details/query_000290.json",
+    "query_000291.json": "details/query_000291.json",
+    "query_000292.json": "details/query_000292.json",
+    "query_000293.json": "details/query_000293.json",
+    "query_000294.json": "details/query_000294.json",
+    "query_000295.json": "details/query_000295.json",
+    "query_000296.json": "details/query_000296.json",
+    "query_000297.json": "details/query_000297.json",
+    "query_000298.json": "details/query_000298.json",
+    "query_000299.json": "details/query_000299.json",
+    "query_000300.json": "details/query_000300.json",
+    "query_000301.json": "details/query_000301.json",
+    "query_000302.json": "details/query_000302.json",
+    "query_000303.json": "details/query_000303.json",
+    "query_000304.json": "details/query_000304.json",
+    "query_000305.json": "details/query_000305.json",
+    "query_000306.json": "details/query_000306.json",
+    "query_000307.json": "details/query_000307.json",
+    "query_000308.json": "details/query_000308.json",
+    "query_000309.json": "details/query_000309.json",
+    "query_000310.json": "details/query_000310.json",
+    "query_000311.json": "details/query_000311.json",
+    "query_000312.json": "details/query_000312.json",
+    "query_000313.json": "details/query_000313.json",
+    "query_000314.json": "details/query_000314.json",
+    "query_000315.json": "details/query_000315.json",
+    "query_000316.json": "details/query_000316.json",
+    "query_000317.json": "details/query_000317.json",
+    "query_000318.json": "details/query_000318.json",
+    "query_000319.json": "details/query_000319.json",
+    "query_000320.json": "details/query_000320.json",
+    "query_000321.json": "details/query_000321.json",
+    "query_000322.json": "details/query_000322.json",
+    "query_000323.json": "details/query_000323.json",
+    "query_000324.json": "details/query_000324.json",
+    "query_000325.json": "details/query_000325.json",
+    "query_000326.json": "details/query_000326.json",
+    "query_000327.json": "details/query_000327.json",
+    "query_000328.json": "details/query_000328.json",
+    "query_000329.json": "details/query_000329.json",
+    "query_000330.json": "details/query_000330.json",
+    "query_000331.json": "details/query_000331.json",
+    "query_000332.json": "details/query_000332.json",
+    "query_000333.json": "details/query_000333.json",
+    "query_000334.json": "details/query_000334.json",
+    "query_000335.json": "details/query_000335.json",
+    "query_000336.json": "details/query_000336.json",
+    "query_000337.json": "details/query_000337.json",
+    "query_000338.json": "details/query_000338.json",
+    "query_000339.json": "details/query_000339.json",
+    "query_000340.json": "details/query_000340.json",
+    "query_000341.json": "details/query_000341.json",
+    "query_000342.json": "details/query_000342.json",
+    "query_000343.json": "details/query_000343.json",
+    "query_000344.json": "details/query_000344.json",
+    "query_000345.json": "details/query_000345.json",
+    "query_000346.json": "details/query_000346.json",
+    "query_000347.json": "details/query_000347.json",
+    "query_000348.json": "details/query_000348.json",
+    "query_000349.json": "details/query_000349.json",
+    "query_000350.json": "details/query_000350.json",
+    "query_000351.json": "details/query_000351.json",
+    "query_000352.json": "details/query_000352.json",
+    "query_000353.json": "details/query_000353.json",
+    "query_000354.json": "details/query_000354.json",
+    "query_000355.json": "details/query_000355.json",
+    "query_000356.json": "details/query_000356.json",
+    "query_000357.json": "details/query_000357.json",
+    "query_000358.json": "details/query_000358.json",
+    "query_000359.json": "details/query_000359.json",
+    "query_000360.json": "details/query_000360.json",
+    "query_000361.json": "details/query_000361.json",
+    "query_000362.json": "details/query_000362.json",
+    "query_000363.json": "details/query_000363.json",
+    "query_000364.json": "details/query_000364.json",
+    "query_000365.json": "details/query_000365.json",
+    "query_000366.json": "details/query_000366.json",
+    "query_000367.json": "details/query_000367.json",
+    "query_000368.json": "details/query_000368.json",
+    "query_000369.json": "details/query_000369.json",
+    "query_000370.json": "details/query_000370.json",
+    "query_000371.json": "details/query_000371.json",
+    "query_000372.json": "details/query_000372.json",
+    "query_000373.json": "details/query_000373.json",
+    "query_000374.json": "details/query_000374.json",
+    "query_000375.json": "details/query_000375.json",
+    "query_000376.json": "details/query_000376.json",
+    "query_000377.json": "details/query_000377.json",
+    "query_000378.json": "details/query_000378.json",
+    "query_000379.json": "details/query_000379.json",
+    "query_000380.json": "details/query_000380.json",
+    "query_000381.json": "details/query_000381.json",
+    "query_000382.json": "details/query_000382.json",
+    "query_000383.json": "details/query_000383.json",
+    "query_000384.json": "details/query_000384.json",
+    "query_000385.json": "details/query_000385.json",
+    "query_000386.json": "details/query_000386.json",
+    "query_000387.json": "details/query_000387.json",
+    "query_000388.json": "details/query_000388.json",
+    "query_000389.json": "details/query_000389.json",
+    "query_000390.json": "details/query_000390.json",
+    "query_000391.json": "details/query_000391.json",
+    "query_000392.json": "details/query_000392.json",
+    "query_000393.json": "details/query_000393.json",
+    "query_000394.json": "details/query_000394.json",
+    "query_000395.json": "details/query_000395.json",
+    "query_000396.json": "details/query_000396.json",
+    "query_000397.json": "details/query_000397.json",
+    "query_000398.json": "details/query_000398.json",
+    "query_000399.json": "details/query_000399.json",
+    "query_000400.json": "details/query_000400.json",
+    "query_000401.json": "details/query_000401.json"
+  }
+}

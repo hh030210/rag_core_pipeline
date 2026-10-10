@@ -27,16 +27,25 @@ VectorRetriever 初始化时注入：
 top_k 仍由上层用于最终融合结果截断；它不是语义向量召回池大小。维度检索与融合逻辑仍由 Retriever 和 retrieval_fusion 负责。
 
 
-## 实验目录（2026-10-09 重整）
-当前向量策略保留在根部 search.py，生产导入仍为 rag_core.vector_retrieval.VectorRetriever。
-- experiments/01_query_composition/code/：七种查询组合策略的运行、分析和验证代码。
-- experiments/01_query_composition/output/：原冒烟/全量结果和日志。
-- experiments/02_evaluate_rerun/code/launch.py：隔离运行原 run.py evaluate 的入口。
-- experiments/02_evaluate_rerun/output/：原重跑数据及结果；再次运行会生成独立时间戳子目录。
+## 实验目录
 
-从仓库根目录运行：
-~~bash
-PYTHONDONTWRITEBYTECODE=1 /home/humq/envs/denoise_qa/bin/python -m rag_core.vector_retrieval.experiments.01_query_composition.code.run --help
-PYTHONDONTWRITEBYTECODE=1 /home/humq/envs/denoise_qa/bin/python -m rag_core.vector_retrieval.experiments.02_evaluate_rerun.code.launch
-~~
-编号目录通过 python -m 模块入口执行；实验内部使用相对导入。主流程未改为采用实验获胜策略。
+`experiments/00_method_comparison/` 集中保存五种方法：子查询拼接、仅原始查询、原始查询加子查询拼接、查询向量加权平均、纯向量集成。
+
+- `code/`：五个可选策略文件，每种方法一个 `.py`。
+- 实验根目录 `run.py`、`verify.py`、`build_index.py`：公共运行、验证和索引构建入口。
+- `output/dataset/`：五种方法的逐条结果、指标及必要向量索引。
+
+详细运行说明见 `experiments/00_method_comparison/code/README.md`。从仓库根目录执行：
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 /home/humq/envs/denoise_qa/bin/python -m rag_core.vector_retrieval.experiments.00_method_comparison.run --help
+```
+
+生产检索由根目录 `search.py` 分派到所选策略。在文件开头修改：
+
+```python
+VECTOR_RETRIEVAL_STRATEGY = "subqueries_concat.py"
+```
+
+可填写 `code` 目录中的任意策略文件名（包含 `.py`）。修改后重启运行或新建VectorRetriever实例。当前默认子查询拼接，主流程会按策略所需文本进行批量编码，再执行语义检索。纯向量集成从实验output/dataset读取三组索引，返回完整payload供融合流程使用。
+

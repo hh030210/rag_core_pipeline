@@ -1,0 +1,625 @@
+{
+  "name": "query_000208.json",
+  "batch_id": "3da4da3548dc429baeb8f26d7d46ec4e",
+  "original_query": "一天之内把少林寺塔林三皇寨和初祖庵都逛完来得及吗，怎么安排顺序",
+  "subqueries": [
+    "少林寺 塔林 三皇寨 初祖庵 游览路线 一日游",
+    "少林寺景区 一天内 合理安排 多个景点",
+    "少林寺 塔林 三皇寨 初祖庵 游玩顺序"
+  ],
+  "component_texts": [
+    "一天之内把少林寺塔林三皇寨和初祖庵都逛完来得及吗，怎么安排顺序",
+    "少林寺 塔林 三皇寨 初祖庵 游览路线 一日游",
+    "少林寺景区 一天内 合理安排 多个景点",
+    "少林寺 塔林 三皇寨 初祖庵 游玩顺序"
+  ],
+  "query_analysis": {
+    "constraints": {
+      "scenic_spot": {
+        "labels": [
+          "少林寺",
+          "初祖庵",
+          "三皇寨",
+          "塔林"
+        ],
+        "intent_terms": [
+          "景点"
+        ],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "entity_category": {
+        "labels": [
+          "景点"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "construction_history": {
+        "labels": [
+          "塔林"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      },
+      "associated_figure": {
+        "labels": [
+          "三皇"
+        ],
+        "intent_terms": [],
+        "match": "ANY",
+        "role": "auxiliary"
+      }
+    },
+    "active_dimensions": [
+      "scenic_spot",
+      "entity_category",
+      "construction_history",
+      "associated_figure"
+    ],
+    "spot_names": [
+      "少林寺"
+    ],
+    "resolved_poi_entities": [
+      {
+        "mention": "少林寺景区",
+        "canonical_name": "少林寺",
+        "scenic_area": "少林寺",
+        "entity_type": "scenic_area"
+      },
+      {
+        "mention": "少林寺",
+        "canonical_name": "少林寺",
+        "scenic_area": "少林寺",
+        "entity_type": "scenic_area"
+      },
+      {
+        "mention": "三皇寨",
+        "canonical_name": "三皇寨",
+        "scenic_area": "少林寺",
+        "entity_type": "poi"
+      },
+      {
+        "mention": "初祖庵",
+        "canonical_name": "初祖庵",
+        "scenic_area": "少林寺",
+        "entity_type": "poi"
+      },
+      {
+        "mention": "塔林",
+        "canonical_name": "塔林",
+        "scenic_area": "少林寺",
+        "entity_type": "poi"
+      }
+    ],
+    "precise_entity_terms": [],
+    "confidence": 0.85,
+    "routing": {
+      "main_dimension": "",
+      "secondary_dimensions": []
+    },
+    "parser_diagnostics": {
+      "llm_constraint_count": 0,
+      "llm_intent_only_count": 0,
+      "recovered_constraint_count": 4,
+      "fallback_used": true,
+      "deterministic_enrichment_used": true,
+      "recovery_sources": [
+        "lexical_label"
+      ],
+      "llm_attempts": 1,
+      "llm_error": "",
+      "parser_mode": "llm"
+    },
+    "query_fact_count": 0,
+    "verified_fact_match_count": 0,
+    "fact_anchor_terms": [
+      "多个景点",
+      "游览路线",
+      "三皇寨",
+      "个景点",
+      "初祖庵",
+      "多个景",
+      "少林寺",
+      "游览路",
+      "览路线",
+      "一天",
+      "一日",
+      "三皇"
+    ],
+    "entity_anchor_candidate_count": 0,
+    "verified_fact_index_candidate_count": 0,
+    "no_candidate_lexical_fallback_count": 0
+  },
+  "gold_chunk_ids": [
+    "少林寺-景区介绍_000::chunk_0001",
+    "少林寺-景区介绍_000::chunk_0002",
+    "少林寺-运营信息_000::chunk_0000",
+    "少林寺-运营信息_000::chunk_0001"
+  ],
+  "gold_relevance": {},
+  "strategies": {
+    "subqueries_concat": {
+      "query_text": "少林寺 塔林 三皇寨 初祖庵 游览路线 一日游 | 少林寺景区 一天内 合理安排 多个景点 | 少林寺 塔林 三皇寨 初祖庵 游玩顺序",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 2,
+        "miss": false,
+        "rr": 0.5,
+        "result_count": 10,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.75,
+        "precision_at_5": 0.6,
+        "ndcg_at_5": 0.59251203,
+        "rr_at_5": 0.5,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.4,
+        "ndcg_at_10": 0.73156821,
+        "rr_at_10": 0.5,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.26666667,
+        "ndcg_at_15": 0.73156821,
+        "rr_at_15": 0.5,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.2,
+        "ndcg_at_20": 0.73156821,
+        "rr_at_20": 0.5
+      },
+      "results": [
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "rank": 1,
+          "score": 0.6938077
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "rank": 2,
+          "score": 0.6782122
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0001",
+          "rank": 3,
+          "score": 0.67460585
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 4,
+          "score": 0.61670214
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "rank": 5,
+          "score": 0.6096331
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0000",
+          "rank": 6,
+          "score": 0.6033993
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0011",
+          "rank": 7,
+          "score": 0.5592081
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0007",
+          "rank": 8,
+          "score": 0.5551225
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0012",
+          "rank": 9,
+          "score": 0.5456922
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0009",
+          "rank": 10,
+          "score": 0.54514
+        }
+      ]
+    },
+    "original_only": {
+      "query_text": "一天之内把少林寺塔林三皇寨和初祖庵都逛完来得及吗，怎么安排顺序",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 9,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.25,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.75,
+        "precision_at_5": 0.6,
+        "ndcg_at_5": 0.80480998,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.4,
+        "ndcg_at_10": 0.94386615,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.26666667,
+        "ndcg_at_15": 0.94386615,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.2,
+        "ndcg_at_20": 0.94386615,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0001",
+          "rank": 1,
+          "score": 0.6512493
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "rank": 2,
+          "score": 0.6150062
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "rank": 3,
+          "score": 0.6130022
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "rank": 4,
+          "score": 0.55569017
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 5,
+          "score": 0.5547345
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0000",
+          "rank": 6,
+          "score": 0.51727116
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0007",
+          "rank": 7,
+          "score": 0.5008546
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0011",
+          "rank": 8,
+          "score": 0.48943385
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0009",
+          "rank": 9,
+          "score": 0.48320308
+        }
+      ]
+    },
+    "original_plus_subqueries_concat": {
+      "query_text": "一天之内把少林寺塔林三皇寨和初祖庵都逛完来得及吗，怎么安排顺序 | 少林寺 塔林 三皇寨 初祖庵 游览路线 一日游 | 少林寺景区 一天内 合理安排 多个景点 | 少林寺 塔林 三皇寨 初祖庵 游玩顺序",
+      "component_texts": null,
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 9,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.25,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.75,
+        "precision_at_5": 0.6,
+        "ndcg_at_5": 0.73658969,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.4,
+        "ndcg_at_10": 0.87564587,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.26666667,
+        "ndcg_at_15": 0.87564587,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.2,
+        "ndcg_at_20": 0.87564587,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "rank": 1,
+          "score": 0.6391656
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "rank": 2,
+          "score": 0.6357381
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0001",
+          "rank": 3,
+          "score": 0.63165665
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 4,
+          "score": 0.5807253
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0000",
+          "rank": 5,
+          "score": 0.5765689
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "rank": 6,
+          "score": 0.55546033
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0007",
+          "rank": 7,
+          "score": 0.5302173
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0011",
+          "rank": 8,
+          "score": 0.5175493
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0012",
+          "rank": 9,
+          "score": 0.5124702
+        }
+      ]
+    },
+    "original_subqueries_centroid_w2": {
+      "query_text": null,
+      "component_texts": [
+        "一天之内把少林寺塔林三皇寨和初祖庵都逛完来得及吗，怎么安排顺序",
+        "少林寺 塔林 三皇寨 初祖庵 游览路线 一日游",
+        "少林寺景区 一天内 合理安排 多个景点",
+        "少林寺 塔林 三皇寨 初祖庵 游玩顺序"
+      ],
+      "metrics": {
+        "first_gold_rank": 1,
+        "miss": false,
+        "rr": 1.0,
+        "result_count": 10,
+        "hit_at_1": true,
+        "gold_recall_at_1": 0.25,
+        "precision_at_1": 1.0,
+        "ndcg_at_1": 1.0,
+        "rr_at_1": 1.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.75,
+        "precision_at_5": 0.6,
+        "ndcg_at_5": 0.78770206,
+        "rr_at_5": 1.0,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.4,
+        "ndcg_at_10": 0.92675824,
+        "rr_at_10": 1.0,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.26666667,
+        "ndcg_at_15": 0.92675824,
+        "rr_at_15": 1.0,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.2,
+        "ndcg_at_20": 0.92675824,
+        "rr_at_20": 1.0
+      },
+      "results": [
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0001",
+          "rank": 1,
+          "score": 0.6949049
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "rank": 2,
+          "score": 0.69486845
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "rank": 3,
+          "score": 0.69262755
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "rank": 4,
+          "score": 0.618713
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "rank": 5,
+          "score": 0.61428165
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0000",
+          "rank": 6,
+          "score": 0.60443795
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0007",
+          "rank": 7,
+          "score": 0.5573169
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0011",
+          "rank": 8,
+          "score": 0.55290294
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0009",
+          "rank": 9,
+          "score": 0.54200214
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0012",
+          "rank": 10,
+          "score": 0.5413224
+        }
+      ]
+    },
+    "dense_ensemble": {
+      "results": [
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0000",
+          "score": 0.6259837299585342,
+          "rank": 1
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0001",
+          "score": 0.616661936044693,
+          "rank": 2
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0001",
+          "score": 0.6151254773139954,
+          "rank": 3
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0002",
+          "score": 0.5840048864483833,
+          "rank": 4
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0003",
+          "score": 0.5663563534617424,
+          "rank": 5
+        },
+        {
+          "chunk_id": "少林寺-运营信息_000::chunk_0000",
+          "score": 0.5191751569509506,
+          "rank": 6
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0009",
+          "score": 0.5076421350240707,
+          "rank": 7
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0007",
+          "score": 0.5057675242424011,
+          "rank": 8
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0011",
+          "score": 0.5021731331944466,
+          "rank": 9
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0006",
+          "score": 0.4793754145503044,
+          "rank": 10
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0012",
+          "score": 0.4779909998178482,
+          "rank": 11
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0005",
+          "score": 0.47699255123734474,
+          "rank": 12
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0004",
+          "score": 0.4694136828184128,
+          "rank": 13
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0008",
+          "score": 0.4519837126135826,
+          "rank": 14
+        },
+        {
+          "chunk_id": "少林寺-景区介绍_000::chunk_0010",
+          "score": 0.4432569444179535,
+          "rank": 15
+        }
+      ],
+      "metrics": {
+        "first_gold_rank": 2,
+        "miss": false,
+        "rr": 0.5,
+        "result_count": 15,
+        "hit_at_1": false,
+        "gold_recall_at_1": 0.0,
+        "precision_at_1": 0.0,
+        "ndcg_at_1": 0.0,
+        "rr_at_1": 0.0,
+        "hit_at_5": true,
+        "gold_recall_at_5": 0.75,
+        "precision_at_5": 0.6,
+        "ndcg_at_5": 0.60961995,
+        "rr_at_5": 0.5,
+        "hit_at_10": true,
+        "gold_recall_at_10": 1.0,
+        "precision_at_10": 0.4,
+        "ndcg_at_10": 0.74867613,
+        "rr_at_10": 0.5,
+        "hit_at_15": true,
+        "gold_recall_at_15": 1.0,
+        "precision_at_15": 0.26666667,
+        "ndcg_at_15": 0.74867613,
+        "rr_at_15": 0.5,
+        "hit_at_20": true,
+        "gold_recall_at_20": 1.0,
+        "precision_at_20": 0.2,
+        "ndcg_at_20": 0.74867613,
+        "rr_at_20": 0.5
+      }
+    }
+  },
+  "cost": {
+    "subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_only": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_plus_subqueries_concat": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 1
+    },
+    "original_subqueries_centroid_w2": {
+      "logical_dense_searches": 1,
+      "query_embedding_texts": 4,
+      "online_qdrant_calls": 1
+    },
+    "dense_ensemble": {
+      "logical_dense_searches": 3,
+      "query_embedding_texts": 1,
+      "online_qdrant_calls": 0
+    }
+  }
+}

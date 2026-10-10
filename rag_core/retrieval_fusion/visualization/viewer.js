@@ -8,6 +8,10 @@ const el = (tag, className = '', value = null) => {
 let rows = [];
 let rowsByStrategy = {};
 let liveAccumulators = {};
+let vectorStrategiesBySource = {};
+let fusionStrategiesBySource = {};
+let currentPipelineStrategies = {vector:null, fusion:null};
+let adaptiveManifest = null, adaptiveAccumulator = null;
 let filtered = [];
 let selectedName = null;
 const topK = { semantic: 5, dimension: 5, fusion: 5 };
@@ -26,12 +30,13 @@ let manifest = null;
 let dimensionManifest = null;
 let recommendedManifest = null;
 const DATASETS = {
-  online: '../experiments/01_online_snapshots/output/dataset/',
-  dimension: '../experiments/06_dimension_score/output/dataset/',
-  recommended: '../experiments/07_recommended_fusion/output/dataset/',
+  adaptive: '../experiments/00_method_comparison/output/online_adaptive/dataset/',
+  online: '../experiments/00_method_comparison/output/online/dataset/',
+  dimension: '../experiments/00_method_comparison/output/dimension_score/dataset/',
+  recommended: '../experiments/00_method_comparison/output/recommended_fusion/dataset/',
 };
 let activeStrategy = 'recommended';
-function strategyIndex(strategy) { return strategy === 'old' ? manifest : strategy === 'new' ? dimensionManifest : recommendedManifest; }
+function strategyIndex(strategy) { if (strategy === 'adaptive') return adaptiveManifest; return strategy === 'old' ? manifest : strategy === 'new' ? dimensionManifest : recommendedManifest; }
 function strategyRows(strategy) { return importedDetails ? rows : rowsByStrategy[strategy] || []; }
 function batchLabel(strategy) {
   const index = strategyIndex(strategy);
@@ -43,6 +48,7 @@ function offlineLabel() {
   return strategyLabel(activeStrategy);
 }
 function strategyLabel(strategy) {
+  if (strategy === 'adaptive') return '自适应融合基准';
   return strategy === 'recommended' ? '推荐融合'
     : strategy === 'old' ? '线上融合' : '离线融合（维度分数基准）';
 }
@@ -75,60 +81,66 @@ function renderMetrics(evaluation) {
 function renderEvaluation(evaluation) {
   const panel = $('#evaluation-panel');
   const metrics = ['Hit@1', 'Hit@5', 'Hit@10', 'Hit@15', 'MRR@10', 'nDCG@5'];
-  if (!evaluation?.metrics?.length) {
-    panel.hidden = true;
-    return;
+  if (!evaluation?.metrics?.length) { panel.hidden = true; return; }
+  const mode = $('#metric-denominator').value;
+  const groups = importedDetails ? {old: evaluation}
+    : Object.fromEntries(Object.entries(liveAccumulators).map(([key, acc]) => [key, acc.result(mode)]));
+  if (adaptiveAccumulator && !importedDetails) groups.adaptive = adaptiveAccumulator.result(mode);
+  const definitions = [['semantic', 'old'], ['dimension', 'old'], ['old', 'adaptive'], ['new', 'new'], ['recommended', 'recommended']];
+  const entries = definitions.flatMap(([key, source]) => {
+    const group = groups[source];
+    const metric = group?.metrics.find(row => row.key === key);
+    return metric ? [{...metric, group, source}] : [];
+  });
+  if (importedDetails) {
+    entries.splice(0, entries.length, ...evaluation.metrics.map(row => ({...row, group:evaluation, source:'old'})));
   }
   const head = el('div', 'evaluation-head');
-  const title = el('h2', '', '检索路线与融合策略对比（根据候选现算）');
-  title.id = 'evaluation-title';
-  head.append(title);
-  const total = evaluation.denominator;
-  head.append(el(
-    'div',
-    'evaluation-note',
-    '各组读取对应实验自己保存的候选与 Golden，使用各自分母。主流程只更新线上评测组。',
-  ));
-  const makeTable = (rowsFor, mappedQueries, totalQueries) => {
-    const table = el('table', 'evaluation-table');
-    const thead = document.createElement('thead');
-    const headerRow = document.createElement('tr');
-    headerRow.append(el('th', '', '检索路线'));
-    for (const label of metrics) headerRow.append(el('th', '', `${label} (%)`));
-    thead.append(headerRow);
-    const tbody = document.createElement('tbody');
-    for (const row of rowsFor) {
-      const tr = document.createElement('tr');
-      if (row.key === 'fusion_new') tr.className = 'is-new';
-      tr.append(el('th', '', row.label));
-      for (const label of metrics) {
-        const td = document.createElement('td');
-        if (label.startsWith('Hit@')) {
-          const count = row.hits[label];
-          td.textContent = row.complete && totalQueries
-            ? `${(count / totalQueries * 100).toFixed(2)}% (${count}/${totalQueries})`
-            : '—';
-        } else {
-          const value = row.ranking_scores[label];
-          td.textContent = row.complete && totalQueries ? `${(value * 100).toFixed(2)}%` : '—';
-        }
-        tr.append(td);
-      }
-      tbody.append(tr);
-    }
-    table.append(thead, tbody);
-    const wrap = el('div', 'evaluation-table-wrap');
-    wrap.append(table);
-    return wrap;
-  };
+  const title = el('h2', '', '融合策略对比（根据候选现算）');
+  title.id = 'evaluation-title'; head.append(title);
+  head.append(el('div', 'evaluation-note', '展示语义、维度路线及 code 中全部三种融合策略；各策略读取自己的候选与 Golden。'));
   panel.replaceChildren(head);
-  const groups = importedDetails ? [['old', liveAccumulator]] : Object.entries(liveAccumulators);
-  for (const [strategy, accumulator] of groups) {
-    const group = accumulator.result($('#metric-denominator').value);
-    panel.append(el('h3', '', strategyLabel(strategy) + ' · ' + (importedDetails ? metricSource : batchLabel(strategy))),
-      el('div', 'evaluation-note', '查询 ' + group.total_queries + '；Gold 已映射 ' + group.mapped_queries + '；本组分母 ' + group.denominator),
-      makeTable(group.metrics, group.mapped_queries, group.denominator));
+  const strategyNames = vectorStrategiesBySource.old || [];
+  panel.append(el('p', 'evaluation-note', '本批向量策略：' + (strategyNames.join('、') || '未记录（旧批次）')
+    + ' · 当前主线配置：' + (currentPipelineStrategies.fusion || '读取中')
+    + ' · 本批线上融合：' + (fusionStrategiesBySource.old || []).join('、')
+    + ' · 查询 ' + evaluation.total_queries + ' · Gold 已映射 ' + evaluation.mapped_queries
+    + ' · 指标分母 ' + (mode === 'all' ? '全部查询' : 'Gold 已映射查询')));
+  if (importedDetails) {
+    panel.append(el('p', 'evaluation-note', metricSource));
+  } else {
+    panel.append(el('p', 'evaluation-note', ['adaptive', 'new', 'recommended'].filter(key => groups[key])
+      .map(key => strategyLabel(key) + '：' + batchLabel(key)).join('；')));
+    const stale = (adaptiveManifest && adaptiveManifest.input_batch_id !== manifest.batch_id) || (dimensionManifest && dimensionManifest.input_batch_id !== manifest.batch_id)
+      || (recommendedManifest && recommendedManifest.input_batch_id !== dimensionManifest?.batch_id);
+    if (stale) panel.append(el('p', 'evaluation-note', '注意：06 或 07 尚未跟随当前线上批次更新，请运行 run_all.py。各行仍按自己的实验数据计算。'));
   }
+  const table = el('table', 'evaluation-table'), thead = el('thead'), header = el('tr');
+  header.append(el('th', '', '检索路线'));
+  for (const label of metrics) header.append(el('th', '', label + ' (%)'));
+  thead.append(header);
+  const tbody = el('tbody');
+  for (const row of entries) {
+    const tr = el('tr'); tr.dataset.route = row.key; tr.dataset.source = row.source;
+    if (row.key === 'recommended') tr.className = 'is-new';
+    const filename = {adaptive:'online_adaptive.py', new:'dimension_score.py', recommended:'recommended_fusion.py'}[row.source];
+    const heading = el('th', '', row.source === 'adaptive' ? '自适应融合基准' : row.label); heading.scope = 'row';
+    if (filename) { heading.append(el('code','strategy-filename',filename)); tr.dataset.strategyFile=filename;
+      if (filename === currentPipelineStrategies.fusion) { heading.append(el('span','mainline-badge','当前主线'));tr.classList.add('is-mainline'); } }
+    if (row.key === 'semantic') heading.title = strategyNames.join('、');
+    tr.append(heading);
+    for (const label of metrics) {
+      const td = el('td');
+      td.textContent = row.complete && row.group.denominator
+        ? label.startsWith('Hit@')
+          ? (row.hits[label] / row.group.denominator * 100).toFixed(2) + '% (' + row.hits[label] + '/' + row.group.denominator + ')'
+          : (row.ranking_scores[label] * 100).toFixed(2) + '%'
+        : '—';
+      tr.append(td);
+    }
+    tbody.append(tr);
+  }
+  table.append(thead, tbody); const wrap = el('div', 'evaluation-table-wrap'); wrap.append(table); panel.append(wrap);
   panel.hidden = false;
 }
 function renderRouteFusionChart() {
@@ -145,7 +157,7 @@ function renderRouteFusionChart() {
   }));
   const maxCount = Math.max(1, ...groups.map(group => group.length));
   const head = el('div', 'route-fusion-head');
-  const title = el('h2', '', '两路命中组合与当前融合结果');
+  const title = el('h2', '', '融合策略分析 · 两路命中组合');
   title.id = 'route-fusion-title';
   head.append(title, el('div', 'route-fusion-note',
     offlineLabel() + ' · ' + batchLabel(activeStrategy) + ' · 语义 Top-' + topK.semantic + ' / 维度 Top-' + topK.dimension + ' / 融合 Top-' + topK.fusion + ' · Gold 已映射 ' + mapped.length + ' 条'));
@@ -404,7 +416,7 @@ function renderDetail(detail, row) {
   head.append(intro, nav);
 
   const badges = el('div', 'badges');
-  for (const [name, key] of [['语义', 'semantic_rank'], ['维度', 'dimension_rank'], ['线上融合', 'old_rank'], ...(detail.routes.new ? [['离线融合', 'new_rank']] : []), ...(detail.recommended ? [['推荐融合', 'recommended_rank']] : [])]) {
+  for (const [name, key] of [['语义', 'semantic_rank'], ['维度', 'dimension_rank'], [caseStrategy === 'adaptive' ? '自适应融合' : '主线评测', 'old_rank'], ...(detail.routes.new ? [['离线融合', 'new_rank']] : []), ...(detail.recommended ? [['推荐融合', 'recommended_rank']] : [])]) {
     const limit = key === 'semantic_rank' ? caseTopK.semantic : key === 'dimension_rank' ? caseTopK.dimension : caseTopK.fusion;
     const rank = row[key], hit = isRank(rank, limit);
     const status = !state(row).mapped ? '未标注' : hit ? `Top-${limit} 命中 #${rank}` : Number.isInteger(rank) ? '第 ' + rank + ' 名' : '未召回';
@@ -416,7 +428,7 @@ function renderDetail(detail, row) {
   routes.append(
     renderRoute(detail, row, 'semantic', '语义检索', '相似度排序', 'semantic_rank'),
     renderRoute(detail, row, 'dimension', '维度检索', '维度匹配排序', 'dimension_rank'),
-    renderRoute(detail, row, 'old', '线上融合', '线上快照排名', 'old_rank'),
+    renderRoute(detail, row, 'old', caseStrategy === 'adaptive' ? '自适应融合基准' : '主线评测结果', caseStrategy === 'adaptive' ? 'online_adaptive.py' : '已保存的线上排序', 'old_rank'),
     ...(detail.routes.new ? [renderRoute(detail, row, 'new', '离线融合', '维度分数融合', 'new_rank')] : []),
     ...(detail.recommended ? [renderRoute(routeDetail, row, 'recommended', '推荐融合', '维度角色校准', 'recommended_rank')] : []),
   );
@@ -512,7 +524,9 @@ function refreshCalculatedTable() {
 async function readJSON(path) {
   const url = new URL(path, location.href).href;
   if (rawPayloadLoads.has(url)) return rawPayloadLoads.get(url);
-  const load = fetch(url, {cache: 'no-store'}).then(response => {
+  const requestURL = new URL(url);
+  requestURL.searchParams.set('_fresh', String(Date.now()));
+  const load = fetch(requestURL.href, {cache: 'no-store'}).then(response => {
     if (!response.ok) throw new Error('无法读取实验数据：' + path + '（HTTP ' + response.status + '）');
     return response.json();
   }).finally(() => rawPayloadLoads.delete(url));
@@ -527,20 +541,20 @@ async function readExperimentIndex(base) {
 }
 async function loadLatestExperimentIndexes() {
   const optionalIndex = async base => { try { return await readExperimentIndex(base); } catch (error) { if (error.message.includes('HTTP 404')) return null; throw error; } };
-  [manifest, dimensionManifest, recommendedManifest] = await Promise.all([
-    readExperimentIndex(DATASETS.online), optionalIndex(DATASETS.dimension), optionalIndex(DATASETS.recommended),
+  [manifest, dimensionManifest, recommendedManifest, adaptiveManifest] = await Promise.all([
+    readExperimentIndex(DATASETS.online), optionalIndex(DATASETS.dimension), optionalIndex(DATASETS.recommended), readExperimentIndex(DATASETS.adaptive),
   ]);
   if (!Array.isArray(manifest.items) || !manifest.items.length) throw new Error('线上评测索引为空');
-  for (const strategy of ['old', 'new', 'recommended']) {
+  for (const strategy of ['old', 'adaptive', 'new', 'recommended']) {
     const index = strategyIndex(strategy);
     if (index && !Array.isArray(index.items)) index.items = Object.keys(index.detail_files).map(name => ({name}));
     for (const id of ['strategy-select', 'case-strategy-select']) $('#' + id).querySelector('option[value="' + strategy + '"]').disabled = !index;
   }
-  if (!strategyIndex(activeStrategy)) activeStrategy = 'old';
-  if (!strategyIndex(caseStrategy)) caseStrategy = 'old';
+  if (!strategyIndex(activeStrategy)) activeStrategy = 'adaptive';
+  if (!strategyIndex(caseStrategy)) caseStrategy = 'adaptive';
   $('#strategy-select').value = activeStrategy;
   $('#case-strategy-select').value = caseStrategy;
-  metricSource = '线上、离线、推荐分别读取各自实验结果';
+  metricSource = '主线批次与各融合方法分别读取实验数据';
   rows = manifest.items.map(row => ({...row}));
 }
 async function reloadLatestMetrics() {
@@ -572,17 +586,21 @@ async function calculateLiveMetrics() {
   $('#evaluation-panel').hidden = false;
   $('#evaluation-panel').replaceChildren(el('div', 'evaluation-note', '正在分别计算各实验候选与 Golden…'));
   try {
-    const nextRows = {}, accumulators = {};
+    const nextRows = {}, accumulators = {}, nextVectorStrategies = {}, nextFusionStrategies = {};
     const strategies = importedDetails ? ['old'] : ['old', 'new', 'recommended'].filter(strategy => strategyIndex(strategy));
     const total = strategies.reduce((n, strategy) => n + (importedDetails ? rows.length : strategyIndex(strategy).items.length), 0);
     let completed = 0;
     for (const strategy of strategies) {
       const acc = RetrievalMetrics.accumulator();
+      const vectorNames = new Set();
+      const fusionNames = new Set();
       const updated = (importedDetails ? rows : strategyIndex(strategy).items).map(row => ({...row}));
       for (let offset = 0; offset < updated.length; offset += 4) {
         await Promise.all(updated.slice(offset, offset + 4).map(async row => {
           const detail = importedDetails?.get(row.name) || await loadExperimentDetail(row.name, strategy);
           Object.assign(row, acc.add(detail));
+          vectorNames.add(detail.query_analysis?.vector_retrieval_strategy || "未记录（旧批次）");
+          fusionNames.add(detail.query_analysis?.fusion_strategy || detail.evaluation?.retrieval?.fusion_strategy?.file || detail.evaluation?.retrieval?.fusion_strategy?.name || 'adaptive_report_v1（迁移前基准）');
           row.query = detail.query;
         }));
         if (generation !== metricGeneration) return;
@@ -591,16 +609,35 @@ async function calculateLiveMetrics() {
       }
       nextRows[strategy] = updated;
       accumulators[strategy] = acc;
+      nextVectorStrategies[strategy] = [...vectorNames];
+      nextFusionStrategies[strategy] = [...fusionNames];
     }
     rowsByStrategy = nextRows;
     rows = nextRows.old;
     liveAccumulators = accumulators;
+    vectorStrategiesBySource = nextVectorStrategies;
+    fusionStrategiesBySource = nextFusionStrategies;
     liveAccumulator = accumulators.old;
     detailCache.clear();
+    if (!importedDetails) {
+    adaptiveAccumulator = RetrievalMetrics.accumulator();
+    const adaptiveRows = adaptiveManifest.items.map(row=>({...row}));
+    const adaptiveByName = new Map(adaptiveRows.map(row=>[row.name,row]));
+    const adaptiveFiles = Object.values(adaptiveManifest.detail_files);
+    for (let offset=0; offset<adaptiveFiles.length; offset+=8) {
+      const details = await Promise.all(adaptiveFiles.slice(offset,offset+8).map(readJSON));
+      for (const detail of details) {
+        if (detail.batch_id !== adaptiveManifest.batch_id) throw new Error('自适应基准批次不一致');
+        const ranks = adaptiveAccumulator.add(detail);
+        Object.assign(adaptiveByName.get(detail.name),ranks,{adaptive_rank:ranks.old_rank,query:detail.query});
+      }
+    }
+    rowsByStrategy.adaptive = adaptiveRows;
+    }
     refreshCalculatedTable();
     renderRouteFusionChart();
     refreshCasePanel();
-    $('#metric-status').textContent = metricSource + ' · 已分别计算 ' + strategies.length + ' 组实验';
+    $('#metric-status').textContent = metricSource + ' · 已分别计算 ' + (strategies.length + (importedDetails ? 0 : 1)) + ' 组数据';
   } catch (error) {
     if (generation === metricGeneration) {
       liveAccumulator = null;
@@ -631,6 +668,28 @@ async function importEvaluation(file) {
 }
 
 
+let batchPollInFlight = false;
+async function checkLatestBatches() {
+  if (document.hidden || importedDetails || !liveAccumulator || batchPollInFlight || $('#recalculate-metrics').disabled) return;
+  batchPollInFlight = true;
+  try {
+    const current = await Promise.all(Object.values(DATASETS).map(async base => {
+      try { return (await readJSON(base + 'index.json')).batch_id; }
+      catch (error) { if (error.message.includes('HTTP 404')) return null; throw error; }
+    }));
+    const loaded = [adaptiveManifest?.batch_id || null, manifest?.batch_id || null, dimensionManifest?.batch_id || null, recommendedManifest?.batch_id || null];
+    if (current.some((batch, i) => batch !== loaded[i])) {
+      $('#metric-status').textContent = '发现新批次，正在重新读取并计算…';
+      await reloadLatestMetrics();
+    }
+  } catch (error) {
+    $('#metric-status').textContent = '自动检查最新批次失败：' + error.message;
+  } finally { batchPollInFlight = false; }
+}
+setInterval(checkLatestBatches, 30000);
+window.addEventListener('focus', checkLatestBatches);
+document.addEventListener('visibilitychange', checkLatestBatches);
+window.addEventListener('pipeline-strategies-changed', refreshCalculatedTable);
 start();
 
 function renderRecommended(detail, row, routes) {
