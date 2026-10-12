@@ -536,8 +536,10 @@ async function readJSON(path) {
 async function readExperimentIndex(base) {
   const index = await readJSON(base + 'index.json');
   if (!index.detail_files || typeof index.detail_files !== 'object') throw new Error('实验索引缺少 detail_files：' + base);
-  index.detail_files = Object.fromEntries(Object.entries(index.detail_files).map(([name, path]) => [name, base + path]));
-  return index;
+  // Concurrent readers may share a cached JSON object; keep path expansion local.
+  return {...index, detail_files: Object.fromEntries(
+    Object.entries(index.detail_files).map(([name, path]) => [name, new URL(path, new URL(base, location.href)).href])
+  )};
 }
 async function loadLatestExperimentIndexes() {
   const source = await fetch(new URL('../fusion.py', location.href), {cache:'no-store'}).then(r=>r.text());
