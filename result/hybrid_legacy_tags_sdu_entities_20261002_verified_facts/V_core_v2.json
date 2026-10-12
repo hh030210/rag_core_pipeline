@@ -1,0 +1,214 @@
+{
+  "schema_version": "2.0",
+  "dimensions": [
+    {
+      "id": "object_identity",
+      "name": "对象与身份",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景点的实体类别、人物角色与身份属性",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "entity_type",
+      "name": "实体类型",
+      "parent_id": "object_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "实体是何种场所、建筑或地理单元,如殿宇、楼阁、洞窟、祠庵、园林、村寨、山体、湖泊等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "person_role",
+      "name": "人物身份",
+      "parent_id": "object_identity",
+      "level": 2,
+      "indexable": true,
+      "description": "文本中的人物社会角色或血缘身份,如孔氏嫡长孙、住持、僧人、奉祀官、工匠、民间艺人等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "geographic_location",
+      "name": "地理位置",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "描述景点所在的空间位置、区位关系与交通可及性",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "location_hierarchy",
+      "name": "位置层级",
+      "parent_id": "geographic_location",
+      "level": 2,
+      "indexable": true,
+      "description": "实体所处的行政区划、景区分区、周边相对方位,如省市、街道、景区内部区域等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "transportation_mode",
+      "name": "交通方式",
+      "parent_id": "geographic_location",
+      "level": 2,
+      "indexable": true,
+      "description": "可抵达或内部移动的交通手段,如高铁、公交、自驾、缆车、电瓶车、游船、步行等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "history_culture",
+      "name": "历史文化",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "与景点相关的历史事件、文化传说与宗教艺术背景",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "historical_event",
+      "name": "历史事件",
+      "parent_id": "history_culture",
+      "level": 2,
+      "indexable": true,
+      "description": "兴建、迁建、毁坏、重修、赐额、临幸等历史性事件,包括其发生年代",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "cultural_connotation",
+      "name": "文化内涵",
+      "parent_id": "history_culture",
+      "level": 2,
+      "indexable": true,
+      "description": "景点承载的宗教思想、礼制观念、传说故事及文物价值,如儒家祭祀、禅宗祖庭、民间传说等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "artistic_feature",
+      "name": "艺术特征",
+      "parent_id": "history_culture",
+      "level": 2,
+      "indexable": true,
+      "description": "建筑、雕塑、绘画、石刻等方面的工艺做法、艺术风格与代表作品",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "landscape_feature",
+      "name": "景观特色",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "描述自然与人工景观的构成要素、视觉效果与美学特点",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "landscape_composition",
+      "name": "景观组成",
+      "parent_id": "landscape_feature",
+      "level": 2,
+      "indexable": true,
+      "description": "构成景观的实体要素,如峰墙、峰林、湖泊、瀑布、彩林、洞穴、溪流、冰貌等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "visual_feature",
+      "name": "视觉特色",
+      "parent_id": "landscape_feature",
+      "level": 2,
+      "indexable": true,
+      "description": "以形状、色彩、光影、气势为核心的视觉描述,如金光映照、峰墙如城、飞瀑多姿等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "operation_service",
+      "name": "开放运营",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "景点的开放状态、游览服务与设施信息",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "opening_period",
+      "name": "开放时段",
+      "parent_id": "operation_service",
+      "level": 2,
+      "indexable": true,
+      "description": "景点的季节性或每日开放时间、关闭日等时间信息",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "visitor_service",
+      "name": "游客服务",
+      "parent_id": "operation_service",
+      "level": 2,
+      "indexable": true,
+      "description": "面向游客的服务设施或指引,如行李寄存、游览路线建议、适宜人群、注意事项、卫生餐饮等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "ticketing_policy",
+      "name": "票务规则",
+      "parent_id": null,
+      "level": 1,
+      "indexable": false,
+      "description": "门票、票务类型及相关优惠政策",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "ticket_type",
+      "name": "票价类型",
+      "parent_id": "ticketing_policy",
+      "level": 2,
+      "indexable": true,
+      "description": "门票的价格类别或计价方式,如全价票、优惠票、联票、单程票价等",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    },
+    {
+      "id": "ticket_policy",
+      "name": "购票政策",
+      "parent_id": "ticketing_policy",
+      "level": 2,
+      "indexable": true,
+      "description": "预约制度、购票渠道、退改规则、优惠范围等管理性规定",
+      "aliases": [],
+      "value_policy": "multi",
+      "max_labels": 5
+    }
+  ]
+}
