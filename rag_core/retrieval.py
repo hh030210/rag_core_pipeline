@@ -596,7 +596,10 @@ class Retriever:
         return candidates[:limit]
 
     def _fact_index_matches(self, query_facts: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
-        if not bool(getattr(self.settings, "fact_index_candidate_recall_enabled", True)):
+        if not (
+            bool(getattr(self.settings, "fact_index_candidate_recall_enabled", False))
+            or bool(getattr(self.settings, "verified_fact_evidence_rerank_enabled", False))
+        ):
             return {}
         return self.fact_index.matches(query_facts)
 
@@ -631,6 +634,362 @@ class Retriever:
             })
         candidates.sort(key=lambda item: item["score"], reverse=True)
         return candidates[:limit]
+
+    def _rerank_main_dimension_coverage(
+        self, candidates: List[Dict[str, Any]], policy: Dict[str, Any]
+    ) -> List[Dict[str, Any]]:
+        """Reorder only the leading pool using direct, query-relevant coverage.
+
+        Candidate count is deliberately not rewarded.  A candidate first has
+        to match the routed main dimension; only then can secondary coverage
+        across *different parent dimensions* add a small bonus.  This avoids
+        promoting a chunk merely because it accumulated several generic leaf
+        labels below one parent.
+        """
+        if not bool(getattr(self.settings, "main_coverage_rerank_enabled", False)):
+            return candidates
+        main = str(policy.get("main_dimension", ""))
+        if not main or not candidates:
+            return candidates
+        top_n = max(1, int(getattr(self.settings, "main_coverage_rerank_top_n", 20)))
+        head, tail = list(candidates[:top_n]), list(candidates[top_n:])
+        secondary = set(policy.get("secondary_dimensions", []))
+        for original_rank, item in enumerate(head, 1):
+            matched = set(item.get("matched_dimensions", []) or [])
+            main_matches = [
+                match for match in item.get("matches", []) or []
+                if str(match.get("dimension_id", "")) == main
+            ]
+            # A weak vector hit is already represented by the base score. It
+            # must not unlock an additional coverage reward: only an exact
+            # canonical label or literal intent evidence is strong enough to
+            # serve as the main-dimension gate.
+            main_hit = any(
+                str(match.get("source", "")) in {"canonical_label", "intent_text"}
+                for match in main_matches
+            )
+            parent_ids = {
+                str(self.maps["nodes"].get(leaf_id, {}).get("parent_id") or leaf_id)
+                for leaf_id in matched
+            }
+            secondary_hits = secondary.intersection(matched)
+            # Main dimension acts as a ranking gate, not a hard candidate
+            # filter. Candidates without it retain their base score and can
+            # still surface when the parser has routed the query imperfectly.
+            bonus = 0.0
+            if main_hit:
+                bonus += 0.18
+                bonus += 0.05 * len(secondary_hits)
+                bonus += 0.04 * max(0, len(parent_ids) - 1)
+            item["base_dimension_score"] = float(item.get("score", 0.0))
+            item["main_dimension_hit"] = main_hit
+            item["direct_parent_coverage"] = len(parent_ids)
+            item["main_coverage_rerank_bonus"] = round(bonus, 6)
+            item["score"] = float(item.get("score", 0.0)) + bonus
+            # Stable tie-breaker: preserve base ordering when signals agree.
+            item["_main_coverage_original_rank"] = original_rank
+        head.sort(key=lambda item: (-float(item.get("score", 0.0)), item["_main_coverage_original_rank"]))
+        for item in head:
+            item.pop("_main_coverage_original_rank", None)
+        return [*head, *tail]
+
+    @staticmethod
+    def _discriminative_fact_matches(matches: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Keep only fact evidence that can distinguish a candidate chunk.
+
+        A subject plus a generic ``feature`` relation, with no queried object,
+        is often shared by many descriptions of the same attraction.  It is
+        useful for recall but too broad to move a result upward.  Every other
+        controlled relation (or an explicit queried object) is retained.
+        """
+        selected, seen = [], set()
+        for item in matches or []:
+            query_fact = item.get("query_fact", {}) or {}
+            predicate = str(query_fact.get("predicate", "")).strip().lower()
+            obj = str(query_fact.get("object", "")).strip()
+            if not predicate or (predicate == "feature" and not obj):
+                continue
+            fact = item.get("fact", {}) or {}
+            key = (
+                str(query_fact.get("subject", "")).strip(), predicate, obj,
+                str(fact.get("object", "")).strip(),
+            )
+            if key not in seen:
+                seen.add(key)
+                selected.append(item)
+        return selected
+
+    def _rerank_verified_fact_evidence(
+        self, candidates: List[Dict[str, Any]], fact_matches: Dict[str, List[Dict[str, Any]]]
+    ) -> List[Dict[str, Any]]:
+        """Promote Top-N chunks with source-verified query fact evidence.
+
+        This is deliberately a reranker, not another candidate route: a chunk
+        must already be in the dimension candidate pool.  The evidence link is
+        exact subject + controlled predicate (+ optional object), and the fact
+        index was built only after validating all fields in the same chunk.
+        """
+        if not bool(getattr(self.settings, "verified_fact_evidence_rerank_enabled", False)):
+            return candidates
+        if not candidates or not fact_matches:
+            return candidates
+        top_n = max(1, int(getattr(self.settings, "verified_fact_evidence_rerank_top_n", 20)))
+        head, tail = list(candidates[:top_n]), list(candidates[top_n:])
+        for original_rank, item in enumerate(head, 1):
+            evidence = self._discriminative_fact_matches(
+                fact_matches.get(str(item.get("chunk_id", "")), [])
+            )
+            # One exact relation is already strong evidence.  A second
+            # independent relation adds only a small bounded increment, so a
+            # verbose chunk cannot win merely by containing many facts.
+            bonus = 0.0
+            if evidence:
+                # Calibrated on the held-out fixed candidate pool: the
+                # relation is exact and source-verified, so it needs enough
+                # weight to cross close Top-5 / Top-10 score boundaries.
+                bonus = 0.25 + 0.05 * min(2, len(evidence) - 1)
+            item["base_score_before_fact_evidence_rerank"] = float(item.get("score", 0.0))
+            item["verified_fact_evidence_matches"] = evidence[:3]
+            item["verified_fact_evidence_count"] = len(evidence)
+            item["verified_fact_evidence_rerank_bonus"] = round(bonus, 6)
+            item["score"] = float(item.get("score", 0.0)) + bonus
+            item["_fact_evidence_original_rank"] = original_rank
+        head.sort(key=lambda item: (-float(item.get("score", 0.0)), item["_fact_evidence_original_rank"]))
+        for item in head:
+            item.pop("_fact_evidence_original_rank", None)
+        return [*head, *tail]
+
+    def _answer_evidence_terms(
+        self, query: str, analysis: Dict[str, Any], query_facts: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """Build exact, answer-bearing anchors for candidate-only reranking.
+
+        Dimension labels describe topic relevance, but a good answer chunk also
+        has to carry the concrete entity, object, or number asked about.  Terms
+        are derived from structured query facts and already-resolved entities;
+        rare literal fragments are admitted only as a small supplement.
+        """
+        terms: Dict[str, str] = {}
+
+        def add(value: Any, kind: str, min_length: int = 2) -> None:
+            value = str(value or "").strip()
+            if len(value) < min_length:
+                return
+            existing = terms.get(value)
+            # A POI/precise entity is more trustworthy than a generic fact
+            # field if both happen to have the same surface form.
+            priorities = {"poi": 4, "precise_entity": 4, "fact_subject": 3,
+                          "fact_object": 2, "rare_literal": 1, "number": 1}
+            if not existing or priorities[kind] > priorities[existing]:
+                terms[value] = kind
+
+        for entity in analysis.get("resolved_poi_entities", []) or []:
+            add(entity.get("mention", ""), "poi")
+            add(entity.get("canonical_name", ""), "poi")
+        for value in analysis.get("precise_entity_terms", []) or []:
+            add(value, "precise_entity")
+        for fact in query_facts or []:
+            add(fact.get("subject", ""), "fact_subject")
+            add(fact.get("object", ""), "fact_object")
+        # Numeric/time/price expressions are exact answer constraints.  Keep
+        # at least two digits to avoid treating every single digit as evidence.
+        for value in re.findall(r"\d{2,}(?:\.\d+)?", query):
+            add(value, "number")
+        for value in analysis.get("fact_anchor_terms", []) or []:
+            value = str(value).strip()
+            if len(value) >= 3 and self._anchor_document_frequency(value) <= 6:
+                add(value, "rare_literal", min_length=3)
+
+        max_df = max(12, math.ceil(len(self.points) * 0.12))
+        output = []
+        for value, kind in terms.items():
+            df = self._anchor_document_frequency(value)
+            if kind not in {"poi", "precise_entity", "number"} and (not df or df > max_df):
+                continue
+            output.append({"term": value, "kind": kind, "document_frequency": df})
+        priority = {"poi": 0, "precise_entity": 0, "fact_subject": 1,
+                    "fact_object": 2, "number": 3, "rare_literal": 4}
+        return sorted(output, key=lambda item: (priority[item["kind"]], item["document_frequency"], -len(item["term"])))[:12]
+
+    def _rerank_answer_evidence(
+        self, candidates: List[Dict[str, Any]], query: str, analysis: Dict[str, Any],
+        query_facts: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """Reorder only Top-N candidates by literal answer evidence.
+
+        Exact entity/object/number evidence is a bounded ranking feature, never
+        a retrieval route. Exact entity--relation matches remain handled by the
+        verified-fact reranker, preventing relation evidence from being counted
+        twice here.
+        """
+        if not bool(getattr(self.settings, "answer_evidence_rerank_enabled", False)):
+            return candidates
+        terms = self._answer_evidence_terms(query, analysis, query_facts)
+        if not candidates or not terms:
+            return candidates
+        top_n = max(1, int(getattr(self.settings, "answer_evidence_rerank_top_n", 20)))
+        head, tail = list(candidates[:top_n]), list(candidates[top_n:])
+        base_weights = {
+            "poi": 0.18, "precise_entity": 0.18, "fact_subject": 0.15,
+            "fact_object": 0.12, "number": 0.08, "rare_literal": 0.08,
+        }
+        for original_rank, item in enumerate(head, 1):
+            title = str(item.get("doc_title", "")) + "\n" + str(item.get("chunk_gen_title", ""))
+            body = str(item.get("chunk_text_full", item.get("chunk_text", "")) or "")
+            matches = []
+            for evidence in terms:
+                term = evidence["term"]
+                if term not in title and term not in body:
+                    continue
+                in_title = term in title
+                bonus = base_weights[evidence["kind"]] + (0.07 if in_title else 0.0)
+                matches.append({**evidence, "in_title": in_title, "bonus": round(bonus, 6)})
+            matches.sort(key=lambda value: (-value["bonus"], value["document_frequency"], -len(value["term"])))
+            # Two independent anchors are enough to distinguish an answer
+            # chunk; cap the literal component so labels remain primary.
+            bonus = min(0.30, sum(value["bonus"] for value in matches[:2]))
+            item["base_score_before_answer_evidence_rerank"] = float(item.get("score", 0.0))
+            item["answer_evidence_matches"] = matches[:4]
+            item["answer_evidence_rerank_bonus"] = round(bonus, 6)
+            item["score"] = float(item.get("score", 0.0)) + bonus
+            item["_answer_evidence_original_rank"] = original_rank
+        head.sort(key=lambda item: (-float(item.get("score", 0.0)), item["_answer_evidence_original_rank"]))
+        for item in head:
+            item.pop("_answer_evidence_original_rank", None)
+        return [*head, *tail]
+
+    def _rerank_answerability(
+        self, candidates: List[Dict[str, Any]], query: str, analysis: Dict[str, Any],
+        query_facts: List[Dict[str, Any]], fact_matches: Dict[str, List[Dict[str, Any]]],
+    ) -> List[Dict[str, Any]]:
+        """Apply a strict, local answerability pass to the leading pool.
+
+        Dimension retrieval establishes topical relevance.  This pass is more
+        conservative: a sizeable promotion requires a concrete answer entity
+        (POI, precise entity, or fact subject) *and* either source-verified
+        relation evidence or a queried concrete attribute (object/number).
+        It neither calls an LLM nor adds candidates, so its latency is bounded
+        by string checks over the existing Top-N results.
+        """
+        if not bool(getattr(self.settings, "answerability_rerank_enabled", False)):
+            return candidates
+        terms = self._answer_evidence_terms(query, analysis, query_facts)
+        if not candidates or not terms:
+            return candidates
+
+        top_n = max(1, int(getattr(self.settings, "answerability_rerank_top_n", 20)))
+        head, tail = list(candidates[:top_n]), list(candidates[top_n:])
+        entity_kinds = {"poi", "precise_entity", "fact_subject"}
+        attribute_kinds = {"fact_object", "number"}
+        for original_rank, item in enumerate(head, 1):
+            title = str(item.get("doc_title", "")) + "\n" + str(item.get("chunk_gen_title", ""))
+            body = str(item.get("chunk_text_full", item.get("chunk_text", "")) or "")
+            matched = [
+                evidence for evidence in terms
+                if evidence["term"] in title or evidence["term"] in body
+            ]
+            entity = [value for value in matched if value["kind"] in entity_kinds]
+            attribute = [value for value in matched if value["kind"] in attribute_kinds]
+            relation = self._discriminative_fact_matches(
+                fact_matches.get(str(item.get("chunk_id", "")), [])
+            )
+
+            # Relation-only matches may identify the topic, but do not prove
+            # that this chunk answers the named entity in the question.
+            bonus = 0.0
+            if entity and relation:
+                bonus = 0.34 + 0.04 * min(2, len(relation) - 1)
+                if attribute:
+                    bonus += 0.05
+            elif entity and attribute:
+                bonus = 0.20 + (0.04 if any(value["term"] in title for value in entity) else 0.0)
+            elif entity and len(entity) >= 2:
+                # Useful for multi-entity comparison questions even where the
+                # fact parser did not emit an explicit predicate.
+                bonus = 0.12
+            elif relation:
+                bonus = 0.04
+            bonus = min(0.45, bonus)
+            item["base_score_before_answerability_rerank"] = float(item.get("score", 0.0))
+            item["answerability_entity_matches"] = [value["term"] for value in entity[:3]]
+            item["answerability_attribute_matches"] = [value["term"] for value in attribute[:3]]
+            item["answerability_relation_count"] = len(relation)
+            item["answerability_rerank_bonus"] = round(bonus, 6)
+            item["score"] = float(item.get("score", 0.0)) + bonus
+            item["_answerability_original_rank"] = original_rank
+        head.sort(key=lambda item: (-float(item.get("score", 0.0)), item["_answerability_original_rank"]))
+        for item in head:
+            item.pop("_answerability_original_rank", None)
+        return [*head, *tail]
+
+    def _rerank_slot_coverage(
+        self, candidates: List[Dict[str, Any]], query: str, analysis: Dict[str, Any],
+        query_facts: List[Dict[str, Any]], fact_matches: Dict[str, List[Dict[str, Any]]],
+    ) -> List[Dict[str, Any]]:
+        """Reward coherent coverage for genuinely compositional questions.
+
+        A chunk is not penalized merely because an answer is distributed over
+        several chunks.  The pass activates only when the query exposes at
+        least two independent entities, or at least two non-entity
+        constraints.  A reward then requires coverage of two or more slots in
+        the *same* chunk.  All signals are exact local matches or the existing
+        source-validated fact links; no model call is made at query time.
+        """
+        if not bool(getattr(self.settings, "slot_coverage_rerank_enabled", False)):
+            return candidates
+        terms = self._answer_evidence_terms(query, analysis, query_facts)
+        if not candidates or not terms:
+            return candidates
+
+        entity_kinds = {"poi", "precise_entity", "fact_subject"}
+        attribute_kinds = {"fact_object", "number"}
+        entity_terms = {item["term"] for item in terms if item["kind"] in entity_kinds}
+        attribute_terms = {item["term"] for item in terms if item["kind"] in attribute_kinds}
+        relation_slots = {
+            str(fact.get("predicate", "")).strip().lower()
+            for fact in (query_facts or [])
+            if str(fact.get("predicate", "")).strip().lower() not in {"", "feature"}
+        }
+        # Do not apply a compositional preference to an ordinary one-fact
+        # question; answerability reranking already handles that case.
+        if len(entity_terms) < 2 and len(attribute_terms | relation_slots) < 2:
+            return candidates
+
+        slot_total = len(entity_terms) + len(attribute_terms) + len(relation_slots)
+        if slot_total < 2:
+            return candidates
+        top_n = max(1, int(getattr(self.settings, "slot_coverage_rerank_top_n", 20)))
+        head, tail = list(candidates[:top_n]), list(candidates[top_n:])
+        for original_rank, item in enumerate(head, 1):
+            title = str(item.get("doc_title", "")) + "\n" + str(item.get("chunk_gen_title", ""))
+            body = str(item.get("chunk_text_full", item.get("chunk_text", "")) or "")
+            matched_entities = sorted(term for term in entity_terms if term in title or term in body)
+            matched_attributes = sorted(term for term in attribute_terms if term in title or term in body)
+            matched_relations = {
+                str(match.get("query_fact", {}).get("predicate", "")).strip().lower()
+                for match in self._discriminative_fact_matches(
+                    fact_matches.get(str(item.get("chunk_id", "")), [])
+                )
+            } & relation_slots
+            covered = len(matched_entities) + len(matched_attributes) + len(matched_relations)
+            coverage = covered / slot_total
+            # Require two independently requested elements.  This deliberately
+            # leaves single-entity answer chunks at their existing score.
+            bonus = min(0.30, 0.30 * coverage) if covered >= 2 else 0.0
+            item["base_score_before_slot_coverage_rerank"] = float(item.get("score", 0.0))
+            item["slot_coverage_total"] = slot_total
+            item["slot_coverage_count"] = covered
+            item["slot_coverage_ratio"] = round(coverage, 6)
+            item["slot_coverage_entities"] = matched_entities[:4]
+            item["slot_coverage_attributes"] = matched_attributes[:4]
+            item["slot_coverage_relations"] = sorted(matched_relations)[:3]
+            item["slot_coverage_rerank_bonus"] = round(bonus, 6)
+            item["score"] = float(item.get("score", 0.0)) + bonus
+            item["_slot_coverage_original_rank"] = original_rank
+        head.sort(key=lambda item: (-float(item.get("score", 0.0)), item["_slot_coverage_original_rank"]))
+        for item in head:
+            item.pop("_slot_coverage_original_rank", None)
+        return [*head, *tail]
 
     @staticmethod
     def _dimension_policy(analysis: Dict[str, Any]) -> Dict[str, Any]:
@@ -1066,6 +1425,18 @@ class Retriever:
                 dimension.sort(key=lambda item: item["score"], reverse=True)
             dimension = dimension[:dimension_pool]
         analysis["verified_fact_index_candidate_count"] = len(fact_index_candidates)
+        # Ranking-only refinement: operates after every candidate source has
+        # been unioned, but before ranks are assigned. It never admits or
+        # removes a candidate from the pool.
+        dimension = self._rerank_main_dimension_coverage(dimension, dimension_policy)
+        dimension = self._rerank_verified_fact_evidence(dimension, verified_fact_matches)
+        dimension = self._rerank_answer_evidence(dimension, query, analysis, query_facts or [])
+        dimension = self._rerank_answerability(
+            dimension, query, analysis, query_facts or [], verified_fact_matches
+        )
+        dimension = self._rerank_slot_coverage(
+            dimension, query, analysis, query_facts or [], verified_fact_matches
+        )
         lexical_fallback_candidates = []
         if not dimension:
             lexical_fallback_candidates = self._no_candidate_lexical_fallback(query, analysis)

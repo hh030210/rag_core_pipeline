@@ -42,6 +42,8 @@ def main() -> None:
                         help="Keep samples with no validated gold-to-chunk mapping in metric denominators.")
     parser.add_argument("--use-rewritten-query", action="store_true",
                         help="Use dataset-provided context-resolved queries when available (multi-turn evaluation only).")
+    parser.add_argument("--only-context-dependent", action="store_true",
+                        help="Evaluate only samples that provide multi-turn context and a different rewritten query.")
     parser.add_argument("--enable-no-candidate-lexical-fallback", action="store_true",
                         help="Use constrained BM25-style fact recall only when the dimension route is empty.")
     fact_index_group = parser.add_mutually_exclusive_group()
@@ -56,6 +58,26 @@ def main() -> None:
                         help="JSON facts pre-parsed from evaluation queries; required to activate fact matching.")
     parser.add_argument("--verified-fact-tail-start", default=None, type=int,
                         help="Insert verified fact candidates after this rank (default: 10; 0 mixes by score).")
+    parser.add_argument("--enable-main-coverage-rerank", action="store_true",
+                        help="Rerank only the leading candidate pool using main-dimension-gated parent coverage.")
+    parser.add_argument("--main-coverage-rerank-top-n", default=20, type=int,
+                        help="Leading candidate count eligible for main-coverage reranking.")
+    parser.add_argument("--enable-verified-fact-evidence-rerank", action="store_true",
+                        help="Rerank existing candidates using same-chunk verified query-fact evidence.")
+    parser.add_argument("--verified-fact-evidence-rerank-top-n", default=20, type=int,
+                        help="Leading candidate count eligible for verified fact evidence reranking.")
+    parser.add_argument("--enable-answer-evidence-rerank", action="store_true",
+                        help="Rerank existing Top-N candidates using exact answer-bearing literals.")
+    parser.add_argument("--answer-evidence-rerank-top-n", default=20, type=int,
+                        help="Leading candidate count eligible for answer-evidence reranking.")
+    parser.add_argument("--enable-answerability-rerank", action="store_true",
+                        help="Rerank existing Top-N candidates using deterministic entity/relation/attribute answerability evidence.")
+    parser.add_argument("--answerability-rerank-top-n", default=20, type=int,
+                        help="Leading candidate count eligible for strict answerability reranking.")
+    parser.add_argument("--enable-slot-coverage-rerank", action="store_true",
+                        help="For compositional queries, reward existing chunks that cover multiple requested slots.")
+    parser.add_argument("--slot-coverage-rerank-top-n", default=20, type=int,
+                        help="Leading candidate count eligible for slot-coverage reranking.")
     args = parser.parse_args()
 
     args.output.mkdir(parents=True, exist_ok=True)
@@ -74,6 +96,16 @@ def main() -> None:
         settings.fact_index_candidate_recall_enabled = args.verified_fact_index
     if args.verified_fact_tail_start is not None:
         settings.fact_index_tail_insertion_rank = max(0, args.verified_fact_tail_start)
+    settings.main_coverage_rerank_enabled = args.enable_main_coverage_rerank
+    settings.main_coverage_rerank_top_n = max(1, args.main_coverage_rerank_top_n)
+    settings.verified_fact_evidence_rerank_enabled = args.enable_verified_fact_evidence_rerank
+    settings.verified_fact_evidence_rerank_top_n = max(1, args.verified_fact_evidence_rerank_top_n)
+    settings.answer_evidence_rerank_enabled = args.enable_answer_evidence_rerank
+    settings.answer_evidence_rerank_top_n = max(1, args.answer_evidence_rerank_top_n)
+    settings.answerability_rerank_enabled = args.enable_answerability_rerank
+    settings.answerability_rerank_top_n = max(1, args.answerability_rerank_top_n)
+    settings.slot_coverage_rerank_enabled = args.enable_slot_coverage_rerank
+    settings.slot_coverage_rerank_top_n = max(1, args.slot_coverage_rerank_top_n)
     query_fact_cache = {}
     if args.query_fact_cache:
         cache = json.loads(args.query_fact_cache.read_text(encoding="utf-8"))
@@ -125,6 +157,13 @@ def main() -> None:
             for record in load_gold_records(args.dataset)
         ]
     dataset_total = len(records)
+    if args.only_context_dependent:
+        records = [record for record in records if (
+            str(record.get("multi_turn_context", "")).strip()
+            and str(record.get("rewritten_query", "")).strip()
+            and str(record.get("rewritten_query", "")).strip() != str(record.get("question", "")).strip()
+        )]
+        dataset_total = len(records)
     unmapped_records = [record for record in records if not record.get("gold_chunk_ids")]
     if not args.include_unmapped_golden:
         records = [record for record in records if record.get("gold_chunk_ids")]
@@ -133,12 +172,16 @@ def main() -> None:
     ks = (1, 3, 5, 10, 15, 20)
     rows = []
     empty_candidates = 0
+    context_rewrite_applied_count = 0
     for index, record in enumerate(records, 1):
+        original_query = record["question"]
         retrieval_query = record.get("rewritten_query", "") if args.use_rewritten_query else ""
-        retrieval_query = retrieval_query or record["question"]
+        retrieval_query = retrieval_query or original_query
+        context_rewrite_applied_count += int(retrieval_query != original_query)
         retrieval = retriever.search(
             retrieval_query, top_k=5, dimension_pool=100,
             dimension_only=True, query_facts=query_fact_cache.get(retrieval_query, []),
+            original_query=original_query,
         )
         if not retrieval["dimension_candidates"]:
             empty_candidates += 1
@@ -168,7 +211,19 @@ def main() -> None:
         "query_fact_cache": str(args.query_fact_cache) if args.query_fact_cache else "",
         "query_fact_cache_query_count": len(query_fact_cache),
         "verified_fact_tail_start": settings.fact_index_tail_insertion_rank,
+        "main_coverage_rerank_enabled": settings.main_coverage_rerank_enabled,
+        "main_coverage_rerank_top_n": settings.main_coverage_rerank_top_n,
+        "verified_fact_evidence_rerank_enabled": settings.verified_fact_evidence_rerank_enabled,
+        "verified_fact_evidence_rerank_top_n": settings.verified_fact_evidence_rerank_top_n,
+        "answer_evidence_rerank_enabled": settings.answer_evidence_rerank_enabled,
+        "answer_evidence_rerank_top_n": settings.answer_evidence_rerank_top_n,
+        "answerability_rerank_enabled": settings.answerability_rerank_enabled,
+        "answerability_rerank_top_n": settings.answerability_rerank_top_n,
+        "slot_coverage_rerank_enabled": settings.slot_coverage_rerank_enabled,
+        "slot_coverage_rerank_top_n": settings.slot_coverage_rerank_top_n,
         "use_rewritten_query": args.use_rewritten_query,
+        "context_rewrite_applied_count": context_rewrite_applied_count,
+        "only_context_dependent": args.only_context_dependent,
     }
     (args.output / "results.jsonl").write_text(
         "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows),

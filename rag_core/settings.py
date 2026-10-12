@@ -56,6 +56,28 @@ class Settings:
     # 0 means score-mixed legacy behavior.  A positive value preserves the
     # leading dimension ranks and inserts verified fact candidates afterwards.
     fact_index_tail_insertion_rank: int = 10
+    # Optional ranking-only correction. It never changes candidate recall:
+    # inside the leading pool, main-dimension hits may receive a bounded
+    # reward for covering distinct parent dimensions.
+    main_coverage_rerank_enabled: bool = False
+    main_coverage_rerank_top_n: int = 20
+    # Ranking-only factual correction.  Exact entity--relation evidence is
+    # verified against the source chunk before it can reorder the leading pool.
+    verified_fact_evidence_rerank_enabled: bool = False
+    verified_fact_evidence_rerank_top_n: int = 20
+    # Exact answer-bearing literal reranker, limited to the leading candidate
+    # pool. It complements (but does not expand) dimension retrieval.
+    answer_evidence_rerank_enabled: bool = True
+    answer_evidence_rerank_top_n: int = 20
+    # Strict answerability pass over existing candidates only.  Unlike a
+    # topical label match, promotion requires an answer entity together with
+    # a verified relation or a concrete queried attribute.
+    answerability_rerank_enabled: bool = False
+    answerability_rerank_top_n: int = 20
+    # For compositional questions, reward a candidate only when it covers
+    # multiple independently requested answer slots in the same chunk.
+    slot_coverage_rerank_enabled: bool = False
+    slot_coverage_rerank_top_n: int = 20
     mock: bool = False
 
     @classmethod
@@ -94,6 +116,16 @@ class Settings:
             "no_candidate_lexical_fallback_enabled": _env_bool("NO_CANDIDATE_LEXICAL_FALLBACK", False),
             "fact_index_candidate_recall_enabled": _env_bool("FACT_INDEX_CANDIDATE_RECALL", True),
             "fact_index_tail_insertion_rank": int(os.getenv("FACT_INDEX_TAIL_INSERTION_RANK", "10")),
+            "main_coverage_rerank_enabled": _env_bool("MAIN_COVERAGE_RERANK", False),
+            "main_coverage_rerank_top_n": int(os.getenv("MAIN_COVERAGE_RERANK_TOP_N", "20")),
+            "verified_fact_evidence_rerank_enabled": _env_bool("VERIFIED_FACT_EVIDENCE_RERANK", False),
+            "verified_fact_evidence_rerank_top_n": int(os.getenv("VERIFIED_FACT_EVIDENCE_RERANK_TOP_N", "20")),
+            "answer_evidence_rerank_enabled": _env_bool("ANSWER_EVIDENCE_RERANK", True),
+            "answer_evidence_rerank_top_n": int(os.getenv("ANSWER_EVIDENCE_RERANK_TOP_N", "20")),
+            "answerability_rerank_enabled": _env_bool("ANSWERABILITY_RERANK", False),
+            "answerability_rerank_top_n": int(os.getenv("ANSWERABILITY_RERANK_TOP_N", "20")),
+            "slot_coverage_rerank_enabled": _env_bool("SLOT_COVERAGE_RERANK", False),
+            "slot_coverage_rerank_top_n": int(os.getenv("SLOT_COVERAGE_RERANK_TOP_N", "20")),
             "mock": _env_bool("RAG_MOCK", False),
         }
         values.update(overrides)
