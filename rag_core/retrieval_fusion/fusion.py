@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-# Choose any strategy filename in experiments/00_method_comparison/code/.
+# Choose any strategy filename (excluding run_comparison_methods.py) in experiments/00_method_comparison/code/.
 FUSION_STRATEGY = "dimension_score.py"
 
 import json
@@ -76,7 +76,7 @@ def _save_fusion_snapshot(
 ) -> Path:
     """Save one complete retrieval/fusion result under the project output dir."""
     output_dir = Path(os.getenv("RAG_FUSION_OUTPUT_DIR") or
-                      Path(__file__).resolve().parent / "experiments" / "00_method_comparison" / "output" / "online" / "dataset" / "snapshots")
+                      Path(__file__).resolve().parent / "experiments" / "00_method_comparison" / "output" / Path(FUSION_STRATEGY).stem)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     created_at = datetime.now().astimezone()
@@ -235,7 +235,7 @@ def apply_fusion(semantic, dimension, *, top_k, query=None, original_query=None,
     """Dispatch by filename; strategy candidates keep their complete retrieval payload."""
     from importlib import import_module
     filename = strategy_file or FUSION_STRATEGY
-    choices = sorted(p.name for p in STRATEGY_DIRECTORY.glob('*.py'))
+    choices = sorted(p.name for p in STRATEGY_DIRECTORY.glob('*.py') if p.name != 'run_comparison_methods.py')
     if not isinstance(filename, str) or Path(filename).name != filename or filename not in choices:
         raise ValueError(f'Unknown fusion strategy {filename!r}; choose one of {choices}')
     strategy = import_module('rag_core.retrieval_fusion.experiments.00_method_comparison.code.' + Path(filename).stem)

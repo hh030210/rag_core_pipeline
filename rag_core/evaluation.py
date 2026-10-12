@@ -552,10 +552,11 @@ def _parse_ks(values: Sequence[int] | str) -> Tuple[int, ...]:
 def _publish_fusion_evaluation(rows, config, summary, chunks, experiments_dir=None):
     """Publish one complete evaluation batch; never accumulate previous snapshots."""
     experiments = Path(experiments_dir or Path(__file__).resolve().parent / 'retrieval_fusion' / 'experiments').resolve() / '00_method_comparison' / 'output'
-    names = ('online',)
+    from rag_core.retrieval_fusion.fusion import FUSION_STRATEGY, STRATEGY_DIRECTORY
+    names = (Path(FUSION_STRATEGY).stem,)
     for name in names:
         folder = experiments / name
-        if folder.is_symlink() or (folder / 'dataset').is_symlink():
+        if folder.is_symlink():
             raise ValueError('Refusing to replace a symlinked experiment output')
         folder.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix='.evaluate-', dir=experiments))
@@ -566,10 +567,11 @@ def _publish_fusion_evaluation(rows, config, summary, chunks, experiments_dir=No
     try:
         outputs = {name: stage / name / 'output' for name in names}
         online = outputs[names[0]]
-        details = online / 'dataset' / 'details'
+        details = online
         details.mkdir(parents=True)
         manifest = {'schema_version': 1, 'batch_id': batch, 'source': 'run.py evaluate ' + generated,
-                    'generated_at': generated, 'config': config, 'items': [], 'detail_files': {}}
+                    'generated_at': generated, 'config': config, 'strategy_file': FUSION_STRATEGY,
+                    'methods': sorted(p.name for p in STRATEGY_DIRECTORY.glob('*.py') if p.name != 'run_comparison_methods.py'), 'items': [], 'detail_files': {}}
         for i, row in enumerate(rows):
             name = 'evaluate_' + str(i).zfill(6) + '.json'
             gold = list(row['gold']['chunk_ids'])
@@ -597,12 +599,15 @@ def _publish_fusion_evaluation(rows, config, summary, chunks, experiments_dir=No
                       'query_analysis': row.get('query_analysis', {}),
                       'gold': {**row['gold'], 'gold_chunk_ids': gold, 'gold_count': len(gold)},
                       'routes': routes, 'chunks': bodies, 'evaluation': row}
+            detail['fusion_candidates'] = routes['old']
+            if FUSION_STRATEGY == 'dimension_score.py': detail['routes']['new'] = routes['old']
+            if FUSION_STRATEGY == 'recommended_fusion.py': detail['candidates'] = routes['old']
             (details / name).write_text(json.dumps(detail, ensure_ascii=False) + '\n', encoding='utf-8')
             manifest['items'].append({'name': name, 'query': row['question'], 'gold_count': len(gold)})
-            manifest['detail_files'][name] = 'details/' + name
-        (online / 'dataset' / 'index.json').write_text(json.dumps(manifest, ensure_ascii=False) + '\n', encoding='utf-8')
+            manifest['detail_files'][name] = name
+        (online / 'index.json').write_text(json.dumps(manifest, ensure_ascii=False) + '\n', encoding='utf-8')
         for name in names:
-            index = json.loads((outputs[name] / 'dataset' / 'index.json').read_text())
+            index = json.loads((outputs[name] / 'index.json').read_text())
             if index.get('batch_id') != batch or set(index['detail_files']) != set(manifest['detail_files']):
                 raise ValueError('Fusion evaluation batch mismatch: ' + name)
         # Replace only the online evaluation output; experiments run independently.
@@ -724,7 +729,7 @@ def run_evaluation(
     fusion_output = _publish_fusion_evaluation(rows, config, summary, chunks)
     return {
         "fusion_output": str(fusion_output),
-        "dataset_path": str(fusion_output / "dataset"),
+        "dataset_path": str(fusion_output),
         "config": config,
         "summary": summary,
     }

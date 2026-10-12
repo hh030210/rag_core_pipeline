@@ -30,10 +30,10 @@ let manifest = null;
 let dimensionManifest = null;
 let recommendedManifest = null;
 const DATASETS = {
-  adaptive: '../experiments/00_method_comparison/output/online_adaptive/dataset/',
-  online: '../experiments/00_method_comparison/output/online/dataset/',
-  dimension: '../experiments/00_method_comparison/output/dimension_score/dataset/',
-  recommended: '../experiments/00_method_comparison/output/recommended_fusion/dataset/',
+  adaptive: '../experiments/00_method_comparison/output/online_adaptive/',
+  online: '../experiments/00_method_comparison/output/dimension_score/',
+  dimension: '../experiments/00_method_comparison/output/dimension_score/',
+  recommended: '../experiments/00_method_comparison/output/recommended_fusion/',
 };
 let activeStrategy = 'recommended';
 function strategyIndex(strategy) { if (strategy === 'adaptive') return adaptiveManifest; return strategy === 'old' ? manifest : strategy === 'new' ? dimensionManifest : recommendedManifest; }
@@ -111,9 +111,9 @@ function renderEvaluation(evaluation) {
   } else {
     panel.append(el('p', 'evaluation-note', ['adaptive', 'new', 'recommended'].filter(key => groups[key])
       .map(key => strategyLabel(key) + '：' + batchLabel(key)).join('；')));
-    const stale = (adaptiveManifest && adaptiveManifest.input_batch_id !== manifest.batch_id) || (dimensionManifest && dimensionManifest.input_batch_id !== manifest.batch_id)
-      || (recommendedManifest && recommendedManifest.input_batch_id !== dimensionManifest?.batch_id);
-    if (stale) panel.append(el('p', 'evaluation-note', '注意：06 或 07 尚未跟随当前线上批次更新，请运行 run_all.py。各行仍按自己的实验数据计算。'));
+    const stale = (adaptiveManifest && adaptiveManifest.input_batch_id !== (manifest.mainline_batch_id || manifest.input_batch_id || manifest.batch_id)) || (dimensionManifest && dimensionManifest.batch_id !== manifest.batch_id && dimensionManifest.input_batch_id !== (manifest.mainline_batch_id || manifest.input_batch_id || manifest.batch_id))
+      || (recommendedManifest && recommendedManifest.input_batch_id !== dimensionManifest?.batch_id && recommendedManifest.input_batch_id !== dimensionManifest?.input_batch_id);
+    if (stale) panel.append(el('p', 'evaluation-note', '注意：06 或 07 尚未跟随当前线上批次更新，请运行融合 code/run_comparison_methods.py。各行仍按自己的实验数据计算。'));
   }
   const table = el('table', 'evaluation-table'), thead = el('thead'), header = el('tr');
   header.append(el('th', '', '检索路线'));
@@ -540,6 +540,10 @@ async function readExperimentIndex(base) {
   return index;
 }
 async function loadLatestExperimentIndexes() {
+  const source = await fetch(new URL('../fusion.py', location.href), {cache:'no-store'}).then(r=>r.text());
+  const match = source.match(/^\s*FUSION_STRATEGY\s*=\s*["']([A-Za-z_][A-Za-z0-9_]*).py["']/m);
+  if (!match) throw new Error('无法读取主线融合策略');
+  DATASETS.online = '../experiments/00_method_comparison/output/' + match[1] + '/';
   const optionalIndex = async base => { try { return await readExperimentIndex(base); } catch (error) { if (error.message.includes('HTTP 404')) return null; throw error; } };
   [manifest, dimensionManifest, recommendedManifest, adaptiveManifest] = await Promise.all([
     readExperimentIndex(DATASETS.online), optionalIndex(DATASETS.dimension), optionalIndex(DATASETS.recommended), readExperimentIndex(DATASETS.adaptive),
@@ -576,6 +580,7 @@ async function loadExperimentDetail(name, strategy = 'old') {
   if (!path) throw new Error('该实验缺少查询：' + name);
   const detail = await readJSON(path);
   if (detail.name !== name || detail.batch_id !== index.batch_id || !detail.routes || !detail.gold || !detail.chunks) throw new Error('该实验的输入快照或批次不完整：' + name);
+  if (strategy === 'old' && detail.fusion_candidates) detail.routes.old = detail.fusion_candidates;
   if (strategy === 'new') detail.routes.new = detail.fusion_candidates;
   if (strategy === 'recommended') detail.recommended = {candidates: detail.candidates, diagnostics: detail.diagnostics, configuration: detail.configuration};
   return detail;

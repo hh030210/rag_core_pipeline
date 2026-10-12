@@ -1,7 +1,17 @@
 """Retained adaptive online baseline."""
-from importlib import import_module
-_shared = import_module('rag_core.retrieval_fusion.experiments.00_method_comparison.runtime')
-_normalize_scores = _shared._normalize_scores
+from typing import Any, Dict, List
+def _normalize_scores(results: List[Dict[str, Any]]) -> Dict[str, float]:
+    """Min-max normalize one route's scores, keyed by chunk ID."""
+    if not results:
+        return {}
+    scores = [float(item.get("score", 0.0)) for item in results]
+    low, high = min(scores), max(scores)
+    if high == low:
+        return {str(item["chunk_id"]): 1.0 for item in results}
+    return {
+        str(item["chunk_id"]): (float(item.get("score", 0.0)) - low) / (high - low)
+        for item in results
+    }
 
 def adaptive_fusion(semantic, dimension, *, top_k):
     """Current online adaptive_report_v1 strategy, extracted without rank changes."""
@@ -92,6 +102,105 @@ def adaptive_fusion(semantic, dimension, *, top_k):
         },
     }
 
+def make_snapshot(semantic, dimension, *, top_k, query=None, original_query=None, query_analysis=None):
+    baseline = adaptive_fusion(semantic, dimension, top_k=top_k)
+    candidates = baseline['fusion_candidates']
+    chunks = {str(c['chunk_id']): {'text':str(c.get('chunk_text_full') or c.get('chunk_text') or ''), 'title':c.get('doc_title') or c.get('chunk_gen_title') or '', 'source_file':c.get('source_file') or ''} for c in candidates}
+    payloads = candidates
+    candidates = [{k:v for k,v in c.items() if k != 'chunk_text'} for c in candidates]
+    return dict(payloads=payloads, query=query or original_query or '', retrieval_query=query or original_query or '', original_query=original_query, query_analysis=query_analysis or {}, top_k=top_k, semantic_candidates=semantic, dimension_candidates=dimension, fusion_candidates=candidates, chunks=chunks)
+
+def restore_payloads(result, snapshot, filename):
+    originals = {str(c['chunk_id']): c for c in snapshot.get('payloads', snapshot['fusion_candidates'])}
+    candidates = [{**originals[str(c['chunk_id'])], **c, 'final_score':c['score'], 'fused_score':c['score']} for c in result['fusion_candidates']]
+    result['fusion_candidates'] = candidates
+    result['fusion_results'] = candidates[:snapshot['top_k']]
+    result['fusion_strategy'] = dict(name=filename[:-3], file=filename, configuration=result.get('configuration', {}))
+    return result
 
 def fuse(semantic, dimension, *, top_k, query=None, original_query=None, query_analysis=None):
     return adaptive_fusion(semantic, dimension, top_k=top_k)
+
+
+def run_comparison(input_dir, output_dir=None, *, top_k=10):
+    """Replay this method from saved route inputs; atomically replace its flat JSON output."""
+    import copy, json, shutil, tempfile
+    from pathlib import Path
+    from datetime import datetime, timezone
+    from uuid import uuid4
+    source = Path(input_dir).resolve()
+    method = Path(__file__).stem
+    comparison = Path(__file__).resolve().parents[1]
+    target = Path(output_dir or comparison / 'output' / method).absolute()
+    if target.is_symlink():
+        raise ValueError('Output must not be a symlink')
+    manifest = json.loads((source / 'index.json').read_text())
+    rows = []
+    for name, relative in manifest['detail_files'].items():
+        file = (source / relative).resolve()
+        if Path(name).name != name or not file.is_relative_to(source):
+            raise ValueError('Unsafe detail path')
+        detail = json.loads(file.read_text())
+        if detail.get('batch_id') != manifest.get('batch_id'):
+            raise ValueError('Mixed source batches')
+        rows.append((name, detail))
+    target.parent.mkdir(parents=True, exist_ok=True)
+    batch = uuid4().hex
+    index = dict(schema_version=2, batch_id=batch, input_batch_id=manifest['batch_id'],
+                 generated_at=datetime.now(timezone.utc).isoformat(), strategy_file=method+'.py',
+                 source='run_comparison_methods', items=[], detail_files={})
+    mapped = hits5 = 0
+    with tempfile.TemporaryDirectory(prefix='.comparison-', dir=target.parent) as temporary:
+        stage = Path(temporary) / 'current'
+        previous = Path(temporary) / 'previous'
+        stage.mkdir()
+        for name, row in rows:
+            semantic, dimension = copy.deepcopy(row['routes']['semantic']), copy.deepcopy(row['routes']['dimension'])
+            for candidate in semantic + dimension:
+                candidate['chunk_text_full'] = row.get('chunks', {}).get(str(candidate['chunk_id']), {}).get('text', '')
+            result = fuse(semantic, dimension, top_k=top_k,
+                          query=row.get('retrieval_query') or row.get('query', ''),
+                          original_query=row.get('query'), query_analysis=row.get('query_analysis'))
+            result['fusion_strategy']['file'] = method+'.py'
+            candidates = result['fusion_candidates']
+            detail = {**copy.deepcopy(row), **result, 'name':name, 'batch_id':batch, 'strategy_file':method+'.py'}
+            detail['routes'] = {**row['routes'], 'old':adaptive_fusion(copy.deepcopy(semantic), copy.deepcopy(dimension), top_k=top_k)['fusion_candidates']}
+            if method == 'dimension_score': detail['routes']['new'] = candidates
+            if method == 'recommended_fusion': detail['candidates'] = candidates
+            (stage/name).write_text(json.dumps(detail, ensure_ascii=False)+'\n')
+            gold = set(detail['gold']['gold_chunk_ids'])
+            mapped += bool(gold)
+            hits5 += bool(gold & {c['chunk_id'] for c in candidates[:5]})
+            index['items'].append(dict(name=name, query=detail['query'], gold_count=len(gold)))
+            index['detail_files'][name] = name
+        (stage/'index.json').write_text(json.dumps(index, ensure_ascii=False)+'\n')
+        had_previous = target.exists()
+        if had_previous: target.rename(previous)
+        try: stage.rename(target)
+        except BaseException:
+            if had_previous: previous.rename(target)
+            raise
+    print(json.dumps(dict(method=method, queries=len(rows), mapped=mapped, hit5=hits5,
+                          hit5_percent=round(hits5/(mapped or 1)*100, 4), output=str(target)), ensure_ascii=False), flush=True)
+    return index
+
+
+def main(argv=None):
+    import argparse
+    from pathlib import Path
+    from rag_core.retrieval_fusion.fusion import FUSION_STRATEGY
+    comparison = Path(__file__).resolve().parents[1]
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--input-dataset', type=Path, default=comparison/'output'/Path(FUSION_STRATEGY).stem)
+    parser.add_argument('--output-dir', type=Path)
+    parser.add_argument('--top-k', type=int, default=10)
+    args = parser.parse_args(argv)
+    if args.top_k <= 0: parser.error('--top-k must be positive')
+    run_comparison(args.input_dataset, args.output_dir, top_k=args.top_k)
+
+
+if __name__ == '__main__':
+    import sys
+    from pathlib import Path
+    if not __package__: sys.path.insert(0, str(Path(__file__).resolve().parents[5]))
+    main()

@@ -1,7 +1,7 @@
 """Select a semantic retrieval strategy by its Python filename."""
 from __future__ import annotations
 
-# Choose any .py file directly in experiments/00_method_comparison/code/.
+# Choose any strategy .py file (excluding run_comparison_methods.py) directly in experiments/00_method_comparison/code/.
 VECTOR_RETRIEVAL_STRATEGY = "original_subqueries_centroid_w2.py"
 
 import math
@@ -24,7 +24,7 @@ class VectorRetriever:
         self.strategy_data_dir = strategy_data_dir
         self.strategy_file = strategy_file or VECTOR_RETRIEVAL_STRATEGY
         filename = Path(self.strategy_file)
-        choices = sorted(p.name for p in STRATEGY_DIRECTORY.glob('*.py'))
+        choices = sorted(p.name for p in STRATEGY_DIRECTORY.glob('*.py') if p.name != 'run_comparison_methods.py')
         if filename.name != self.strategy_file or filename.suffix != '.py' or self.strategy_file not in choices:
             raise ValueError(f'Unknown vector strategy {self.strategy_file!r}; choose one of {choices}')
         module = import_module('rag_core.vector_retrieval.experiments.00_method_comparison.code.' + filename.stem)
