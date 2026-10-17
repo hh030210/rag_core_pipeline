@@ -1,5 +1,11 @@
 # RAG Core Pipeline
 
+## 新流程：自适应案例优化与群智提示（2026-10-17）
+
+本分支新增逐案例五模块初始提示生成、golden 证据下的自适应优化、QA 聚类与群智提示、缓存检索上下文推理，以及 chapter3 机械指标和 Qwen 三维评价。支持含/不含“噪音与 rerank 筛选说明”的完整双组流程。
+
+入口与运行依赖见 [NEW_WORKFLOW.md](NEW_WORKFLOW.md)；最新景区 fusion top5 双组实验见 [SCENIC_ABLATION_README.md](SCENIC_ABLATION_README.md)。原有检索流程说明保留如下。
+
 这是从原仓库抽出的最小可运行项目，只保留一条完整闭环：
 
 ```text

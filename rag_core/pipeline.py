@@ -85,5 +85,7 @@ def run_cluster_prompting(settings: Settings, examples_path: str, *,
     return pipeline.run(
         examples,
         cluster_count=cluster_count if cluster_count is not None else settings.cluster_count,
-        iterations=iterations if iterations is not None else max(0, settings.prompt_iterations or 3),
+        iterations=iterations if iterations is not None else settings.prompt_max_rounds,
+        min_gain=settings.prompt_min_gain,
+        initial_module=payload.get("base_prompt") or None,
     )

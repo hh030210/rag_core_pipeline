@@ -14,6 +14,8 @@
 from __future__ import annotations
 
 import json
+import hashlib
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Sequence
 
@@ -22,6 +24,7 @@ import numpy as np
 from .embedding import EmbeddingModel
 from .llm import LLMClient
 from .prompting import PromptOptimizer
+from .prompt_policy import POLICY_TEXT, META_PROMPT_PATH, request_module, validate_module
 
 
 CLUSTER_PROMPT_VERSION = "1.0"
@@ -59,9 +62,14 @@ def normalize_examples(raw_examples: Iterable[Mapping[str, Any]]) -> List[Dict[s
         question = str(_first(raw, ("question", "query", "prompt"), "") or "").strip()
         if not question:
             continue
-        context = str(_first(raw, ("context", "retrieved_context", "gold_context"), "") or "").strip()
+        # Golden-only offline optimization. Never silently substitute retrieval.
+        context = str(_first(raw, ("gold_context", "golden_context"), "") or "").strip()
         if not context:
-            context = "\n".join(_text_list(_first(raw, ("gold_evidence_texts", "evidence_texts", "source"), [])))
+            context = "\n".join(_text_list(_first(raw, ("gold_evidence_texts", "source"), [])))
+        if not context and isinstance(raw.get("gold"), Mapping):
+            context = "\n".join(_text_list(raw["gold"].get("evidence_texts", [])))
+        if not context and raw.get("context_kind") == "golden":
+            context = str(raw.get("context", "")).strip()
         reference = str(_first(
             raw, ("reference_answer", "answer", "standard_answer", "gold_answer"), ""
         ) or "").strip()
@@ -71,6 +79,7 @@ def normalize_examples(raw_examples: Iterable[Mapping[str, Any]]) -> List[Dict[s
             "id": sample_id,
             "question": question,
             "context": context,
+            "context_kind": "golden" if context else "missing_golden",
             "reference_answer": reference,
         })
     return examples
@@ -139,48 +148,78 @@ def _silhouette(vectors: Sequence[Sequence[float]], labels: Sequence[int]) -> fl
     return float(np.mean(scores)) if scores else 0.0
 
 
-def _safe_module(value: Any) -> Dict[str, str]:
-    return PromptOptimizer.normalize_module(value if isinstance(value, Mapping) else None)
+def _safe_module(value: Any, evidence_policy=True) -> Dict[str, str]:
+    return PromptOptimizer.normalize_module(value if isinstance(value, Mapping) else None, evidence_policy=evidence_policy)
 
 
 class ClusterPromptPipeline:
     """把 QA 迭代、聚类和群智 Prompt 生成串成一个可审计流水线。"""
 
     def __init__(self, *, client: LLMClient, embeddings: EmbeddingModel,
-                 run_dir: str | Path):
+                 run_dir: str | Path, evidence_policy=True, meta_prompt_path=None):
         self.client = client
         self.embeddings = embeddings
         self.run_dir = Path(run_dir)
+        self.evidence_policy = bool(evidence_policy)
+        self.meta_prompt_path = Path(meta_prompt_path) if meta_prompt_path else META_PROMPT_PATH
         self.case_dir = self.run_dir / "cluster_prompting" / "case_iterations"
         self.prompt_dir = self.run_dir / "cluster_prompting" / "cluster_prompts"
 
-    def _case_iteration(self, example: Dict[str, Any], iterations: int) -> Dict[str, Any]:
+    def _case_iteration(self, example: Dict[str, Any], iterations: int,
+                        min_gain: float = 1.0, initial_module=None) -> Dict[str, Any]:
         """复用统一 PromptOptimizer，避免从旧项目复制第二套 LLM 逻辑。"""
         case_id = str(example["id"])
         output_path = self.case_dir / f"{case_id}.json"
+        if output_path.resolve().parent != self.case_dir.resolve():
+            raise ValueError("Unsafe case id")
+        signature = hashlib.sha256(json.dumps({"example": example, "max_rounds": iterations,
+            "min_gain": min_gain, "initial_guidance": initial_module,
+            "meta_prompt": self.meta_prompt_path.read_text(encoding="utf-8"),
+            "evidence_policy": self.evidence_policy,
+            "model": getattr(self.client, "model", ""), "seed": getattr(self.client, "seed", None),
+            "base_url": getattr(self.client, "base_url", ""), "mock": self.client.mock},
+            ensure_ascii=False, sort_keys=True).encode()).hexdigest()
         try:
-            optimizer = PromptOptimizer(client=self.client, run_dir=self.case_dir)
-            result = optimizer.optimize(
-                [example], iterations=max(0, int(iterations)),
-                output_path=output_path,
-            )
+            optimizer = PromptOptimizer(client=self.client, run_dir=self.case_dir,
+                evidence_policy=self.evidence_policy, meta_prompt_path=self.meta_prompt_path)
+            result = None
+            if output_path.exists():
+                previous = json.loads(output_path.read_text(encoding="utf-8"))
+                if previous.get("case_signature") == signature and previous.get("stop_reason") not in {None, "in_progress"}:
+                    validate_module(previous, evidence_policy=self.evidence_policy)
+                    result = previous
+                elif previous.get("case_signature") not in {None, signature}:
+                    raise ValueError("Case input/config changed; use a new run directory")
+            if result is None:
+                result = optimizer.optimize(
+                    [example], iterations=int(iterations), min_gain=min_gain,
+                    initial_module=initial_module, output_path=output_path,
+                )
+                result["case_signature"] = signature
+                output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
             return {
                 "id": case_id,
                 "question": example["question"],
                 "answer": example.get("reference_answer", ""),
                 "context": example.get("context", ""),
-                "final_prompt": _safe_module(result),
+                "final_prompt": _safe_module(result, evidence_policy=self.evidence_policy),
                 "history": result.get("history", []),
-                "generated_answer": self._last_generated_answer(result.get("history", [])),
+                "generated_answer": self._last_generated_answer([{"answers": result.get("selected_answers", [])}]),
+                "initial_prompt": result.get("initial_prompt", {}),
+                "stop_reason": result.get("stop_reason", ""),
+                "selected_iteration": result.get("selected_iteration"),
+                "selected_scores": result.get("selected_scores", {}),
             }
         except Exception as exc:
+            if not self.client.mock:
+                raise RuntimeError(f"Case {case_id} failed; no silent default prompt accepted: {exc}") from exc
             # 单个样本失败不阻断其余样本；失败信息会进入审计文件。
             fallback = {
                 "id": case_id,
                 "question": example["question"],
                 "answer": example.get("reference_answer", ""),
                 "context": example.get("context", ""),
-                "final_prompt": PromptOptimizer.default_module(),
+                "final_prompt": PromptOptimizer.default_module(self.evidence_policy),
                 "history": [],
                 "generated_answer": "",
                 "error": f"{type(exc).__name__}: {exc}",
@@ -204,18 +243,21 @@ class ClusterPromptPipeline:
         return ""
 
     def _cluster_prompt(self, cluster_id: int, cases: List[Dict[str, Any]]) -> Dict[str, Any]:
-        fallback = PromptOptimizer.default_module()
+        fallback = PromptOptimizer.default_module(self.evidence_policy)
         if self.client.mock or not self.client.api_key:
             return {"cluster_id": cluster_id, "prompt": fallback,
                     "source_case_count": len(cases), "method": "fallback"}
 
         summaries = []
-        for case in cases[:20]:
+        for case in cases:
             summaries.append({
                 "question": case.get("question", ""),
                 "reference_answer": case.get("answer", ""),
                 "final_prompt": case.get("final_prompt", {}),
-                "iteration_history": case.get("history", []),
+                "iteration_history": [
+                    {key: item.get(key) for key in ("iteration", "dimensions", "total", "feedback", "accepted", "reason")}
+                    for item in case.get("history", [])
+                ],
             })
         user = (
             "请根据同一问题簇中的多条 QA 迭代记录，生成这个问题簇通用的问答 Prompt。\n"
@@ -223,32 +265,48 @@ class ClusterPromptPipeline:
             "证据不足时明确说明，不得编造；只输出 JSON，字段必须是："
             "system_prompt、instruction、context_strategy、format_requirement、uncertainty_handling。\n"
             f"问题簇编号：{cluster_id}\n"
+            "不得将具体案例答案硬编码到通用提示中。\n"
+            + (f"context_strategy 必须逐字保留以下两条约束：\n{POLICY_TEXT}\n" if self.evidence_policy else "")
+            +
             f"QA 迭代记录：{json.dumps(summaries, ensure_ascii=False)}"
         )
         try:
-            result = self.client.complete_json(
+            result = request_module(self.client,
                 "你是聚类级 Prompt 群智优化专家，只输出合法 JSON。",
                 user,
-                temperature=0.1,
-                max_tokens=1400,
-                repair_prompt="把原始输出修复为包含五个指定字符串字段的合法 JSON。",
+                max_tokens=2400,
+                evidence_policy=self.evidence_policy,
             )
-            module = _safe_module(result)
+            module = _safe_module(result, evidence_policy=self.evidence_policy)
             method = "llm_collective_synthesis"
         except Exception as exc:
+            if not self.client.mock:
+                raise RuntimeError(f"Cluster {cluster_id} synthesis failed: {exc}") from exc
             module = fallback
             method = f"fallback:{type(exc).__name__}"
         return {"cluster_id": cluster_id, "prompt": module,
                 "source_case_count": len(cases), "method": method}
 
     def run(self, examples: Iterable[Mapping[str, Any]], *, cluster_count: int = 6,
-            iterations: int = 3) -> Dict[str, Any]:
+            iterations: int = 30, min_gain: float = 1.0, initial_module=None, workers: int = 1) -> Dict[str, Any]:
         examples = normalize_examples(examples)
         if not examples:
             raise ValueError("聚类 Prompt 流程至少需要一条有效 QA 样本")
         self.run_dir.mkdir(parents=True, exist_ok=True)
         self.case_dir.mkdir(parents=True, exist_ok=True)
-        cases = [self._case_iteration(example, iterations) for example in examples]
+        if not self.client.mock and any(example.get("context_kind") != "golden" for example in examples):
+            raise ValueError("All training examples must contain explicit golden evidence")
+        if workers < 1:
+            raise ValueError("workers must be positive")
+        cases = [None] * len(examples)
+        with ThreadPoolExecutor(max_workers=min(workers, len(examples))) as executor:
+            futures = {executor.submit(self._case_iteration, example, iterations, min_gain, initial_module): index
+                       for index, example in enumerate(examples)}
+            for count, future in enumerate(as_completed(futures), 1):
+                index = futures[future]
+                cases[index] = future.result()
+                print(f"case optimization: {count}/{len(examples)} id={cases[index]['id']} "
+                      f"stop={cases[index].get('stop_reason')} selected={cases[index].get('selected_iteration')}", flush=True)
 
         # 与原流程保持一致：聚类文本由“问题 + 答案”构成；答案缺失时只使用问题。
         cluster_texts = [f"{case['question']}\n{case.get('answer') or case.get('generated_answer', '')}".strip()
@@ -285,6 +343,9 @@ class ClusterPromptPipeline:
             "config": {"cluster_count_requested": int(cluster_count),
                        "cluster_count_actual": len(clusters),
                        "prompt_iterations": int(iterations),
+                       "iteration_mode": "adaptive", "min_total_gain": float(min_gain),
+                       "training_context": "golden",
+                       "evidence_policy": self.evidence_policy,
                        "embedding_text": "question + reference_answer"},
             "metrics": {"sample_count": len(cases),
                         "cluster_count_actual": len(clusters),
@@ -302,7 +363,7 @@ class ClusterPromptRouter:
     """加载聚类产物并为新问题选择 Top-K 聚类 Prompt。"""
 
     def __init__(self, *, run_dir: str | Path, embeddings: EmbeddingModel,
-                 enabled: bool = False, top_k: int = 1):
+                 enabled: bool = False, top_k: int = 1, evidence_policy=None):
         self.run_dir = Path(run_dir)
         self.embeddings = embeddings
         self.enabled = bool(enabled)
@@ -316,6 +377,10 @@ class ClusterPromptRouter:
                     self.artifact = raw
             except (OSError, json.JSONDecodeError):
                 self.artifact = {}
+        saved_policy = self.artifact.get("config", {}).get("evidence_policy", True)
+        if evidence_policy is not None and bool(evidence_policy) != saved_policy:
+            raise ValueError("Router policy mode must match cluster artifact")
+        self.evidence_policy = saved_policy if evidence_policy is None else bool(evidence_policy)
 
     @property
     def available(self) -> bool:
@@ -334,7 +399,7 @@ class ClusterPromptRouter:
                 "cluster_id": int(cluster.get("cluster_id", 0)),
                 "score": round(_cosine(query_vector, center), 6),
                 "size": int(cluster.get("size", 0)),
-                "prompt": _safe_module(cluster.get("prompt")),
+                "prompt": _safe_module(cluster.get("prompt"), evidence_policy=self.evidence_policy),
                 "prompt_path": cluster.get("prompt_path", ""),
             })
         candidates.sort(key=lambda item: item["score"], reverse=True)

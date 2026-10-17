@@ -42,6 +42,8 @@ class Settings:
     semantic_pool: int = 100
     dimension_pool: int = 20
     prompt_iterations: int = 0
+    prompt_max_rounds: int = 30
+    prompt_min_gain: float = 1.0
     cluster_prompt_enabled: bool = False
     cluster_top_k: int = 1
     cluster_count: int = 6
@@ -107,6 +109,8 @@ class Settings:
             "semantic_pool": int(os.getenv("SEMANTIC_POOL", "20")),
             "dimension_pool": int(os.getenv("DIMENSION_POOL", "100")),
             "prompt_iterations": int(os.getenv("PROMPT_ITERATIONS", "0")),
+            "prompt_max_rounds": int(os.getenv("PROMPT_MAX_ROUNDS", "30")),
+            "prompt_min_gain": float(os.getenv("PROMPT_MIN_GAIN", "1.0")),
             "cluster_prompt_enabled": _env_bool("CLUSTER_PROMPTS", False),
             "cluster_top_k": int(os.getenv("CLUSTER_TOP_K", "1")),
             "cluster_count": int(os.getenv("CLUSTER_COUNT", "6")),

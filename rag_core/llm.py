@@ -13,13 +13,15 @@ from typing import Any, Optional
 
 class LLMClient:
     def __init__(self, *, api_key: str = "", base_url: str = "", model: str = "",
-                 openai_compat: bool = True, interval: float = 0.0, mock: bool = False):
+                 openai_compat: bool = True, interval: float = 0.0, mock: bool = False,
+                 seed: Optional[int] = None):
         self.api_key = api_key
         self.base_url = base_url.rstrip("/")
         self.model = model
         self.openai_compat = openai_compat
         self.interval = max(0.0, float(interval))
         self.mock = mock
+        self.seed = seed
         self._last_request = 0.0
         self._lock = threading.Lock()
 
@@ -66,7 +68,9 @@ class LLMClient:
                 "max_tokens": max_tokens,
             }
             if "qwen3" in self.model.lower():
-                payload["extra_body"] = {"enable_thinking": False}
+                payload["chat_template_kwargs"] = {"enable_thinking": False}
+            if self.seed is not None:
+                payload["seed"] = int(self.seed)
         else:
             url = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation"
             payload = {
@@ -92,7 +96,12 @@ class LLMClient:
             choices = body.get("choices") or []
             if not choices:
                 raise RuntimeError(f"LLM 返回空 choices: {body}")
-            return str((choices[0].get("message") or {}).get("content") or "").strip()
+            if choices[0].get("finish_reason") == "length":
+                raise RuntimeError("LLM output truncated (finish_reason=length); increase output budget")
+            content = str((choices[0].get("message") or {}).get("content") or "").strip()
+            if not content:
+                raise RuntimeError("LLM returned empty content")
+            return re.sub(r"<think>[\s\S]*?</think>", "", content, flags=re.I).strip()
         return str((body.get("output") or {}).get("text") or "").strip()
 
     def complete_json(self, system: str, user: str, *, temperature: float = 0.1,

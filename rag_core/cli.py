@@ -31,6 +31,8 @@ def _common(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--cluster-top-k", type=int, default=None,
                         help="新问题最多使用几个相近聚类 Prompt，默认 1")
     parser.add_argument("--mock", action="store_true", help="本地无网络验收模式")
+    parser.add_argument("--prompt-max-rounds", type=int, default=None, help="自适应迭代保护上限，默认 30")
+    parser.add_argument("--prompt-min-gain", type=float, default=None, help="0-100 总分的最小提升，默认 1")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -43,7 +45,7 @@ def build_parser() -> argparse.ArgumentParser:
         item.add_argument("--schema", default="", help="可选 v2 Schema JSON")
         item.add_argument("--denoise-method", choices=("none", "ppl", "mechanical"), default="mechanical")
         item.add_argument("--prompt-examples", default="", help="可选问答样本 JSON，用于 Prompt 迭代")
-        item.add_argument("--prompt-iterations", type=int, default=3)
+        item.add_argument("--prompt-iterations", type=int, default=None, help="兼容参数：作为迭代保护上限")
         item.add_argument("--cluster-examples", default="",
                           help="可选 QA JSON；执行聚类级 Prompt 流程")
         item.add_argument("--cluster-count", type=int, default=None)
@@ -80,7 +82,7 @@ def build_parser() -> argparse.ArgumentParser:
     opt = sub.add_parser("optimize-prompt", help="用问答样本执行案例级 Prompt 迭代")
     _common(opt)
     opt.add_argument("--examples", required=True)
-    opt.add_argument("--prompt-iterations", type=int, default=3)
+    opt.add_argument("--prompt-iterations", type=int, default=None, help="兼容参数：作为迭代保护上限")
     cluster = sub.add_parser("cluster-prompts", help="QA 聚类并生成聚类级群智 Prompt")
     _common(cluster)
     cluster.add_argument("--examples", required=True, help="问答样本 JSON")
@@ -111,6 +113,8 @@ def _settings(args) -> Settings:
         "llm_model": args.llm_model,
         "llm_interval": args.llm_interval,
         "cluster_top_k": args.cluster_top_k,
+        "prompt_max_rounds": args.prompt_max_rounds,
+        "prompt_min_gain": args.prompt_min_gain,
         "mock": True if args.mock else None,
     }.items() if value is not None}
     if args.no_openai_compat:

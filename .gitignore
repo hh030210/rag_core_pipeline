@@ -13,3 +13,12 @@ models/
 result/
 rag_core/retrieval_fusion/fusion_engine/output_new/
 rag_core/retrieval_fusion/fusion_engine/output_recommended/
+# Local experiment inputs, runtime packages and credentials are not source code.
+inputs/
+runtime_deps/
+backups/
+.env
+.env.*
+!.env.example
+*.pem
+*.key

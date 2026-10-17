@@ -15,6 +15,7 @@ from typing import Any, Dict, List, Optional
 from .llm import LLMClient
 from .prompting import PromptOptimizer
 from .settings import Settings
+from .cluster_prompting import normalize_examples
 
 
 PROMPT_MODULE_VERSION = "1.0"
@@ -73,24 +74,27 @@ def load_base_prompt(path: str | Path) -> Dict[str, Any]:
 class PromptOptimizationModule:
     """独立的 Prompt 输入输出模块。"""
 
-    def __init__(self, *, client: LLMClient, work_dir: str | Path = "./runs/prompt_module"):
+    def __init__(self, *, client: LLMClient, work_dir: str | Path = "./runs/prompt_module", min_gain=1.0,
+                 max_rounds=30):
         self.client = client
         self.work_dir = Path(work_dir)
+        self.min_gain = float(min_gain)
+        self.max_rounds = int(max_rounds)
 
     def optimize(
         self,
         examples: List[Dict[str, Any]],
         *,
         base_prompt: Optional[Dict[str, Any]] = None,
-        iterations: int = 3,
+        iterations: int = 30,
         output_path: str | Path,
         input_path: str | Path = "",
     ) -> Dict[str, Any]:
         output = Path(output_path)
         optimizer = PromptOptimizer(client=self.client, run_dir=self.work_dir)
         optimized = optimizer.optimize(
-            examples,
-            iterations=max(0, int(iterations)),
+            normalize_examples(examples),
+            iterations=int(iterations), min_gain=self.min_gain,
             initial_module=base_prompt if base_prompt else None,
             output_path=output,
         )
@@ -121,7 +125,7 @@ class PromptOptimizationModule:
         if base_prompt_path:
             base_prompt = load_base_prompt(base_prompt_path)
         config = payload.get("config") or {}
-        effective_iterations = int(iterations if iterations is not None else config.get("iterations", 3))
+        effective_iterations = int(iterations if iterations is not None else config.get("iterations", self.max_rounds))
         return self.optimize(
             payload["examples"],
             base_prompt=base_prompt,
@@ -152,7 +156,8 @@ def run_prompt_module(
     iterations: Optional[int] = None,
 ) -> Dict[str, Any]:
     """供主流程和外部脚本调用的显式输入输出函数。"""
-    module = PromptOptimizationModule(client=build_client(settings), work_dir=Path(output_path).parent)
+    module = PromptOptimizationModule(client=build_client(settings), work_dir=Path(output_path).parent,
+                                      min_gain=settings.prompt_min_gain, max_rounds=settings.prompt_max_rounds)
     return module.run_file(
         input_path,
         output_path,
@@ -166,7 +171,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--input", required=True, help="问答样本 JSON")
     parser.add_argument("--output", required=True, help="优化 Prompt JSON 输出路径")
     parser.add_argument("--base-prompt", default="", help="可选基础 Prompt JSON")
-    parser.add_argument("--iterations", type=int, default=None, help="迭代轮数，默认读取输入 config 或 3")
+    parser.add_argument("--iterations", type=int, default=None, help="自适应迭代保护上限，默认读取输入 config 或 30")
+    parser.add_argument("--min-gain", type=float, default=1.0, help="0-100 总分的最小提升")
     parser.add_argument("--run-dir", default="./runs/prompt_module", help="模块运行目录")
     parser.add_argument("--llm-api-key", default=None)
     parser.add_argument("--llm-base-url", default=None)
@@ -187,6 +193,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             "llm_model": args.llm_model,
             "llm_interval": args.llm_interval,
             "mock": True if args.mock else None,
+            "prompt_min_gain": args.min_gain,
         }.items()
         if value is not None
     }

@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from .llm import LLMClient
+from .prompt_policy import protect_module
 
 
 DEFAULT_SYSTEM_PROMPT = """你是知识库问答助手。你只能依据给定的检索上下文回答问题。
@@ -19,9 +20,12 @@ DEFAULT_SYSTEM_PROMPT = """你是知识库问答助手。你只能依据给定�
 class PromptOptimizer:
     """保留原项目的三步在线扩展，并提供可审计的案例级迭代。"""
 
-    def __init__(self, *, client: LLMClient, run_dir: str | Path):
+    def __init__(self, *, client: LLMClient, run_dir: str | Path, evidence_policy=True,
+                 meta_prompt_path=None):
         self.client = client
         self.run_dir = Path(run_dir)
+        self.evidence_policy = bool(evidence_policy)
+        self.meta_prompt_path = Path(meta_prompt_path) if meta_prompt_path else None
         self.prompt_path = self.run_dir / "optimized_prompt.json"
         self.cache_path = self.run_dir / "query_expansion_cache.json"
         self._cache_lock = threading.Lock()
@@ -33,30 +37,30 @@ class PromptOptimizer:
                 self.cache = {}
 
     @staticmethod
-    def default_module() -> Dict[str, str]:
-        return {
+    def default_module(evidence_policy=True) -> Dict[str, str]:
+        return protect_module({
             "system_prompt": DEFAULT_SYSTEM_PROMPT,
             "instruction": "先定位问题所需事实，再逐项回答。",
             "context_strategy": "优先使用与问题实体、属性和时间条件直接相关的片段。",
             "format_requirement": "使用自然语言回答；问题包含多个要点时分点回答。",
             "uncertainty_handling": "证据不足时明确指出缺失信息，不补写外部事实。",
-        }
+        }, evidence_policy=evidence_policy)
 
     def load_module(self) -> Dict[str, str]:
         if self.prompt_path.exists():
             try:
                 data = json.loads(self.prompt_path.read_text(encoding="utf-8"))
                 if isinstance(data, dict) and data.get("system_prompt"):
-                    return self.normalize_module(data)
+                    return self.normalize_module(data, evidence_policy=self.evidence_policy)
             except Exception:
                 pass
-        return self.default_module()
+        return self.default_module(self.evidence_policy)
 
     @classmethod
-    def normalize_module(cls, module: Dict[str, Any] | None) -> Dict[str, str]:
+    def normalize_module(cls, module: Dict[str, Any] | None, evidence_policy=True) -> Dict[str, str]:
         source = module if isinstance(module, dict) else {}
-        default = cls.default_module()
-        return {key: str(source.get(key, default[key])) for key in default}
+        default = cls.default_module(evidence_policy)
+        return protect_module({key: str(source.get(key, default[key])) for key in default}, evidence_policy=evidence_policy)
 
     def expand(self, query: str) -> Dict[str, Any]:
         with self._cache_lock:
@@ -97,58 +101,17 @@ class PromptOptimizer:
         return {"original_query": query, "sub_queries": sub_queries,
                 "entity_terms": entity_terms, "cached": False}
 
-    def optimize(self, examples: List[Dict[str, Any]], iterations: int = 3, *,
+    def optimize(self, examples: List[Dict[str, Any]], iterations: int = 30, *,
                  initial_module: Dict[str, Any] | None = None,
-                 output_path: str | Path | None = None) -> Dict[str, Any]:
-        current = self.normalize_module(initial_module) if initial_module is not None else self.load_module()
-        history = []
-        examples = [item for item in examples if isinstance(item, dict) and item.get("question")][:20]
-        if not examples or self.client.mock or not self.client.api_key:
-            return self._save(current, history, "no_examples_or_mock", output_path=output_path)
-        for round_index in range(max(1, int(iterations))):
-            feedback = []
-            scores = []
-            answers = []
-            for example in examples:
-                context = str(example.get("context", example.get("retrieved_context", "")))[:6000]
-                reference = str(example.get("reference_answer", example.get("answer", "")))[:2000]
-                answer = self.client.complete(
-                    current["system_prompt"],
-                    self._qa_user(example["question"], context, current),
-                    temperature=0.1, max_tokens=800,
-                )
-                answers.append({"question": example["question"], "answer": answer})
-                try:
-                    judged = self.client.complete_json(
-                        "你是严格的 RAG 答案评测器，只输出 JSON。",
-                        "评估候选答案与参考答案的一致性，返回 {\"score\":0到100,\"feedback\":\"具体问题\"}。\n"
-                        f"问题：{example['question']}\n参考答案：{reference}\n候选答案：{answer}\n检索上下文：{context}",
-                        temperature=0.0, max_tokens=256,
-                    )
-                    scores.append(float(judged.get("score", 0)))
-                    feedback.append(str(judged.get("feedback", "")))
-                except Exception as exc:
-                    feedback.append(f"评测失败：{exc}")
-            rewrite_user = (
-                "根据当前 Prompt 和多条评测反馈，改写一个更适合本知识库问答的 Prompt。"
-                "必须保留上下文约束、证据不足时拒答、完整回答多个要点的要求。只输出 JSON，字段为 "
-                "system_prompt、instruction、context_strategy、format_requirement、uncertainty_handling。\n"
-                f"当前 Prompt：{json.dumps(current, ensure_ascii=False)}\n"
-                f"本轮平均分：{sum(scores)/len(scores) if scores else 0:.2f}\n"
-                f"评测反馈：{json.dumps(feedback, ensure_ascii=False)}"
-            )
-            try:
-                updated = self.client.complete_json("你是 Prompt 优化专家，只输出合法 JSON。", rewrite_user,
-                                                    temperature=0.1, max_tokens=1000)
-                if isinstance(updated, dict) and updated.get("system_prompt"):
-                    current = {key: str(updated.get(key, current.get(key, "")))
-                               for key in ("system_prompt", "instruction", "context_strategy",
-                                           "format_requirement", "uncertainty_handling")}
-            except Exception as exc:
-                feedback.append(f"Prompt 改写失败：{exc}")
-            history.append({"iteration": round_index + 1, "scores": scores,
-                            "feedback": feedback, "answers": answers})
-        return self._save(current, history, "iterative_optimization", output_path=output_path)
+                 output_path: str | Path | None = None,
+                 min_gain: float = 1.0) -> Dict[str, Any]:
+        examples = [item for item in examples if isinstance(item, dict) and item.get("question")]
+        if self.client.mock:
+            return self._save(self.default_module(self.evidence_policy), [], "no_examples_or_mock", output_path=output_path,
+                              metadata={"mock": True, "stop_reason": "mock_only_no_real_optimization"})
+        from .adaptive_prompting import adaptive_optimize
+        return adaptive_optimize(self, examples, initial_module=initial_module,
+                                 max_rounds=int(iterations), min_gain=float(min_gain), output_path=output_path)
 
     @staticmethod
     def _qa_user(question: str, context: str, module: Dict[str, str]) -> str:
@@ -159,9 +122,10 @@ class PromptOptimizer:
                 f"检索上下文：\n{context}\n\n用户问题：\n{question}\n\n请给出最终答案：")
 
     def _save(self, module: Dict[str, str], history: List[Dict[str, Any]], method: str,
-              *, output_path: str | Path | None = None) -> Dict[str, Any]:
+              *, output_path: str | Path | None = None,
+              metadata: Dict[str, Any] | None = None) -> Dict[str, Any]:
         self.run_dir.mkdir(parents=True, exist_ok=True)
-        result = {**module, "method": method, "history": history}
+        result = {**module, "method": method, "history": history, **(metadata or {})}
         path = Path(output_path) if output_path else self.prompt_path
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")

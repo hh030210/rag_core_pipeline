@@ -36,8 +36,19 @@ class EmbeddingModel:
             pass
         except Exception as exc:
             print(f"[提示] FlagEmbedding 加载失败，尝试 SentenceTransformer: {exc}")
-        from sentence_transformers import SentenceTransformer
         target_device = "cpu" if self.device in {"cpu", "auto"} else self.device
+        try:
+            from sentence_transformers import SentenceTransformer
+        except ImportError:
+            # The server already has torch/transformers. Preserve chapter3's
+            # Chinese BGE CLS pooling without upgrading its vLLM environment.
+            from transformers import AutoModel, AutoTokenizer
+            self._tokenizer = AutoTokenizer.from_pretrained(resolved, local_files_only=True)
+            self._model = AutoModel.from_pretrained(resolved, local_files_only=True)
+            self._model.to(target_device).eval()
+            self._target_device = target_device
+            self._mode = "transformers_cls"
+            return
         self._model = SentenceTransformer(resolved, device=target_device, local_files_only=True)
         self._mode = "sentence_transformers"
 
@@ -63,6 +74,17 @@ class EmbeddingModel:
         if self._mode == "flag":
             result = self._model.encode(items, return_dense=True, batch_size=batch_size)
             vectors = result["dense_vecs"]
+        elif self._mode == "transformers_cls":
+            import torch
+            vectors = []
+            for offset in range(0, len(items), batch_size):
+                tokens = self._tokenizer(items[offset:offset + batch_size], padding=True,
+                    truncation=True, max_length=512, return_tensors="pt")
+                tokens = {key: value.to(self._target_device) for key, value in tokens.items()}
+                with torch.no_grad():
+                    output = self._model(**tokens).last_hidden_state[:, 0]
+                    output = torch.nn.functional.normalize(output, p=2, dim=1)
+                vectors.extend(output.cpu().tolist())
         else:
             vectors = self._model.encode(
                 items,
@@ -90,6 +112,8 @@ class EmbeddingModel:
         if self._mode == "flag":
             result = self._model.encode(items, return_dense=True, batch_size=batch_size)
             vectors = result["dense_vecs"]
+        elif self._mode == "transformers_cls":
+            return np.asarray(self.encode(items), dtype=np.float32)
         else:
             vectors = self._model.encode(
                 items,
