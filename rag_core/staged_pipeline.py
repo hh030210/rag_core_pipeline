@@ -434,7 +434,8 @@ def run_qa_stage(settings: Settings, *, question: str = "", dataset: str = "",
     run_dir = Path(settings.run_dir)
     if bool(question.strip()) == bool(dataset):
         raise ValueError("qa 必须且只能提供 --question 或 --dataset 之一")
-    output_path = Path(output) if output else run_dir / "qa_results.jsonl"
+    default_name = "qa_results.jsonl" if dataset else "qa_result.json"
+    output_path = Path(output) if output else run_dir / default_name
     state, skip = _begin(run_dir, "qa", {"question": question, "dataset": dataset,
                                           "output": str(output_path), "top_k": top_k,
                                           "concurrency": concurrency, "resume": resume})
