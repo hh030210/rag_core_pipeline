@@ -60,7 +60,7 @@ GET /api/v1/file-processing/jobs/<job_id>/dimensions?offset=0&limit=20&include_e
 GET /api/v1/file-processing/jobs/<job_id>/ingestion?sample_limit=5&include_text=false
 ```
 
-- `chunks` 返回 chunk ID、来源文档、长度、分片统计；`include_text=true` 时额外返回 chunk 正文。
+- `chunks` 返回最终 chunk ID、来源文档、长度、分片统计，并默认带上原始源文档清单、动态分片推荐（含 LLM 推荐理由）和源文档分片统计；`include_text=true` 时返回最终 chunk 正文，`include_source_text=true` 才会返回源文档全文，`include_intermediate=false` 可关闭中间结果。
 - `dimensions` 返回本数据集新归纳的维度结构、各维度覆盖 chunk 数/标签数、诊断统计，以及按页返回的 chunk 标签；`include_evidence=true` 时附上标签证据。
 - `ingestion` 会读取入库 manifest，并检查 local 文件后端的点数，或实时查询 Qdrant collection 的点数及少量 payload 样例；不会返回向量值。若多个任务共用 collection，实时点数是整个 collection 的数量，不一定等于本次任务的写入数。
 

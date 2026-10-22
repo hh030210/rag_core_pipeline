@@ -179,6 +179,18 @@ def test_file_processing_stage_artifacts_are_observable(monkeypatch, tmp_path):
     (run_dir / "chunks" / "chunk_summary.json").write_text(
         '{"total_chunks":1,"average_length":25}', encoding="utf-8"
     )
+    (run_dir / "chunks" / "source_chunks.json").write_text(
+        '[{"doc_id":"source1","file_name":"doc.md","file_type":"md","content":"颐和园上午开放。"}]',
+        encoding="utf-8",
+    )
+    (run_dir / "chunks" / "source_summary.json").write_text(
+        '{"total_subfiles":1,"total_chunks":1,"subfiles":[{"file_name":"doc.md","word_count":1}]}',
+        encoding="utf-8",
+    )
+    (run_dir / "chunks" / "chunk_recommendations.json").write_text(
+        '{"metadata":{"version":"1.0"},"recommendations":{"source1":{"doc_id":"source1","l_min":20,"l_max":500,"model_reasoning":"按完整语义单元切分"}}}',
+        encoding="utf-8",
+    )
     (run_dir / "V_core_v2.json").write_text(
         '{"generation_method":"test-schema","schema_source_record_count":1,"dimensions":[{"id":"service.opening_hours","name":"开放时间","level":2,"indexable":true}]}',
         encoding="utf-8",
@@ -225,6 +237,8 @@ def test_file_processing_stage_artifacts_are_observable(monkeypatch, tmp_path):
     assert chunks.status_code == dimensions.status_code == ingestion.status_code == 200
     assert chunks.json()["summary"]["total_chunks"] == 1
     assert chunks.json()["items"][0]["chunk_text"] == "颐和园上午开放。"
+    assert chunks.json()["intermediate"]["recommendations"][0]["l_min"] == 20
+    assert chunks.json()["intermediate"]["source_documents"]["items"][0]["content_chars"] == 8
     assert dimensions.json()["dimensions"][0]["covered_chunks"] == 1
     assert dimensions.json()["tagged_chunks"]["items"][0]["tag_details"]
     assert ingestion.json()["verified"] is True

@@ -266,6 +266,9 @@ def _read_run_artifact(run_dir: Path, name: str, default: Any = None) -> Any:
     paths = {
         "chunks": run_dir / "chunks.json",
         "chunks_summary": run_dir / "chunks" / "chunk_summary.json",
+        "source_chunks": run_dir / "chunks" / "source_chunks.json",
+        "source_summary": run_dir / "chunks" / "source_summary.json",
+        "chunk_recommendations": run_dir / "chunks" / "chunk_recommendations.json",
         "schema": run_dir / "V_core_v2.json",
         "tags": run_dir / "tags_output_v2.json",
         "dimension_metadata": run_dir / "dimension_metadata_v2.json",
@@ -530,6 +533,8 @@ def get_file_processing_chunks(
     offset: int = Query(default=0, ge=0),
     limit: int = Query(default=20, ge=1, le=100),
     include_text: bool = False,
+    include_source_text: bool = False,
+    include_intermediate: bool = True,
 ) -> dict[str, Any]:
     job, _ = _ready_run(job_id)
     run_dir = Path(job["run_dir"]).resolve()
@@ -548,6 +553,35 @@ def get_file_processing_chunks(
         if include_text:
             item["chunk_text"] = chunk.get("chunk_text_full") or chunk.get("chunk_text") or ""
         items.append(item)
+    intermediate = None
+    if include_intermediate:
+        source_chunks = _read_run_artifact(run_dir, "source_chunks", default=[]) or []
+        source_summary = _read_run_artifact(run_dir, "source_summary", default={}) or {}
+        recommendations_artifact = _read_run_artifact(run_dir, "chunk_recommendations", default={}) or {}
+        recommendation_map = recommendations_artifact.get("recommendations", {})
+        recommendations = list(recommendation_map.values()) if isinstance(recommendation_map, dict) else []
+        source_items = []
+        for source in source_chunks[offset:offset + limit]:
+            source_item = {
+                key: source.get(key) for key in ("doc_id", "file_name", "source_file", "file_type")
+                if key in source
+            }
+            content = str(source.get("content", ""))
+            source_item["content_chars"] = len(content)
+            if include_source_text:
+                source_item["content"] = content
+            source_items.append(source_item)
+        intermediate = {
+            "source_summary": source_summary,
+            "recommendation_metadata": recommendations_artifact.get("metadata", {}),
+            "recommendations": recommendations,
+            "source_documents": {
+                "total": len(source_chunks),
+                "offset": offset,
+                "limit": limit,
+                "items": source_items,
+            },
+        }
     return {
         "run_id": job["run_id"],
         "stage": "chunking",
@@ -556,6 +590,7 @@ def get_file_processing_chunks(
         "offset": offset,
         "limit": limit,
         "items": items,
+        "intermediate": intermediate,
     }
 
 
