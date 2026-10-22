@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Callable, Dict
 
 from .chunk_stage import run_chunking
 from .cluster_prompting import ClusterPromptPipeline, normalize_examples
@@ -17,13 +17,28 @@ from .settings import Settings
 from .storage import VectorStore
 
 
-def run_ingest(settings: Settings, schema_path: str = "") -> Dict[str, Any]:
+def run_ingest(
+    settings: Settings,
+    schema_path: str = "",
+    *,
+    strict_dataset_schema: bool = False,
+    progress_callback: Callable[[str, int, str], None] | None = None,
+) -> Dict[str, Any]:
     settings.apply_runtime_environment()
     if not settings.input_path:
         raise ValueError("ingest/run 必须指定 --input")
     settings.ensure_dirs()
+    if progress_callback:
+        progress_callback("chunking", 5, "正在读取文件并执行分片")
     chunk_result = run_chunking(settings.input_path, settings.run_dir / "chunks", settings)
-    dimension_result = run_dimensions(chunk_result["records"], settings, schema_path=schema_path)
+    if progress_callback:
+        progress_callback("dimension_extraction", 35, "分片完成，正在从本批语料归纳维度并提取标签")
+    dimension_result = run_dimensions(
+        chunk_result["records"], settings, schema_path=schema_path,
+        strict_dataset_schema=strict_dataset_schema,
+    )
+    if progress_callback:
+        progress_callback("embedding_and_upsert", 75, "维度标签完成，正在生成向量并写入向量库")
     embeddings = EmbeddingModel(settings.model_path, settings.embedding_device,
                                 settings.vector_dim, settings.mock)
     store = VectorStore(run_dir=settings.run_dir, backend="local" if settings.mock else settings.backend,
@@ -35,6 +50,9 @@ def run_ingest(settings: Settings, schema_path: str = "") -> Dict[str, Any]:
         "project": "rag_core_pipeline", "schema_version": "2.0",
         "backend": store_result["backend"], "collection": store_result["collection"],
         "input": str(settings.input_path), "run_dir": str(settings.run_dir),
+        "schema_generation_method": dimension_result["schema"].get("generation_method", ""),
+        "schema_source_record_count": dimension_result["schema"].get("schema_source_record_count", 0),
+        "dimension_count": len(dimension_result["schema"].get("dimensions", [])),
         "experiment_config": {
             "semantic_pool": int(getattr(settings, "semantic_pool", 20)),
             "dimension_pool": int(getattr(settings, "dimension_pool", 100)),
@@ -53,6 +71,8 @@ def run_ingest(settings: Settings, schema_path: str = "") -> Dict[str, Any]:
         },
     }
     (settings.run_dir / "run_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+    if progress_callback:
+        progress_callback("completed", 100, "文件处理、维度提取和入库均已完成")
     return manifest
 
 

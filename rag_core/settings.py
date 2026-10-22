@@ -138,8 +138,9 @@ class Settings:
     def apply_runtime_environment(self) -> None:
         """让复制进来的 v2 LLM 服务与本项目配置保持一致。"""
         os.environ["LLM_OPENAI_COMPAT"] = "1" if self.llm_openai_compat else "0"
-        if self.llm_api_key:
-            os.environ["LLM_API_KEY"] = self.llm_api_key
+        # Do not copy request-scoped credentials into process-wide environment:
+        # API requests may use different providers/keys concurrently. Callers
+        # pass the key directly to each LLM client/miner.
         os.environ["LLM_BASE_URL"] = self.llm_base_url
         os.environ["LLM_MODEL"] = self.llm_model
         os.environ["LLM_API_INTERVAL"] = str(self.llm_interval)
