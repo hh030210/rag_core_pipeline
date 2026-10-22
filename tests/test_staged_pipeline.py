@@ -84,16 +84,17 @@ def test_mock_pipeline_runs_each_stage_and_persists_intermediates(tmp_path):
         "reference_answer": "上午开放",
     }], ensure_ascii=False), encoding="utf-8")
     batch_qa_result = run_qa_stage(
-        settings, dataset=str(qa_dataset), output=str(run_dir / "qa_results.jsonl"),
+        settings, dataset=str(qa_dataset), output=str(tmp_path / "qa_results.jsonl"),
         top_k=3, concurrency=1,
     )
     assert batch_qa_result["status"] == "completed"
     assert batch_qa_result["summary"]["completed"] == 1
-    assert len((run_dir / "qa_results.jsonl").read_text(encoding="utf-8").splitlines()) == 1
+    assert len((tmp_path / "qa_results.jsonl").read_text(encoding="utf-8").splitlines()) == 1
 
     statuses = pipeline_status(run_dir)
     assert all(statuses["stages"][stage]["status"] == "completed"
                for stage in ("chunk", "schema", "tag", "index", "retrieve", "evaluate", "qa"))
+    assert str(tmp_path / "qa_results.jsonl") in statuses["stages"]["qa"]["artifacts_present"]
     inspected = inspect_run(run_dir, "all")
     assert inspected["stages"]["chunk"]["summary"]["chunks"] > 0
 

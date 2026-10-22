@@ -476,7 +476,8 @@ def pipeline_status(run_dir: str | Path) -> dict[str, Any]:
     output = {"run_dir": str(root), "state_file": str(_state_path(root)), "stages": {}}
     for stage, artifacts in STAGE_ARTIFACTS.items():
         entry = dict(state.get("stages", {}).get(stage, {}))
-        present = [str(root / item) for item in artifacts if (root / item).exists()]
+        registered_artifacts = entry.get("artifacts") or [str(root / item) for item in artifacts]
+        present = [str(path) for path in registered_artifacts if Path(path).exists()]
         if not entry and present:
             status = "artifacts_found_not_registered"
         else:
@@ -494,9 +495,16 @@ def inspect_run(run_dir: str | Path, stage: str = "all") -> dict[str, Any]:
         raise ValueError(f"未知阶段 {stage!r}; 可选: all, {', '.join(STAGE_ARTIFACTS)}")
     selected = list(STAGE_ARTIFACTS) if stage == "all" else [stage]
     details: dict[str, Any] = {"run_dir": str(root), "stages": {}}
+    registered = _load_state(root).get("stages", {})
     for name in selected:
-        info: dict[str, Any] = {"artifacts": [str(path) for path in _artifact_paths(root, name)
-                                               if path.exists()]}
+        stage_state = registered.get(name, {})
+        saved_artifacts = stage_state.get("artifacts") or [str(path) for path in _artifact_paths(root, name)]
+        info: dict[str, Any] = {
+            "status": stage_state.get("status", "not_started"),
+            "artifacts": [str(path) for path in saved_artifacts if Path(path).exists()],
+        }
+        if stage_state.get("summary") is not None:
+            info["stage_summary"] = stage_state["summary"]
         try:
             if name == "chunk" and (root / "chunks.json").exists():
                 rows = load_chunks(root)
