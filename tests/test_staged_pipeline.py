@@ -5,6 +5,7 @@ from rag_core.staged_pipeline import (
     inspect_run,
     pipeline_status,
     run_chunk_stage,
+    run_evaluation_stage,
     run_index_stage,
     run_qa_stage,
     run_retrieval_stage,
@@ -59,13 +60,27 @@ def test_mock_pipeline_runs_each_stage_and_persists_intermediates(tmp_path):
     assert retrieval["query"]
     assert retrieval["retrieval"]["semantic_results"]
 
+    chunks = json.loads((run_dir / "chunks.json").read_text(encoding="utf-8"))
+    golden = tmp_path / "golden.json"
+    golden.write_text(json.dumps([{
+        "id": "q1",
+        "question": "北京颐和园什么时候开放？",
+        "reference_answer": "上午开放",
+        "gold_chunk_ids": [chunks[0]["doc_id"]],
+    }], ensure_ascii=False), encoding="utf-8")
+    evaluation_result = run_evaluation_stage(
+        settings, golden, top_k=3, eval_depth=3, query_expansion=False
+    )
+    assert evaluation_result["status"] == "completed"
+    assert (run_dir / "evaluation" / "summary.json").exists()
+
     qa_result = run_qa_stage(settings, question="北京颐和园什么时候开放？", top_k=3)
     assert qa_result["status"] == "completed"
     assert (run_dir / "qa_result.json").exists()
 
     statuses = pipeline_status(run_dir)
     assert all(statuses["stages"][stage]["status"] == "completed"
-               for stage in ("chunk", "schema", "tag", "index", "retrieve", "qa"))
+               for stage in ("chunk", "schema", "tag", "index", "retrieve", "evaluate", "qa"))
     inspected = inspect_run(run_dir, "all")
     assert inspected["stages"]["chunk"]["summary"]["chunks"] > 0
 

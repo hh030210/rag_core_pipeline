@@ -412,7 +412,13 @@ def run_evaluation_stage(settings: Settings, dataset: str | Path, *, output: str
         result = run_evaluation(run_dir=run_dir, dataset_path=dataset, settings=settings,
                                 output_dir=output_dir, top_k=top_k, eval_depth=eval_depth,
                                 ks=ks, query_expansion=query_expansion,
-                                query_parser_mode=query_parser_mode)
+                                query_parser_mode=query_parser_mode,
+                                experiments_dir=output_dir / "published")
+        _write_json(output_dir / "summary.json", {
+            "fusion_output": result.get("fusion_output", ""),
+            "config": result.get("config", {}),
+            "summary": result.get("summary", {}),
+        })
         entry = state["stages"]["evaluate"]
         entry["artifacts"] = [str(output_dir)]
         entry["summary"] = {"output": result.get("fusion_output", ""),
