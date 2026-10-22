@@ -78,6 +78,19 @@ def test_mock_pipeline_runs_each_stage_and_persists_intermediates(tmp_path):
     assert qa_result["status"] == "completed"
     assert (run_dir / "qa_result.json").exists()
 
+    qa_dataset = tmp_path / "qa.json"
+    qa_dataset.write_text(json.dumps([{
+        "id": "qa1", "question": "北京颐和园什么时候开放？",
+        "reference_answer": "上午开放",
+    }], ensure_ascii=False), encoding="utf-8")
+    batch_qa_result = run_qa_stage(
+        settings, dataset=str(qa_dataset), output=str(run_dir / "qa_results.jsonl"),
+        top_k=3, concurrency=1,
+    )
+    assert batch_qa_result["status"] == "completed"
+    assert batch_qa_result["summary"]["completed"] == 1
+    assert len((run_dir / "qa_results.jsonl").read_text(encoding="utf-8").splitlines()) == 1
+
     statuses = pipeline_status(run_dir)
     assert all(statuses["stages"][stage]["status"] == "completed"
                for stage in ("chunk", "schema", "tag", "index", "retrieve", "evaluate", "qa"))
