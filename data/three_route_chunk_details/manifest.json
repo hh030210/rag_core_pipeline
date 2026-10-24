@@ -1,0 +1,96 @@
+{
+  "title": "三数据集三路检索 Top10 Chunk 明细",
+  "record_format": "jsonl.gz; one record per query and result version; routes contain actual top 10 hits",
+  "result_record_count": 6003,
+  "retrieved_chunk_record_count": 177395,
+  "missing_chunk_text_count": 0,
+  "datasets": {
+    "scenic_before": {
+      "dataset": "景区数据集",
+      "version": "优化前",
+      "query_count": 402,
+      "file": "scenic_before_top10_chunks.jsonl.gz",
+      "route_hit_counts": {
+        "semantic": 4020,
+        "dimension": 2770,
+        "fusion": 4020
+      },
+      "missing_chunk_text_counts": {
+        "semantic": 0,
+        "dimension": 0,
+        "fusion": 0
+      },
+      "source": "scenic_three_route_compare/output/optimization_before_results.jsonl"
+    },
+    "scenic_after": {
+      "dataset": "景区数据集",
+      "version": "优化后",
+      "query_count": 402,
+      "file": "scenic_after_top10_chunks.jsonl.gz",
+      "route_hit_counts": {
+        "semantic": 3881,
+        "dimension": 3720,
+        "fusion": 3976
+      },
+      "missing_chunk_text_counts": {
+        "semantic": 0,
+        "dimension": 0,
+        "fusion": 0
+      },
+      "source": "scenic_three_route_compare/output/optimization_after_results.jsonl"
+    },
+    "duretrieval": {
+      "dataset": "DuRetrieval-MTEB dev",
+      "version": "当前可恢复的完整三路归档评测",
+      "query_count": 2000,
+      "file": "duretrieval_top10_chunks.jsonl.gz",
+      "route_hit_counts": {
+        "semantic": 20000,
+        "dimension": 19661,
+        "fusion": 20000
+      },
+      "missing_chunk_text_counts": {
+        "semantic": 0,
+        "dimension": 0,
+        "fusion": 0
+      },
+      "source": "evaluation_query_facet_evidence_v2_full_gpu0_20260928"
+    },
+    "dbqa": {
+      "dataset": "db_qa",
+      "version": "当前全流程结果",
+      "query_count": 3199,
+      "file": "dbqa_top10_chunks.jsonl.gz",
+      "route_hit_counts": {
+        "semantic": 31990,
+        "dimension": 31367,
+        "fusion": 31990
+      },
+      "missing_chunk_text_counts": {
+        "semantic": 0,
+        "dimension": 0,
+        "fusion": 0
+      },
+      "source": "dbqa_full_20261016_a91f3c/run/qa_results.jsonl"
+    }
+  },
+  "server_directory": "/home/humq/rag_core_experiments/all_datasets_top10_retrieval_results/three_route_chunk_details",
+  "files": {
+    "scenic_before_top10_chunks.jsonl.gz": {
+      "size_bytes": 6167458
+    },
+    "scenic_after_top10_chunks.jsonl.gz": {
+      "size_bytes": 7888850
+    },
+    "duretrieval_top10_chunks.jsonl.gz": {
+      "size_bytes": 23987089
+    },
+    "dbqa_top10_chunks.jsonl.gz": {
+      "size_bytes": 54707648
+    },
+    "three_route_chunk_details.docx": {
+      "size_bytes": 68298
+    }
+  },
+  "docx_page_count": 11
+}
