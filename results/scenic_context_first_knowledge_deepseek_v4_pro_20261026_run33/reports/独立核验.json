@@ -1,0 +1,87 @@
+{
+  "passed": true,
+  "training_n": 23,
+  "planned_test_n": 378,
+  "k": 8,
+  "training_versions_checked": 42,
+  "final_answers_checked": 377,
+  "raw_calls_checked": 1704,
+  "numeric_evaluations_checked": 418,
+  "judge_sha256": "3aae06818129602eb470f1b5b9a6703ba9e72268b09859198514d8fa6e65ffc1",
+  "single_final_answer_call": true,
+  "no_test_reference_in_answer_request": true,
+  "same_judge_training_and_final": true,
+  "feedback_audit": {
+    "passed": true,
+    "training_ids": [
+      "train_2fdf60fc8b07ab69e9f2",
+      "train_11d1e4f2d4ae2f1c692a",
+      "train_39f52c47eccd2a52d445",
+      "train_67044a62c2281ffe39fd",
+      "train_3876e95a1d70bcef10b2",
+      "train_d86f7479ffccde5d626b",
+      "train_f40ac1d3322b1101639f",
+      "train_ba8b3588486f756c6253",
+      "train_a73e286de53dec0953be",
+      "train_d200e105cff25a7f04b7",
+      "train_06588dc87b36f184bf82",
+      "train_9aed43ea762fcfce19b5",
+      "train_54af290caf3c4b0da63c",
+      "train_d0539e6d656e71eb9527",
+      "train_47d0fb7065124f9c9b57",
+      "train_f45b3605059a0a0d8d7e",
+      "train_b441b9320c1784ae3f10",
+      "train_2442511c7f14f9797ffb",
+      "train_e9bfc737196000c31c4c",
+      "train_1a45dcf31b4250c73b77",
+      "train_131b26deec99645f3f8c",
+      "train_2921e3e9daaffb2f8c3c",
+      "train_c29ed58b248c118baf7f"
+    ],
+    "clusters": 8,
+    "replayed_answers_checked": 29,
+    "qualitative_comparisons_checked": 29,
+    "accepted_repairs": 0,
+    "numeric_scoring_used": false,
+    "test_data_used_for_feedback": false,
+    "initial_fusion_artifacts_preserved": true,
+    "unverifiable_replays": [],
+    "all_feedback_diagnoses_valid": true
+  },
+  "transport_recovery": null,
+  "structural_recovery": {
+    "eligible_ids": [
+      "4e5938dd7d97a3657549b9612fd9d4ff",
+      "66e9dd9f9421c6d211540fa7ce8f955e",
+      "949390c583fabc9d71ef18d964bea1d7",
+      "a8d74bd14040452f394e72bb5404b4e8"
+    ],
+    "recovered_evaluations": 4,
+    "original_scores_and_reasons_preserved": true,
+    "empty_response_failures_not_retried": true,
+    "new_raw_calls": 2,
+    "no_answer_regeneration": true,
+    "all_machine_metrics_unchanged": true
+  },
+  "failures": [
+    {
+      "id": "7f6463484693a1c151187036136a2392",
+      "status": "failed",
+      "error": "ValueError: Empty response"
+    },
+    {
+      "id": "27304aad02fc77ca8e04ff70bcdb5613",
+      "status": "failed",
+      "error": "ValueError: Empty response"
+    }
+  ],
+  "physically_isolated_evaluation_views": true,
+  "metric_keys": [
+    "factual_accuracy",
+    "context_faithfulness",
+    "question_completeness",
+    "answer_accuracy",
+    "reference_similarity"
+  ],
+  "scope": "Structural/source audit, not certification of LLM judgment correctness"
+}
