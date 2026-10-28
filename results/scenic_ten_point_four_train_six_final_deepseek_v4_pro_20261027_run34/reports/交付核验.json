@@ -1,0 +1,40 @@
+{
+  "raw_requests_including_failures": {
+    "提示生成（含校验失败尝试）": 51,
+    "案例作答": 42,
+    "案例评价": 85,
+    "群智反馈（含阶段生成和无效尝试）": 77,
+    "测试作答": 382,
+    "测试评价": 1147
+  },
+  "total_raw_requests": 1784,
+  "server_results_sha256": "b0da347bfb5d2b702ad578f7479eda239a8d35faf6f905450ad41aff48a939c4",
+  "judge_sha256": "ad91f3c5e611f9372e106e57a69572b2b8a676554e3f0272714f23089b02a0d3",
+  "no_new_model_calls": true,
+  "batch_finished": true,
+  "all_planned_questions_valid": false,
+  "feedback_unverifiable_replays": [
+    {
+      "cluster_id": "1",
+      "round": 0,
+      "id": "train_3876e95a1d70bcef10b2",
+      "retained_previous_prompt": true,
+      "raw_attempts": [
+        "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793095515243216214_218e9ffdadee.json",
+        "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793095533150529883_3072c54e228d.json",
+        "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793095549753117163_61f77059d5f2.json"
+      ]
+    },
+    {
+      "cluster_id": "1",
+      "round": 0,
+      "id": "train_67044a62c2281ffe39fd",
+      "retained_previous_prompt": true,
+      "raw_attempts": [
+        "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793095540066832080_f5a99234d37b.json",
+        "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793095577597663493_0e2e05f7ff22.json",
+        "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793095622999695305_ba82c396ed23.json"
+      ]
+    }
+  ]
+}

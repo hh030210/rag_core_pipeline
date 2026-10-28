@@ -1,0 +1,140 @@
+{
+  "passed": true,
+  "training_n": 23,
+  "planned_test_n": 378,
+  "k": 4,
+  "training_versions_checked": 42,
+  "final_answers_checked": 377,
+  "raw_calls_checked": 1655,
+  "numeric_evaluations_checked": 417,
+  "judge_sha256": "ad91f3c5e611f9372e106e57a69572b2b8a676554e3f0272714f23089b02a0d3",
+  "single_final_answer_call": true,
+  "no_test_reference_in_answer_request": true,
+  "same_judge_training_and_final": true,
+  "feedback_audit": {
+    "passed": true,
+    "training_ids": [
+      "train_2fdf60fc8b07ab69e9f2",
+      "train_11d1e4f2d4ae2f1c692a",
+      "train_39f52c47eccd2a52d445",
+      "train_67044a62c2281ffe39fd",
+      "train_3876e95a1d70bcef10b2",
+      "train_d86f7479ffccde5d626b",
+      "train_f40ac1d3322b1101639f",
+      "train_ba8b3588486f756c6253",
+      "train_a73e286de53dec0953be",
+      "train_d200e105cff25a7f04b7",
+      "train_06588dc87b36f184bf82",
+      "train_9aed43ea762fcfce19b5",
+      "train_54af290caf3c4b0da63c",
+      "train_d0539e6d656e71eb9527",
+      "train_47d0fb7065124f9c9b57",
+      "train_f45b3605059a0a0d8d7e",
+      "train_b441b9320c1784ae3f10",
+      "train_2442511c7f14f9797ffb",
+      "train_e9bfc737196000c31c4c",
+      "train_1a45dcf31b4250c73b77",
+      "train_131b26deec99645f3f8c",
+      "train_2921e3e9daaffb2f8c3c",
+      "train_c29ed58b248c118baf7f"
+    ],
+    "clusters": 4,
+    "replayed_answers_checked": 27,
+    "qualitative_comparisons_checked": 27,
+    "accepted_repairs": 0,
+    "numeric_scoring_used": false,
+    "test_data_used_for_feedback": false,
+    "initial_fusion_artifacts_preserved": true,
+    "unverifiable_replays": [
+      {
+        "cluster_id": "1",
+        "round": 0,
+        "id": "train_3876e95a1d70bcef10b2",
+        "retained_previous_prompt": true,
+        "raw_attempts": [
+          "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793095515243216214_218e9ffdadee.json",
+          "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793095533150529883_3072c54e228d.json",
+          "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793095549753117163_61f77059d5f2.json"
+        ]
+      },
+      {
+        "cluster_id": "1",
+        "round": 0,
+        "id": "train_67044a62c2281ffe39fd",
+        "retained_previous_prompt": true,
+        "raw_attempts": [
+          "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793095540066832080_f5a99234d37b.json",
+          "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793095577597663493_0e2e05f7ff22.json",
+          "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793095622999695305_ba82c396ed23.json"
+        ]
+      }
+    ],
+    "all_feedback_diagnoses_valid": false
+  },
+  "transport_recovery": null,
+  "structural_recovery": {
+    "kind": "ten_point_named_structural",
+    "eligible_ids": [
+      "44cde353fbf3cb5bce523245677409ed",
+      "ebabd5a75b27074b42b12fc685459b3b",
+      "1e406b3672029dfdd9d50e9f2fd34487",
+      "ab63dc2d701f1f6492056615113ff889",
+      "14ddc491053456e4fe7b0a937911b462",
+      "41f056de76ffed85d2a094d33dc12250",
+      "45404f3314b40924131090a99d8d2cdd",
+      "747e30c34fbf0e90e45c9bd2f70729d2",
+      "93e4b293735cd6c230ea6482d38d6cd2",
+      "7b6146578d1577605bbdc19eb787d336",
+      "d126a14b030e388a7ad06496a7180ea7",
+      "aaa12808734a52a805938c00ba432f45"
+    ],
+    "recovered_evaluations": 12,
+    "original_scores_and_reasons_preserved": true,
+    "new_raw_calls": 5,
+    "no_answer_regeneration": true,
+    "all_machine_metrics_unchanged": true,
+    "unsafe_failures_not_resampled": [
+      {
+        "id": "ea0bbfee327902cc3e1121f433185ceb",
+        "reason": "No original completed response for first missing view",
+        "view": "question_answer"
+      },
+      {
+        "id": "970cc795f02a17c85895b68091c0fc68",
+        "reason": "No original valid answer"
+      },
+      {
+        "id": "f601e14ddd4f2cbe98527fc3a29b94f3",
+        "reason": "No original completed response for first missing view",
+        "view": "question_answer"
+      }
+    ]
+  },
+  "failures": [
+    {
+      "id": "f601e14ddd4f2cbe98527fc3a29b94f3",
+      "status": "failed",
+      "error": "ValueError: Empty response"
+    },
+    {
+      "id": "970cc795f02a17c85895b68091c0fc68",
+      "status": "failed",
+      "error": "ValueError: Empty response"
+    },
+    {
+      "id": "ea0bbfee327902cc3e1121f433185ceb",
+      "status": "failed",
+      "error": "ValueError: Empty response"
+    }
+  ],
+  "physically_isolated_evaluation_views": true,
+  "metric_keys": [
+    "factual_accuracy",
+    "context_faithfulness",
+    "question_completeness",
+    "answer_conciseness",
+    "reference_similarity",
+    "answer_preference"
+  ],
+  "scope": "Structural/source audit, not certification of LLM judgment correctness"
+}

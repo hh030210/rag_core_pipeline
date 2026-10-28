@@ -1,0 +1,172 @@
+{
+  "read_only": true,
+  "deployed": false,
+  "eligible": [
+    {
+      "id": "14ddc491053456e4fe7b0a937911b462",
+      "question": "普通画舫和豪华画舫有什么区别，坐哪个划算",
+      "error": "ValueError: Wrong metrics for view facts_context",
+      "view": "facts_context",
+      "raw_record": "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793097639751895728_d1dadba9ad53.json",
+      "scores": {
+        "factual_accuracy": 10,
+        "context_faithfulness": 10
+      },
+      "kind": "named_structural_recovery_only"
+    },
+    {
+      "id": "1e406b3672029dfdd9d50e9f2fd34487",
+      "question": "张家界哪里拍照最出片？",
+      "error": "ValueError: Wrong metrics for view question_answer",
+      "view": "question_answer",
+      "raw_record": "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793098370363652595_b745eb31bab2.json",
+      "scores": {
+        "question_completeness": 10,
+        "answer_conciseness": 10
+      },
+      "kind": "named_structural_recovery_only"
+    },
+    {
+      "id": "41f056de76ffed85d2a094d33dc12250",
+      "question": "佛香阁有多高？里面供的是什么佛？",
+      "error": "ValueError: Wrong metrics for view reference_comparison",
+      "view": "reference_comparison",
+      "raw_record": "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793097848341231180_a99c4f8f1539.json",
+      "scores": {
+        "reference_similarity": 9,
+        "answer_preference": 0
+      },
+      "kind": "named_structural_recovery_only"
+    },
+    {
+      "id": "44cde353fbf3cb5bce523245677409ed",
+      "question": "张家界适合带小朋友去玩吗，有什么需要注意的",
+      "error": "ValueError: No safe quote-only repair",
+      "view": "reference_comparison",
+      "raw_record": "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793098429994554377_9d5244061f09.json",
+      "scores": {
+        "reference_similarity": 3,
+        "answer_preference": 1
+      },
+      "kind": "named_structural_recovery_only"
+    },
+    {
+      "id": "45404f3314b40924131090a99d8d2cdd",
+      "question": "明十三陵的营建过程包括哪些步骤，成祖朱棣如何卜选陵址的？",
+      "error": "ValueError: Wrong metrics for view reference_comparison",
+      "view": "reference_comparison",
+      "raw_record": "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793096092634053741_3b274ed236c8.json",
+      "scores": {
+        "reference_similarity": 9,
+        "answer_preference": 1
+      },
+      "kind": "named_structural_recovery_only"
+    },
+    {
+      "id": "747e30c34fbf0e90e45c9bd2f70729d2",
+      "question": "龙门石窟能带狗进去吗？",
+      "error": "ValueError: Wrong metrics for view reference_comparison",
+      "view": "reference_comparison",
+      "raw_record": "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793096938356684650_113228a214ab.json",
+      "scores": {
+        "reference_similarity": 10,
+        "answer_preference": 0
+      },
+      "kind": "named_structural_recovery_only"
+    },
+    {
+      "id": "7b6146578d1577605bbdc19eb787d336",
+      "question": "金鞭溪那个神鹰护鞭是什么传说？",
+      "error": "ValueError: Wrong metrics for view reference_comparison",
+      "view": "reference_comparison",
+      "raw_record": "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793098698995672334_16e236cd5e38.json",
+      "scores": {
+        "reference_similarity": 8,
+        "answer_preference": 0
+      },
+      "kind": "named_structural_recovery_only"
+    },
+    {
+      "id": "93e4b293735cd6c230ea6482d38d6cd2",
+      "question": "少林寺除了是禅宗祖庭，还是什么文化的发祥地？",
+      "error": "ValueError: Wrong metrics for view reference_comparison",
+      "view": "reference_comparison",
+      "raw_record": "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793097394134939317_90bcfbcd62f9.json",
+      "scores": {
+        "reference_similarity": 9,
+        "answer_preference": 1
+      },
+      "kind": "named_structural_recovery_only"
+    },
+    {
+      "id": "aaa12808734a52a805938c00ba432f45",
+      "question": "除了长陵还有哪个陵也是皇帝生前建的，有什么看点",
+      "error": "ValueError: Not an unambiguous completed reason-line quote error",
+      "view": "facts_context",
+      "raw_record": "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793096194074980166_d472cd0b4598.json",
+      "scores": {
+        "factual_accuracy": 10,
+        "context_faithfulness": 10
+      },
+      "kind": "named_structural_recovery_only"
+    },
+    {
+      "id": "ab63dc2d701f1f6492056615113ff889",
+      "question": "网上买的门票怎么取？在哪个窗口？",
+      "error": "ValueError: Not an unambiguous completed reason-line quote error",
+      "view": "reference_comparison",
+      "raw_record": "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793098504819794094_85b19b763b57.json",
+      "scores": {
+        "reference_similarity": 7,
+        "answer_preference": 0
+      },
+      "kind": "named_structural_recovery_only"
+    },
+    {
+      "id": "d126a14b030e388a7ad06496a7180ea7",
+      "question": "南孔庙的停车场是免费的吗？如果开车去，从哪个门进？",
+      "error": "ValueError: Wrong metrics for view reference_comparison",
+      "view": "reference_comparison",
+      "raw_record": "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793096852178426076_5f6b94c724f5.json",
+      "scores": {
+        "reference_similarity": 10,
+        "answer_preference": 0
+      },
+      "kind": "named_structural_recovery_only"
+    },
+    {
+      "id": "ebabd5a75b27074b42b12fc685459b3b",
+      "question": "苏堤有多长？上面有几座桥？",
+      "error": "ValueError: Wrong metrics for view reference_comparison",
+      "view": "reference_comparison",
+      "raw_record": "/pub/yanglw/rag_core_pipeline/runs/scenic_ten_point_four_train_six_final_deepseek_v4_pro_20261027_run34/api_calls/1793097476257523613_ed17396295bc.json",
+      "scores": {
+        "reference_similarity": 10,
+        "answer_preference": 1
+      },
+      "kind": "named_structural_recovery_only"
+    }
+  ],
+  "unsafe": [
+    {
+      "id": "970cc795f02a17c85895b68091c0fc68",
+      "question": "从郑州新郑机场下飞机后，怎么去少林寺最方便？",
+      "error": "ValueError: Empty response",
+      "reason": "没有原始有效答案"
+    },
+    {
+      "id": "ea0bbfee327902cc3e1121f433185ceb",
+      "question": "慈禧为什么要拿海军的钱来修园子？",
+      "error": "ValueError: Empty response",
+      "view": "question_answer",
+      "reason": "没有原始完整返回，不重采样"
+    },
+    {
+      "id": "f601e14ddd4f2cbe98527fc3a29b94f3",
+      "question": "蒋介石跟龙门石窟有什么关系？",
+      "error": "ValueError: Empty response",
+      "view": "question_answer",
+      "reason": "没有原始完整返回，不重采样"
+    }
+  ]
+}
