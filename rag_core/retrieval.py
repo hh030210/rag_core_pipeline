@@ -1281,7 +1281,14 @@ class Retriever:
                query_facts: List[Dict[str, Any]] | None = None,
                original_query: str | None = None,
                subqueries: List[str] | None = None,
-               save_snapshot: bool = False) -> Dict[str, Any]:
+               save_snapshot: bool = False, *,
+               semantic_weight: float = 1.0,
+               dimension_weight: float = 0.05,
+               lexical_weight: float = 0.10) -> Dict[str, Any]:
+        """Retrieve candidates and fuse them with per-call dimension_score weights.
+
+        Omitted weights preserve the existing 1.0 / 0.05 / 0.10 formula.
+        """
         vector_subqueries = [
             str(item) for item in (subqueries or []) if str(item).strip()
         ]
@@ -1446,7 +1453,10 @@ class Retriever:
             item["rank"] = rank
 
         fused = apply_fusion(semantic, dimension, top_k=top_k, query=query,
-                             original_query=original_query or query, query_analysis=analysis)
+                             original_query=original_query or query, query_analysis=analysis,
+                             semantic_weight=semantic_weight,
+                             dimension_weight=dimension_weight,
+                             lexical_weight=lexical_weight)
         analysis["fusion_strategy"] = fused["fusion_strategy"]["file"]
         fusion_candidates = fused["fusion_candidates"]
         fusion = fused["fusion_results"]

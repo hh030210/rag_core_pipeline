@@ -231,15 +231,30 @@ def fuse_retrieval_results(
     return result
 
 
-def apply_fusion(semantic, dimension, *, top_k, query=None, original_query=None, query_analysis=None, strategy_file=None):
-    """Dispatch by filename; strategy candidates keep their complete retrieval payload."""
+def apply_fusion(semantic, dimension, *, top_k, query=None, original_query=None,
+                 query_analysis=None, strategy_file=None,
+                 semantic_weight: float = 1.0, dimension_weight: float = 0.05,
+                 lexical_weight: float = 0.10):
+    """Dispatch fusion; dimension_score weights apply to this call only.
+
+    Other strategies retain their own scoring rules and reject custom weights.
+    """
     from importlib import import_module
     filename = strategy_file or FUSION_STRATEGY
     choices = sorted(p.name for p in STRATEGY_DIRECTORY.glob('*.py') if p.name != 'run_comparison_methods.py')
     if not isinstance(filename, str) or Path(filename).name != filename or filename not in choices:
         raise ValueError(f'Unknown fusion strategy {filename!r}; choose one of {choices}')
+    fusion_weights = {}
+    if filename == 'dimension_score.py':
+        fusion_weights = dict(semantic_weight=semantic_weight,
+                              dimension_weight=dimension_weight,
+                              lexical_weight=lexical_weight)
+    elif (semantic_weight, dimension_weight, lexical_weight) != (1.0, 0.05, 0.10):
+        raise ValueError('Custom fusion weights are only supported by dimension_score.py')
     strategy = import_module('rag_core.retrieval_fusion.experiments.00_method_comparison.code.' + Path(filename).stem)
-    result = strategy.fuse(semantic, dimension, top_k=top_k, query=query, original_query=original_query, query_analysis=query_analysis)
+    result = strategy.fuse(semantic, dimension, top_k=top_k, query=query,
+                           original_query=original_query, query_analysis=query_analysis,
+                           **fusion_weights)
     result['fusion_strategy']['file'] = filename
     return result
 
