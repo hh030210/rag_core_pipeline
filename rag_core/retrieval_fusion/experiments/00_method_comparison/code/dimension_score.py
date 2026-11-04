@@ -1,6 +1,7 @@
 """Dimension-score baseline; same scorer used online and in replay."""
 import math,re
 from collections import Counter
+SEMANTIC_WEIGHT=1.0
 DIMENSION_WEIGHT=0.05
 LEXICAL_WEIGHT=0.10
 MISSING_SEMANTIC_PENALTY=0.025
@@ -14,7 +15,8 @@ def grams(text):
     return result
 
 
-def score_snapshot(snapshot):
+def score_snapshot(snapshot, *, semantic_weight=SEMANTIC_WEIGHT,
+                   dimension_weight=DIMENSION_WEIGHT, lexical_weight=LEXICAL_WEIGHT):
     semantic_route = snapshot['semantic_candidates']
     dimension_route = snapshot['dimension_candidates']
     old = {str(item['chunk_id']): item for item in snapshot['fusion_candidates']}
@@ -46,9 +48,9 @@ def score_snapshot(snapshot):
         dimension_norm = float(dim.get('normalized_dimension_score', 0.0))
         lexical_score = raw_lexical / max_lexical if max_lexical else 0.0
         components = {
-            'semantic': effective_semantic,
-            'dimension': DIMENSION_WEIGHT * dimension_norm,
-            'lexical': LEXICAL_WEIGHT * lexical_score,
+            'semantic': semantic_weight * effective_semantic,
+            'dimension': dimension_weight * dimension_norm,
+            'lexical': lexical_weight * lexical_score,
         }
         score = round(sum(components.values()), 10)
         chunk = chunks.get(chunk_id, {})
@@ -76,8 +78,9 @@ def score_snapshot(snapshot):
         'original_query': snapshot.get('original_query'),
         'strategy': 'normalized_dimension_score_blend_v1',
         'configuration': {
-            'dimension_weight': DIMENSION_WEIGHT,
-            'lexical_weight': LEXICAL_WEIGHT,
+            'semantic_weight': semantic_weight,
+            'dimension_weight': dimension_weight,
+            'lexical_weight': lexical_weight,
             'missing_semantic_penalty': MISSING_SEMANTIC_PENALTY,
         },
         'top_k': top_k, 'fusion_candidates': ranked,
@@ -206,9 +209,12 @@ def restore_payloads(result, snapshot, filename):
     result['fusion_strategy'] = dict(name=filename[:-3], file=filename, configuration=result.get('configuration', {}))
     return result
 
-def fuse(semantic, dimension, *, top_k, query=None, original_query=None, query_analysis=None):
+def fuse(semantic, dimension, *, top_k, query=None, original_query=None, query_analysis=None,
+         semantic_weight=SEMANTIC_WEIGHT, dimension_weight=DIMENSION_WEIGHT,
+         lexical_weight=LEXICAL_WEIGHT):
     snapshot = make_snapshot(semantic, dimension, top_k=top_k, query=query, original_query=original_query, query_analysis=query_analysis)
-    result = score_snapshot(snapshot)
+    result = score_snapshot(snapshot, semantic_weight=semantic_weight,
+                            dimension_weight=dimension_weight, lexical_weight=lexical_weight)
     return restore_payloads(result, snapshot, "dimension_score.py")
 
 

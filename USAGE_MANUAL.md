@@ -217,6 +217,32 @@ cd /home/humq/rag_core_pipeline
 - 每条结果中的 matched_dimensions、matched_labels、dimension_paths 和 score。
 - context_audit：实际传给生成模型的上下文长度。
 
+### 5.1 Python 接口的融合权重
+
+已初始化的 `Retriever` 可以在每次调用 `search()` 时单独设置三个融合权重：
+
+~~~python
+result = retriever.search(
+    "西湖什么时候开放？",
+    top_k=5,
+    semantic_weight=1.0,
+    dimension_weight=0.05,
+    lexical_weight=0.10,
+)
+~~~
+
+当前默认 `dimension_score.py` 策略按以下公式打分：
+
+~~~text
+最终分 = semantic_weight × 语义分
+       + dimension_weight × 归一化维度分
+       + lexical_weight × 归一化词面分
+~~~
+
+三个参数可以分别省略，默认值依次为 `1.0`、`0.05`、`0.10`；显式传入 `0` 可以关闭对应评分项。权重不做总和归一化，只影响本次调用。实际权重记录在返回结果的 `fusion_strategy.configuration` 中。
+
+`QAService.answer()` 和底层 `apply_fusion()` 也接受这三个同名参数。其他融合策略沿用各自原有公式，传入非默认权重时会明确报错。这些参数通过 Python 函数调用传递，可供后续 HTTP 服务封装使用。
+
 ## 6. 离线检索评测
 
 `evaluate` 使用带 Golden 证据的 JSON/JSONL 测试集，分别评估语义、维度和融合三路检索，输出 First Golden Rank、MRR、Hit@K、Golden Recall@K、nDCG、融合救回/伤害和逐问题 badcase。

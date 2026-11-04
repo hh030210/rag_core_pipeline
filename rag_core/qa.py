@@ -60,7 +60,10 @@ class QAService:
             output.append(copied)
         return output
 
-    def answer(self, query: str, *, top_k: int | None = None, context_chars: int = 0) -> Dict[str, Any]:
+    def answer(self, query: str, *, top_k: int | None = None, context_chars: int = 0,
+               semantic_weight: float = 1.0, dimension_weight: float = 0.05,
+               lexical_weight: float = 0.10) -> Dict[str, Any]:
+        """Answer using per-call fusion weights; omitted weights keep current defaults."""
         expansion = self.prompts.expand(query)
         subqueries = expansion.get("sub_queries") or [query]
         retrieval_query = " | ".join(subqueries)
@@ -69,6 +72,9 @@ class QAService:
             top_k=top_k or self.settings.top_k,
             original_query=query,
             subqueries=subqueries,
+            semantic_weight=semantic_weight,
+            dimension_weight=dimension_weight,
+            lexical_weight=lexical_weight,
         )
         chunks = retrieval.get("top_chunks", [])
         context_parts = []
