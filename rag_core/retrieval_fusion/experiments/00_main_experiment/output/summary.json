@@ -1,0 +1,119 @@
+{
+  "metadata": {
+    "created_at_utc": "2026-11-04T03:37:14+00:00",
+    "strategy": "dimension_score.py",
+    "fusion_entrypoint": "rag_core.retrieval_fusion.fusion.apply_fusion",
+    "dataset_path": "/home/humq/rag_core_runs/real_merged7_sdu_v4pro_full_20260921_run1/qa_dataset_435.json",
+    "dataset_questions": 435,
+    "route_snapshot_dir": "/home/humq/rag_core_pipeline/rag_core/retrieval_fusion/experiments/00_method_comparison/output/dimension_score",
+    "route_batch_id": "182f6bb9fe3247189ad1fd9b007aeb46",
+    "route_snapshot_count": 435,
+    "evaluated_answerable_questions": 402,
+    "excluded_no_golden_chunks": 33,
+    "excluded_unmapped_evidence": 0,
+    "gold_document_mapping_fallbacks": 33,
+    "ks": [
+      1,
+      5,
+      10
+    ],
+    "thresholds": {
+      "chunk_recall_micro": 0.9,
+      "doc_recall_micro": 0.9,
+      "accuracy_micro": 0.85
+    },
+    "evaluation_mode": "Offline fusion replay: saved semantic and dimension route candidates were passed through the current fusion.py strategy; vector retrieval was not rerun."
+  },
+  "metrics_by_k": {
+    "1": {
+      "answerable_queries": 402,
+      "hit_at_k": 0.6293532338308457,
+      "gold_recall_at_k_micro": 0.4354561101549053,
+      "gold_recall_at_k_macro": 0.5340796019900497,
+      "chunk_recall_micro": 0.4354561101549053,
+      "chunk_recall_macro": 0.5340796019900497,
+      "precision_at_k": 0.6293532338308457,
+      "mrr_at_k": 0.6293532338308457,
+      "ndcg_at_k": 0.6293532338308457,
+      "mrr": 0.7405536235881791,
+      "miss_rate": 0.029850746268656716,
+      "first_gold_rank_mean_when_found": 2.317948717948718,
+      "chunk_complete_query_rate": 0.4552238805970149,
+      "doc_recall_micro": 0.8259860788863109,
+      "doc_recall_macro": 0.8519900497512438,
+      "doc_complete_query_rate": 0.818407960199005,
+      "accuracy_micro": 0.8855721393034826,
+      "accuracy_macro": 0.8855721393034826,
+      "gold_chunks": 581,
+      "gold_documents": 431,
+      "retrieved_chunks": 402,
+      "same_doc_relevant_chunks": 356,
+      "mean_result_count": 29.616915422885572,
+      "targets_met": {
+        "chunk_recall_micro": false,
+        "doc_recall_micro": false,
+        "accuracy_micro": true
+      }
+    },
+    "5": {
+      "answerable_queries": 402,
+      "hit_at_k": 0.8880597014925373,
+      "gold_recall_at_k_micro": 0.7469879518072289,
+      "gold_recall_at_k_macro": 0.8255389718076286,
+      "chunk_recall_micro": 0.7469879518072289,
+      "chunk_recall_macro": 0.8255389718076286,
+      "precision_at_k": 0.21592039800995025,
+      "mrr_at_k": 0.7308872305140962,
+      "ndcg_at_k": 0.7308840932044534,
+      "mrr": 0.7405536235881791,
+      "miss_rate": 0.029850746268656716,
+      "first_gold_rank_mean_when_found": 2.317948717948718,
+      "chunk_complete_query_rate": 0.7661691542288557,
+      "doc_recall_micro": 0.9698375870069605,
+      "doc_recall_macro": 0.972636815920398,
+      "doc_complete_query_rate": 0.9701492537313433,
+      "accuracy_micro": 0.7446384039900249,
+      "accuracy_macro": 0.744485903814262,
+      "gold_chunks": 581,
+      "gold_documents": 431,
+      "retrieved_chunks": 2005,
+      "same_doc_relevant_chunks": 1493,
+      "mean_result_count": 29.616915422885572,
+      "targets_met": {
+        "chunk_recall_micro": false,
+        "doc_recall_micro": true,
+        "accuracy_micro": false
+      }
+    },
+    "10": {
+      "answerable_queries": 402,
+      "hit_at_k": 0.9527363184079602,
+      "gold_recall_at_k_micro": 0.8537005163511188,
+      "gold_recall_at_k_macro": 0.9048507462686567,
+      "chunk_recall_micro": 0.8537005163511188,
+      "chunk_recall_macro": 0.9048507462686567,
+      "precision_at_k": 0.12338308457711443,
+      "mrr_at_k": 0.7396440416962805,
+      "ndcg_at_k": 0.7614227346378584,
+      "mrr": 0.7405536235881791,
+      "miss_rate": 0.029850746268656716,
+      "first_gold_rank_mean_when_found": 2.317948717948718,
+      "chunk_complete_query_rate": 0.8557213930348259,
+      "doc_recall_micro": 0.988399071925754,
+      "doc_recall_macro": 0.9888059701492538,
+      "doc_complete_query_rate": 0.9875621890547264,
+      "accuracy_micro": 0.6944584382871537,
+      "accuracy_macro": 0.6944888651978204,
+      "gold_chunks": 581,
+      "gold_documents": 431,
+      "retrieved_chunks": 3970,
+      "same_doc_relevant_chunks": 2757,
+      "mean_result_count": 29.616915422885572,
+      "targets_met": {
+        "chunk_recall_micro": false,
+        "doc_recall_micro": true,
+        "accuracy_micro": false
+      }
+    }
+  }
+}
