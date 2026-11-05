@@ -1,118 +1,337 @@
 {
   "metadata": {
-    "created_at_utc": "2026-11-04T03:37:14+00:00",
-    "strategy": "dimension_score.py",
-    "fusion_entrypoint": "rag_core.retrieval_fusion.fusion.apply_fusion",
+    "created_at_utc": "2026-11-04T07:59:45+00:00",
     "dataset_path": "/home/humq/rag_core_runs/real_merged7_sdu_v4pro_full_20260921_run1/qa_dataset_435.json",
-    "dataset_questions": 435,
-    "route_snapshot_dir": "/home/humq/rag_core_pipeline/rag_core/retrieval_fusion/experiments/00_method_comparison/output/dimension_score",
-    "route_batch_id": "182f6bb9fe3247189ad1fd9b007aeb46",
-    "route_snapshot_count": 435,
-    "evaluated_answerable_questions": 402,
+    "source_snapshot_dir": "/home/humq/rag_core_pipeline/rag_core/retrieval_fusion/experiments/00_method_comparison/output/dimension_score",
+    "source_batch_id": "182f6bb9fe3247189ad1fd9b007aeb46",
+    "fusion_strategy": "dimension_score.py",
+    "source_snapshot_count": 435,
+    "evaluated_queries": 402,
     "excluded_no_golden_chunks": 33,
-    "excluded_unmapped_evidence": 0,
-    "gold_document_mapping_fallbacks": 33,
-    "ks": [
+    "excluded_unmapped_golden": 0,
+    "top_k_values": [
       1,
       5,
-      10
+      10,
+      15,
+      20
     ],
+    "route_detail_files": {
+      "vector": "vector_retrieval_details.jsonl",
+      "dimension": "dimension_retrieval_details.jsonl",
+      "hybrid": "hybrid_retrieval_details.jsonl"
+    },
     "thresholds": {
-      "chunk_recall_micro": 0.9,
-      "doc_recall_micro": 0.9,
-      "accuracy_micro": 0.85
+      "recall_at_k_macro": 0.9,
+      "doc_precision_at_k_micro": 0.85
     },
-    "evaluation_mode": "Offline fusion replay: saved semantic and dimension route candidates were passed through the current fusion.py strategy; vector retrieval was not rerun."
+    "doc_precision_denominator": "actual number returned among the first k chunks; routes returning fewer than k candidates use their actual returned count"
   },
-  "metrics_by_k": {
-    "1": {
-      "answerable_queries": 402,
-      "hit_at_k": 0.6293532338308457,
-      "gold_recall_at_k_micro": 0.4354561101549053,
-      "gold_recall_at_k_macro": 0.5340796019900497,
-      "chunk_recall_micro": 0.4354561101549053,
-      "chunk_recall_macro": 0.5340796019900497,
-      "precision_at_k": 0.6293532338308457,
-      "mrr_at_k": 0.6293532338308457,
-      "ndcg_at_k": 0.6293532338308457,
-      "mrr": 0.7405536235881791,
-      "miss_rate": 0.029850746268656716,
-      "first_gold_rank_mean_when_found": 2.317948717948718,
-      "chunk_complete_query_rate": 0.4552238805970149,
-      "doc_recall_micro": 0.8259860788863109,
-      "doc_recall_macro": 0.8519900497512438,
-      "doc_complete_query_rate": 0.818407960199005,
-      "accuracy_micro": 0.8855721393034826,
-      "accuracy_macro": 0.8855721393034826,
-      "gold_chunks": 581,
-      "gold_documents": 431,
-      "retrieved_chunks": 402,
-      "same_doc_relevant_chunks": 356,
-      "mean_result_count": 29.616915422885572,
-      "targets_met": {
-        "chunk_recall_micro": false,
-        "doc_recall_micro": false,
-        "accuracy_micro": true
+  "metrics_by_route": {
+    "vector": {
+      "1": {
+        "eligible_queries": 402,
+        "hit_at_k": 0.5348258706467661,
+        "recall_at_k_macro": 0.4596600331674959,
+        "recall_at_k_micro": 0.37005163511187605,
+        "mrr_at_k": 0.5348258706467661,
+        "ndcg_at_k": 0.5348258706467661,
+        "doc_precision_at_k_micro": 0.8830845771144279,
+        "doc_precision_at_k_macro": 0.8830845771144279,
+        "complete_chunk_query_rate": 0.39800995024875624,
+        "gold_chunks": 581,
+        "gold_documents": 431,
+        "retrieved_chunks": 402,
+        "doc_relevant_chunks": 355,
+        "mean_returned_per_query": 1.0,
+        "targets_met": {
+          "recall_at_k_macro": false,
+          "doc_precision_at_k_micro": true
+        }
+      },
+      "5": {
+        "eligible_queries": 402,
+        "hit_at_k": 0.8432835820895522,
+        "recall_at_k_macro": 0.7736318407960199,
+        "recall_at_k_micro": 0.7056798623063684,
+        "mrr_at_k": 0.6548507462686567,
+        "ndcg_at_k": 0.6645820374665333,
+        "doc_precision_at_k_micro": 0.7511266900350526,
+        "doc_precision_at_k_macro": 0.7518242122719735,
+        "complete_chunk_query_rate": 0.7114427860696517,
+        "gold_chunks": 581,
+        "gold_documents": 431,
+        "retrieved_chunks": 1997,
+        "doc_relevant_chunks": 1500,
+        "mean_returned_per_query": 4.967661691542289,
+        "targets_met": {
+          "recall_at_k_macro": false,
+          "doc_precision_at_k_micro": false
+        }
+      },
+      "10": {
+        "eligible_queries": 402,
+        "hit_at_k": 0.9129353233830846,
+        "recall_at_k_macro": 0.8603233830845771,
+        "recall_at_k_micro": 0.810671256454389,
+        "mrr_at_k": 0.6645502645502646,
+        "ndcg_at_k": 0.697679931686561,
+        "doc_precision_at_k_micro": 0.691992837042722,
+        "doc_precision_at_k_macro": 0.6962656953328595,
+        "complete_chunk_query_rate": 0.8109452736318408,
+        "gold_chunks": 581,
+        "gold_documents": 431,
+        "retrieved_chunks": 3909,
+        "doc_relevant_chunks": 2705,
+        "mean_returned_per_query": 9.723880597014926,
+        "targets_met": {
+          "recall_at_k_macro": false,
+          "doc_precision_at_k_micro": false
+        }
+      },
+      "15": {
+        "eligible_queries": 402,
+        "hit_at_k": 0.945273631840796,
+        "recall_at_k_macro": 0.9022802653399667,
+        "recall_at_k_micro": 0.8588640275387264,
+        "mrr_at_k": 0.6670420927883615,
+        "ndcg_at_k": 0.7102298943522654,
+        "doc_precision_at_k_micro": 0.6520198440822113,
+        "doc_precision_at_k_macro": 0.6566058112699904,
+        "complete_chunk_query_rate": 0.8582089552238806,
+        "gold_chunks": 581,
+        "gold_documents": 431,
+        "retrieved_chunks": 5644,
+        "doc_relevant_chunks": 3680,
+        "mean_returned_per_query": 14.039800995024876,
+        "targets_met": {
+          "recall_at_k_macro": true,
+          "doc_precision_at_k_micro": false
+        }
+      },
+      "20": {
+        "eligible_queries": 402,
+        "hit_at_k": 0.9552238805970149,
+        "recall_at_k_macro": 0.918698175787728,
+        "recall_at_k_micro": 0.8846815834767642,
+        "mrr_at_k": 0.6676202884115526,
+        "ndcg_at_k": 0.7150841943052263,
+        "doc_precision_at_k_micro": 0.6242624838106202,
+        "doc_precision_at_k_macro": 0.6355971955080707,
+        "complete_chunk_query_rate": 0.8756218905472637,
+        "gold_chunks": 581,
+        "gold_documents": 431,
+        "retrieved_chunks": 6949,
+        "doc_relevant_chunks": 4338,
+        "mean_returned_per_query": 17.286069651741293,
+        "targets_met": {
+          "recall_at_k_macro": true,
+          "doc_precision_at_k_micro": false
+        }
       }
     },
-    "5": {
-      "answerable_queries": 402,
-      "hit_at_k": 0.8880597014925373,
-      "gold_recall_at_k_micro": 0.7469879518072289,
-      "gold_recall_at_k_macro": 0.8255389718076286,
-      "chunk_recall_micro": 0.7469879518072289,
-      "chunk_recall_macro": 0.8255389718076286,
-      "precision_at_k": 0.21592039800995025,
-      "mrr_at_k": 0.7308872305140962,
-      "ndcg_at_k": 0.7308840932044534,
-      "mrr": 0.7405536235881791,
-      "miss_rate": 0.029850746268656716,
-      "first_gold_rank_mean_when_found": 2.317948717948718,
-      "chunk_complete_query_rate": 0.7661691542288557,
-      "doc_recall_micro": 0.9698375870069605,
-      "doc_recall_macro": 0.972636815920398,
-      "doc_complete_query_rate": 0.9701492537313433,
-      "accuracy_micro": 0.7446384039900249,
-      "accuracy_macro": 0.744485903814262,
-      "gold_chunks": 581,
-      "gold_documents": 431,
-      "retrieved_chunks": 2005,
-      "same_doc_relevant_chunks": 1493,
-      "mean_result_count": 29.616915422885572,
-      "targets_met": {
-        "chunk_recall_micro": false,
-        "doc_recall_micro": true,
-        "accuracy_micro": false
+    "dimension": {
+      "1": {
+        "eligible_queries": 402,
+        "hit_at_k": 0.2512437810945274,
+        "recall_at_k_macro": 0.21376451077943617,
+        "recall_at_k_micro": 0.1738382099827883,
+        "mrr_at_k": 0.2512437810945274,
+        "ndcg_at_k": 0.2512437810945274,
+        "doc_precision_at_k_micro": 0.7402597402597403,
+        "doc_precision_at_k_macro": 0.7089552238805971,
+        "complete_chunk_query_rate": 0.18407960199004975,
+        "gold_chunks": 581,
+        "gold_documents": 431,
+        "retrieved_chunks": 385,
+        "doc_relevant_chunks": 285,
+        "mean_returned_per_query": 0.9577114427860697,
+        "targets_met": {
+          "recall_at_k_macro": false,
+          "doc_precision_at_k_micro": false
+        }
+      },
+      "5": {
+        "eligible_queries": 402,
+        "hit_at_k": 0.5671641791044776,
+        "recall_at_k_macro": 0.49647595356550583,
+        "recall_at_k_micro": 0.4457831325301205,
+        "mrr_at_k": 0.37147595356550583,
+        "ndcg_at_k": 0.3823224139770024,
+        "doc_precision_at_k_micro": 0.6801853997682503,
+        "doc_precision_at_k_macro": 0.6355306799336651,
+        "complete_chunk_query_rate": 0.43781094527363185,
+        "gold_chunks": 581,
+        "gold_documents": 431,
+        "retrieved_chunks": 1726,
+        "doc_relevant_chunks": 1174,
+        "mean_returned_per_query": 4.293532338308458,
+        "targets_met": {
+          "recall_at_k_macro": false,
+          "doc_precision_at_k_micro": false
+        }
+      },
+      "10": {
+        "eligible_queries": 402,
+        "hit_at_k": 0.6318407960199005,
+        "recall_at_k_macro": 0.5620232172470978,
+        "recall_at_k_micro": 0.5370051635111877,
+        "mrr_at_k": 0.38133242517570876,
+        "ndcg_at_k": 0.40893513644690055,
+        "doc_precision_at_k_micro": 0.6492287055667337,
+        "doc_precision_at_k_macro": 0.6050047382136935,
+        "complete_chunk_query_rate": 0.5,
+        "gold_chunks": 581,
+        "gold_documents": 431,
+        "retrieved_chunks": 2982,
+        "doc_relevant_chunks": 1936,
+        "mean_returned_per_query": 7.417910447761194,
+        "targets_met": {
+          "recall_at_k_macro": false,
+          "doc_precision_at_k_micro": false
+        }
+      },
+      "15": {
+        "eligible_queries": 402,
+        "hit_at_k": 0.654228855721393,
+        "recall_at_k_macro": 0.5918325041459369,
+        "recall_at_k_micro": 0.576592082616179,
+        "mrr_at_k": 0.38311915420124376,
+        "ndcg_at_k": 0.4182517461882544,
+        "doc_precision_at_k_micro": 0.6338383838383839,
+        "doc_precision_at_k_macro": 0.5958684350475395,
+        "complete_chunk_query_rate": 0.5298507462686567,
+        "gold_chunks": 581,
+        "gold_documents": 431,
+        "retrieved_chunks": 3960,
+        "doc_relevant_chunks": 2510,
+        "mean_returned_per_query": 9.850746268656716,
+        "targets_met": {
+          "recall_at_k_macro": false,
+          "doc_precision_at_k_micro": false
+        }
+      },
+      "20": {
+        "eligible_queries": 402,
+        "hit_at_k": 0.6741293532338308,
+        "recall_at_k_macro": 0.6144278606965174,
+        "recall_at_k_micro": 0.6058519793459552,
+        "mrr_at_k": 0.38425530779858214,
+        "ndcg_at_k": 0.42456045558980465,
+        "doc_precision_at_k_micro": 0.621167576648467,
+        "doc_precision_at_k_macro": 0.5909541626701762,
+        "complete_chunk_query_rate": 0.5572139303482587,
+        "gold_chunks": 581,
+        "gold_documents": 431,
+        "retrieved_chunks": 4762,
+        "doc_relevant_chunks": 2958,
+        "mean_returned_per_query": 11.845771144278608,
+        "targets_met": {
+          "recall_at_k_macro": false,
+          "doc_precision_at_k_micro": false
+        }
       }
     },
-    "10": {
-      "answerable_queries": 402,
-      "hit_at_k": 0.9527363184079602,
-      "gold_recall_at_k_micro": 0.8537005163511188,
-      "gold_recall_at_k_macro": 0.9048507462686567,
-      "chunk_recall_micro": 0.8537005163511188,
-      "chunk_recall_macro": 0.9048507462686567,
-      "precision_at_k": 0.12338308457711443,
-      "mrr_at_k": 0.7396440416962805,
-      "ndcg_at_k": 0.7614227346378584,
-      "mrr": 0.7405536235881791,
-      "miss_rate": 0.029850746268656716,
-      "first_gold_rank_mean_when_found": 2.317948717948718,
-      "chunk_complete_query_rate": 0.8557213930348259,
-      "doc_recall_micro": 0.988399071925754,
-      "doc_recall_macro": 0.9888059701492538,
-      "doc_complete_query_rate": 0.9875621890547264,
-      "accuracy_micro": 0.6944584382871537,
-      "accuracy_macro": 0.6944888651978204,
-      "gold_chunks": 581,
-      "gold_documents": 431,
-      "retrieved_chunks": 3970,
-      "same_doc_relevant_chunks": 2757,
-      "mean_result_count": 29.616915422885572,
-      "targets_met": {
-        "chunk_recall_micro": false,
-        "doc_recall_micro": true,
-        "accuracy_micro": false
+    "hybrid": {
+      "1": {
+        "eligible_queries": 402,
+        "hit_at_k": 0.6293532338308457,
+        "recall_at_k_macro": 0.5340796019900497,
+        "recall_at_k_micro": 0.4354561101549053,
+        "mrr_at_k": 0.6293532338308457,
+        "ndcg_at_k": 0.6293532338308457,
+        "doc_precision_at_k_micro": 0.8855721393034826,
+        "doc_precision_at_k_macro": 0.8855721393034826,
+        "complete_chunk_query_rate": 0.4552238805970149,
+        "gold_chunks": 581,
+        "gold_documents": 431,
+        "retrieved_chunks": 402,
+        "doc_relevant_chunks": 356,
+        "mean_returned_per_query": 1.0,
+        "targets_met": {
+          "recall_at_k_macro": false,
+          "doc_precision_at_k_micro": true
+        }
+      },
+      "5": {
+        "eligible_queries": 402,
+        "hit_at_k": 0.8880597014925373,
+        "recall_at_k_macro": 0.8255389718076286,
+        "recall_at_k_micro": 0.7469879518072289,
+        "mrr_at_k": 0.7308872305140962,
+        "ndcg_at_k": 0.7308840932044534,
+        "doc_precision_at_k_micro": 0.7446384039900249,
+        "doc_precision_at_k_macro": 0.744485903814262,
+        "complete_chunk_query_rate": 0.7661691542288557,
+        "gold_chunks": 581,
+        "gold_documents": 431,
+        "retrieved_chunks": 2005,
+        "doc_relevant_chunks": 1493,
+        "mean_returned_per_query": 4.987562189054726,
+        "targets_met": {
+          "recall_at_k_macro": false,
+          "doc_precision_at_k_micro": false
+        }
+      },
+      "10": {
+        "eligible_queries": 402,
+        "hit_at_k": 0.9527363184079602,
+        "recall_at_k_macro": 0.9048507462686567,
+        "recall_at_k_micro": 0.8537005163511188,
+        "mrr_at_k": 0.7396440416962805,
+        "ndcg_at_k": 0.7614227346378584,
+        "doc_precision_at_k_micro": 0.6944584382871537,
+        "doc_precision_at_k_macro": 0.6944888651978204,
+        "complete_chunk_query_rate": 0.8557213930348259,
+        "gold_chunks": 581,
+        "gold_documents": 431,
+        "retrieved_chunks": 3970,
+        "doc_relevant_chunks": 2757,
+        "mean_returned_per_query": 9.875621890547263,
+        "targets_met": {
+          "recall_at_k_macro": true,
+          "doc_precision_at_k_micro": false
+        }
+      },
+      "15": {
+        "eligible_queries": 402,
+        "hit_at_k": 0.9577114427860697,
+        "recall_at_k_macro": 0.9277363184079602,
+        "recall_at_k_micro": 0.8932874354561101,
+        "mrr_at_k": 0.7400478667269712,
+        "ndcg_at_k": 0.7693088205192632,
+        "doc_precision_at_k_micro": 0.6442224900981574,
+        "doc_precision_at_k_macro": 0.6440008788889386,
+        "complete_chunk_query_rate": 0.8880597014925373,
+        "gold_chunks": 581,
+        "gold_documents": 431,
+        "retrieved_chunks": 5807,
+        "doc_relevant_chunks": 3741,
+        "mean_returned_per_query": 14.445273631840797,
+        "targets_met": {
+          "recall_at_k_macro": true,
+          "doc_precision_at_k_micro": false
+        }
+      },
+      "20": {
+        "eligible_queries": 402,
+        "hit_at_k": 0.9601990049751243,
+        "recall_at_k_macro": 0.9388888888888889,
+        "recall_at_k_micro": 0.9156626506024096,
+        "mrr_at_k": 0.7402033393637871,
+        "ndcg_at_k": 0.772920512808576,
+        "doc_precision_at_k_micro": 0.6149177232263285,
+        "doc_precision_at_k_macro": 0.6192369812289755,
+        "complete_chunk_query_rate": 0.9079601990049752,
+        "gold_chunks": 581,
+        "gold_documents": 431,
+        "retrieved_chunks": 7414,
+        "doc_relevant_chunks": 4559,
+        "mean_returned_per_query": 18.442786069651742,
+        "targets_met": {
+          "recall_at_k_macro": true,
+          "doc_precision_at_k_micro": false
+        }
       }
     }
   }

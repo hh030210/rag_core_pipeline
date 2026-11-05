@@ -1,54 +1,58 @@
-# 景区数据集多路检索融合评测
+# 景区数据集三路检索统一评测
 
-- 评测时间：2026-11-04T03:37:14+00:00
-- 融合入口：rag_core.retrieval_fusion.fusion.apply_fusion
-- 当前策略：dimension_score.py
-- 测试集：/home/humq/rag_core_runs/real_merged7_sdu_v4pro_full_20260921_run1/qa_dataset_435.json（435 条）
-- 路由候选来源：/home/humq/rag_core_pipeline/rag_core/retrieval_fusion/experiments/00_method_comparison/output/dimension_score，批次 182f6bb9fe3247189ad1fd9b007aeb46
-- 有效评测问题：402 条；无 golden chunk 排除 33 条；证据映射失败排除 0 条。
-- Golden 文档映射回退次数：33（从 chunk ID 的来源文件前缀推断）。
+- 测试集：/home/humq/rag_core_runs/real_merged7_sdu_v4pro_full_20260921_run1/qa_dataset_435.json（共 435 条）
+- 有效评测问题：402 条；无 golden chunk 排除 33 条；gold 映射失败排除 0 条。
+- 路由候选批次：182f6bb9fe3247189ad1fd9b007aeb46
+- 混合检索策略：dimension_score.py
+- 评测时间：2026-11-04T07:59:45+00:00
 
-## 评测范围
+## 评测范围与数据
 
-程序读取现有景区 QA 测试集对应的语义路由和维度路由候选，并调用当前 fusion.py 的 apply_fusion 重新执行融合排序。该实验评估融合排序本身；没有重新调用向量库、embedding 或 query parser。路由候选批次 ID 保存在 summary.json，便于复现和审计。
+向量检索使用 semantic 路由候选，衡量用户查询语义；维度检索使用 dimension 路由候选，衡量关键信息匹配；混合检索将同一问题的 semantic 和 dimension 候选交给当前 fusion.py 的 apply_fusion 排序。三路候选详情分别保存在 output 下的 JSONL 文件，之后由同一指标脚本统一计算。
 
-Golden chunk 使用路由快照中由 QA source 证据文本映射出的 gold.chunk_ids。Golden 文档优先取候选记录的 source_file；当 golden chunk 没有候选元数据时，从其 chunk ID 的来源文件前缀推断。
+本次使用已保存的景区数据集路由候选回放，未重新调用向量库或 query parser。Golden chunks 取自测试集 source 证据文本的现有映射；golden 文档优先取 source_file，缺失时由 chunk ID 的来源前缀推断。
 
-## 指标口径
+## 指标定义
 
-所有指标只在有 golden chunk 且证据映射成功的问题上计算。k 表示融合排序 Top-k；若实际返回少于 k 条，则准确率分母为实际返回条数。
+所有指标在有 golden chunk 且映射成功的问题上计算。chunk 相关性采用二元判断：chunk_id 属于该题 golden_chunk_ids 即相关。
 
-1. **Hit@k**：每题 Top-k 至少命中一个 golden chunk 的问题比例。
-2. **Gold Recall@k**：每题命中的 golden chunk 数 / golden chunk 总数；报告 micro 汇总值与 macro 逐题平均值。
-3. **Precision@k**：Top-k 中精确命中的 golden chunk 数 / k，保留原有 chunk 级精确率口径。
-4. **MRR@k**：每题首个 golden chunk 排名倒数的平均值；同时保留全融合候选集的 RR、first_gold_rank、miss 和 result_count。
-5. **NDCG@k**：按 golden chunk 二元相关性计算折损累计增益并按理想排序归一化。
-6. **Chunk 完整覆盖率**：Top-k 命中该题全部 golden chunks 的问题数 / 有效问题数，用于检查关键证据是否齐全。
-7. **Doc 召回率**：Top-k 命中的 golden 来源文档数 / golden 来源文档总数；报告 micro、macro 和逐题完整覆盖率。
-8. **同源文档准确率**：Top-k 中属于该题 golden 来源文档的 chunk 数 / Top-k 实际返回 chunk 数；按用户要求，同一 golden 文档中的 chunk 均计为有效。
+1. **Hit@k**：Top-k 中至少命中一个 golden chunk 的问题比例。
+2. **Recall@k**：单题命中 golden chunk 数 / 该题 golden chunk 总数；报告 macro（逐题平均）和 micro（全体 golden chunks 汇总）。
+3. **MRR@k**：每题首个 golden chunk 的倒数排名，再对问题取平均；未命中的题计 0。
+4. **nDCG@k**：按 chunk 二元相关性计算折损累计增益，并用理想排序归一化。
+5. **Doc Precision@k**：Top-k 实际返回 chunk 中，source_file 属于该题 golden 文档的比例；报告 micro 与逐题 macro。若某路返回少于 k 个 chunk，分母使用实际返回数。
 
-验收阈值按汇总 micro 指标判断：Chunk 召回率 ≥ 90%，Doc 召回率 ≥ 90%，准确率 ≥ 85%。逐题完整覆盖率作为额外诊断项展示。
+原目标阈值继续用于诊断：Recall@k macro ≥ 90%，Doc Precision@k micro ≥ 85%。Chunk 完整覆盖率作为补充项，表示 Top-k 命中该题全部 golden chunks 的问题比例。
 
 ## 结果
 
-| K | Hit@k | Gold Recall@k micro / macro | Precision@k | MRR@k | NDCG@k | Chunk 完整覆盖率 | Doc Recall micro | Doc 完整覆盖率 | 同源文档准确率 micro | 阈值结果 |
-|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| 1 | 62.94% | 43.55% / 53.41% | 62.94% | 62.94% | 62.94% | 45.52% | 82.60% | 81.84% | 88.56% | 未全部达标 |
-| 5 | 88.81% | 74.70% / 82.55% | 21.59% | 73.09% | 73.09% | 76.62% | 96.98% | 97.01% | 74.46% | 未全部达标 |
-| 10 | 95.27% | 85.37% / 90.49% | 12.34% | 73.96% | 76.14% | 85.57% | 98.84% | 98.76% | 69.45% | 未全部达标 |
+| 检索方式 | k | Hit@k | Recall@k macro / micro | MRR@k | nDCG@k | Doc Precision@k micro / macro | Chunk 完整覆盖率 | 阈值 |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| 向量检索（用户查询语义） | 1 | 53.48% | 45.97% / 37.01% | 53.48% | 53.48% | 88.31% / 88.31% | 39.80% | 未达标 |
+| 向量检索（用户查询语义） | 5 | 84.33% | 77.36% / 70.57% | 65.49% | 66.46% | 75.11% / 75.18% | 71.14% | 未达标 |
+| 向量检索（用户查询语义） | 10 | 91.29% | 86.03% / 81.07% | 66.46% | 69.77% | 69.20% / 69.63% | 81.09% | 未达标 |
+| 向量检索（用户查询语义） | 15 | 94.53% | 90.23% / 85.89% | 66.70% | 71.02% | 65.20% / 65.66% | 85.82% | 未达标 |
+| 向量检索（用户查询语义） | 20 | 95.52% | 91.87% / 88.47% | 66.76% | 71.51% | 62.43% / 63.56% | 87.56% | 未达标 |
+| 维度检索（关键信息匹配） | 1 | 25.12% | 21.38% / 17.38% | 25.12% | 25.12% | 74.03% / 70.90% | 18.41% | 未达标 |
+| 维度检索（关键信息匹配） | 5 | 56.72% | 49.65% / 44.58% | 37.15% | 38.23% | 68.02% / 63.55% | 43.78% | 未达标 |
+| 维度检索（关键信息匹配） | 10 | 63.18% | 56.20% / 53.70% | 38.13% | 40.89% | 64.92% / 60.50% | 50.00% | 未达标 |
+| 维度检索（关键信息匹配） | 15 | 65.42% | 59.18% / 57.66% | 38.31% | 41.83% | 63.38% / 59.59% | 52.99% | 未达标 |
+| 维度检索（关键信息匹配） | 20 | 67.41% | 61.44% / 60.59% | 38.43% | 42.46% | 62.12% / 59.10% | 55.72% | 未达标 |
+| 混合检索（融合排序） | 1 | 62.94% | 53.41% / 43.55% | 62.94% | 62.94% | 88.56% / 88.56% | 45.52% | 未达标 |
+| 混合检索（融合排序） | 5 | 88.81% | 82.55% / 74.70% | 73.09% | 73.09% | 74.46% / 74.45% | 76.62% | 未达标 |
+| 混合检索（融合排序） | 10 | 95.27% | 90.49% / 85.37% | 73.96% | 76.14% | 69.45% / 69.45% | 85.57% | 未达标 |
+| 混合检索（融合排序） | 15 | 95.77% | 92.77% / 89.33% | 74.00% | 76.93% | 64.42% / 64.40% | 88.81% | 未达标 |
+| 混合检索（融合排序） | 20 | 96.02% | 93.89% / 91.57% | 74.02% | 77.29% | 61.49% / 61.92% | 90.80% | 未达标 |
 
-## 达标结论
+## 文件
 
-Top-10 汇总：Chunk 召回率 85.37%，Doc 召回率 98.84%，准确率 69.45%。
-达到阈值：doc_recall_micro；未达到阈值：chunk_recall_micro, accuracy_micro。
-Top-10 Hit 率为 95.27%；这表示至少命中一块 golden chunk，不表示每题所有证据均齐全。
-Top-10 每题完整召回全部 golden chunks 的比例为 85.57%。
-全候选集 MRR 为 74.06%，miss 率为 2.99%，首个 golden chunk 的平均排名（命中问题）为 2.32，平均候选数为 29.62。
+- vector_retrieval_details.jsonl：向量检索 Top-20 结果及逐 chunk 文档归属、gold 标签。
+- dimension_retrieval_details.jsonl：维度检索 Top-20 结果及逐 chunk 文档归属、gold 标签。
+- hybrid_retrieval_details.jsonl：当前融合策略 Top-20 结果及逐 chunk 文档归属、gold 标签。
+- per_query_metrics.jsonl：三种检索逐题、逐 k 的统一指标。
+- summary.json：汇总数据、数据源批次和阈值判断。
 
-## 结果解释
+复现命令：
 
-Chunk 级指标判断标准证据分块是否进入 Top-k；Doc 级指标判断这些证据所在的来源文档是否被覆盖。准确率依照本实验约定，统计 Top-k 中属于 golden 来源文档的所有 chunk，因此不要求 chunk 本身必须等于 golden chunk。
-
-逐题明细见 per_query.jsonl，汇总指标和阈值布尔值见 summary.json。重跑命令：
-
-    python3 rag_core/retrieval_fusion/experiments/00_main_experiment/code/evaluate_main.py --ks 1,5,10
+    python3 rag_core/retrieval_fusion/experiments/00_main_experiment/code/export_retrieval_details.py
+    python3 rag_core/retrieval_fusion/experiments/00_main_experiment/code/calculate_metrics.py
