@@ -1,6 +1,7 @@
-"""Dimension-score baseline; same scorer used online and in replay."""
+"""Dimension-score baseline for live routes and in-run strategy comparisons."""
 import math,re
 from collections import Counter
+SEMANTIC_WEIGHT=1.0
 DIMENSION_WEIGHT=0.05
 LEXICAL_WEIGHT=0.10
 MISSING_SEMANTIC_PENALTY=0.025
@@ -14,7 +15,8 @@ def grams(text):
     return result
 
 
-def score_snapshot(snapshot):
+def score_snapshot(snapshot, *, semantic_weight=SEMANTIC_WEIGHT,
+                   dimension_weight=DIMENSION_WEIGHT, lexical_weight=LEXICAL_WEIGHT):
     semantic_route = snapshot['semantic_candidates']
     dimension_route = snapshot['dimension_candidates']
     old = {str(item['chunk_id']): item for item in snapshot['fusion_candidates']}
@@ -46,9 +48,9 @@ def score_snapshot(snapshot):
         dimension_norm = float(dim.get('normalized_dimension_score', 0.0))
         lexical_score = raw_lexical / max_lexical if max_lexical else 0.0
         components = {
-            'semantic': effective_semantic,
-            'dimension': DIMENSION_WEIGHT * dimension_norm,
-            'lexical': LEXICAL_WEIGHT * lexical_score,
+            'semantic': semantic_weight * effective_semantic,
+            'dimension': dimension_weight * dimension_norm,
+            'lexical': lexical_weight * lexical_score,
         }
         score = round(sum(components.values()), 10)
         chunk = chunks.get(chunk_id, {})
@@ -76,8 +78,9 @@ def score_snapshot(snapshot):
         'original_query': snapshot.get('original_query'),
         'strategy': 'normalized_dimension_score_blend_v1',
         'configuration': {
-            'dimension_weight': DIMENSION_WEIGHT,
-            'lexical_weight': LEXICAL_WEIGHT,
+            'semantic_weight': semantic_weight,
+            'dimension_weight': dimension_weight,
+            'lexical_weight': lexical_weight,
             'missing_semantic_penalty': MISSING_SEMANTIC_PENALTY,
         },
         'top_k': top_k, 'fusion_candidates': ranked,
@@ -206,91 +209,10 @@ def restore_payloads(result, snapshot, filename):
     result['fusion_strategy'] = dict(name=filename[:-3], file=filename, configuration=result.get('configuration', {}))
     return result
 
-def fuse(semantic, dimension, *, top_k, query=None, original_query=None, query_analysis=None):
+def fuse(semantic, dimension, *, top_k, query=None, original_query=None, query_analysis=None,
+         semantic_weight=SEMANTIC_WEIGHT, dimension_weight=DIMENSION_WEIGHT,
+         lexical_weight=LEXICAL_WEIGHT):
     snapshot = make_snapshot(semantic, dimension, top_k=top_k, query=query, original_query=original_query, query_analysis=query_analysis)
-    result = score_snapshot(snapshot)
+    result = score_snapshot(snapshot, semantic_weight=semantic_weight,
+                            dimension_weight=dimension_weight, lexical_weight=lexical_weight)
     return restore_payloads(result, snapshot, "dimension_score.py")
-
-
-def run_comparison(input_dir, output_dir=None, *, top_k=10):
-    """Replay this method from saved route inputs; atomically replace its flat JSON output."""
-    import copy, json, shutil, tempfile
-    from pathlib import Path
-    from datetime import datetime, timezone
-    from uuid import uuid4
-    source = Path(input_dir).resolve()
-    method = Path(__file__).stem
-    comparison = Path(__file__).resolve().parents[1]
-    target = Path(output_dir or comparison / 'output' / method).absolute()
-    if target.is_symlink():
-        raise ValueError('Output must not be a symlink')
-    manifest = json.loads((source / 'index.json').read_text())
-    rows = []
-    for name, relative in manifest['detail_files'].items():
-        file = (source / relative).resolve()
-        if Path(name).name != name or not file.is_relative_to(source):
-            raise ValueError('Unsafe detail path')
-        detail = json.loads(file.read_text())
-        if detail.get('batch_id') != manifest.get('batch_id'):
-            raise ValueError('Mixed source batches')
-        rows.append((name, detail))
-    target.parent.mkdir(parents=True, exist_ok=True)
-    batch = uuid4().hex
-    index = dict(schema_version=2, batch_id=batch, input_batch_id=manifest['batch_id'],
-                 generated_at=datetime.now(timezone.utc).isoformat(), strategy_file=method+'.py',
-                 source='run_comparison_methods', items=[], detail_files={})
-    mapped = hits5 = 0
-    with tempfile.TemporaryDirectory(prefix='.comparison-', dir=target.parent) as temporary:
-        stage = Path(temporary) / 'current'
-        previous = Path(temporary) / 'previous'
-        stage.mkdir()
-        for name, row in rows:
-            semantic, dimension = copy.deepcopy(row['routes']['semantic']), copy.deepcopy(row['routes']['dimension'])
-            for candidate in semantic + dimension:
-                candidate['chunk_text_full'] = row.get('chunks', {}).get(str(candidate['chunk_id']), {}).get('text', '')
-            result = fuse(semantic, dimension, top_k=top_k,
-                          query=row.get('retrieval_query') or row.get('query', ''),
-                          original_query=row.get('query'), query_analysis=row.get('query_analysis'))
-            result['fusion_strategy']['file'] = method+'.py'
-            candidates = result['fusion_candidates']
-            detail = {**copy.deepcopy(row), **result, 'name':name, 'batch_id':batch, 'strategy_file':method+'.py'}
-            detail['routes'] = {**row['routes'], 'old':adaptive_fusion(copy.deepcopy(semantic), copy.deepcopy(dimension), top_k=top_k)['fusion_candidates']}
-            if method == 'dimension_score': detail['routes']['new'] = candidates
-            if method == 'recommended_fusion': detail['candidates'] = candidates
-            (stage/name).write_text(json.dumps(detail, ensure_ascii=False)+'\n')
-            gold = set(detail['gold']['gold_chunk_ids'])
-            mapped += bool(gold)
-            hits5 += bool(gold & {c['chunk_id'] for c in candidates[:5]})
-            index['items'].append(dict(name=name, query=detail['query'], gold_count=len(gold)))
-            index['detail_files'][name] = name
-        (stage/'index.json').write_text(json.dumps(index, ensure_ascii=False)+'\n')
-        had_previous = target.exists()
-        if had_previous: target.rename(previous)
-        try: stage.rename(target)
-        except BaseException:
-            if had_previous: previous.rename(target)
-            raise
-    print(json.dumps(dict(method=method, queries=len(rows), mapped=mapped, hit5=hits5,
-                          hit5_percent=round(hits5/(mapped or 1)*100, 4), output=str(target)), ensure_ascii=False), flush=True)
-    return index
-
-
-def main(argv=None):
-    import argparse
-    from pathlib import Path
-    from rag_core.retrieval_fusion.fusion import FUSION_STRATEGY
-    comparison = Path(__file__).resolve().parents[1]
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--input-dataset', type=Path, default=comparison/'output'/Path(FUSION_STRATEGY).stem)
-    parser.add_argument('--output-dir', type=Path)
-    parser.add_argument('--top-k', type=int, default=10)
-    args = parser.parse_args(argv)
-    if args.top_k <= 0: parser.error('--top-k must be positive')
-    run_comparison(args.input_dataset, args.output_dir, top_k=args.top_k)
-
-
-if __name__ == '__main__':
-    import sys
-    from pathlib import Path
-    if not __package__: sys.path.insert(0, str(Path(__file__).resolve().parents[5]))
-    main()

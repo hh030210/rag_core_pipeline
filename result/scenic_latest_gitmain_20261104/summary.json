@@ -1,0 +1,77 @@
+{
+  "total": 435,
+  "answerable": 435,
+  "gold_mapped": 402,
+  "badcase_count": 57,
+  "routes": {
+    "semantic": {
+      "first_gold_rank_mean_on_hits": 4.64676617,
+      "miss_count": 33,
+      "mrr@10": 0.61728334,
+      "hit_rate@10": 0.83908046,
+      "gold_recall@10": 0.79122605,
+      "precision@10": 0.10735632,
+      "ndcg@10": 0.64529424,
+      "map@10": 0.58296844
+    },
+    "dimension": {
+      "first_gold_rank_mean_on_hits": 3.26646707,
+      "miss_count": 101,
+      "mrr@10": 0.45881956,
+      "hit_rate@10": 0.71724138,
+      "gold_recall@10": 0.65264368,
+      "precision@10": 0.08827586,
+      "ndcg@10": 0.48716117,
+      "map@10": 0.41597072
+    },
+    "fusion": {
+      "first_gold_rank_mean_on_hits": 3.54726368,
+      "miss_count": 33,
+      "mrr@10": 0.68466612,
+      "hit_rate@10": 0.86896552,
+      "gold_recall@10": 0.82570881,
+      "precision@10": 0.11218391,
+      "ndcg@10": 0.69987467,
+      "map@10": 0.6412387
+    }
+  },
+  "route_class_counts": {
+    "both_hit": 293,
+    "neither_hit": 51,
+    "semantic_only_hit": 72,
+    "dimension_only_hit": 19
+  },
+  "fusion": {
+    "rescue_rate@10": 0.19770115,
+    "harm_rate@10": 0.02528736,
+    "rank_gain_mean": -1.2137931
+  },
+  "config": {
+    "source_commit": "96031c0",
+    "collection": "rag_core_sdu_v4pro_full_20260921_run1",
+    "collection_points": 323,
+    "dataset": "data/merged_7_rag_test_set.json",
+    "raw_records": 436,
+    "blank_queries_excluded": 1,
+    "valid_queries": 435,
+    "gold_mapped": 402,
+    "top_k": 10,
+    "eval_depth": 10,
+    "semantic_pool": 100,
+    "dimension_pool": 20,
+    "query_expansion": false,
+    "query_parser": "fixed/replayed from 2026-10-28 exact per-query analysis; parser code unchanged in source commit",
+    "semantic_strategy": "original_subqueries_centroid_w2.py",
+    "fusion_strategy": "dimension_score.py",
+    "fusion_weights": {
+      "semantic_weight": 1.0,
+      "dimension_weight": 0.05,
+      "lexical_weight": 0.1
+    },
+    "embedding_model": "/home/humq/rag_db_silm/model/bge-m3",
+    "embedding_device": "auto",
+    "map_formula": "mean AP@10; AP denominator=min(number of mapped gold chunks,10); unmapped questions contribute 0",
+    "previous_parser_snapshot": "/home/humq/rag_core_runs/real_merged7_latest_retrieval_20261028/current_results.jsonl",
+    "run_seconds": 252.58
+  }
+}

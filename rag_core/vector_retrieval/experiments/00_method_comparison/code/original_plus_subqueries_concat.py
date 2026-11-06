@@ -41,7 +41,7 @@ class Strategy:
     def __init__(self, retriever):
         self.retriever = retriever
     def query_texts(self, parts, original):
-        return [' | '.join([original,*parts])]
+        return [' | '.join(dict.fromkeys([original, *parts]))]
     def search(self, parts, original, vectors, limit, spot_names):
         text = self.query_texts(parts, original)[0]
         vector = _unit_vector(vectors[text])

@@ -1,6 +1,5 @@
 """Original-query weight 2, subquery weight 1; deduplicate texts before averaging."""
 import math
-import math
 from typing import Any, Dict, List, Sequence
 try:
     import numpy as np
