@@ -23,7 +23,7 @@ from .query_parser import QueryParserV2, _as_list, _clean_terms
 from .schema_v2 import SCHEMA_VERSION, normalize_label, normalize_text
 
 
-QUERY_PARSER_V4_VERSION = "4.4"
+QUERY_PARSER_V4_VERSION = "4.5"
 
 
 # These rules identify the property being asked about. Merely mentioning an
@@ -59,7 +59,7 @@ _STRICT_INTENT_RULES = {
         r"多少年|多久|谁建|谁造|谁修|生前|合葬|历史事件"
     ),
     "cultural_connotation": (
-        r"为什么叫|为何叫|名称由来|名字由来|得名|来历|寓意|象征|文化(?:价值|意义|内涵)|"
+        r"为什么(?:又)?叫|为何(?:又)?叫|名称由来|名字由来|得名|来历|寓意|象征|文化(?:价值|意义|内涵)|"
         r"传说|典故|祭祀|信仰|文物价值"
     ),
     "artistic_feature": (
@@ -73,6 +73,57 @@ _STRICT_INTENT_RULES = {
     "visual_feature": r"形状|色彩|颜色|光影|外观|视觉效果|看起来|像什么|什么样子",
 }
 
+# The strict rules above use the canonical schema's IDs. Collections may have
+# their own IDs (for example ``hist_event`` or ``entity_name``), so resolve a
+# strict intent against the active collection's leaf schema before assigning
+# the main/secondary retrieval route.
+_STRICT_SCHEMA_HINTS = {
+    "historical_event": (
+        "historical_event", "hist_event", "历史事件", "历史故事", "历史沿革",
+    ),
+    "cultural_connotation": (
+        "cultural_connotation", "name_origin", "名称渊源", "名称由来", "名字由来",
+        "命名由来", "名称考释", "文化内涵", "entity_name", "对象名称", "别称",
+    ),
+    "artistic_feature": (
+        "artistic_feature", "artistic_style", "艺术特征", "艺术风格", "艺术特色",
+    ),
+    "landscape_composition": (
+        "landscape_composition", "landscape_element", "landscape_type", "景观组成",
+        "景观构成", "景观要素", "建筑构成",
+    ),
+    "visual_feature": (
+        "visual_feature", "视觉特色", "视觉特征", "外观特征",
+    ),
+    "opening_period": (
+        "opening_period", "开放时段", "开放时间", "营业时间", "开放时间段",
+    ),
+    "visitor_service": (
+        "visitor_service", "service_facility", "service_rule", "游客服务", "服务设施",
+        "游览须知",
+    ),
+    "ticket_type": (
+        "ticket_type", "票价类型", "票务信息", "门票类型",
+    ),
+    "ticket_policy": (
+        "ticket_policy", "ticketing_policy", "购票政策", "票务规则", "预约规则",
+    ),
+    "transportation_mode": (
+        "transportation_mode", "transport_external", "transport_internal", "交通方式",
+        "外部交通", "内部交通",
+    ),
+    "location_hierarchy": (
+        "location_hierarchy", "geo_position", "geographic_location", "相对位置",
+        "位置层级", "地理位置",
+    ),
+    "entity_type": (
+        "entity_type", "landscape_type", "实体类型", "景观类型", "建筑类型",
+    ),
+    "person_role": (
+        "person_role", "entity_role", "hist_figure", "人物身份", "身份角色", "历史人物",
+    ),
+}
+
 
 class QueryParserV4(QueryParserV2):
     """Schema-constrained parser with intent-slot preservation and diagnostics."""
@@ -81,6 +132,7 @@ class QueryParserV4(QueryParserV2):
         super().__init__(*args, **kwargs)
         self._cache_lock = threading.RLock()
         self._cached_error_retry_attempted: set[str] = set()
+        self._cache_write_disabled = False
         self._corpus_induced_schema = (
             self.schema.get("generation_method") == "llm_corpus_induced_strict"
         )
@@ -109,6 +161,45 @@ class QueryParserV4(QueryParserV2):
             if not re.search(r"怎么去|怎么到|如何到达|公交|地铁|自驾|出租车|高铁|火车站|机场", query):
                 selected.pop("transportation_mode", None)
         return selected
+
+    def _resolve_schema_intent(self, intent_id: str) -> str:
+        """Map a canonical intent ID to the closest leaf in this run's schema."""
+        leaves = set(self.maps["leaves"])
+        if intent_id in leaves:
+            return intent_id
+        hints = _STRICT_SCHEMA_HINTS.get(intent_id, (intent_id,))
+        ranked = []
+        for leaf_id in leaves:
+            node = self.maps["nodes"].get(leaf_id, {})
+            name = normalize_text(node.get("name", ""))
+            description = normalize_text(node.get("description", ""))
+            aliases = [normalize_text(value) for value in _as_list(node.get("aliases"))]
+            best = 0
+            for index, hint in enumerate(hints):
+                hint_text = normalize_text(hint)
+                hint_id = normalize_label(hint)
+                leaf_key = normalize_label(leaf_id)
+                name_key = normalize_label(name)
+                alias_keys = {normalize_label(value) for value in aliases}
+                # Exact schema identifiers and node names take precedence over
+                # a loose match in prose. Earlier hints are more specific.
+                preference = max(0, 20 - index)
+                if hint_id and hint_id == leaf_key:
+                    best = max(best, 120 + preference)
+                if hint_text and hint_text == name:
+                    best = max(best, 110 + preference)
+                if hint_id and hint_id in alias_keys:
+                    best = max(best, 100 + preference)
+                if hint_text and (hint_text in name or hint_text in normalize_text(leaf_id)):
+                    best = max(best, 70 + preference)
+                if hint_text and hint_text in description:
+                    best = max(best, 25 + preference)
+            if best:
+                ranked.append((best, str(leaf_id)))
+        if not ranked:
+            return ""
+        ranked.sort(key=lambda item: (-item[0], item[1]))
+        return ranked[0][1]
 
     def _recover_constraints(
         self, query_text: str, llm_constraints: List[Dict[str, Any]]
@@ -147,6 +238,15 @@ class QueryParserV4(QueryParserV2):
 
         by_dimension = {item["dimension_id"]: item for item in broad}
         strict = self._strict_intents(query_text)
+        resolved_strict: Dict[str, List[str]] = {}
+        for intent_id, terms in strict.items():
+            dimension_id = self._resolve_schema_intent(intent_id)
+            if dimension_id:
+                resolved_strict.setdefault(dimension_id, []).extend(terms)
+        strict = {
+            dimension_id: list(dict.fromkeys(terms))
+            for dimension_id, terms in resolved_strict.items()
+        }
         if not strict:
             # Controlled recall fallback: choose exactly one property-bearing
             # dimension. Generic subject dimensions are excluded because a
@@ -262,9 +362,15 @@ class QueryParserV4(QueryParserV2):
             self.cache = {}
 
     def _save_cache(self) -> None:
+        if self._cache_write_disabled:
+            return
         parent = os.path.dirname(self.cache_file)
         if parent:
-            os.makedirs(parent, exist_ok=True)
+            try:
+                os.makedirs(parent, exist_ok=True)
+            except OSError:
+                self._cache_write_disabled = True
+                return
         with self._cache_lock:
             snapshot = dict(self.cache)
             temp_path = ""
@@ -290,9 +396,17 @@ class QueryParserV4(QueryParserV2):
                         indent=2,
                     )
                 os.replace(temp_path, self.cache_file)
+            except OSError:
+                # Query caches are an optimization. Read-only experiment
+                # artifacts must not turn a successful parse into a failed
+                # retrieval request; keep the parsed item in this process.
+                self._cache_write_disabled = True
             finally:
                 if temp_path and os.path.exists(temp_path):
-                    os.unlink(temp_path)
+                    try:
+                        os.unlink(temp_path)
+                    except OSError:
+                        pass
 
     def _allowed_nodes(self) -> Dict[str, Dict[str, Any]]:
         """Only expose indexable leaves to the LLM and exact parser."""
@@ -450,4 +564,6 @@ class QueryParserV4(QueryParserV2):
         with self._cache_lock:
             self.cache[key] = result
             self._save_cache()
+            if self._cache_write_disabled:
+                result["diagnostics"]["cache_persistence"] = "memory_only"
         return result

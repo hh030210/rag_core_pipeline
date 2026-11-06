@@ -7,13 +7,11 @@ import threading
 from pathlib import Path
 from typing import Any, Dict, List
 
+from .collective_qa import CONTEXT_FIRST_SYSTEM_PROMPT, context_first_module
 from .llm import LLMClient
 
 
-DEFAULT_SYSTEM_PROMPT = """你是知识库问答助手。你只能依据给定的检索上下文回答问题。
-请直接给出准确、完整、清晰的答案，保留上下文中的人名、地名、时间和数量。
-如果上下文没有足够证据，请明确说明“文中未说明”，不要使用外部知识或编造信息。
-不要输出思考过程。"""
+DEFAULT_SYSTEM_PROMPT = CONTEXT_FIRST_SYSTEM_PROMPT
 
 
 class PromptOptimizer:
@@ -34,13 +32,7 @@ class PromptOptimizer:
 
     @staticmethod
     def default_module() -> Dict[str, str]:
-        return {
-            "system_prompt": DEFAULT_SYSTEM_PROMPT,
-            "instruction": "先定位问题所需事实，再逐项回答。",
-            "context_strategy": "优先使用与问题实体、属性和时间条件直接相关的片段。",
-            "format_requirement": "使用自然语言回答；问题包含多个要点时分点回答。",
-            "uncertainty_handling": "证据不足时明确指出缺失信息，不补写外部事实。",
-        }
+        return context_first_module()
 
     def load_module(self) -> Dict[str, str]:
         if self.prompt_path.exists():
@@ -90,10 +82,16 @@ class PromptOptimizer:
                 print(f"[提示] 实体提取失败，保留空列表: {exc}")
         with self._cache_lock:
             self.cache[query] = {"sub_queries": sub_queries, "entity_terms": entity_terms}
-            self.run_dir.mkdir(parents=True, exist_ok=True)
-            self.cache_path.write_text(
-                json.dumps(self.cache, ensure_ascii=False, indent=2), encoding="utf-8"
-            )
+            try:
+                self.run_dir.mkdir(parents=True, exist_ok=True)
+                self.cache_path.write_text(
+                    json.dumps(self.cache, ensure_ascii=False, indent=2), encoding="utf-8"
+                )
+            except OSError:
+                # Run artifacts may be mounted read-only by the API service.
+                # Expansion caching is optional; keep the current result in
+                # memory and continue the QA request.
+                pass
         return {"original_query": query, "sub_queries": sub_queries,
                 "entity_terms": entity_terms, "cached": False}
 

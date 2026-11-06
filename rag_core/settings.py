@@ -42,6 +42,7 @@ class Settings:
     semantic_pool: int = 100
     dimension_pool: int = 20
     prompt_iterations: int = 0
+    qa_strategy: str = "collective_context_first"
     cluster_prompt_enabled: bool = False
     cluster_top_k: int = 1
     cluster_count: int = 6
@@ -107,6 +108,7 @@ class Settings:
             "semantic_pool": int(os.getenv("SEMANTIC_POOL", "20")),
             "dimension_pool": int(os.getenv("DIMENSION_POOL", "100")),
             "prompt_iterations": int(os.getenv("PROMPT_ITERATIONS", "0")),
+            "qa_strategy": os.getenv("QA_STRATEGY", "collective_context_first").strip().lower(),
             "cluster_prompt_enabled": _env_bool("CLUSTER_PROMPTS", False),
             "cluster_top_k": int(os.getenv("CLUSTER_TOP_K", "1")),
             "cluster_count": int(os.getenv("CLUSTER_COUNT", "6")),
@@ -138,8 +140,9 @@ class Settings:
     def apply_runtime_environment(self) -> None:
         """让复制进来的 v2 LLM 服务与本项目配置保持一致。"""
         os.environ["LLM_OPENAI_COMPAT"] = "1" if self.llm_openai_compat else "0"
-        if self.llm_api_key:
-            os.environ["LLM_API_KEY"] = self.llm_api_key
+        # Do not copy request-scoped credentials into process-wide environment:
+        # API requests may use different providers/keys concurrently. Callers
+        # pass the key directly to each LLM client/miner.
         os.environ["LLM_BASE_URL"] = self.llm_base_url
         os.environ["LLM_MODEL"] = self.llm_model
         os.environ["LLM_API_INTERVAL"] = str(self.llm_interval)

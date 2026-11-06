@@ -588,7 +588,7 @@ class IntegratedChunker:
         self.denoise_method = getattr(args, "denoise_method", "") or (
             "ppl" if getattr(args, "denoise", True) else "none"
         )
-        if self.denoise_method not in {"none", "ppl", "mechanical"}:
+        if self.denoise_method not in {"none", "ppl", "mechanical", "both"}:
             raise ValueError(f"不支持的去噪方式: {self.denoise_method}")
 
         # 加载推荐配置（用于第三轮分片）
@@ -630,23 +630,23 @@ class IntegratedChunker:
         rec_config_path_str = getattr(self.args, 'recommendation_config', '') or ''
         recommendation_path = Path(rec_config_path_str) if rec_config_path_str else None
 
-        print("[Step 1] 正在拆分子文件并调用大模型获取分片推荐...", file=sys.stderr)
-        subfiles = self._round1_split(text, recommendation_path, base_name)
+        print("[Step 1/3] 正在为整篇文档获取一次动态分片推荐（此阶段不切分）...", file=sys.stderr)
+        documents = self._round1_split(text, recommendation_path, base_name)
 
         all_results = []
-        for i, sub in enumerate(subfiles):
-            print(f"[Step 2 & 3] 正在处理子文件 {i+1}/{len(subfiles)}: {sub['file_name']}", file=sys.stderr)
-            print(f"  分片推荐: l_min={sub['l_min']}, l_max={sub['l_max']} ({sub.get('genre', 'unknown')})", file=sys.stderr)
+        for document in documents:
+            print(f"[Step 2/3] 正在对整篇文档计算 PPL 并在异常边界切分: {document['file_name']}", file=sys.stderr)
+            print(f"  分片推荐: l_min={document['l_min']}, l_max={document['l_max']} ({document.get('genre', 'unknown')})", file=sys.stderr)
 
-            r2_chunks, denoised_text = self._round2_process(sub)
-            sub["denoised_content"] = denoised_text
-            sub["r2_chunks"] = r2_chunks
-            sub["denoise_method"] = self.denoise_method
-            sub["denoise_report"] = getattr(self, "_last_denoise_report", {})
+            r2_chunks, denoised_text = self._round2_process(document)
+            document["denoised_content"] = denoised_text
+            document["r2_chunks"] = r2_chunks
+            document["denoise_method"] = self.denoise_method
+            document["denoise_report"] = getattr(self, "_last_denoise_report", {})
 
-            final_chunks = self._round3_process(sub)
-            sub["chunks"] = final_chunks
-            all_results.append(sub)
+            print("[Step 3/3] 正在按整篇文档的动态推荐统一合并/拆分...", file=sys.stderr)
+            document["chunks"] = self._round3_process(document)
+            all_results.append(document)
 
         self._save_results(all_results, output_dir, base_name)
         return all_results
@@ -691,206 +691,136 @@ class IntegratedChunker:
         print(f"[Done] 目录处理完成: {summary['total_chunks']} 个 chunk", file=sys.stderr)
 
     def _round1_split(self, text: str, recommendation_path: Path = None, file_name: str = "unknown") -> List[Dict]:
-        """第一轮：按结构拆分 + LLM 推荐"""
-        lines = text.splitlines()
-        boundaries = [0]
+        """第一轮只对整篇输入文档做一次动态推荐，不拆分正文。"""
         base_name = file_name or "doc"
-        
-        # 结构边界检测
-        patterns = [
-            re.compile(r"^\s*={3,}.+={0,}\s*$", re.I),  # ===== 标题 =====
-            re.compile(r"^\s*#{1,6}\s+.+$"),            # Markdown 标题
-            re.compile(r"^\s*-{20,}\s*$"),             # --------... 30个分隔线
-            re.compile(r"^\s*-{3}\s*$"),               # --- 分隔线
-        ]
-        
-        for i, line in enumerate(lines):
-            if any(p.match(line) for p in patterns):
-                boundaries.append(i)
-        
-        boundaries.append(len(lines))
-        
-        # 创建子文件并获取 LLM 推荐
-        subfiles = []
-        recommendations = []
-        
-        for i in range(len(boundaries) - 1):
-            content = "\n".join(lines[boundaries[i]:boundaries[i+1]]).strip()
-            if not content:
-                continue
-            
-            doc_id = f"{base_name}_{i:03d}"
-            file_name = f"{base_name}_sub_{i:03d}.txt"
-            
-            # 获取 LLM 推荐
-            sub_data = {
-                "doc_id": doc_id,
-                "file_name": file_name,
-                "source_file": base_name,
-                "file_type": "doc",
-                "content": content,
-            }
-            
-            if self.recommender:
-                rec = self.recommender.get_recommendation(sub_data)
-                sub_data["genre"] = rec.genre
-                sub_data["l_min"] = rec.l_min
-                sub_data["l_max"] = rec.l_max
-                sub_data["word_count"] = rec.word_count
-                sub_data["model_reasoning"] = rec.model_reasoning
-                recommendations.append(rec)
-            else:
-                # 默认值
-                sub_data["genre"] = "doc"
-                sub_data["l_min"] = 400
-                sub_data["l_max"] = 1000
-                sub_data["word_count"] = len(content)
-                sub_data["model_reasoning"] = "默认推荐（未使用 LLM）"
-            
-            subfiles.append(sub_data)
-        
-        # 保存推荐配置（仅当提供了路径时才保存）
-        if recommendation_path and (recommendations or subfiles):
+        document = {
+            "doc_id": base_name,
+            "file_name": base_name,
+            "source_file": base_name,
+            "file_type": "doc",
+            "content": text,
+        }
+        recommendation = None
+        if self.recommender:
+            recommendation = self.recommender.get_recommendation(document)
+            genre = recommendation.genre
+            l_min = recommendation.l_min
+            l_max = recommendation.l_max
+            model_reasoning = recommendation.model_reasoning
+            word_count = recommendation.word_count
+        else:
+            genre = "doc"
+            l_min = 400
+            l_max = 1000
+            model_reasoning = "默认推荐（未使用 LLM）"
+            word_count = len(text)
+
+        document.update({
+            "genre": genre,
+            "l_min": l_min,
+            "l_max": l_max,
+            "word_count": word_count,
+            "model_reasoning": model_reasoning,
+        })
+        if recommendation_path:
             rec_config = ChunkRecommendationConfig(str(recommendation_path))
-            if recommendations:
-                for rec in recommendations:
-                    rec_config.add_recommendation(rec)
-            else:
-                # 保存默认推荐
-                for sub in subfiles:
-                    rec_config.add_recommendation(SubFileRecommendation(
-                        doc_id=sub["doc_id"],
-                        file_name=sub["file_name"],
-                        genre=sub["genre"],
-                        word_count=sub["word_count"],
-                        l_min=sub["l_min"],
-                        l_max=sub["l_max"],
-                        model_reasoning=sub["model_reasoning"]
-                    ))
+            rec_config.load()
+            rec_config.add_recommendation(recommendation or SubFileRecommendation(
+                doc_id=base_name,
+                file_name=base_name,
+                genre=genre,
+                word_count=word_count,
+                l_min=l_min,
+                l_max=l_max,
+                model_reasoning=model_reasoning,
+            ))
             rec_config.save()
-            print(f"[Step 1] 分片推荐配置已保存至: {recommendation_path}", file=sys.stderr)
-        
-        return subfiles
+            print(f"[Step 1/3] 整篇文档推荐配置已保存至: {recommendation_path}", file=sys.stderr)
+        return [document]
 
     def _round2_process(self, sub: Dict) -> Tuple[List[str], str]:
-        """第二轮：按选择的方式去噪，再沿用原 PPL 边界切分。"""
-        sents = self.splitter.split(sub["content"])
+        """第二轮：整篇文档计算 PPL，并只在异常转折处切分，不因 PPL 删除正文。"""
+        original_sents = self.splitter.split(sub["content"])
+        retained_sents = list(original_sents)
         method = self.denoise_method
-        self._last_denoise_report = {
+        report: Dict[str, Any] = {
             "method": method,
             "boundary_splitter": "ppl",
+            "steps": [],
+            "removed": [],
+            "review": [],
         }
 
-        if method == "mechanical":
-            mechanical_result = self.mechanical_denoiser.denoise(sents)
-            denoised = mechanical_result["kept_sentences"]
-            self._last_denoise_report.update(mechanical_result["summary"])
-            self._last_denoise_report["removed"] = mechanical_result["removed"]
-            self._last_denoise_report["review"] = mechanical_result["review"]
-            ppls = [None] * len(denoised)
-        elif method == "ppl":
-            if len(sents) <= 1:
-                self._last_denoise_report.update({
-                    "input_sentence_count": len(sents),
-                    "kept_sentence_count": len(sents),
-                    "removed_sentence_count": 0,
-                    "input_chars": sum(len(s) for s in sents),
-                    "kept_chars": sum(len(s) for s in sents),
-                    "removed_chars": 0,
-                    "removed_char_ratio": 0.0,
-                })
-                return [sub["content"]], sub["content"]
+        # 机械去噪仍是独立可选项；PPL 在本阶段只负责发现切分边界，不删除句子。
+        if method in {"mechanical", "both"}:
+            mechanical_result = self.mechanical_denoiser.denoise(retained_sents)
+            retained_sents = mechanical_result["kept_sentences"]
+            mechanical_summary = mechanical_result["summary"]
+            report["steps"].append({"method": "mechanical", **mechanical_summary})
+            report["removed"].extend(
+                {**item, "method": "mechanical"}
+                for item in mechanical_result["removed"]
+            )
+            report["review"].extend(mechanical_result["review"])
+            report["review_sentence_count"] = mechanical_summary.get("review_sentence_count", 0)
 
-            # 计算 PPL 并去噪
-            ppls = [None] + [self.ppl_scorer.score("".join(sents[max(0, i-self.window_w):i]), sents[i]) for i in range(1, len(sents))]
-            # 确保所有 PPL 值都是纯 Python float
-            ppls = [float(p) if p is not None else None for p in ppls]
-            valid_ppls = [float(p) for p in ppls if p is not None]
-
-            # 手动计算标准差（避免 statistics.pstdev 的类型问题）
-            def calc_mean_std(values):
-                if not values:
-                    return 100.0
-                n = len(values)
-                mean = sum(values) / n
-                if n == 1:
-                    return mean
-                variance = sum((x - mean) ** 2 for x in values) / n
-                std = variance ** 0.5
-                return mean, std
-
-            if len(valid_ppls) > 1:
-                mean, std = calc_mean_std(valid_ppls)
-                t1 = mean + 3 * std
-            else:
-                t1 = valid_ppls[0] if valid_ppls else 100.0
-
-            denoised = [s for i, s in enumerate(sents) if ppls[i] is None or ppls[i] <= t1]
-            if not denoised:
-                denoised = sents
-            removed = [s for i, s in enumerate(sents) if ppls[i] is not None and ppls[i] > t1]
-            self._last_denoise_report.update({
-                "input_sentence_count": len(sents),
-                "kept_sentence_count": len(denoised),
-                "removed_sentence_count": len(removed),
-                "input_chars": sum(len(s) for s in sents),
-                "kept_chars": sum(len(s) for s in denoised),
-                "removed_chars": sum(len(s) for s in removed),
-                "removed_char_ratio": round(sum(len(s) for s in removed) / max(sum(len(s) for s in sents), 1), 6),
-            })
+        scores: List[Optional[float]] = [None]
+        scores.extend(
+            float(self.ppl_scorer.score(
+                "".join(retained_sents[max(0, i - self.window_w):i]), retained_sents[i]
+            ))
+            for i in range(1, len(retained_sents))
+        )
+        valid_scores = [score for score in scores if score is not None]
+        if len(valid_scores) > 1:
+            mean = sum(valid_scores) / len(valid_scores)
+            variance = sum((score - mean) ** 2 for score in valid_scores) / len(valid_scores)
+            threshold = mean + variance ** 0.5
+        elif valid_scores:
+            threshold = valid_scores[0]
         else:
-            denoised = sents
-            ppls = [None] * len(sents)
-            self._last_denoise_report.update({
-                "input_sentence_count": len(sents),
-                "kept_sentence_count": len(sents),
-                "removed_sentence_count": 0,
-                "input_chars": sum(len(s) for s in sents),
-                "kept_chars": sum(len(s) for s in sents),
-                "removed_chars": 0,
-                "removed_char_ratio": 0.0,
-            })
+            threshold = None
 
-        if len(denoised) <= 1:
-            return ["".join(denoised)], "".join(denoised)
+        boundaries = [
+            index for index, score in enumerate(scores)
+            if index > 0 and score is not None and threshold is not None and score > threshold
+        ]
+        chunks: List[str] = []
+        start = 0
+        for boundary in boundaries:
+            chunks.append("".join(retained_sents[start:boundary]))
+            start = boundary
+        if start < len(retained_sents):
+            chunks.append("".join(retained_sents[start:]))
 
-        # 计算 PPL 寻找切分点
-        ppls2 = [None] + [self.ppl_scorer.score("".join(denoised[max(0, i-self.window_w):i]), denoised[i]) for i in range(1, len(denoised))]
-        ppls2 = [float(p) if p is not None else None for p in ppls2]
-        valid_ppls2 = [float(p) for p in ppls2 if p is not None]
-
-        def calc_mean_std(values):
-            if not values:
-                return 100.0
-            n = len(values)
-            mean = sum(values) / n
-            if n == 1:
-                return mean
-            variance = sum((x - mean) ** 2 for x in values) / n
-            std = variance ** 0.5
-            return mean, std
-
-        if len(valid_ppls2) > 1:
-            mean2, std2 = calc_mean_std(valid_ppls2)
-            t2 = mean2 + std2
-        else:
-            t2 = valid_ppls2[0] if valid_ppls2 else 100.0
-
-        chunks = []
-        curr = []
-        for i, s in enumerate(denoised):
-            if i > 0 and ppls2[i] is not None and ppls2[i] > t2:
-                chunks.append("".join(curr))
-                curr = [s]
-            else:
-                curr.append(s)
-        if curr:
-            chunks.append("".join(curr))
-
-        return chunks, "".join(denoised)
+        original_chars = sum(map(len, original_sents))
+        retained_chars = sum(map(len, retained_sents))
+        report["steps"].append({
+            "method": "ppl_boundary_split",
+            "input_sentence_count": len(retained_sents),
+            "scored_boundary_count": len(valid_scores),
+            "boundary_count": len(boundaries),
+            "boundary_sentence_indices": boundaries,
+            "threshold": threshold,
+            "input_chars": retained_chars,
+            "kept_chars": retained_chars,
+            "removed_sentence_count": 0,
+            "removed_chars": 0,
+        })
+        report.update({
+            "input_sentence_count": len(original_sents),
+            "kept_sentence_count": len(retained_sents),
+            "removed_sentence_count": len(original_sents) - len(retained_sents),
+            "input_chars": original_chars,
+            "kept_chars": retained_chars,
+            "removed_chars": max(0, original_chars - retained_chars),
+            "removed_char_ratio": round(max(0, original_chars - retained_chars) / max(original_chars, 1), 6),
+        })
+        self._last_denoise_report = report
+        return chunks, "".join(retained_sents)
 
     def _round3_process(self, sub: Dict) -> List[Dict]:
-        """第三轮：策略优化与融合（使用推荐配置中的 l_min/l_max）"""
+        """第三轮：整篇文档范围内按推荐长度合并 PPL 片段，并拆分超长句/片段。"""
         doc_id = sub.get("doc_id", "")
 
         # 从推荐配置读取 l_min/l_max
@@ -904,62 +834,72 @@ class IntegratedChunker:
                 l_min = config_rec.l_min
                 l_max = config_rec.l_max
 
-        # 获取第二轮的 chunks
-        r2_chunks = sub.get("r2_chunks", [])
+        # 对显式传入的空列表保持为空，避免把已去噪为空的正文静默恢复。
+        if "r2_chunks" in sub:
+            r2_chunks = sub.get("r2_chunks") or []
+        else:
+            r2_chunks = [c["chunk_text"] for c in sub.get("chunks", [])] if sub.get("chunks") else [sub.get("content", "")]
         if not r2_chunks:
-            r2_chunks = [c["chunk_text"] for c in sub.get("chunks", [])] if sub.get("chunks") else [sub["content"]]
+            return []
 
-        blocks = [ChunkBlock(
-            text=c,
-            source_doc_id=doc_id,
-            genre=sub.get("genre", "doc"),
-            l_min=l_min,
-            l_max=l_max
-        ) for c in r2_chunks]
-        
-        # 处理超大分片 (使用 Strategy 2: 贪心 IG 融合)
-        processed = []
-        for b in blocks:
-            if b.length <= b.l_max:
-                processed.append(b)
-            else:
-                units = [ChunkBlock(
-                    text=s,
-                    source_doc_id=b.source_doc_id,
-                    genre=b.genre,
-                    l_min=b.l_min,
-                    l_max=b.l_max
-                ) for s in self.splitter.split(b.text)]
-                
-                # 贪心合并
-                while len(units) > 1:
-                    best_ig = -1
-                    best_i = -1
-                    for i in range(len(units) - 1):
-                        if units[i].length + units[i+1].length <= b.l_max:
-                            ig = self.ig_calc.ig(units[i], units[i+1])
-                            if ig > best_ig:
-                                best_ig = ig
-                                best_i = i
-                    if best_i == -1:
-                        break
-                    units[best_i].text += units[best_i+1].text
-                    units.pop(best_i + 1)
-                
-                processed.extend(units)
+        l_min = max(1, int(l_min))
+        l_max = max(l_min, int(l_max))
+        target = (l_min + l_max) // 2
 
-        # 处理过小分片融合
-        final = []
-        for b in processed:
-            if not final or b.length >= b.l_min * self.beta_small:
-                final.append(b)
-            else:
-                if final[-1].length + b.length <= b.l_max * self.beta:
-                    final[-1].text += b.text
+        # 展开为句子级原子单元，以便在整篇文档范围内跨 PPL 边界合并。
+        units: List[str] = []
+        for block_text in r2_chunks:
+            sentences = self.splitter.split(str(block_text))
+            for sentence in sentences:
+                if len(sentence) <= l_max:
+                    units.append(sentence)
                 else:
-                    final.append(b)
-        
-        return [{"chunk_text": b.text, "chunk_len": b.length} for b in final]
+                    # 单句超过上限时才做硬切，避免最终 chunk 超出推荐 l_max。
+                    piece_count = (len(sentence) + l_max - 1) // l_max
+                    piece_size = (len(sentence) + piece_count - 1) // piece_count
+                    units.extend(
+                        sentence[offset:offset + piece_size]
+                        for offset in range(0, len(sentence), piece_size)
+                    )
+
+        if not units:
+            return []
+
+        packed: List[List[str]] = []
+        current: List[str] = []
+        current_len = 0
+        for unit in units:
+            unit_len = len(unit)
+            would_exceed_max = current and current_len + unit_len > l_max
+            would_pass_target = current and current_len >= l_min and current_len + unit_len > target
+            if would_exceed_max or would_pass_target:
+                packed.append(current)
+                current = []
+                current_len = 0
+            current.append(unit)
+            current_len += unit_len
+        if current:
+            # 尾部不足 l_min 时，优先和前块合并；若超出 l_max，则从前块末尾
+            # 挪动完整句子，尽量让尾块达到推荐下限且不压低前块到 l_min 以下。
+            if packed and current_len < l_min and sum(map(len, packed[-1])) + current_len <= l_max:
+                packed[-1].extend(current)
+            elif packed and current_len < l_min:
+                previous = packed[-1]
+                while previous and current_len < l_min:
+                    candidate = previous[-1]
+                    if sum(map(len, previous[:-1])) < l_min or current_len + len(candidate) > l_max:
+                        break
+                    previous.pop()
+                    current.insert(0, candidate)
+                    current_len += len(candidate)
+                packed.append(current)
+            else:
+                packed.append(current)
+
+        return [
+            {"chunk_text": "".join(parts), "chunk_len": sum(map(len, parts))}
+            for parts in packed if parts
+        ]
 
     def _save_results(self, results: List[Dict], output_dir: Path, base_name: str):
         """保存结果"""
@@ -1017,9 +957,9 @@ def main():
     parser.add_argument("--recommendation_config", default="", help="分片推荐配置文件路径")
     parser.add_argument(
         "--denoise-method",
-        choices=["none", "ppl", "mechanical"],
+        choices=["none", "ppl", "mechanical", "both"],
         default="",
-        help="第二阶段去噪方式：none、ppl（旧方案）或 mechanical（新增机械规则方案）",
+        help="第二阶段去噪方式：none、ppl、mechanical 或 both（先机械去噪，再 PPL 去噪）",
     )
     parser.add_argument("--denoise", action="store_true", default=True, help="兼容旧参数：启用 PPL 去噪")
     parser.add_argument("--no-denoise", dest="denoise", action="store_false", help="禁用 PPL 去噪")

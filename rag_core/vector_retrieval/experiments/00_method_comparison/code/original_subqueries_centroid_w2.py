@@ -24,16 +24,23 @@ def _matches_spot(payload: Dict[str, Any], spot_names: Sequence[str]) -> bool:
             str(payload.get('source_file', '')).split('-', 1)[0].strip() in allowed)
 
 def _search_store(retriever, vector, limit, spot_names):
+    # spot_names is applied after vector search because source_file matching is
+    # a prefix check. Fetch extra rows first so this post-filter does not leave
+    # a requested Top-K short when enough matching chunks exist just below the
+    # initial nearest-neighbor window.
+    fetch_limit = max(limit, limit * 5) if spot_names else limit
     if retriever.vector_name == 'chunk_text_vec':
-        hits = retriever.vector_store.semantic_search(vector, limit)
+        hits = retriever.vector_store.semantic_search(vector, fetch_limit)
     else:
-        hits = retriever.vector_store.semantic_search(vector, limit, vector_name=retriever.vector_name)
+        hits = retriever.vector_store.semantic_search(vector, fetch_limit, vector_name=retriever.vector_name)
     results = []
     for hit in hits:
         payload = hit.get('payload', {})
         if _matches_spot(payload, spot_names):
             results.append({'chunk_id': payload.get('chunk_id', hit['id']),
                             'score': hit['score'], 'source': 'semantic', **payload})
+            if len(results) >= limit:
+                break
     for rank, item in enumerate(results, 1):
         item['rank'] = rank
     return results

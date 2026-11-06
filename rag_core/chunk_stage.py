@@ -72,8 +72,12 @@ def run_chunking(input_path: str | Path, output_dir: str | Path, settings) -> Di
         "min_length": min(lengths),
         "max_length": max(lengths),
         "average_length": round(sum(lengths) / len(lengths), 3),
-        "shorter_than_l_min": sum(length < settings.l_min for length in lengths),
-        "longer_than_l_max": sum(length > settings.l_max for length in lengths),
+        "shorter_than_l_min": sum(
+            item["chunk_len"] < int(item.get("l_min", settings.l_min)) for item in records
+        ),
+        "longer_than_l_max": sum(
+            item["chunk_len"] > int(item.get("l_max", settings.l_max)) for item in records
+        ),
         "denoise_method": settings.denoise_method,
         "source_artifact": str(aggregate),
     }

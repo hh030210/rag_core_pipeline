@@ -78,7 +78,9 @@ def dataset_schema_fingerprint(records) -> str:
     return digest.hexdigest()
 
 
-def induce_dataset_schema(records, settings) -> Dict[str, Any]:
+def induce_dataset_schema(
+    records, settings, parent_dimension_count: int | None = None
+) -> Dict[str, Any]:
     """Create a strict, fresh schema from this dataset's chunks only."""
     records = list(records or [])
     if not records:
@@ -96,9 +98,14 @@ def induce_dataset_schema(records, settings) -> Dict[str, Any]:
     schema = miner.generate_candidate_schema(
         [str(item.get("doc_text", item.get("chunk_text_full", ""))) for item in records],
         allow_fallback=False,
+        parent_dimension_count=parent_dimension_count,
     )
     schema = load_schema(schema, allow_legacy=False, strict=True)
     parents = [node for node in schema.get("dimensions", []) if node.get("level") == 1]
+    if parent_dimension_count is not None and len(parents) != parent_dimension_count:
+        raise ValueError(
+            f"语料归纳 schema 应包含恰好 {parent_dimension_count} 个一级维度，当前 {len(parents)} 个"
+        )
     if not 5 <= len(parents) <= 8:
         raise ValueError(f"语料归纳 schema 一级维度应为 5–8 个，当前 {len(parents)} 个")
     child_counts = {
@@ -126,6 +133,7 @@ def run_dimensions(
     *,
     strict_dataset_schema: bool = False,
     resume_tags: bool = False,
+    parent_dimension_count: int | None = None,
 ) -> Dict[str, Any]:
     """运行原始 code_jyx v2 Schema、叶子标签和倒排索引流程。"""
     settings.ensure_dirs()
@@ -151,6 +159,12 @@ def run_dimensions(
                     "严格模式拒绝此 schema：它不是由当前这批 records 新归纳生成的，"
                     "或其数据集指纹不匹配"
                 )
+            if parent_dimension_count is not None:
+                parent_count = sum(node.get("level") == 1 for node in schema.get("dimensions", []))
+                if parent_count != parent_dimension_count:
+                    raise ValueError(
+                        f"严格模式要求 {parent_dimension_count} 个一级维度，schema 实际有 {parent_count} 个"
+                    )
             generation_method = "llm_corpus_induced_strict"
         else:
             generation_method = "provided_schema"
@@ -159,7 +173,7 @@ def run_dimensions(
         generation_method = "code_jyx_mock_schema"
     else:
         if strict_dataset_schema:
-            schema = induce_dataset_schema(records, settings)
+            schema = induce_dataset_schema(records, settings, parent_dimension_count)
             generation_method = "llm_corpus_induced_strict"
         else:
             from code_jyx.llm_service import DimensionMiningWithQwen

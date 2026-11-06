@@ -63,6 +63,10 @@ def _result_row(record: Dict[str, Any], result: Dict[str, Any], index: int) -> D
         "context_stats": result.get("context_stats", {}),
         "prompt": result.get("prompt", {}),
         "prompt_mode": result.get("prompt_mode", "global"),
+        "qa_strategy": result.get("qa_strategy", ""),
+        "qa_cluster_id": result.get("qa_cluster_id"),
+        "qa_cluster_score": result.get("qa_cluster_score"),
+        "qa_profile_id": result.get("qa_profile_id", ""),
         "prompt_modules_used": result.get("prompt_modules_used", []),
         "cluster_routing": result.get("cluster_routing", {}),
     }

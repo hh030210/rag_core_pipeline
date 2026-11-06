@@ -192,26 +192,43 @@ class Retriever:
         vector_cache_meta_path = self.run_dir / "dimension_tag_evidence_vectors_v2.json"
         matrix = None
         cache_loaded = False
+        cache_metadata = None
         if np is not None and vector_cache_path.exists() and vector_cache_meta_path.exists():
             try:
-                metadata = json.loads(vector_cache_meta_path.read_text(encoding="utf-8"))
-                if metadata.get("signature") == cache_signature and metadata.get("count") == len(tag_vector_keys):
+                cache_metadata = json.loads(vector_cache_meta_path.read_text(encoding="utf-8"))
+                if (cache_metadata.get("signature") == cache_signature
+                        and cache_metadata.get("count") == len(tag_vector_keys)):
                     matrix = np.load(vector_cache_path, mmap_mode="r")
                     if matrix.ndim != 2 or matrix.shape[0] != len(tag_vector_keys):
                         matrix = None
             except Exception as exc:
                 print(f"[维度检索] 标签向量缓存不可复用，将重新编码: {exc}", flush=True)
                 matrix = None
+        if (np is not None and matrix is None and tag_vector_keys
+                and (vector_cache_path.exists() or vector_cache_meta_path.exists())):
+            cached_count = cache_metadata.get("count", "未知") if cache_metadata else "未知"
+            print(
+                f"[维度检索] 标签向量缓存未命中（缓存条数={cached_count}，当前需要={len(tag_vector_keys)}），将重建",
+                flush=True,
+            )
         if matrix is not None:
             cache_loaded = True
             self.tag_vector_cache = {key: matrix[index] for index, key in enumerate(tag_vector_keys)}
             print(f"[维度检索] 复用标签向量缓存 {len(tag_vector_keys)}/{len(tag_vector_keys)}", flush=True)
         try:
-            cache_batch_size = max(1, int(os.getenv("TAG_VECTOR_CACHE_BATCH_SIZE", "4096")))
+            cache_batch_size = max(1, int(os.getenv("TAG_VECTOR_CACHE_BATCH_SIZE", "256")))
         except ValueError:
-            cache_batch_size = 4096
+            cache_batch_size = 256
+        if not cache_loaded and tag_vector_keys:
+            print(
+                f"[维度检索] 开始生成 {len(tag_vector_keys)} 条标签向量，设备="
+                f"{getattr(self.embeddings, 'resolved_device', getattr(self.embeddings, 'device', '未知'))}，"
+                f"缓存批次={cache_batch_size}",
+                flush=True,
+            )
         for start in range(0, len(tag_vector_keys) if not cache_loaded else 0, cache_batch_size):
             end = min(start + cache_batch_size, len(tag_vector_keys))
+            print(f"[维度检索] 正在编码标签向量 {start + 1}-{end}/{len(tag_vector_keys)}", flush=True)
             encode_compact = getattr(self.embeddings, "encode_compact", self.embeddings.encode)
             vectors = encode_compact(tag_vector_texts[start:end])
             if np is not None and vectors is not None and len(vectors) > 0:
@@ -223,8 +240,7 @@ class Retriever:
             else:
                 for key, vector in zip(tag_vector_keys[start:end], vectors):
                     self.tag_vector_cache[key] = _unit_vector(vector)
-            if end == len(tag_vector_keys) or end % (cache_batch_size * 4) == 0:
-                print(f"[维度检索] 标签向量缓存 {end}/{len(tag_vector_keys)}", flush=True)
+            print(f"[维度检索] 已编码标签向量 {end}/{len(tag_vector_keys)}", flush=True)
         if np is not None and not cache_loaded and tag_vector_keys:
             try:
                 matrix = np.stack([self.tag_vector_cache[key] for key in tag_vector_keys]).astype(
@@ -300,6 +316,27 @@ class Retriever:
             except Exception as exc:
                 parser_diagnostics = {"error": f"{type(exc).__name__}: {exc}"}
                 print(f"[提示] 原始 code_jyx 查询解析失败，使用确定性解析: {exc}")
+                try:
+                    fallback_constraints = self.query_parser._recover_constraints(query, [])
+                    for item in fallback_constraints:
+                        leaf_id = str(item.get("dimension_id", ""))
+                        if leaf_id not in self.maps["leaves"]:
+                            continue
+                        constraints[leaf_id] = {
+                            "labels": list(item.get("labels", []) or []),
+                            "intent_terms": list(item.get("intent_terms", []) or []),
+                            "match": item.get("match", "ANY"),
+                            "role": item.get("role", "auxiliary"),
+                        }
+                    parser_diagnostics.update({
+                        "parser_mode": "deterministic_recovery",
+                        "llm_attempts": 0,
+                        "recovered_constraint_count": len(constraints),
+                    })
+                except Exception as fallback_exc:
+                    parser_diagnostics["recovery_error"] = (
+                        f"{type(fallback_exc).__name__}: {fallback_exc}"
+                    )
 
         # 查询父维度时展开所有叶子，但在打分时按父维度取最大值，避免子节点数量带来额外分数。
         for parent_id, children in self.maps["children"].items():

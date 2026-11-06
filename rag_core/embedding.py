@@ -16,8 +16,20 @@ class EmbeddingModel:
         self.dimension = int(dimension)
         self.mock = mock
         self._model = None
+        self.resolved_device = "cpu" if mock else self._resolve_device(device)
         if not mock:
             self._load()
+
+    @staticmethod
+    def _resolve_device(device: str) -> str:
+        """Resolve ``auto`` to CUDA when available instead of forcing CPU."""
+        if device and device != "auto":
+            return device
+        try:
+            import torch
+        except ImportError:
+            return "cpu"
+        return "cuda" if torch.cuda.is_available() else "cpu"
 
     def _load(self) -> None:
         candidates = [self.model_path]
@@ -26,20 +38,22 @@ class EmbeddingModel:
         resolved = next((p for p in candidates if p and os.path.exists(p)), None)
         if not resolved:
             raise FileNotFoundError("未找到 BGE 模型，请设置 BGE_MODEL_PATH；本地测试请使用 --mock")
+        target_device = self.resolved_device
+        print(f"[向量模型] 加载 BGE-M3，设备={target_device}", flush=True)
         try:
             from FlagEmbedding import BGEM3FlagModel
-            target_device = "cpu" if self.device in {"cpu", "auto"} else self.device
             self._model = BGEM3FlagModel(resolved, use_fp16=False, device=target_device)
             self._mode = "flag"
+            print("[向量模型] 编码后端=FlagEmbedding", flush=True)
             return
         except ImportError:
             pass
         except Exception as exc:
             print(f"[提示] FlagEmbedding 加载失败，尝试 SentenceTransformer: {exc}")
         from sentence_transformers import SentenceTransformer
-        target_device = "cpu" if self.device in {"cpu", "auto"} else self.device
         self._model = SentenceTransformer(resolved, device=target_device, local_files_only=True)
         self._mode = "sentence_transformers"
+        print("[向量模型] 编码后端=SentenceTransformer", flush=True)
 
     def _hash_vector(self, text: str) -> List[float]:
         values = []
@@ -57,7 +71,8 @@ class EmbeddingModel:
         if not items:
             return []
         try:
-            batch_size = max(1, int(os.getenv("EMBEDDING_BATCH_SIZE", "8")))
+            default_batch = "16" if self.resolved_device.startswith("cuda") else "8"
+            batch_size = max(1, int(os.getenv("EMBEDDING_BATCH_SIZE", default_batch)))
         except ValueError:
             batch_size = 8
         if self._mode == "flag":
@@ -84,7 +99,8 @@ class EmbeddingModel:
         if not items:
             return np.empty((0, self.dimension), dtype=np.float32)
         try:
-            batch_size = max(1, int(os.getenv("EMBEDDING_BATCH_SIZE", "8")))
+            default_batch = "16" if self.resolved_device.startswith("cuda") else "8"
+            batch_size = max(1, int(os.getenv("EMBEDDING_BATCH_SIZE", default_batch)))
         except ValueError:
             batch_size = 8
         if self._mode == "flag":

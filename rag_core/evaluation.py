@@ -643,6 +643,7 @@ def run_evaluation(
     result_text_chars: int = 800,
     query_expansion: bool = True,
     query_parser_mode: str = "deterministic",
+    experiments_dir: str | Path | None = None,
 ) -> Dict[str, Any]:
     run_dir = Path(run_dir)
     output_dir = Path(output_dir)
@@ -726,7 +727,9 @@ def run_evaluation(
         "query_parser_mode": query_parser_mode,
         "query_parser_model": settings.llm_model if query_parser_mode == "llm" else "",
     }
-    fusion_output = _publish_fusion_evaluation(rows, config, summary, chunks)
+    fusion_output = _publish_fusion_evaluation(
+        rows, config, summary, chunks, experiments_dir=experiments_dir
+    )
     return {
         "fusion_output": str(fusion_output),
         "dataset_path": str(fusion_output),

@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import textwrap
 from pathlib import Path
 
 from .evaluation import compare_evaluations, run_evaluation
@@ -41,7 +42,7 @@ def build_parser() -> argparse.ArgumentParser:
         _common(item)
         item.add_argument("--input", required=True)
         item.add_argument("--schema", default="", help="可选 v2 Schema JSON")
-        item.add_argument("--denoise-method", choices=("none", "ppl", "mechanical"), default="mechanical")
+        item.add_argument("--denoise-method", choices=("none", "ppl", "mechanical", "both"), default="mechanical")
         item.add_argument("--prompt-examples", default="", help="可选问答样本 JSON，用于 Prompt 迭代")
         item.add_argument("--prompt-iterations", type=int, default=3)
         item.add_argument("--cluster-examples", default="",
@@ -53,7 +54,11 @@ def build_parser() -> argparse.ArgumentParser:
             item.add_argument("--top-k", type=int, default=5)
     ask = sub.add_parser("ask", help="对已有运行目录检索并生成答案")
     _common(ask)
-    ask.add_argument("--query", required=True)
+    ask.add_argument("--query", default="", help="单条问题；与 --interactive 同用时作为首个问题")
+    ask.add_argument("--interactive", action="store_true",
+                     help="持续交互问答；输入 q、quit 或 exit 退出")
+    ask.add_argument("--full-json", action="store_true",
+                     help="交互模式也打印完整 JSON（包含所有候选和调试字段）")
     ask.add_argument("--top-k", type=int, default=5)
     ask.add_argument("--context-chars", type=int, default=0, help="每个 chunk 上限；0 表示传入完整 chunk")
     batch = sub.add_parser("batch-ask", help="对问答数据集批量生成答案并保留三路 Top-5")
@@ -124,8 +129,68 @@ def _settings(args) -> Settings:
     return Settings.from_env(args.run_dir, **overrides)
 
 
+def _format_interactive_result(result: dict, top_k: int = 5) -> str:
+    """Show the answer and useful retrieval evidence, not all candidate internals."""
+    retrieval = result.get("retrieval") or {}
+    lanes = (
+        ("语义检索", "semantic_top5", "semantic_results", "normalized_semantic_score"),
+        ("维度检索", "dimension_top5", "dimension_results", "normalized_dimension_score"),
+        ("融合检索", "fusion_top5", "fusion_results", "fused_score"),
+    )
+    lines = ["\n" + "=" * 72, f"问题：{result.get('query', '')}", "", "回答：",
+             str(result.get("answer", "")).strip() or "（没有生成答案）", "",
+             f"问答策略：{result.get('qa_strategy', 'legacy')} / {result.get('prompt_mode', 'global')}",
+             f"检索排名（各路 Top-{top_k}）"]
+    summaries = result.get("retrieval_top5") or {}
+
+    for label, summary_key, retrieval_key, score_key in lanes:
+        items = (summaries.get(summary_key) or retrieval.get(retrieval_key) or [])[:top_k]
+        lines.append(f"\n{label}：")
+        if not items:
+            lines.append("  （无结果）")
+            continue
+        for index, item in enumerate(items, 1):
+            item = item or {}
+            chunk_id = str(item.get("chunk_id") or "未知 chunk")
+            title = str(item.get("doc_title") or item.get("title") or "").strip()
+            score = item.get(score_key)
+            if score is None:
+                score = item.get("final_score", item.get("score"))
+            score_text = f" | 分数 {float(score):.4f}" if isinstance(score, (int, float)) else ""
+            title_text = f"《{title}》 " if title else ""
+            lines.append(f"  {index}. {title_text}{chunk_id}{score_text}")
+
+    # The fused Top-K is the context actually sent to answer generation.
+    context_items = summaries.get("fusion_top5") or retrieval.get("top_chunks") or []
+    shown_count = min(top_k, len(context_items))
+    lines.extend(["", f"答案依据（融合 Top-{shown_count}，chunk 原文）："])
+    if not context_items:
+        lines.append("  （没有检索到可用上下文）")
+    for index, item in enumerate(context_items[:top_k], 1):
+        item = item or {}
+        title = str(item.get("doc_title") or item.get("title") or "").strip()
+        chunk_id = str(item.get("chunk_id") or "未知 chunk")
+        source = str(item.get("chunk_text_full") or item.get("chunk_text") or "").strip()
+        lines.append(f"\n[{index}] {title + ' · ' if title else ''}{chunk_id}")
+        if source:
+            lines.extend(textwrap.wrap(source, width=100, break_long_words=True,
+                                       break_on_hyphens=False) or [source])
+        else:
+            lines.append("（该结果没有附带 chunk 文本）")
+
+    stats = result.get("context_stats") or {}
+    if stats:
+        lines.extend(["", f"送入模型的上下文：{len(stats.get('chunks') or [])} 个 chunk，"
+                      f"共 {stats.get('provided_chars', 0)} 字符"])
+    lines.extend(["=" * 72, ""])
+    return "\n".join(lines)
+
+
 def main(argv=None) -> int:
-    args = build_parser().parse_args(argv)
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    if args.command == "ask" and not args.query.strip() and not args.interactive:
+        parser.error("ask 需要 --query，或者使用 --interactive 进入交互问答")
     if args.command == "compare":
         result = compare_evaluations(
             baseline_path=args.baseline,
@@ -223,7 +288,7 @@ def main(argv=None) -> int:
                 resume=not args.no_resume,
             )
             print(json.dumps(result, ensure_ascii=False, indent=2))
-        else:
+        elif args.command == "ask":
             manifest_path = Path(args.run_dir) / "run_manifest.json"
             if manifest_path.exists():
                 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -231,9 +296,35 @@ def main(argv=None) -> int:
                     settings.backend = manifest.get("backend", settings.backend)
                 if args.collection is None:
                     settings.collection = manifest.get("collection", settings.collection)
-            result = QAService(run_dir=settings.run_dir, settings=settings).answer(
-                args.query, top_k=args.top_k, context_chars=args.context_chars)
-            print(json.dumps(result, ensure_ascii=False, indent=2))
+            service = QAService(run_dir=settings.run_dir, settings=settings)
+            if not args.interactive:
+                result = service.answer(
+                    args.query, top_k=args.top_k, context_chars=args.context_chars)
+                print(json.dumps(result, ensure_ascii=False, indent=2))
+            else:
+                print("交互问答已启动；输入 q、quit 或 exit 退出。")
+                next_query = args.query.strip()
+                while True:
+                    try:
+                        query = next_query or input("问题> ").strip()
+                    except (EOFError, KeyboardInterrupt):
+                        print("\n交互问答结束。")
+                        break
+                    next_query = ""
+                    if query.lower() in {"q", "quit", "exit"}:
+                        print("交互问答结束。")
+                        break
+                    if not query:
+                        continue
+                    try:
+                        result = service.answer(
+                            query, top_k=args.top_k, context_chars=args.context_chars)
+                        if args.full_json:
+                            print(json.dumps(result, ensure_ascii=False, indent=2))
+                        else:
+                            print(_format_interactive_result(result, top_k=args.top_k))
+                    except Exception as exc:
+                        print(f"[ERROR] {type(exc).__name__}: {exc}")
         return 0
     except Exception as exc:
         print(f"[ERROR] {type(exc).__name__}: {exc}")

@@ -126,7 +126,7 @@ PROMPT_GENERATE_CANDIDATES = """你是一个知识库语料分析与信息架构
 尤其不得预设旅游/景区类目。文档样本是唯一依据，不足以支持的类别不要臆造。
 
 结构约束：
-1. 建立 5 至 8 个一级信息轴；每个一级轴下建立 2 至 6 个语义独立、边界清晰、可检索的叶子维度。
+1. 建立 {parent_dimension_instruction} 个一级信息轴；每个一级轴下建立 2 至 6 个语义独立、边界清晰、可检索的叶子维度。
 2. 一级维度只做语义分组，indexable=false、parent_id=null；二级叶子 indexable=true，parent_id 指向所属一级。
 3. 叶子必须描述可从单个 chunk 中抽取的“信息类型/属性”，不能是具体实体、实例、答案、取值或某个文档主题的改写。
 4. 轴与叶子应覆盖样本中反复出现且对区分事实有用的信息类型；避免空泛兜底、语义重复、过细字段，以及把整篇文档主题直接当维度。
@@ -420,7 +420,7 @@ PROMPT_PARSE_QUERY_V4 = """你是一个严格的查询结构化解析器。
 PROMPT_FORMAT_REPAIR = """你是 JSON Schema 修复器。请在保留原输出中有语料依据的语义内容的前提下，修复下面的模型输出，使其满足要求：
 1. 只输出合法 JSON；2. schema_version 必须为 "2.0"；3. dimensions 是两层树；
 4. 一级 indexable=false 且 parent_id=null；5. 二级 indexable=true 且 parent_id 指向一级；
-6. 一级节点必须有 5 至 8 个；7. 每个一级至少有两个、最多六个叶子；
+6. 一级节点数量按“结构校验错误”中的明确要求执行；未指定具体数量时为 5 至 8 个；7. 每个一级至少有两个、最多六个叶子；
 8. 维度必须是本次给定语料支持的信息类型，而不是具体实体、实例、答案或取值；
 9. 不添加“其他、备注、综合信息”等兜底维度，也不要引入语料样本无法支持的领域类别。
 
@@ -898,7 +898,11 @@ class DimensionMiningWithQwen:
         }
 
     def generate_candidate_schema(
-        self, docs: List[str], *, allow_fallback: bool = True
+        self,
+        docs: List[str],
+        *,
+        allow_fallback: bool = True,
+        parent_dimension_count: int | None = None,
     ) -> Dict[str, Any]:
         """Infer a v2 schema from the supplied corpus samples.
 
@@ -908,6 +912,10 @@ class DimensionMiningWithQwen:
         """
         if not docs:
             raise ValueError("文档列表为空")
+        if parent_dimension_count is not None and not 5 <= int(parent_dimension_count) <= 8:
+            raise ValueError("一级维度数量必须在 5–8 之间")
+        if parent_dimension_count is not None:
+            parent_dimension_count = int(parent_dimension_count)
 
         # 使用覆盖全体记录的均匀分层样本，而不是只取列表开头；样本长度和数量
         # 可由环境变量控制，降低长尾主题或少数信息轴在归纳阶段被漏掉的风险。
@@ -938,8 +946,32 @@ class DimensionMiningWithQwen:
 
         prompt = PROMPT_GENERATE_CANDIDATES.format(
             n=len(snippet_docs),
-            docs_snippet=docs_snippet
+            docs_snippet=docs_snippet,
+            parent_dimension_instruction=(
+                f"恰好 {parent_dimension_count}" if parent_dimension_count is not None else "5 至 8"
+            ),
         )
+
+        def candidate_errors(candidate: Dict[str, Any]) -> list[str]:
+            errors = validate_schema(candidate)
+            parents = [node for node in candidate.get("dimensions", []) if node.get("level") == 1]
+            if parent_dimension_count is not None:
+                if len(parents) != parent_dimension_count:
+                    errors.append(f"一级维度必须恰好为 {parent_dimension_count} 个，当前为 {len(parents)} 个")
+            elif not 5 <= len(parents) <= 8:
+                errors.append(f"一级信息轴数量必须为 5 至 8 个，当前为 {len(parents)} 个")
+            parent_ids = [node.get("id") for node in parents]
+            leaf_counts = {
+                parent_id: sum(
+                    node.get("level") == 2 and node.get("parent_id") == parent_id
+                    for node in candidate.get("dimensions", [])
+                )
+                for parent_id in parent_ids
+            }
+            for parent_id, count in leaf_counts.items():
+                if not 2 <= count <= 6:
+                    errors.append(f"一级信息轴 {parent_id} 必须有 2 至 6 个叶子，当前为 {count} 个")
+            return errors
 
         raw = self._call_llm_json_with_repair(
             prompt,
@@ -947,21 +979,7 @@ class DimensionMiningWithQwen:
             repair_errors="候选维度必须是合法的两层 v2 Schema",
         )
         schema = self._build_candidate_schema(raw)
-        errors = validate_schema(schema)
-        parents = [node for node in schema.get("dimensions", []) if node.get("level") == 1]
-        if not 5 <= len(parents) <= 8:
-            errors.append(f"一级信息轴数量必须为 5 至 8 个，当前为 {len(parents)} 个")
-        parent_ids = [node.get("id") for node in parents]
-        leaf_counts = {
-            parent_id: sum(
-                node.get("level") == 2 and node.get("parent_id") == parent_id
-                for node in schema.get("dimensions", [])
-            )
-            for parent_id in parent_ids
-        }
-        for parent_id, count in leaf_counts.items():
-            if not 2 <= count <= 6:
-                errors.append(f"一级信息轴 {parent_id} 必须有 2 至 6 个叶子，当前为 {count} 个")
+        errors = candidate_errors(schema)
         if errors:
             repair_prompt = PROMPT_FORMAT_REPAIR.format(
                 errors="; ".join(errors),
@@ -969,28 +987,16 @@ class DimensionMiningWithQwen:
             )
             repaired = self._call_llm_json(repair_prompt, temperature=0.0)
             schema = self._build_candidate_schema(repaired)
-            errors = validate_schema(schema)
-            parents = [node for node in schema.get("dimensions", []) if node.get("level") == 1]
-            if not 5 <= len(parents) <= 8:
-                errors.append(f"修复后一级信息轴数量必须为 5 至 8 个，当前为 {len(parents)} 个")
-            parent_ids = [node.get("id") for node in parents]
-            leaf_counts = {
-                parent_id: sum(
-                    node.get("level") == 2 and node.get("parent_id") == parent_id
-                    for node in schema.get("dimensions", [])
-                )
-                for parent_id in parent_ids
-            }
-            for parent_id, count in leaf_counts.items():
-                if not 2 <= count <= 6:
-                    errors.append(f"修复后一级信息轴 {parent_id} 必须有 2 至 6 个叶子，当前为 {count} 个")
+            errors = candidate_errors(schema)
             if errors:
-                if not allow_fallback:
+                if not allow_fallback or parent_dimension_count is not None:
                     raise SchemaValidationError(errors)
                 print("[Warning] LLM v2 Schema 修复仍未通过质量门禁，使用兼容 fallback：" + "; ".join(errors))
                 return self._quality_gate_fallback_schema()
         schema["generation_method"] = "llm_corpus_induced"
         schema["source_sample_count"] = len(snippet_docs)
+        if parent_dimension_count is not None:
+            schema["requested_parent_dimension_count"] = parent_dimension_count
         return schema
 
     def generate_candidate_dimensions(self, docs: List[str]) -> List[str]:
