@@ -17,6 +17,8 @@ from rag_core.retrieval_fusion.experiments.common.live_runtime import (  # noqa:
     parse_ks,
 )
 
+from rag_core.retrieval_fusion.experiments.common.latest_output import stage_latest  # noqa: E402
+
 EXPERIMENT_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT_ROOT = EXPERIMENT_DIR / "output" / "runs"
 MAX_K = 20
@@ -100,8 +102,7 @@ def main(argv=None):
         parser.error("--semantic-pool and --dimension-pool must be at least --top-k")
 
     with LiveRetrievalRuntime(args) as runtime:
-        output_dir = args.output_root.expanduser().resolve() / runtime.run_id
-        output_dir.mkdir(parents=True, exist_ok=False)
+        output_dir = args.output_root.expanduser().resolve() / "latest"
         detail_rows = {route: [] for route in ROUTES}
         for position, record in enumerate(runtime.records, start=1):
             question = record["question"]
@@ -143,11 +144,6 @@ def main(argv=None):
             if position % 25 == 0 or position == len(runtime.records):
                 print(f"live retrieval: {position}/{len(runtime.records)}", flush=True)
 
-        files = {}
-        for route, filename in DETAIL_FILES.items():
-            _write_jsonl(output_dir / filename, detail_rows[route])
-            files[route] = filename
-
         metadata = runtime.metadata()
         metadata.update({
             "experiment": "00_main_experiment",
@@ -157,16 +153,19 @@ def main(argv=None):
             "fusion_strategy": (
                 detail_rows["hybrid"][0].get("strategy") if detail_rows["hybrid"] else None
             ),
-            "files": files,
+            "files": DETAIL_FILES,
         })
         manifest = {
             **metadata,
             "created_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         }
-        (output_dir / "details_manifest.json").write_text(
-            json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
-            encoding="utf-8",
-        )
+        with stage_latest(output_dir) as staging:
+            for route, filename in DETAIL_FILES.items():
+                _write_jsonl(staging / filename, detail_rows[route])
+            (staging / "details_manifest.json").write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
         print(json.dumps(manifest, ensure_ascii=False, indent=2), flush=True)
     return 0
 

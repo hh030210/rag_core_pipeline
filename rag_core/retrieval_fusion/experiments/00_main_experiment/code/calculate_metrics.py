@@ -6,8 +6,15 @@ import argparse
 import json
 import math
 import statistics
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from tempfile import TemporaryDirectory
+
+REPOSITORY = Path(__file__).resolve().parents[5]
+sys.path.insert(0, str(REPOSITORY))
+
+from rag_core.retrieval_fusion.experiments.common.latest_output import lock_output  # noqa: E402
 
 EXPERIMENT_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT_ROOT = EXPERIMENT_DIR / "output" / "runs"
@@ -123,12 +130,19 @@ def percentage(value):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--output-dir", type=Path, required=True,
-        help="Run-specific directory printed by export_retrieval_details.py",
+        "--output-dir", type=Path, default=DEFAULT_OUTPUT_ROOT / "latest",
+        help="Directory containing a completed export (default: output/runs/latest)",
     )
     args = parser.parse_args()
     output_dir = args.output_dir.expanduser().resolve()
+    if output_dir.name == "latest":
+        with lock_output(output_dir):
+            calculate_metrics(output_dir)
+    else:
+        calculate_metrics(output_dir)
 
+
+def calculate_metrics(output_dir: Path) -> None:
     manifest = read_json(output_dir / "details_manifest.json")
     if manifest.get("retrieval_mode") != "live_end_to_end" or not manifest.get("run_id"):
         raise RuntimeError(
@@ -220,11 +234,19 @@ def main():
     with (output_dir / "per_query_metrics.jsonl").open("w", encoding="utf-8") as handle:
         for row in per_query_rows:
             handle.write(json.dumps(row, ensure_ascii=False) + "\n")
-    (output_dir / "evaluation_report.md").write_text(render_report(summary), encoding="utf-8")
+    report_path = output_dir / "evaluation_report.md"
+    report = render_report(summary, output_dir=output_dir)
+    report_path.write_text(report, encoding="utf-8")
+    if output_dir == DEFAULT_OUTPUT_ROOT.resolve() / "latest":
+        published_report = DEFAULT_OUTPUT_ROOT.parent / report_path.name
+        with TemporaryDirectory(prefix=".report-", dir=published_report.parent) as temporary:
+            staged_report = Path(temporary) / report_path.name
+            staged_report.write_text(report, encoding="utf-8")
+            staged_report.replace(published_report)
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 
 
-def render_report(summary):
+def render_report(summary, *, output_dir: Path):
     meta = summary["metadata"]
     metrics = summary["metrics_by_route"]
     lines = [
@@ -277,6 +299,7 @@ def render_report(summary):
         "",
         "## 文件",
         "",
+        f"- 本轮完整输出目录：`{output_dir}`",
         "- vector_retrieval_details.jsonl：本轮向量检索 Top-20 详情。",
         "- dimension_retrieval_details.jsonl：本轮维度检索 Top-20 详情。",
         "- hybrid_retrieval_details.jsonl：本轮融合检索 Top-20 详情。",
@@ -286,7 +309,7 @@ def render_report(summary):
         "## 重跑命令",
         "",
         "    python3 rag_core/retrieval_fusion/experiments/00_main_experiment/code/export_retrieval_details.py",
-        "    python3 rag_core/retrieval_fusion/experiments/00_main_experiment/code/calculate_metrics.py --output-dir <export 命令打印的 run 目录>",
+        "    python3 rag_core/retrieval_fusion/experiments/00_main_experiment/code/calculate_metrics.py --output-dir <export 命令打印的 output_dir>",
         "",
     ]
     return "\n".join(lines)

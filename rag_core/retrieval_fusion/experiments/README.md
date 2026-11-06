@@ -17,14 +17,17 @@ fresh LLM work.
 Run `00_main_experiment/code/export_retrieval_details.py` to freshly retrieve
 the raw dataset through semantic, dimension, and configured fusion routes. The
 three JSONL details and `details_manifest.json` are written under
-`00_main_experiment/output/runs/<run_id>/`.
+`00_main_experiment/output/runs/latest/`. Each successful export replaces
+the previous result, including its reports. The new manifest still records a
+unique run ID.
 
-Then calculate the unified report using exactly the printed run directory:
+Then calculate the unified report in the same directory. For the default run
+location, this also refreshes `00_main_experiment/output/evaluation_report.md`:
 
 ```bash
 python3 rag_core/retrieval_fusion/experiments/00_main_experiment/code/export_retrieval_details.py
 python3 rag_core/retrieval_fusion/experiments/00_main_experiment/code/calculate_metrics.py \
-  --output-dir rag_core/retrieval_fusion/experiments/00_main_experiment/output/runs/<run_id>
+  --output-dir rag_core/retrieval_fusion/experiments/00_main_experiment/output/runs/latest
 ```
 
 The metric script rejects outputs without a `live_end_to_end` manifest, a run

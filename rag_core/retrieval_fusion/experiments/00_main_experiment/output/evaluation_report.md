@@ -1,58 +1,60 @@
-# 景区数据集三路检索统一评测
+# 景区数据集三路实时检索评测
 
 - 测试集：/home/humq/rag_core_runs/real_merged7_sdu_v4pro_full_20260921_run1/qa_dataset_435.json（共 435 条）
-- 有效评测问题：402 条；无 golden chunk 排除 33 条；gold 映射失败排除 0 条。
-- 路由候选批次：182f6bb9fe3247189ad1fd9b007aeb46
-- 混合检索策略：dimension_score.py
-- 评测时间：2026-11-04T07:59:45+00:00
+- Golden 映射：402 条成功，33 条未映射；未映射问题在 macro 指标中按 miss 计入。
+- Run ID：`5e48889ab3bc4049aed872b241276b7f`；检索模式：`live_end_to_end`
+- 当前集合：`rag_core_sdu_v4pro_full_20260921_run1`；融合策略：`{'name': 'dimension_score', 'file': 'dimension_score.py', 'configuration': {'semantic_weight': 1.0, 'dimension_weight': 0.05, 'lexical_weight': 0.1, 'missing_semantic_penalty': 0.025}}`
+- 代码提交：`0005d5a2c9b68988de21add1756d268d8de026d3`；评测时间：2026-11-06T03:24:44+00:00
 
-## 评测范围与数据
+## 评测口径
 
-向量检索使用 semantic 路由候选，衡量用户查询语义；维度检索使用 dimension 路由候选，衡量关键信息匹配；混合检索将同一问题的 semantic 和 dimension 候选交给当前 fusion.py 的 apply_fusion 排序。三路候选详情分别保存在 output 下的 JSONL 文件，之后由同一指标脚本统一计算。
+export_retrieval_details.py 每轮直接读取原始 QA JSON/JSONL，使用当前 run_dir、当前 Qdrant/本地集合和当前向量检索策略完成查询解析、向量检索、维度检索与 fusion.py 融合。查询解析缓存限定在本轮临时目录。三路结果由同一个 run_id 标识；本报告只接受三份同轮产物，不读取旧实验目录、route snapshot 或先前查询解析结果。
 
-本次使用已保存的景区数据集路由候选回放，未重新调用向量库或 query parser。Golden chunks 取自测试集 source 证据文本的现有映射；golden 文档优先取 source_file，缺失时由 chunk ID 的来源前缀推断。
+向量检索衡量用户查询语义，使用本轮 semantic candidates；维度检索衡量关键信息匹配，使用 dimension candidates；混合检索使用 fusion.py 当前策略生成的 fusion candidates。Golden 证据按当前集合中的 chunk payload 重新映射。
 
 ## 指标定义
 
-所有指标在有 golden chunk 且映射成功的问题上计算。chunk 相关性采用二元判断：chunk_id 属于该题 golden_chunk_ids 即相关。
+chunk 相关性采用二元判断：检索 chunk_id 属于该问题映射后的 golden_chunk_ids 即相关。所有指标按原始测试集问题计算；未映射到当前集合的 Golden 在 Hit、Recall macro、MRR、nDCG 和完整覆盖率中按 miss 计入。Recall micro 以可映射 golden chunk 总数为分母。
 
-1. **Hit@k**：Top-k 中至少命中一个 golden chunk 的问题比例。
-2. **Recall@k**：单题命中 golden chunk 数 / 该题 golden chunk 总数；报告 macro（逐题平均）和 micro（全体 golden chunks 汇总）。
-3. **MRR@k**：每题首个 golden chunk 的倒数排名，再对问题取平均；未命中的题计 0。
-4. **nDCG@k**：按 chunk 二元相关性计算折损累计增益，并用理想排序归一化。
-5. **Doc Precision@k**：Top-k 实际返回 chunk 中，source_file 属于该题 golden 文档的比例；报告 micro 与逐题 macro。若某路返回少于 k 个 chunk，分母使用实际返回数。
+1. **Hit@k**：Top-k 命中至少一个 golden chunk 的问题占全部问题的比例。
+2. **Recall@k macro**：逐题计算命中 golden chunk 数 / 该题 golden chunk 数，再对全部题目取平均；Golden 未映射题计 0。**Recall@k micro**：全体命中 golden chunk 数 / 全体已映射 golden chunk 总数。
+3. **MRR@k**：每题第一个 golden chunk 的倒数排名，再对全部题目取平均；未命中计 0。
+4. **nDCG@k**：以 chunk 二元相关性计算折损累计增益，并以理想排序归一化；未命中或无已映射 Golden 计 0。
+5. **Doc Precision@k**：Top-k 返回 chunk 中，来源文档属于该题 golden 文档的比例。报告 micro（汇总相关 chunk / 汇总返回 chunk）和 macro（逐题平均）；分母使用实际返回数量。Golden 文档未映射的问题，其返回 chunk 均不计为相关。
+6. **Chunk 完整覆盖率**：Top-k 命中该题全部已映射 golden chunks 的问题比例；无映射 Golden 题计 0。
 
-原目标阈值继续用于诊断：Recall@k macro ≥ 90%，Doc Precision@k micro ≥ 85%。Chunk 完整覆盖率作为补充项，表示 Top-k 命中该题全部 golden chunks 的问题比例。
+Recall@k macro ≥ 90%、Doc Precision@k micro ≥ 85% 为原目标阈值；报告逐个 k 的判断。
 
 ## 结果
 
-| 检索方式 | k | Hit@k | Recall@k macro / micro | MRR@k | nDCG@k | Doc Precision@k micro / macro | Chunk 完整覆盖率 | 阈值 |
-|---|---:|---:|---:|---:|---:|---:|---:|---|
-| 向量检索（用户查询语义） | 1 | 53.48% | 45.97% / 37.01% | 53.48% | 53.48% | 88.31% / 88.31% | 39.80% | 未达标 |
-| 向量检索（用户查询语义） | 5 | 84.33% | 77.36% / 70.57% | 65.49% | 66.46% | 75.11% / 75.18% | 71.14% | 未达标 |
-| 向量检索（用户查询语义） | 10 | 91.29% | 86.03% / 81.07% | 66.46% | 69.77% | 69.20% / 69.63% | 81.09% | 未达标 |
-| 向量检索（用户查询语义） | 15 | 94.53% | 90.23% / 85.89% | 66.70% | 71.02% | 65.20% / 65.66% | 85.82% | 未达标 |
-| 向量检索（用户查询语义） | 20 | 95.52% | 91.87% / 88.47% | 66.76% | 71.51% | 62.43% / 63.56% | 87.56% | 未达标 |
-| 维度检索（关键信息匹配） | 1 | 25.12% | 21.38% / 17.38% | 25.12% | 25.12% | 74.03% / 70.90% | 18.41% | 未达标 |
-| 维度检索（关键信息匹配） | 5 | 56.72% | 49.65% / 44.58% | 37.15% | 38.23% | 68.02% / 63.55% | 43.78% | 未达标 |
-| 维度检索（关键信息匹配） | 10 | 63.18% | 56.20% / 53.70% | 38.13% | 40.89% | 64.92% / 60.50% | 50.00% | 未达标 |
-| 维度检索（关键信息匹配） | 15 | 65.42% | 59.18% / 57.66% | 38.31% | 41.83% | 63.38% / 59.59% | 52.99% | 未达标 |
-| 维度检索（关键信息匹配） | 20 | 67.41% | 61.44% / 60.59% | 38.43% | 42.46% | 62.12% / 59.10% | 55.72% | 未达标 |
-| 混合检索（融合排序） | 1 | 62.94% | 53.41% / 43.55% | 62.94% | 62.94% | 88.56% / 88.56% | 45.52% | 未达标 |
-| 混合检索（融合排序） | 5 | 88.81% | 82.55% / 74.70% | 73.09% | 73.09% | 74.46% / 74.45% | 76.62% | 未达标 |
-| 混合检索（融合排序） | 10 | 95.27% | 90.49% / 85.37% | 73.96% | 76.14% | 69.45% / 69.45% | 85.57% | 未达标 |
-| 混合检索（融合排序） | 15 | 95.77% | 92.77% / 89.33% | 74.00% | 76.93% | 64.42% / 64.40% | 88.81% | 未达标 |
-| 混合检索（融合排序） | 20 | 96.02% | 93.89% / 91.57% | 74.02% | 77.29% | 61.49% / 61.92% | 90.80% | 未达标 |
+| 检索方式 | k | Hit@k | Recall@k macro / micro | MRR@k | MAP@k | nDCG@k | Doc Precision@k micro / macro | Chunk 完整覆盖率 | 阈值 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| 向量检索（用户查询语义） | 1 | 51.03% | 43.67% / 38.21% | 51.03% | 51.03% | 51.03% | 81.61% / 81.61% | 37.70% | 未达标 |
+| 向量检索（用户查询语义） | 5 | 76.55% | 71.37% / 70.40% | 60.72% | 56.79% | 61.59% | 69.06% / 69.06% | 66.44% | 未达标 |
+| 向量检索（用户查询语义） | 10 | 83.91% | 79.12% / 80.38% | 61.73% | 58.30% | 64.53% | 62.92% / 62.92% | 74.94% | 未达标 |
+| 向量检索（用户查询语义） | 15 | 86.90% | 82.96% / 85.89% | 61.97% | 58.74% | 65.73% | 58.30% / 58.30% | 78.62% | 未达标 |
+| 向量检索（用户查询语义） | 20 | 88.05% | 84.73% / 88.30% | 62.04% | 58.91% | 66.22% | 55.47% / 55.38% | 80.92% | 未达标 |
+| 维度检索（关键信息匹配） | 1 | 25.29% | 21.17% / 18.93% | 25.29% | 25.29% | 25.29% | 68.86% / 65.06% | 17.47% | 未达标 |
+| 维度检索（关键信息匹配） | 5 | 59.31% | 52.93% / 50.43% | 37.77% | 34.00% | 39.82% | 60.56% / 57.07% | 47.13% | 未达标 |
+| 维度检索（关键信息匹配） | 10 | 65.06% | 59.50% / 60.24% | 38.61% | 35.41% | 42.45% | 56.63% / 53.46% | 53.79% | 未达标 |
+| 维度检索（关键信息匹配） | 15 | 67.82% | 62.99% / 65.40% | 38.84% | 35.84% | 43.56% | 53.98% / 51.38% | 57.47% | 未达标 |
+| 维度检索（关键信息匹配） | 20 | 69.89% | 65.00% / 68.50% | 38.96% | 36.01% | 44.13% | 51.50% / 50.01% | 59.77% | 未达标 |
+| 混合检索（融合排序） | 1 | 57.70% | 48.70% / 43.20% | 57.70% | 57.70% | 57.70% | 81.38% / 81.38% | 41.15% | 未达标 |
+| 混合检索（融合排序） | 5 | 82.30% | 76.13% / 74.35% | 67.40% | 62.20% | 67.12% | 68.51% / 68.51% | 70.11% | 未达标 |
+| 混合检索（融合排序） | 10 | 85.98% | 81.77% / 83.13% | 67.86% | 63.46% | 69.31% | 63.10% / 63.10% | 77.47% | 未达标 |
+| 混合检索（融合排序） | 15 | 88.28% | 85.02% / 88.30% | 68.04% | 63.88% | 70.36% | 58.22% / 58.22% | 81.15% | 未达标 |
+| 混合检索（融合排序） | 20 | 89.43% | 86.61% / 90.88% | 68.10% | 64.03% | 70.82% | 55.11% / 55.04% | 82.76% | 未达标 |
 
 ## 文件
 
-- vector_retrieval_details.jsonl：向量检索 Top-20 结果及逐 chunk 文档归属、gold 标签。
-- dimension_retrieval_details.jsonl：维度检索 Top-20 结果及逐 chunk 文档归属、gold 标签。
-- hybrid_retrieval_details.jsonl：当前融合策略 Top-20 结果及逐 chunk 文档归属、gold 标签。
-- per_query_metrics.jsonl：三种检索逐题、逐 k 的统一指标。
-- summary.json：汇总数据、数据源批次和阈值判断。
+- 本轮完整输出目录：`/home/humq/rag_core_pipeline/rag_core/retrieval_fusion/experiments/00_main_experiment/output/runs/latest`
+- vector_retrieval_details.jsonl：本轮向量检索 Top-20 详情。
+- dimension_retrieval_details.jsonl：本轮维度检索 Top-20 详情。
+- hybrid_retrieval_details.jsonl：本轮融合检索 Top-20 详情。
+- per_query_metrics.jsonl：逐题、逐路由、逐 k 指标。
+- summary.json：汇总指标及运行元数据。
 
-复现命令：
+## 重跑命令
 
     python3 rag_core/retrieval_fusion/experiments/00_main_experiment/code/export_retrieval_details.py
-    python3 rag_core/retrieval_fusion/experiments/00_main_experiment/code/calculate_metrics.py
+    python3 rag_core/retrieval_fusion/experiments/00_main_experiment/code/calculate_metrics.py --output-dir <export 命令打印的 output_dir>
