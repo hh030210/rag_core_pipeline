@@ -12,12 +12,14 @@ REPOSITORY = Path(__file__).resolve().parents[5]
 sys.path.insert(0, str(REPOSITORY))
 
 from rag_core.retrieval_fusion.experiments.common.live_runtime import (  # noqa: E402
-    LiveRetrievalRuntime,
     add_live_arguments,
     parse_ks,
 )
 
 from rag_core.retrieval_fusion.experiments.common.latest_output import stage_latest  # noqa: E402
+from rag_core.retrieval_fusion.experiments.common.scenic_query_replay import (  # noqa: E402
+    ScenicRetrievalRuntime,
+)
 
 EXPERIMENT_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT_ROOT = EXPERIMENT_DIR / "output" / "runs"
@@ -90,9 +92,15 @@ def _write_jsonl(path: Path, rows) -> None:
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    add_live_arguments(parser, default_top_k=MAX_K, default_semantic_pool=100, default_dimension_pool=20)
+    add_live_arguments(parser, default_top_k=MAX_K, default_query_parser_mode="llm")
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
+    parser.add_argument(
+        "--replay-query-analysis", action="store_true",
+        help="Use archived LLM analyses without calling the API",
+    )
     args = parser.parse_args(argv)
+    if args.replay_query_analysis and (args.query_parser_mode != "llm" or args.query_expansion):
+        parser.error("--replay-query-analysis requires llm parser mode and query expansion disabled")
     ks = parse_ks(args.ks)
     if max(ks) > MAX_K:
         parser.error(f"--ks cannot exceed the saved result depth {MAX_K}")
@@ -101,20 +109,14 @@ def main(argv=None):
     if args.semantic_pool < args.top_k or args.dimension_pool < args.top_k:
         parser.error("--semantic-pool and --dimension-pool must be at least --top-k")
 
-    with LiveRetrievalRuntime(args) as runtime:
+    with ScenicRetrievalRuntime(args) as runtime:
         output_dir = args.output_root.expanduser().resolve() / "latest"
         detail_rows = {route: [] for route in ROUTES}
         for position, record in enumerate(runtime.records, start=1):
             question = record["question"]
             parts = runtime.query_parts(question)
             retrieval_query = " | ".join(parts)
-            result = runtime.retrieve(
-                question,
-                parts,
-                top_k=args.top_k,
-                semantic_pool=args.semantic_pool,
-                dimension_pool=args.dimension_pool,
-            )
+            result = runtime.retrieve_record(record, parts)
             gold_ids = set(map(str, record.get("gold_chunk_ids") or []))
             gold_documents = _gold_documents(record, runtime.chunks_by_id)
             for route, (result_key, label) in ROUTES.items():
@@ -138,6 +140,7 @@ def main(argv=None):
                     "gold_resolution": record.get("gold_resolution", {}),
                     "gold_chunk_ids": sorted(gold_ids),
                     "gold_documents": gold_documents,
+                    "query_parser_source": runtime.retriever.parser_source,
                     "query_analysis": result.get("query_analysis", {}),
                     "retrieved": _retrieved(candidates, gold_ids, gold_documents),
                 })

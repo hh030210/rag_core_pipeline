@@ -8,9 +8,9 @@ directories are never used as retrieval inputs.
 The shared runtime is in `common/live_runtime.py`. It records the raw dataset
 path and SHA-256, active collection, embedding model, strategy settings, source
 commit, and a unique `run_id`. Query parser and optional query expansion caches
-are temporary and isolated to that run. Query parsing is deterministic by
-default; `--query-parser-mode llm` and `--query-expansion` explicitly enable
-fresh LLM work.
+are temporary and isolated to that run. The main three-route evaluation defaults
+to fresh LLM query parsing. Strategy comparisons default to deterministic
+parsing. Query expansion is a separate option enabled with `--query-expansion`.
 
 ## Three-route evaluation
 
@@ -20,6 +20,18 @@ three JSONL details and `details_manifest.json` are written under
 `00_main_experiment/output/runs/latest/`. Each successful export replaces
 the previous result, including its reports. The new manifest still records a
 unique run ID.
+
+The default parser uses `LLM_API_KEY` or `DASHSCOPE_API_KEY` when available.
+Set `LLM_BASE_URL` and `LLM_MODEL` to use the deployed service's endpoint and model.
+When the API service gets these values through systemd, launch the evaluation
+with the same EnvironmentFile settings. If live parsing is unavailable, this run
+uses the archived LLM analyses in
+`result/scenic_latest_gitmain_20261104/retrieval_results.jsonl.gz` for the
+remaining questions. Each replay matches the record ID, question, and retrieval
+query. All three routes search the current collection. The report lists the
+parser sources, replay reason, and archive path. With a known API outage, pass
+`--replay-query-analysis` to start directly with the archive. Pass `--query-parser-mode deterministic`
+to use the rule-based parser for the entire run.
 
 Then calculate the unified report in the same directory. For the default run
 location, this also refreshes `00_main_experiment/output/evaluation_report.md`:

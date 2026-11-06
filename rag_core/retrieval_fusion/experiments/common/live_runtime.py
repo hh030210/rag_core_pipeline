@@ -37,6 +37,7 @@ def add_live_arguments(
     default_top_k: int = 20,
     default_semantic_pool: int = 100,
     default_dimension_pool: int = 20,
+    default_query_parser_mode: str = "deterministic",
 ) -> None:
     """Add common runtime options to an experiment CLI."""
     parser.add_argument("--dataset", type=Path, default=None, help="Raw QA JSON/JSONL dataset")
@@ -47,8 +48,8 @@ def add_live_arguments(
     parser.add_argument("--model-path", default=None)
     parser.add_argument("--device", default=None)
     parser.add_argument(
-        "--query-parser-mode", choices=("deterministic", "llm"), default="deterministic",
-        help="Parse each raw query in this run; no prior query-analysis result is loaded",
+        "--query-parser-mode", choices=("deterministic", "llm"), default=default_query_parser_mode,
+        help="Parse each raw query in this run (default: %(default)s)",
     )
     parser.add_argument(
         "--query-expansion", action="store_true",
@@ -91,6 +92,9 @@ def current_git_commit() -> str:
 
 class LiveRetrievalRuntime:
     """Initialize current settings, parser, embeddings, retriever, and raw Gold."""
+
+    retriever_class = Retriever
+    allow_query_replay = False
 
     def __init__(self, args):
         self.args = args
@@ -146,6 +150,13 @@ class LiveRetrievalRuntime:
         if not self.dataset_path.is_file():
             raise FileNotFoundError(f"raw QA dataset does not exist: {self.dataset_path}")
 
+        if (args.query_parser_mode == "llm" and not self.settings.llm_api_key
+                and not self.allow_query_replay):
+            raise ValueError(
+                "LLM query parsing requires LLM_API_KEY or DASHSCOPE_API_KEY "
+                "(or pass --query-parser-mode deterministic)"
+            )
+
         self.run_id = uuid4().hex
         self._temp = tempfile.TemporaryDirectory(prefix=f"rag-live-{self.run_id[:8]}-")
         self.cache_dir = Path(self._temp.name)
@@ -158,10 +169,7 @@ class LiveRetrievalRuntime:
             self.settings.mock,
         )
         parser_llm = None
-        if args.query_parser_mode == "llm":
-            if not self.settings.llm_api_key:
-                self.close()
-                raise ValueError("--query-parser-mode llm requires LLM_API_KEY or DASHSCOPE_API_KEY")
+        if args.query_parser_mode == "llm" and self.settings.llm_api_key:
             from code_jyx.llm_service import DimensionMiningWithQwen
 
             parser_llm = DimensionMiningWithQwen(
@@ -169,7 +177,7 @@ class LiveRetrievalRuntime:
                 model_name=self.settings.llm_model,
                 base_url=self.settings.llm_base_url,
             )
-        self.retriever = Retriever(
+        self.retriever = self.retriever_class(
             run_dir=self.run_dir,
             settings=self.settings,
             embeddings=self.embeddings,

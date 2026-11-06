@@ -220,6 +220,9 @@ def calculate_metrics(output_dir: Path) -> None:
             "unmapped_questions_are_macro_misses": True,
             "top_k_values": list(K_VALUES),
             "route_detail_files": manifest.get("files", DETAIL_FILES),
+            "query_parser_mode": manifest.get("query_parser_mode"),
+            "query_parser_sources": manifest.get("query_parser_sources", {}),
+            "query_parser_replay": manifest.get("query_parser_replay"),
             "thresholds": THRESHOLDS,
             "doc_precision_denominator": (
                 "actual number of returned chunks among the first k; all rows are included, "
@@ -249,6 +252,15 @@ def calculate_metrics(output_dir: Path) -> None:
 def render_report(summary, *, output_dir: Path):
     meta = summary["metadata"]
     metrics = summary["metrics_by_route"]
+    replay = meta.get("query_parser_replay")
+    sources = meta.get("query_parser_sources", {})
+    replay_status = "未记录" if replay is None else ("是" if replay["used"] else "否")
+    replay_path = replay["data_path"] if replay else "未记录"
+    replay_reason = {
+        "missing_api_key": "评测环境未配置 API 密钥",
+        "llm_unavailable": "实时 LLM 查询解析不可用",
+        "replay_requested": "本轮指定离线回放",
+    }.get(replay.get("reason") if replay else None, "无")
     lines = [
         "# 景区数据集三路实时检索评测",
         "",
@@ -258,9 +270,17 @@ def render_report(summary, *, output_dir: Path):
         f"- 当前集合：`{meta['collection']}`；融合策略：`{meta['fusion_strategy']}`",
         f"- 代码提交：`{meta['source_commit']}`；评测时间：{meta['created_at_utc']}",
         "",
+        "## 查询解析来源",
+        "",
+        f"- 配置模式：{meta.get('query_parser_mode') or '未记录'}",
+        f"- 使用历史解析回放：{replay_status}",
+        f"- 实时 LLM：{sources.get('live_llm', 0)} 题；历史回放：{sources.get('archive_replay', 0)} 题；规则解析：{sources.get('deterministic', 0)} 题。",
+        f"- 回放原因：{replay_reason}",
+        f"- 回放数据位置：`{replay_path}`",
+        "",
         "## 评测口径",
         "",
-        "export_retrieval_details.py 每轮直接读取原始 QA JSON/JSONL，使用当前 run_dir、当前 Qdrant/本地集合和当前向量检索策略完成查询解析、向量检索、维度检索与 fusion.py 融合。查询解析缓存限定在本轮临时目录。三路结果由同一个 run_id 标识；本报告只接受三份同轮产物，不读取旧实验目录、route snapshot 或先前查询解析结果。",
+        "export_retrieval_details.py 每轮直接读取原始 QA JSON/JSONL，使用当前 run_dir、当前 Qdrant/本地集合和当前向量检索策略完成查询解析、向量检索、维度检索与 fusion.py 融合。查询解析缓存限定在本轮临时目录。三路结果由同一个 run_id 标识；本报告按同轮三路明细计算。启用回放时仅复用历史查询解析，三路候选及排序均在本轮重新计算。",
         "",
         "向量检索衡量用户查询语义，使用本轮 semantic candidates；维度检索衡量关键信息匹配，使用 dimension candidates；混合检索使用 fusion.py 当前策略生成的 fusion candidates。Golden 证据按当前集合中的 chunk payload 重新映射。",
         "",
