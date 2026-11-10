@@ -12,10 +12,14 @@ REPOSITORY = Path(__file__).resolve().parents[5]
 sys.path.insert(0, str(REPOSITORY))
 
 from rag_core.retrieval_fusion.experiments.common.live_runtime import (  # noqa: E402
+    DEFAULT_RUN_DIR,
     add_live_arguments,
     parse_ks,
 )
 
+from rag_core.retrieval_fusion.experiments.common.dataset_profiles import (  # noqa: E402
+    MODEL_PATH, PROFILES, profile_output_root,
+)
 from rag_core.retrieval_fusion.experiments.common.latest_output import stage_latest  # noqa: E402
 from rag_core.retrieval_fusion.experiments.common.scenic_query_replay import (  # noqa: E402
     ScenicRetrievalRuntime,
@@ -90,15 +94,39 @@ def _write_jsonl(path: Path, rows) -> None:
             handle.write(json.dumps(row, ensure_ascii=False) + "\n")
 
 
-def main(argv=None):
+def build_parser(*, output_root=DEFAULT_OUTPUT_ROOT):
     parser = argparse.ArgumentParser(description=__doc__)
     add_live_arguments(parser, default_top_k=MAX_K, default_query_parser_mode="llm")
-    parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
+    parser.add_argument("--output-root", type=Path, default=output_root)
     parser.add_argument(
         "--replay-query-analysis", action="store_true",
         help="Use archived LLM analyses without calling the API",
     )
+    return parser
+
+
+def main(argv=None):
+    parser = build_parser()
+    parser.add_argument("--dataset-profile", choices=PROFILES, default="scenic",
+                        help="Select the dataset and matching index (default: scenic)")
+    parser.set_defaults(run_dir=None, query_parser_mode=None)
     args = parser.parse_args(argv)
+    profile = PROFILES[args.dataset_profile]
+    use_profile_index = args.run_dir is None and profile.run_dir is not None
+    args.run_dir = args.run_dir or profile.run_dir or DEFAULT_RUN_DIR
+    args.dataset = args.dataset or profile.dataset
+    args.query_parser_mode = args.query_parser_mode or profile.parser_mode
+    if use_profile_index:
+        args.backend = args.backend or "qdrant"
+        args.collection = args.collection or profile.collection
+    if profile.run_dir is not None:
+        args.model_path = args.model_path or MODEL_PATH
+    if args.output_root == DEFAULT_OUTPUT_ROOT:
+        args.output_root = profile_output_root(DEFAULT_OUTPUT_ROOT, args.dataset_profile)
+    return export(parser, args)
+
+
+def export(parser, args, *, runtime_class=ScenicRetrievalRuntime, experiment=EXPERIMENT_DIR.name):
     if args.replay_query_analysis and (args.query_parser_mode != "llm" or args.query_expansion):
         parser.error("--replay-query-analysis requires llm parser mode and query expansion disabled")
     ks = parse_ks(args.ks)
@@ -109,7 +137,10 @@ def main(argv=None):
     if args.semantic_pool < args.top_k or args.dimension_pool < args.top_k:
         parser.error("--semantic-pool and --dimension-pool must be at least --top-k")
 
-    with ScenicRetrievalRuntime(args) as runtime:
+    with runtime_class(args) as runtime:
+        if getattr(args, "dataset_profile", None) == "duretrieval_mteb" and not args.query_expansion:
+            print("Preparing corpus frequencies for DuRetrieval queries", flush=True)
+            runtime.retriever.prepare_query_anchor_frequencies(record["question"] for record in runtime.records)
         output_dir = args.output_root.expanduser().resolve() / "latest"
         detail_rows = {route: [] for route in ROUTES}
         for position, record in enumerate(runtime.records, start=1):
@@ -132,15 +163,18 @@ def main(argv=None):
                     "strategy": (
                         result.get("fusion_strategy") if route == "hybrid"
                         else runtime.retriever.vector_retriever.strategy_file if route == "vector"
-                        else "dimension_retrieval"
+                        else result.get("dimension_strategy", "dimension_retrieval")
                     ),
                     "candidate_count": len(candidates),
+                    **({"dimension_retrieval_query": result["dimension_retrieval_query"]}
+                       if route == "dimension" and "dimension_retrieval_query" in result else {}),
                     "answerable": record.get("answerable", True),
                     "gold_mapped": bool(gold_ids),
                     "gold_resolution": record.get("gold_resolution", {}),
                     "gold_chunk_ids": sorted(gold_ids),
                     "gold_documents": gold_documents,
                     "query_parser_source": runtime.retriever.parser_source,
+                    "query_expansion_source": runtime.expansion_source,
                     "query_analysis": result.get("query_analysis", {}),
                     "retrieved": _retrieved(candidates, gold_ids, gold_documents),
                 })
@@ -149,7 +183,8 @@ def main(argv=None):
 
         metadata = runtime.metadata()
         metadata.update({
-            "experiment": "00_main_experiment",
+            "experiment": experiment,
+            "dataset_profile": getattr(args, "dataset_profile", "scenic"),
             "output_dir": str(output_dir),
             "metric_ks": list(ks),
             "saved_top_k": MAX_K,
@@ -162,7 +197,9 @@ def main(argv=None):
             **metadata,
             "created_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         }
-        with stage_latest(output_dir) as staging:
+        with stage_latest(
+            output_dir, experiment=experiment, dataset_profile=getattr(args, "dataset_profile", None),
+        ) as staging:
             for route, filename in DETAIL_FILES.items():
                 _write_jsonl(staging / filename, detail_rows[route])
             (staging / "details_manifest.json").write_text(

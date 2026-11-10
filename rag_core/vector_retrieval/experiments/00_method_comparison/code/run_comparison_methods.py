@@ -7,7 +7,6 @@ import json
 import sys
 import time
 from datetime import datetime, timezone
-from importlib import import_module
 from pathlib import Path
 
 REPOSITORY = Path(__file__).resolve().parents[5]
@@ -15,10 +14,14 @@ sys.path.insert(0, str(REPOSITORY))
 
 from rag_core.evaluation import route_metrics  # noqa: E402
 from rag_core.retrieval_fusion.experiments.common.live_runtime import (  # noqa: E402
-    LiveRetrievalRuntime,
     add_live_arguments,
     parse_ks,
 )
+
+from rag_core.retrieval_fusion.experiments.common.comparison_routes import (  # noqa: E402
+    average_precision, evaluate_routes, summarize_routes,
+)
+from rag_core.retrieval_fusion.experiments.common.scenic_query_replay import ScenicRetrievalRuntime  # noqa: E402
 
 HERE = Path(__file__).resolve().parents[1]
 CODE_DIR = HERE / "code"
@@ -91,19 +94,6 @@ def _public_hit(hit, rank, gold_ids, gold_documents):
     }
 
 
-def _average_precision(hits, gold_ids, k):
-    gold_ids = set(map(str, gold_ids))
-    if not gold_ids:
-        return 0.0
-    found = 0
-    precision_sum = 0.0
-    for rank, hit in enumerate(hits[:k], start=1):
-        if str(hit.get("chunk_id", "")) in gold_ids:
-            found += 1
-            precision_sum += found / rank
-    return precision_sum / min(len(gold_ids), k)
-
-
 def _summarize(method_rows, ks):
     all_count = len(method_rows)
     mapped_count = sum(bool(row["gold_chunk_ids"]) for row in method_rows)
@@ -128,7 +118,7 @@ def _summarize(method_rows, ks):
             "recall_at_k_macro": sum(metric[f"gold_recall_at_{k}"] for metric in query_metrics) / all_count if all_count else 0.0,
             "recall_at_k_micro": found_count / gold_count if gold_count else 0.0,
             "mrr_at_k": sum(metric[f"rr_at_{k}"] for metric in query_metrics) / all_count if all_count else 0.0,
-            "map_at_k": sum(_average_precision(row["results"], row["gold_chunk_ids"], k) for row in method_rows) / all_count if all_count else 0.0,
+            "map_at_k": sum(average_precision(row["results"], row["gold_chunk_ids"], k) for row in method_rows) / all_count if all_count else 0.0,
             "ndcg_at_k": sum(metric[f"ndcg_at_{k}"] for metric in query_metrics) / all_count if all_count else 0.0,
             "doc_precision_at_k_micro": golden_doc_hits / retrieved_count if retrieved_count else 0.0,
             "gold_chunk_count": gold_count,
@@ -156,9 +146,9 @@ def main(argv=None):
     if args.top_k > pool:
         parser.error("--top-k must not exceed --semantic-pool")
 
-    args.top_k = min(args.top_k, pool)
+    args.top_k = max(args.top_k, max(ks))
     args.dimension_pool = max(args.dimension_pool, args.top_k)
-    with LiveRetrievalRuntime(args) as runtime:
+    with ScenicRetrievalRuntime(args) as runtime:
         run_id = runtime.run_id
         run_dir = args.output_dir.expanduser().resolve() / run_id
         run_dir.mkdir(parents=True, exist_ok=False)
@@ -178,52 +168,48 @@ def main(argv=None):
             question = record["question"]
             parts = runtime.query_parts(question)
             retrieval_query = " | ".join(parts)
-            query_analysis = runtime.parse_query(retrieval_query)
-            spot_names = query_analysis.get("spot_names") or []
             gold_ids = set(map(str, record.get("gold_chunk_ids") or []))
             gold_documents = _gold_documents(record, runtime.chunks_by_id)
             for method in args.methods:
                 runtime.set_vector_strategy(method + ".py")
-                vector_retriever = runtime.retriever.vector_retriever
-                hits = vector_retriever.search(
-                    parts,
-                    pool,
-                    original_query=question,
-                    spot_names=spot_names,
+                live_result = runtime.retrieve_record(record, parts)
+                routes = evaluate_routes(
+                    live_result, gold_ids, ks,
+                    lambda hit, rank: _public_hit(hit, rank, gold_ids, gold_documents),
                 )
-                selected = [
-                    _public_hit(hit, rank, gold_ids, gold_documents)
-                    for rank, hit in enumerate(hits[:max(ks)], start=1)
-                ]
-                metrics = route_metrics(hits, gold_ids, ks)
-                for k in ks:
-                    metrics[f"average_precision_at_{k}"] = _average_precision(hits, gold_ids, k)
                 method_rows[method].append({
                     "id": record["id"],
                     "query": question,
                     "retrieval_query": retrieval_query,
                     "subqueries": parts,
-                    "query_analysis": query_analysis,
+                    "query_analysis": live_result["query_analysis"],
+                    "query_parser_source": runtime.retriever.parser_source,
+                    "query_expansion_source": runtime.expansion_source,
+                    "fusion_strategy": live_result["fusion_strategy"],
                     "answerable": record.get("answerable", True),
                     "gold_mapped": bool(gold_ids),
                     "gold_resolution": record.get("gold_resolution", {}),
                     "gold_chunk_ids": sorted(gold_ids),
                     "gold_documents": gold_documents,
-                    "results": selected,
-                    "metrics": metrics,
+                    "routes": routes,
+                    **routes["semantic"],
                 })
             if index % 25 == 0 or index == total:
                 elapsed = round(time.perf_counter() - started, 1)
                 print(f"live vector retrieval: {index}/{total} ({elapsed}s)", flush=True)
 
+        run_metadata.update({
+            key: value for key, value in runtime.metadata().items() if key != "vector_strategy"
+        })
         methods_manifest = {}
         for method, rows in method_rows.items():
             method_dir = run_dir / method
             _write_jsonl(method_dir / "queries.jsonl", rows)
             summary = _summarize(rows, ks)
             _write_json(method_dir / "summary.json", {
-                "metadata": {**run_metadata, "method": method},
+                "metadata": {**run_metadata, "method": method, "vector_strategy": method + ".py"},
                 "metrics": summary,
+                "metrics_by_route": summarize_routes(rows, ks, _summarize),
             })
             methods_manifest[method] = {
                 "detail_file": f"{method}/queries.jsonl",

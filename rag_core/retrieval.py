@@ -91,6 +91,8 @@ class _DeterministicQueryMiner:
 
 
 class Retriever:
+    prepare_dimension_vectors = True
+
     def __init__(self, *, run_dir: str | Path, settings, embeddings, llm=None):
         self.run_dir = Path(run_dir)
         self.settings = settings
@@ -152,7 +154,7 @@ class Retriever:
         self.label_resolver = CanonicalLabelResolver(self.run_dir, self.tags_by_dim)
         self.concept_df: Dict[str, Dict[str, int]] = {}
         tag_vector_keys, tag_vector_texts, seen_tag_inputs = [], [], set()
-        for point in self.points:
+        for point in (self.points if self.prepare_dimension_vectors else ()):
             payload = point.get("payload", {})
             for leaf_id in self.maps["leaves"]:
                 values = payload.get(f"dim_{leaf_id}", [])
@@ -472,6 +474,40 @@ class Retriever:
             )
         return self._anchor_df_cache[term]
 
+    @staticmethod
+    def _query_cjk_anchors(query):
+        return {
+            segment[start:start + size]
+            for segment in re.findall(r"[\u4e00-\u9fff]{2,}", query)
+            for size in range(2, min(6, len(segment)) + 1)
+            for start in range(len(segment) - size + 1)
+        }
+
+    def prepare_query_anchor_frequencies(self, questions) -> None:
+        """Batch the exact substring document frequencies for a fixed query set."""
+        if not getattr(self.settings, "fact_anchor_rerank_enabled", True):
+            return
+        terms = set().union(*(self._query_cjk_anchors(question) for question in questions))
+        terms.difference_update(FACT_ANCHOR_STOPWORDS, self._anchor_df_cache)
+        if not terms:
+            return
+        by_prefix = {}
+        for term in terms:
+            by_prefix.setdefault(term[:2], []).append(term)
+        counts = dict.fromkeys(terms, 0)
+        for point in self.points:
+            payload = point.get("payload", {})
+            matched = set()
+            for field in ("doc_title", "chunk_gen_title", "chunk_text_full"):
+                for segment in re.findall(r"[\u4e00-\u9fff]{2,}", str(payload.get(field, ""))):
+                    for start in range(len(segment) - 1):
+                        for term in by_prefix.get(segment[start:start + 2], ()):
+                            if segment.startswith(term, start):
+                                matched.add(term)
+            for term in matched:
+                counts[term] += 1
+        self._anchor_df_cache.update(counts)
+
     def _fact_anchor_terms(self, query: str, analysis: Dict[str, Any]) -> List[str]:
         """Extract query literals that are discriminative in this corpus."""
         candidates = {
@@ -482,10 +518,7 @@ class Retriever:
         # Names are often not present in the POI registry (for example people
         # or inscriptions).  CJK 2--6 grams let corpus frequency identify them
         # without using a brittle, domain-specific NER model.
-        for segment in re.findall(r"[\u4e00-\u9fff]{2,}", query):
-            for size in range(2, min(6, len(segment)) + 1):
-                for start in range(0, len(segment) - size + 1):
-                    candidates.add(segment[start:start + size])
+        candidates.update(self._query_cjk_anchors(query))
         max_df = max(12, math.ceil(len(self.points) * 0.08))
         terms = []
         for term in candidates:
@@ -1311,74 +1344,11 @@ class Retriever:
             item["score"] = round(0.42 + 0.24 * (item["score"] / top), 6)
         return candidates[:limit]
 
-    def search(self, query: str, top_k: int | None = None,
-               semantic_pool: int | None = None,
-               dimension_pool: int | None = None,
-               dimension_only: bool = False,
-               query_facts: List[Dict[str, Any]] | None = None,
-               original_query: str | None = None,
-               subqueries: List[str] | None = None,
-               save_snapshot: bool = False, *,
-               semantic_weight: float = 1.0,
-               dimension_weight: float = 0.05,
-               lexical_weight: float = 0.10) -> Dict[str, Any]:
-        """Retrieve candidates and fuse them with per-call dimension_score weights.
-
-        Omitted weights preserve the existing 1.0 / 0.05 / 0.10 formula.
-        """
-        vector_subqueries = [
-            str(item) for item in (subqueries or []) if str(item).strip()
-        ]
-        if vector_subqueries:
-            query = " | ".join(vector_subqueries)
-        else:
-            vector_subqueries = [query]
-        top_k = top_k or self.settings.top_k
-        semantic_pool = max(top_k, int(semantic_pool or getattr(self.settings, "semantic_pool", 20)))
-        dimension_pool = max(top_k, int(dimension_pool or getattr(self.settings, "dimension_pool", 100)))
-        analysis = self._parse_query(query)
-        analysis["vector_retrieval_strategy"] = self.vector_retriever.strategy_file
-        verified_fact_matches = self._fact_index_matches(query_facts or [])
-        analysis["query_fact_count"] = len(query_facts or [])
-        analysis["verified_fact_match_count"] = sum(
-            len(value) for value in verified_fact_matches.values()
-        )
-        dimension_query_texts = {
-            leaf_id: self._dimension_query_text(query, leaf_id, constraint)
-            for leaf_id, constraint in analysis["constraints"].items()
-            if constraint.get("role") in {"main", "secondary"}
-            and (constraint.get("labels") or constraint.get("intent_terms"))
-        }
-        vector_inputs = [query] + list(dimension_query_texts.values())
-        if not dimension_only:
-            strategy_texts = self.vector_retriever.query_texts(
-                vector_subqueries, original_query=original_query or query
-            )
-            vector_inputs.extend(text for text in strategy_texts if text not in vector_inputs)
-        encoded_vectors = self.embeddings.encode(vector_inputs)
-        query_vec = _unit_vector(encoded_vectors[0])
-        dimension_query_vecs = {
-            leaf_id: _unit_vector(vector)
-            for (leaf_id, _), vector in zip(
-                dimension_query_texts.items(), encoded_vectors[1:]
-            )
-        }
-        dimension_policy = self._dimension_policy(analysis)
-        fact_anchor_terms = (
-            self._fact_anchor_terms(query, analysis)
-            if bool(getattr(self.settings, "fact_anchor_rerank_enabled", True)) else []
-        )
-        analysis["fact_anchor_terms"] = fact_anchor_terms
-        semantic = [] if dimension_only else self.vector_retriever.search(
-            vector_subqueries,
-            semantic_pool,
-            original_query=original_query or query,
-            query_vector=query_vec,
-            query_vector_text=query,
-            query_vectors=dict(zip(vector_inputs, encoded_vectors)),
-            spot_names=analysis["spot_names"],
-        )
-
+    def _retrieve_dimension_candidates(
+        self, *, query, analysis, query_vec, dimension_query_vecs,
+        dimension_policy, fact_anchor_terms, query_facts, verified_fact_matches,
+        dimension_pool,
+    ):
         dimension = []
         # DuRetrieval has no dimension/facet annotations in this run.  When
         # every posting list is empty, scanning every point for every query is
@@ -1488,9 +1458,88 @@ class Retriever:
         analysis["no_candidate_lexical_fallback_count"] = len(lexical_fallback_candidates)
         for rank, item in enumerate(dimension, 1):
             item["rank"] = rank
+        return dimension
+
+    def search(self, query: str, top_k: int | None = None,
+               semantic_pool: int | None = None,
+               dimension_pool: int | None = None,
+               dimension_only: bool = False,
+               query_facts: List[Dict[str, Any]] | None = None,
+               original_query: str | None = None,
+               subqueries: List[str] | None = None,
+               save_snapshot: bool = False, *,
+               semantic_weight: float = 1.0,
+               dimension_weight: float = 0.05,
+               lexical_weight: float = 0.10,
+               fusion_strategy_file: str | None = None) -> Dict[str, Any]:
+        """Retrieve candidates and fuse them with per-call dimension_score weights.
+
+        Omitted weights preserve the existing 1.0 / 0.05 / 0.10 formula.
+        """
+        vector_subqueries = [
+            str(item) for item in (subqueries or []) if str(item).strip()
+        ]
+        if vector_subqueries:
+            query = " | ".join(vector_subqueries)
+        else:
+            vector_subqueries = [query]
+        top_k = top_k or self.settings.top_k
+        semantic_pool = max(top_k, int(semantic_pool or getattr(self.settings, "semantic_pool", 20)))
+        dimension_pool = max(top_k, int(dimension_pool or getattr(self.settings, "dimension_pool", 100)))
+        analysis = self._parse_query(query)
+        analysis["vector_retrieval_strategy"] = self.vector_retriever.strategy_file
+        verified_fact_matches = self._fact_index_matches(query_facts or [])
+        analysis["query_fact_count"] = len(query_facts or [])
+        analysis["verified_fact_match_count"] = sum(
+            len(value) for value in verified_fact_matches.values()
+        )
+        dimension_query_texts = {
+            leaf_id: self._dimension_query_text(query, leaf_id, constraint)
+            for leaf_id, constraint in analysis["constraints"].items()
+            if self.prepare_dimension_vectors
+            and constraint.get("role") in {"main", "secondary"}
+            and (constraint.get("labels") or constraint.get("intent_terms"))
+        }
+        vector_inputs = [query] + list(dimension_query_texts.values())
+        if not dimension_only:
+            strategy_texts = self.vector_retriever.query_texts(
+                vector_subqueries, original_query=original_query or query
+            )
+            vector_inputs.extend(text for text in strategy_texts if text not in vector_inputs)
+        encoded_vectors = self.embeddings.encode(vector_inputs)
+        query_vec = _unit_vector(encoded_vectors[0])
+        dimension_query_vecs = {
+            leaf_id: _unit_vector(vector)
+            for (leaf_id, _), vector in zip(
+                dimension_query_texts.items(), encoded_vectors[1:]
+            )
+        }
+        dimension_policy = self._dimension_policy(analysis)
+        fact_anchor_terms = (
+            self._fact_anchor_terms(query, analysis)
+            if bool(getattr(self.settings, "fact_anchor_rerank_enabled", True)) else []
+        )
+        analysis["fact_anchor_terms"] = fact_anchor_terms
+        semantic = [] if dimension_only else self.vector_retriever.search(
+            vector_subqueries,
+            semantic_pool,
+            original_query=original_query or query,
+            query_vector=query_vec,
+            query_vector_text=query,
+            query_vectors=dict(zip(vector_inputs, encoded_vectors)),
+            spot_names=analysis["spot_names"],
+        )
+
+        dimension = self._retrieve_dimension_candidates(
+            query=query, analysis=analysis, query_vec=query_vec,
+            dimension_query_vecs=dimension_query_vecs, dimension_policy=dimension_policy,
+            fact_anchor_terms=fact_anchor_terms, query_facts=query_facts,
+            verified_fact_matches=verified_fact_matches, dimension_pool=dimension_pool,
+        )
 
         fused = apply_fusion(semantic, dimension, top_k=top_k, query=query,
                              original_query=original_query or query, query_analysis=analysis,
+                             strategy_file=fusion_strategy_file,
                              semantic_weight=semantic_weight,
                              dimension_weight=dimension_weight,
                              lexical_weight=lexical_weight)

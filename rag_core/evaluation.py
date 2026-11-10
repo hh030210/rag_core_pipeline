@@ -549,17 +549,17 @@ def _parse_ks(values: Sequence[int] | str) -> Tuple[int, ...]:
     return result or DEFAULT_KS
 
 
-def _publish_fusion_evaluation(rows, config, summary, chunks, experiments_dir=None):
-    """Publish one complete evaluation batch; never accumulate previous snapshots."""
-    experiments = Path(experiments_dir or Path(__file__).resolve().parent / 'retrieval_fusion' / 'experiments').resolve() / '00_method_comparison' / 'output'
+def _publish_fusion_evaluation(rows, config, summary, chunks, publication_root):
+    """Publish a complete batch in the pipeline run output."""
+    publication_root = Path(publication_root).expanduser().resolve()
     from rag_core.retrieval_fusion.fusion import FUSION_STRATEGY, STRATEGY_DIRECTORY
     names = (Path(FUSION_STRATEGY).stem,)
     for name in names:
-        folder = experiments / name
+        folder = publication_root / name
         if folder.is_symlink():
             raise ValueError('Refusing to replace a symlinked experiment output')
         folder.mkdir(parents=True, exist_ok=True)
-    stage = Path(tempfile.mkdtemp(prefix='.evaluate-', dir=experiments))
+    stage = Path(tempfile.mkdtemp(prefix='.evaluate-', dir=publication_root))
     batch = uuid4().hex
     generated = datetime.now(timezone.utc).isoformat()
     chunk_map = {_result_id(c): c for c in chunks}
@@ -612,7 +612,7 @@ def _publish_fusion_evaluation(rows, config, summary, chunks, experiments_dir=No
                 raise ValueError('Fusion evaluation batch mismatch: ' + name)
         # Replace only the online evaluation output; experiments run independently.
         for name in names:
-            target = experiments / name
+            target = publication_root / name
             backup = stage / (name + '.previous')
             had_previous = target.exists()
             if had_previous:
@@ -628,7 +628,7 @@ def _publish_fusion_evaluation(rows, config, summary, chunks, experiments_dir=No
         raise
     finally:
         shutil.rmtree(stage)
-    return experiments / names[0]
+    return publication_root / names[0]
 
 
 def run_evaluation(
@@ -728,7 +728,7 @@ def run_evaluation(
         "query_parser_model": settings.llm_model if query_parser_mode == "llm" else "",
     }
     fusion_output = _publish_fusion_evaluation(
-        rows, config, summary, chunks, experiments_dir=experiments_dir
+        rows, config, summary, chunks, publication_root=experiments_dir or output_dir / "published"
     )
     return {
         "fusion_output": str(fusion_output),

@@ -26,7 +26,7 @@ def lock_output(output_dir: Path):
 
 
 @contextmanager
-def stage_latest(output_dir: Path):
+def stage_latest(output_dir: Path, *, experiment: str = "00_main_experiment", dataset_profile=None):
     """Publish a complete export and discard the preceding result directory."""
     output_dir.parent.mkdir(parents=True, exist_ok=True)
     with TemporaryDirectory(prefix=".staging-", dir=output_dir.parent) as temporary:
@@ -44,8 +44,10 @@ def stage_latest(output_dir: Path):
                     if not manifest_path.is_file():
                         raise FileExistsError(f"No experiment manifest in {output_dir}")
                     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-                    if manifest.get("experiment") != "00_main_experiment":
+                    if manifest.get("experiment") != experiment:
                         raise FileExistsError(f"Output belongs to a different experiment: {output_dir}")
+                    if dataset_profile and manifest.get("dataset_profile", "scenic") != dataset_profile:
+                        raise FileExistsError(f"Output belongs to a different dataset: {output_dir}")
                     output_dir.rename(previous)
                 staging.rename(output_dir)
             except BaseException:

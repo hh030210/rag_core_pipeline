@@ -57,9 +57,11 @@ class PromptOptimizer:
             sub_queries = cached.get("sub_queries", [query])
             entity_terms = cached.get("entity_terms", [])
             return {"original_query": query, "sub_queries": sub_queries,
-                    "entity_terms": entity_terms, "cached": True}
+                    "entity_terms": entity_terms, "cached": True,
+                    "expansion_failed": cached.get("expansion_failed", False)}
         sub_queries = [query]
         entity_terms: List[str] = []
+        expansion_failed = True
         if not self.client.mock and self.client.api_key:
             try:
                 raw = self.client.complete(
@@ -68,7 +70,9 @@ class PromptOptimizer:
                     temperature=0.2, max_tokens=256,
                 )
                 candidates = [line.strip(" -•\t") for line in raw.splitlines() if line.strip()]
-                sub_queries = [line for line in candidates if 4 < len(line) < 120][:4] or [query]
+                expanded = [line for line in candidates if 4 < len(line) < 120][:4]
+                sub_queries = expanded or [query]
+                expansion_failed = not expanded
             except Exception as exc:
                 print(f"[提示] 子查询扩展失败，使用原问题: {exc}")
             try:
@@ -81,7 +85,8 @@ class PromptOptimizer:
             except Exception as exc:
                 print(f"[提示] 实体提取失败，保留空列表: {exc}")
         with self._cache_lock:
-            self.cache[query] = {"sub_queries": sub_queries, "entity_terms": entity_terms}
+            self.cache[query] = {"sub_queries": sub_queries, "entity_terms": entity_terms,
+                                 "expansion_failed": expansion_failed}
             try:
                 self.run_dir.mkdir(parents=True, exist_ok=True)
                 self.cache_path.write_text(
@@ -93,7 +98,7 @@ class PromptOptimizer:
                 # memory and continue the QA request.
                 pass
         return {"original_query": query, "sub_queries": sub_queries,
-                "entity_terms": entity_terms, "cached": False}
+                "entity_terms": entity_terms, "cached": False, "expansion_failed": expansion_failed}
 
     def optimize(self, examples: List[Dict[str, Any]], iterations: int = 3, *,
                  initial_module: Dict[str, Any] | None = None,

@@ -6,8 +6,9 @@ import json
 from collections import Counter
 from copy import deepcopy
 from functools import cached_property
+from pathlib import Path
 
-from rag_core.retrieval import Retriever
+from rag_core.retrieval import Retriever, _DeterministicQueryMiner
 from rag_core.retrieval_fusion.experiments.common.live_runtime import (
     LiveRetrievalRuntime,
     REPOSITORY,
@@ -24,6 +25,8 @@ class ScenicRetriever(Retriever):
     @cached_property
     def archived_analyses(self) -> dict:
         analyses = {}
+        if not ARCHIVE.is_file():
+            return analyses
         with gzip.open(ARCHIVE, "rt", encoding="utf-8") as stream:
             for line in stream:
                 row = json.loads(line)
@@ -54,10 +57,23 @@ class ScenicRetriever(Retriever):
 
         record_id, question = self.replay_question
         archived = self.archived_analyses.get((record_id, question, query))
-        if archived is None:
+        if archived is not None:
+            self.parser_source = "archive_replay"
+            return deepcopy(archived)
+        if self.replay_reason == "replay_requested":
             raise ValueError(f"No matching LLM query replay for question ID {record_id} in {ARCHIVE}")
-        self.parser_source = "archive_replay"
-        return deepcopy(archived)
+
+        # An expanded query or a different dataset may have no matching parse.
+        parser = self.query_parser
+        if parser is not None and not isinstance(parser.miner, _DeterministicQueryMiner):
+            self.query_parser = type(parser)(
+                self.schema,
+                cache_file=str(Path(parser.cache_file).with_name("deterministic_fallback.json")),
+                miner=_DeterministicQueryMiner(),
+                label_vocabulary=self.postings,
+            )
+        self.parser_source = "deterministic"
+        return super()._parse_query(query)
 
 
 class ScenicRetrievalRuntime(LiveRetrievalRuntime):
@@ -67,14 +83,14 @@ class ScenicRetrievalRuntime(LiveRetrievalRuntime):
     def __init__(self, args):
         super().__init__(args)
         self.retriever.replay_enabled = args.query_parser_mode == "llm"
-        if args.replay_query_analysis:
+        if getattr(args, "replay_query_analysis", False):
             self.retriever.replay_reason = "replay_requested"
         self.parser_sources = Counter()
 
-    def retrieve_record(self, record, parts):
+    def retrieve_record(self, record, parts, *, fusion_strategy_file=None):
         question = record["question"]
         self.retriever.replay_question = (str(record["id"]), question)
-        result = self.retrieve(question, parts)
+        result = self.retrieve(question, parts, fusion_strategy_file=fusion_strategy_file)
         self.parser_sources[self.retriever.parser_source] += 1
         return result
 

@@ -14,6 +14,7 @@ from tempfile import TemporaryDirectory
 REPOSITORY = Path(__file__).resolve().parents[5]
 sys.path.insert(0, str(REPOSITORY))
 
+from rag_core.retrieval_fusion.experiments.common.dataset_profiles import PROFILES, profile_output_root  # noqa: E402
 from rag_core.retrieval_fusion.experiments.common.latest_output import lock_output  # noqa: E402
 
 EXPERIMENT_DIR = Path(__file__).resolve().parents[1]
@@ -127,23 +128,32 @@ def percentage(value):
     return f"{value * 100:.2f}%"
 
 
-def main():
+def main(argv=None, *, output_root=DEFAULT_OUTPUT_ROOT, expected_experiment=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--output-dir", type=Path, default=DEFAULT_OUTPUT_ROOT / "latest",
-        help="Directory containing a completed export (default: output/runs/latest)",
-    )
-    args = parser.parse_args()
-    output_dir = args.output_dir.expanduser().resolve()
+    parser.add_argument("--output-dir", type=Path, help="Override the selected dataset's latest run directory")
+    if expected_experiment is None:
+        parser.add_argument("--dataset-profile", choices=PROFILES, default="scenic")
+    args = parser.parse_args(argv)
+    profile = getattr(args, "dataset_profile", None)
+    if profile:
+        output_root = profile_output_root(output_root, profile)
+    output_dir = (args.output_dir or output_root / "latest").expanduser().resolve()
+    kwargs = dict(output_root=output_root, expected_experiment=expected_experiment, expected_profile=profile)
     if output_dir.name == "latest":
         with lock_output(output_dir):
-            calculate_metrics(output_dir)
+            calculate_metrics(output_dir, **kwargs)
     else:
-        calculate_metrics(output_dir)
+        calculate_metrics(output_dir, **kwargs)
 
 
-def calculate_metrics(output_dir: Path) -> None:
+def calculate_metrics(
+    output_dir: Path, *, output_root=DEFAULT_OUTPUT_ROOT, expected_experiment=None, expected_profile=None,
+) -> None:
     manifest = read_json(output_dir / "details_manifest.json")
+    if expected_profile and manifest.get("dataset_profile", "scenic") != expected_profile:
+        raise ValueError(f"Expected {expected_profile} dataset output in {output_dir}")
+    if expected_experiment and manifest.get("experiment") != expected_experiment:
+        raise ValueError(f"Expected {expected_experiment} output in {output_dir}")
     if manifest.get("retrieval_mode") != "live_end_to_end" or not manifest.get("run_id"):
         raise RuntimeError(
             "Refusing to evaluate this directory: expected a live_end_to_end manifest with run_id"
@@ -208,6 +218,10 @@ def calculate_metrics(output_dir: Path) -> None:
             "retrieval_mode": manifest["retrieval_mode"],
             "run_id": run_id,
             "dataset_path": manifest["dataset_path"],
+            "experiment": manifest.get("experiment", "00_main_experiment"),
+            "dataset_profile": manifest.get("dataset_profile", "scenic"),
+            "collection_points": manifest.get("collection_points"),
+            "backend": manifest.get("backend"),
             "dataset_sha256": manifest.get("dataset_sha256"),
             "run_dir": manifest["run_dir"],
             "collection": manifest.get("collection"),
@@ -223,6 +237,9 @@ def calculate_metrics(output_dir: Path) -> None:
             "query_parser_mode": manifest.get("query_parser_mode"),
             "query_parser_sources": manifest.get("query_parser_sources", {}),
             "query_parser_replay": manifest.get("query_parser_replay"),
+            "query_expansion_sources": manifest.get("query_expansion_sources", {}),
+            "query_expansion_replay_path": manifest.get("query_expansion_replay_path"),
+            "frozen_dimension": manifest.get("frozen_dimension"),
             "thresholds": THRESHOLDS,
             "doc_precision_denominator": (
                 "actual number of returned chunks among the first k; all rows are included, "
@@ -240,8 +257,8 @@ def calculate_metrics(output_dir: Path) -> None:
     report_path = output_dir / "evaluation_report.md"
     report = render_report(summary, output_dir=output_dir)
     report_path.write_text(report, encoding="utf-8")
-    if output_dir == DEFAULT_OUTPUT_ROOT.resolve() / "latest":
-        published_report = DEFAULT_OUTPUT_ROOT.parent / report_path.name
+    if output_dir == output_root.resolve() / "latest":
+        published_report = output_root.parent / report_path.name
         with TemporaryDirectory(prefix=".report-", dir=published_report.parent) as temporary:
             staged_report = Path(temporary) / report_path.name
             staged_report.write_text(report, encoding="utf-8")
@@ -254,22 +271,50 @@ def render_report(summary, *, output_dir: Path):
     metrics = summary["metrics_by_route"]
     replay = meta.get("query_parser_replay")
     sources = meta.get("query_parser_sources", {})
+    expansion = meta.get("query_expansion_sources", {})
+    expansion_path = meta.get("query_expansion_replay_path") or "未使用"
     replay_status = "未记录" if replay is None else ("是" if replay["used"] else "否")
-    replay_path = replay["data_path"] if replay else "未记录"
+    replay_path = replay["data_path"] if replay and replay["used"] else "未使用"
     replay_reason = {
         "missing_api_key": "评测环境未配置 API 密钥",
         "llm_unavailable": "实时 LLM 查询解析不可用",
         "replay_requested": "本轮指定离线回放",
     }.get(replay.get("reason") if replay else None, "无")
+    frozen = meta.get("frozen_dimension")
+    profile = meta.get("dataset_profile", "scenic")
+    dataset_name = PROFILES[profile].title
+    title = f"# {dataset_name}三路检索评测" + ("（本地冻结数据）" if frozen else "（实时检索）")
+    profile_arg = f" --dataset-profile {profile}" if profile != "scenic" and not frozen else ""
+    source_lines = []
+    if frozen:
+        source_lines = [
+            "## 本地冻结数据",
+            "",
+            f"- 来源提交：{frozen['source_commit']}",
+            f"- 语义检索和 Golden 映射使用的本地索引：{frozen['local_points_path']}",
+            f"- 维度检索固定读取的候选文件：{frozen['candidate_path']}",
+            f"- 候选文件覆盖 {frozen['matched_questions']} 题。其余 {frozen['missing_questions']} 题的维度候选为空，仍计入全量指标。",
+            "- 语义检索与融合排序在本轮重新执行。",
+            "",
+        ]
+    steps = "查询解析、向量检索、读取冻结维度候选与融合排序" if frozen else "查询解析、向量检索、维度检索与 fusion.py 融合"
+    command_dir = "rag_core/retrieval_fusion/experiments/" + meta["experiment"] + "/code"
+    display_mode = "live_semantic_frozen_dimension_live_fusion" if frozen else meta["retrieval_mode"]
+    replay_note = (
+        "查询解析回放仅替换查询解析输入。" if frozen else
+        "启用回放时仅复用历史查询解析，三路候选及排序均在本轮重新计算。"
+    )
     lines = [
-        "# 景区数据集三路实时检索评测",
+        title,
         "",
         f"- 测试集：{meta['dataset_path']}（共 {meta['dataset_count']} 条）",
         f"- Golden 映射：{meta['mapped_golden_queries']} 条成功，{meta['unmapped_golden_queries']} 条未映射；未映射问题在 macro 指标中按 miss 计入。",
-        f"- Run ID：`{meta['run_id']}`；检索模式：`{meta['retrieval_mode']}`",
+        f"- Run ID：`{meta['run_id']}`；检索模式：`{display_mode}`",
         f"- 当前集合：`{meta['collection']}`；融合策略：`{meta['fusion_strategy']}`",
+        f"- 索引后端：{meta.get('backend') or '未记录'}；索引点数：{meta.get('collection_points') or '未记录'}。",
         f"- 代码提交：`{meta['source_commit']}`；评测时间：{meta['created_at_utc']}",
         "",
+        *source_lines,
         "## 查询解析来源",
         "",
         f"- 配置模式：{meta.get('query_parser_mode') or '未记录'}",
@@ -278,9 +323,12 @@ def render_report(summary, *, output_dir: Path):
         f"- 回放原因：{replay_reason}",
         f"- 回放数据位置：`{replay_path}`",
         "",
+        f"- 查询扩展：实时 LLM {expansion.get('live_llm', 0)} 题，历史回放 {expansion.get('archive_replay', 0)} 题，原问题 {expansion.get('original', 0) + expansion.get('original_after_failure', 0)} 题。",
+        f"- 查询扩展回放位置：`{expansion_path}`",
+        "",
         "## 评测口径",
         "",
-        "export_retrieval_details.py 每轮直接读取原始 QA JSON/JSONL，使用当前 run_dir、当前 Qdrant/本地集合和当前向量检索策略完成查询解析、向量检索、维度检索与 fusion.py 融合。查询解析缓存限定在本轮临时目录。三路结果由同一个 run_id 标识；本报告按同轮三路明细计算。启用回放时仅复用历史查询解析，三路候选及排序均在本轮重新计算。",
+        f"export_retrieval_details.py 每轮直接读取原始 QA JSON/JSONL，使用当前 run_dir、当前 Qdrant/本地集合和当前向量检索策略完成{steps}。查询解析缓存限定在本轮临时目录。三路结果由同一个 run_id 标识；本报告按同轮三路明细计算。{replay_note}",
         "",
         "向量检索衡量用户查询语义，使用本轮 semantic candidates；维度检索衡量关键信息匹配，使用 dimension candidates；混合检索使用 fusion.py 当前策略生成的 fusion candidates。Golden 证据按当前集合中的 chunk payload 重新映射。",
         "",
@@ -328,8 +376,8 @@ def render_report(summary, *, output_dir: Path):
         "",
         "## 重跑命令",
         "",
-        "    python3 rag_core/retrieval_fusion/experiments/00_main_experiment/code/export_retrieval_details.py",
-        "    python3 rag_core/retrieval_fusion/experiments/00_main_experiment/code/calculate_metrics.py --output-dir <export 命令打印的 output_dir>",
+        f"    python3 {command_dir}/export_retrieval_details.py{profile_arg}",
+        f"    python3 {command_dir}/calculate_metrics.py{profile_arg} --output-dir <export 命令打印的 output_dir>",
         "",
     ]
     return "\n".join(lines)

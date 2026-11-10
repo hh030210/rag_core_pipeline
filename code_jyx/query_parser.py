@@ -2,6 +2,7 @@ import os
 import json
 import hashlib
 import re
+from functools import cached_property
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 try:
@@ -312,19 +313,24 @@ class QueryParserV2:
             })
         return cleaned
 
-    def _exact_vocabulary_hits(self, query_text: str) -> Dict[str, List[str]]:
-        normalized_query = normalize_text(query_text)
-        hits: Dict[str, List[str]] = {}
-        candidates: List[Tuple[int, str, str]] = []
+    @cached_property
+    def _exact_vocabulary(self) -> List[Tuple[str, str, str]]:
+        entries = []
         for dimension_id, labels in self.label_vocabulary.items():
             if dimension_id not in self.maps["leaves"]:
                 continue
             for label in labels:
                 key = normalize_label(label)
-                if len(key) < 2 or key in _QUERY_STOP_TERMS:
-                    continue
-                if key in normalized_query:
-                    candidates.append((len(key), dimension_id, label))
+                if len(key) >= 2 and key not in _QUERY_STOP_TERMS:
+                    entries.append((key, dimension_id, label))
+        return entries
+
+    def _exact_vocabulary_hits(self, query_text: str) -> Dict[str, List[str]]:
+        normalized_query = normalize_text(query_text)
+        hits: Dict[str, List[str]] = {}
+        candidates = [(len(key), dimension_id, label)
+                      for key, dimension_id, label in self._exact_vocabulary
+                      if key in normalized_query]
         # Prefer longer phrases.  Short labels that are contained in a longer
         # hit are usually generic fragments and add little retrieval value.
         candidates.sort(reverse=True)

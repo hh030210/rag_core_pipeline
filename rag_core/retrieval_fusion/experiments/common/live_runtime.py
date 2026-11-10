@@ -12,6 +12,8 @@ import json
 import os
 import subprocess
 import tempfile
+from collections import Counter
+from functools import cached_property
 from pathlib import Path
 from uuid import uuid4
 
@@ -208,7 +210,7 @@ class LiveRetrievalRuntime:
         raw_records = load_gold_records(self.dataset_path)
         self.records = []
         for record in raw_records:
-            mapped = map_gold_to_chunks(record, current_chunks)
+            mapped = map_gold_to_chunks(record, current_chunks if record.get("gold_evidence") else ())
             original_ids = list(map(str, mapped.get("gold_chunk_ids") or []))
             current_ids = [chunk_id for chunk_id in original_ids if chunk_id in current_chunk_ids]
             missing_ids = [chunk_id for chunk_id in original_ids if chunk_id not in current_chunk_ids]
@@ -222,10 +224,9 @@ class LiveRetrievalRuntime:
         self.dataset_sha256 = file_sha256(self.dataset_path)
         self.point_count = len(current_chunks)
         self.query_expander = None
-        if args.query_expansion:
-            if not self.settings.llm_api_key:
-                self.close()
-                raise ValueError("--query-expansion requires LLM_API_KEY or DASHSCOPE_API_KEY")
+        self.expansion_api_failed = False
+        self.expansion_sources = Counter()
+        if args.query_expansion and self.settings.llm_api_key:
             client = LLMClient(
                 api_key=self.settings.llm_api_key,
                 base_url=self.settings.llm_base_url,
@@ -259,17 +260,48 @@ class LiveRetrievalRuntime:
             strategy_file=strategy_file,
         )
 
+    @cached_property
+    def expansion_replay(self) -> dict:
+        path = self.run_dir / "query_expansion_cache.json"
+        try:
+            entries = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return {}
+        return entries if isinstance(entries, dict) else {}
+
     def query_parts(self, question: str) -> list[str]:
-        if self.query_expander is None:
-            return [question]
-        expanded = self.query_expander.expand(question)
-        values = expanded.get("sub_queries") or [question]
-        result = []
-        for value in values:
-            text = str(value or "").strip()
-            if text and text not in result:
-                result.append(text)
-        return result or [question]
+        source = "original"
+        parts = [question]
+        if self.args.query_expansion:
+            if self.query_expander is not None and not self.expansion_api_failed:
+                expanded = self.query_expander.expand(question)
+                self.expansion_api_failed = expanded.get("expansion_failed", False)
+            else:
+                expanded = {}
+
+            if expanded and not self.expansion_api_failed:
+                source = "live_llm"
+            else:
+                archived = self.expansion_replay.get(question)
+                if isinstance(archived, dict) and not archived.get("expansion_failed") and archived.get("sub_queries"):
+                    expanded = archived
+                    source = "archive_replay"
+                else:
+                    expanded = {}
+                    source = "original_after_failure"
+
+            values = expanded.get("sub_queries")
+            if source != "original_after_failure":
+                parts = list(dict.fromkeys(
+                    value.strip() for value in values if isinstance(value, str) and value.strip()
+                )) if isinstance(values, list) else []
+                if not parts:
+                    parts = [question]
+                    source = "original_after_failure"
+
+        self.expansion_source = source
+        self.expansion_sources[source] += 1
+        return parts
 
     def parse_query(self, query: str) -> dict:
         return self.retriever._parse_query(query)
@@ -282,6 +314,7 @@ class LiveRetrievalRuntime:
         top_k: int | None = None,
         semantic_pool: int | None = None,
         dimension_pool: int | None = None,
+        fusion_strategy_file: str | None = None,
     ) -> dict:
         parts = subqueries or [question]
         retrieval_query = " | ".join(parts)
@@ -293,6 +326,7 @@ class LiveRetrievalRuntime:
             original_query=question,
             subqueries=parts,
             save_snapshot=False,
+            fusion_strategy_file=fusion_strategy_file,
         )
 
     def metadata(self) -> dict:
@@ -315,7 +349,12 @@ class LiveRetrievalRuntime:
             "embedding_device": self.settings.embedding_device,
             "query_parser_mode": self.args.query_parser_mode,
             "query_parser_cache": "fresh temporary cache per run",
-            "query_expansion": bool(self.query_expander),
+            "query_expansion": bool(self.args.query_expansion),
+            "query_expansion_sources": dict(self.expansion_sources),
+            "query_expansion_replay_path": (
+                str(self.run_dir / "query_expansion_cache.json")
+                if self.expansion_sources["archive_replay"] else None
+            ),
             "semantic_pool": self.settings.semantic_pool,
             "dimension_pool": self.settings.dimension_pool,
             "top_k": self.settings.top_k,
