@@ -31,6 +31,8 @@
 
 ## 文件与运行入口
 
+案例级固定轮数：在 `launch_ten_point.py init` 时可指定 `--case-iterations N`。N 表示每个训练案例在初始提示作答和评价后执行的提示更新次数；0 表示仅评价初始提示。固定轮数模式保存并使用最后一轮提示，不因评分变化或提示不变而提前停止；请求失败或提示不合规仍会报错。不指定时继续使用原来的自适应停止规则。该参数随新实验配置冻结，不能用于更改已有实验。
+
 - `ten_point_workflow.py`：本轮唯一实验入口，绑定四项训练、六项最终、1–10整数和新视图。
 - `ten_point_format.py`、`test_ten_point_workflow.py`：有界JSON结构恢复与17项离线测试；不改分、不删改理由字词。
 - `knowledge_fallback_workflow.py`、`five_metrics_workflow.py`、`restored_meta_runner.py`：被新入口绑定的复用组件；其中历史文档或旧常量不是本轮运行口径，不单独运行旧入口。

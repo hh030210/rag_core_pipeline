@@ -139,10 +139,20 @@ def grade(api, stages, key, row, answer):
 
 def train_one(api, stages, cfg, row):
     path = r.RUN / 'training/cases' / (row['id'] + '.json')
+    fixed = cfg.get('case_iterations')
+    if fixed is not None and (type(fixed) is not int or fixed < 0):
+        raise ValueError('case_iterations must be a non-negative integer or null')
     state = r.read(path) if path.exists() else {'id':row['id'], 'question':row['question'], 'history':[], 'status':'running'}
+    policy = {'mode':'fixed', 'updates':fixed} if fixed is not None else {'mode':'adaptive'}
+    if 'iteration_policy' in state and state['iteration_policy'] != policy:
+        raise ValueError('Cannot resume a case with a different iteration policy')
+    if state['history'] and 'iteration_policy' not in state and fixed is not None:
+        raise ValueError('Cannot change an existing case to fixed-iteration mode')
+    state['iteration_policy'] = policy
     if state['status'] == 'complete': return state
     accepted = 0
-    for iteration in range(cfg['max_rounds'] + 1):
+    limit = fixed if fixed is not None else cfg['max_rounds']
+    for iteration in range(limit + 1):
         if iteration < len(state['history']):
             if state['history'][iteration].get('accepted'): accepted = iteration
             continue
@@ -159,10 +169,11 @@ def train_one(api, stages, cfg, row):
                     origin = r.generated(api, 'train:' + row['id'] + ':update:' + str(iteration), stages['update']['text'], payload, validate_qa)
                 except RuntimeError as exc:
                     if not str(exc).startswith('Prompt compliance failed: '): raise
+                    if fixed is not None: raise
                     state.update(status='complete', selected_iteration=accepted, prompt=previous['prompt'], stop_reason='update_generation_noncompliant')
                     r.save(path, state); return state
                 prompt = origin['text']
-                if prompt == previous['prompt']:
+                if prompt == previous['prompt'] and fixed is None:
                     state.update(status='complete', selected_iteration=accepted, prompt=prompt, stop_reason='prompt_unchanged')
                     r.save(path, state); return state
             version = {'iteration':iteration, 'prompt':prompt, 'origin':origin, 'answer':None, 'evaluation':None}
@@ -173,11 +184,11 @@ def train_one(api, stages, cfg, row):
         if version['evaluation'] is None:
             version['evaluation'] = grade(api, stages, 'train:' + row['id'] + ':' + str(iteration), row, version['answer']); r.save(p, version)
         dims = version['evaluation']['dimensions']
-        decision = stop_decision(state['history'][accepted]['evaluation']['dimensions'], dims, cfg['min_gain']) if iteration else None
+        decision = stop_decision(state['history'][accepted]['evaluation']['dimensions'], dims, cfg['min_gain']) if iteration and fixed is None else None
         version['accepted'] = decision is None; r.save(p, version); state['history'].append(version)
         if decision is None: accepted = iteration
         best = effective_values(dims)
-        stop = decision or ('primary_metrics_perfect' if primary_perfect(dims) else
+        stop = ('fixed_iterations_complete' if iteration == limit else None) if fixed is not None else decision or ('primary_metrics_perfect' if primary_perfect(dims) else
                            'primary_metric_unassessable' if best is None else
                            'safety_round_limit' if iteration == cfg['max_rounds'] else None)
         if stop:

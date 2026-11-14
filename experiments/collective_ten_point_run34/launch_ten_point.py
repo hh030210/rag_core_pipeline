@@ -42,6 +42,8 @@ def init(args):
     cfg.update(base_url=args.base_url.rstrip('/'), embedding_model=str(Path(args.embedding).resolve()),
                machine_python=sys.executable, library_code=str(runtime),
                data_source='bundled_shared_inputs', workers=args.workers)
+    if args.case_iterations is not None:
+        cfg['case_iterations'] = args.case_iterations
     save(runtime / 'config.json', cfg)
     shared = args.run / 'shared'
     shared.mkdir()
@@ -65,13 +67,18 @@ def main():
     parser.add_argument('--embedding')
     parser.add_argument('--base-url', default=os.getenv('OPENAI_BASE_URL', 'http://127.0.0.1:8910/v1'))
     parser.add_argument('--workers', type=int, default=8)
+    parser.add_argument('--case-iterations', type=int, help='Number of case prompt updates; omit for adaptive stopping')
     parser.add_argument('--gate', choices=('stage', 'cluster', 'feedback_stage', 'feedback'))
     parser.add_argument('--reviewed', action='store_true')
     args = parser.parse_args()
     args.run = args.run.resolve()
     if args.command == 'init':
         assert args.embedding and args.workers > 0
+        if args.case_iterations is not None and args.case_iterations < 0:
+            parser.error('--case-iterations must be non-negative')
         return init(args)
+    if args.case_iterations is not None:
+        parser.error('--case-iterations can only be set when initializing a new run')
     assert (args.run / 'runtime/config.json').exists(), 'Initialize a fresh run first'
     if args.command == 'status':
         path = args.run / 'job_status.json'
